@@ -67,7 +67,7 @@ export default function Technology() {
         </div>
       </section>
 
-      {/* JARVIS — THE AI OPERATING SYSTEM */}
+      {/* JARVIS - THE AI OPERATING SYSTEM */}
       <section className="py-24 md:py-28 bg-background relative z-20 border-t border-white/5 overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(110,86,207,0.12),transparent_55%)] pointer-events-none" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,rgba(59,130,246,0.10),transparent_55%)] pointer-events-none" />
@@ -79,10 +79,10 @@ export default function Technology() {
               <span className="text-xs font-medium text-white/80 tracking-widest uppercase">Three and a half years in the making</span>
             </div>
             <h2 className="text-3xl md:text-5xl lg:text-6xl font-serif font-bold text-white mb-6 leading-[1.1]">
-              Building <span className="text-gradient">Jarvis</span> — the first true AI operating system.
+              Building <span className="text-gradient">Jarvis</span> - the first true AI operating system.
             </h2>
             <p className="text-lg md:text-xl text-white/60 leading-relaxed">
-              Most of the industry chases a single bigger model. We took a different bet. For three and a half years we've been training, fine-tuning, and orchestrating dozens of specialist models into one cohesive system that runs other AI systems — the way an operating system runs other software.
+              Most of the industry chases a single bigger model. We took a different bet. For three and a half years we've been training, fine-tuning, and orchestrating dozens of specialist models into one cohesive system that runs other AI systems - the way an operating system runs other software.
             </p>
           </div>
 
@@ -99,13 +99,13 @@ export default function Technology() {
               {[
                 {
                   phase: "Phase 01",
-                  period: "Late 2022 — Mid 2023",
+                  period: "Late 2022 - Mid 2023",
                   title: "Foundation & Reasoning",
-                  desc: "Trained core reasoning models on curated multi-domain corpora — code, finance, contracts, scientific writing. Established the base layer Jarvis uses to understand instructions and decompose them into sub-tasks.",
+                  desc: "Trained core reasoning models on curated multi-domain corpora - code, finance, contracts, scientific writing. Established the base layer Jarvis uses to understand instructions and decompose them into sub-tasks.",
                 },
                 {
                   phase: "Phase 02",
-                  period: "Mid 2023 — Early 2024",
+                  period: "Mid 2023 - Early 2024",
                   title: "Tool Use & Function Calling",
                   desc: "Taught models to invoke tools, call APIs, query databases, and chain function calls. Introduced reliable structured-output training so every action is machine-verifiable, not just text.",
                 },
@@ -113,17 +113,17 @@ export default function Technology() {
                   phase: "Phase 03",
                   period: "2024",
                   title: "Multi-Agent Orchestration",
-                  desc: "Trained Jarvis to delegate. Specialist models for research, coding, finance, content, and ops were fine-tuned independently — Jarvis learned when to spawn them, what context to hand off, and how to merge their results.",
+                  desc: "Trained Jarvis to delegate. Specialist models for research, coding, finance, content, and ops were fine-tuned independently - Jarvis learned when to spawn them, what context to hand off, and how to merge their results.",
                 },
                 {
                   phase: "Phase 04",
-                  period: "Late 2024 — Mid 2025",
+                  period: "Late 2024 - Mid 2025",
                   title: "Self-Correction & Memory",
-                  desc: "Reinforcement loops on long-horizon tasks. Jarvis learned to critique its own outputs, retry with new strategies, and persist memory across sessions — the leap from chat assistant to operator.",
+                  desc: "Reinforcement loops on long-horizon tasks. Jarvis learned to critique its own outputs, retry with new strategies, and persist memory across sessions - the leap from chat assistant to operator.",
                 },
                 {
                   phase: "Phase 05",
-                  period: "Mid 2025 — Today",
+                  period: "Mid 2025 - Today",
                   title: "Production Hardening",
                   desc: "Adversarial red-teaming, latency optimization, deterministic guardrails, and live deployment as the engine behind our first commercial product, Fin. Jarvis now runs in production, supervised but autonomous.",
                 },
@@ -239,7 +239,7 @@ export default function Technology() {
                     How Jarvis runs other AI systems.
                   </h3>
                   <p className="text-white/60 leading-relaxed mb-4">
-                    Jarvis is not one model — it's the conductor. When a task arrives, Jarvis interprets intent, picks the right specialist (one of ours, or a third-party model like GPT, Claude, or Gemini), allocates context, runs it, verifies the output, and decides whether to ship it, retry it, or hand it to another agent.
+                    Jarvis is not one model - it's the conductor. When a task arrives, Jarvis interprets intent, picks the right specialist (one of ours, or a third-party model like GPT, Claude, or Gemini), allocates context, runs it, verifies the output, and decides whether to ship it, retry it, or hand it to another agent.
                   </p>
                   <p className="text-white/60 leading-relaxed">
                     The same way Linux scheduled processes for the last forty years, Jarvis schedules cognition for the next forty. Models become processes. Prompts become syscalls. Memory becomes shared state. Outputs become contract-verified return values.

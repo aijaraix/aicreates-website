@@ -212,7 +212,7 @@ export default function Fin() {
                 Meet <span className="text-gradient">Fin.</span>
               </h1>
               <p className="text-lg md:text-xl text-white/70 leading-relaxed mb-4">
-                The world's first agentic, tokenized neobank — a new-age digital piggy bank that does more than hold your money. Fin grows it, plays with it, and puts it to work, autonomously.
+                The world's first agentic, tokenized neobank - a new-age digital piggy bank that does more than hold your money. Fin grows it, plays with it, and puts it to work, autonomously.
               </p>
               <p className="text-base md:text-lg text-white/55 leading-relaxed mb-10">
                 After three and a half years building our own AI operating system, Fin is the first product we're bringing to the world.
@@ -241,7 +241,7 @@ export default function Fin() {
               <div className="relative w-full max-w-md aspect-square rounded-[2.5rem] glass-card border-white/10 overflow-hidden flex items-center justify-center p-6">
                 <img
                   src={finMascot}
-                  alt="Fin — the AIcreatesAI mascot"
+                  alt="Fin - the AIcreatesAI mascot"
                   className="w-full h-full object-contain drop-shadow-[0_0_40px_rgba(59,130,246,0.4)]"
                 />
               </div>
@@ -258,7 +258,7 @@ export default function Fin() {
               A neobank that <span className="text-gradient">thinks for itself.</span>
             </h2>
             <p className="text-lg text-white/60 leading-relaxed">
-              Fin is what happens when a savings account, a brokerage, a prediction market, and an arcade are all run by the same intelligent agent. Top up your account and Fin's AI puts your balance to work across yield, crypto, prediction markets, skill-based games, and real-world AR rewards — all from a single wallet you fully own.
+              Fin is what happens when a savings account, a brokerage, a prediction market, and an arcade are all run by the same intelligent agent. Top up your account and Fin's AI puts your balance to work across yield, crypto, prediction markets, skill-based games, and real-world AR rewards - all from a single wallet you fully own.
             </p>
           </div>
 
@@ -312,7 +312,7 @@ export default function Fin() {
                   <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/20 z-10 pointer-events-none rounded-[1.7rem]" />
                   <img
                     src={s.src}
-                    alt={`Fin app — ${s.label}`}
+                    alt={`Fin app - ${s.label}`}
                     className="w-full h-full object-cover rounded-[1.7rem] group-hover:scale-[1.02] transition-transform duration-700"
                   />
                 </div>
@@ -331,7 +331,7 @@ export default function Fin() {
               Built for <span className="text-gradient">everyone.</span>
             </h2>
             <p className="text-lg text-white/60">
-              From the first dollar in a digital piggy bank to multi-million-dollar corporate treasuries — Fin scales with you.
+              From the first dollar in a digital piggy bank to multi-million-dollar corporate treasuries - Fin scales with you.
             </p>
           </div>
 
@@ -343,7 +343,7 @@ export default function Fin() {
                 title: "The new-age piggy bank",
                 points: [
                   "Single wallet, fully owned by you",
-                  "AI-driven yield (5–15% APY)",
+                  "AI-driven yield (5-15% APY)",
                   "Earn through games, drops & markets",
                   "Round-ups and auto-invest",
                 ],
@@ -410,7 +410,7 @@ export default function Fin() {
                 className="glass-card p-2 rounded-3xl overflow-hidden border-white/10"
               >
                 <div className="relative rounded-2xl overflow-hidden">
-                  <img src={s.src} alt={`Fin Business — ${s.label}`} className="w-full h-auto object-cover" />
+                  <img src={s.src} alt={`Fin Business - ${s.label}`} className="w-full h-auto object-cover" />
                 </div>
                 <p className="text-center text-white/55 text-sm mt-3 mb-1 tracking-wide uppercase">{s.label}</p>
               </motion.div>
@@ -449,7 +449,7 @@ export default function Fin() {
               </div>
               <h3 className="text-2xl font-serif font-bold text-white mb-3">Crossmint</h3>
               <p className="text-white/60 leading-relaxed text-base">
-                We're building Fin's stablecoin infrastructure on Crossmint — issuance, custody, scoped cards, and on-chain settlement. Crossmint powers the wallets, the cards, and the rails behind every transaction.
+                We're building Fin's stablecoin infrastructure on Crossmint - issuance, custody, scoped cards, and on-chain settlement. Crossmint powers the wallets, the cards, and the rails behind every transaction.
               </p>
             </motion.div>
 
@@ -468,7 +468,7 @@ export default function Fin() {
               </div>
               <h3 className="text-2xl font-serif font-bold text-white mb-3">Transak</h3>
               <p className="text-white/60 leading-relaxed text-base">
-                A Transak widget is embedded directly inside Fin so users can purchase crypto with a card, bank transfer, or local payment method — without ever leaving the app.
+                A Transak widget is embedded directly inside Fin so users can purchase crypto with a card, bank transfer, or local payment method - without ever leaving the app.
               </p>
             </motion.div>
           </div>
@@ -506,13 +506,13 @@ export default function Fin() {
           <div className="max-w-3xl mx-auto text-center mb-16">
             <h2 className="text-3xl md:text-5xl font-serif font-bold text-white mb-6">Five ways your money grows.</h2>
             <p className="text-lg text-white/60">
-              Fin's AI doesn't just sit on your balance. It puts it to work — across every surface in the app.
+              Fin's AI doesn't just sit on your balance. It puts it to work - across every surface in the app.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-5 max-w-6xl mx-auto">
             {[
-              { icon: TrendingUp, title: "Yield Strategies", desc: "Stable yield farming, 5–15% APY, low to high risk profiles." },
+              { icon: TrendingUp, title: "Yield Strategies", desc: "Stable yield farming, 5-15% APY, low to high risk profiles." },
               { icon: Sparkles, title: "Crypto Round-ups", desc: "Spare change auto-invested into curated crypto baskets." },
               { icon: Gamepad2, title: "Skill Games", desc: "Crypto Quizzes, Speed Trading Duels, Savings Sprints." },
               { icon: MapPin, title: "AR GEO Drops", desc: "Real-world USDC rewards discoverable through the camera." },

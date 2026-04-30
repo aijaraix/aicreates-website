@@ -26,7 +26,7 @@ export default function About() {
               <Brand /> is a technology company building agentic AI systems, intelligent business infrastructure, and next-generation digital products. We believe the future of software is autonomous, self-healing, and deeply integrated with human intent.
             </p>
             <p className="text-lg text-white/50 leading-relaxed max-w-2xl">
-              For the past three and a half years we've been quietly building our own AI operating system from the ground up. Today we're launching our first product on top of it — <Link href="/products/fin" className="text-white hover:text-primary underline-offset-4 hover:underline transition-colors">Fin</Link>, a tokenized neobank and new-age digital piggy bank.
+              For the past three and a half years we've been quietly building our own AI operating system from the ground up. Today we're launching our first product on top of it - <Link href="/products/fin" className="text-white hover:text-primary underline-offset-4 hover:underline transition-colors">Fin</Link>, a tokenized neobank and new-age digital piggy bank.
             </p>
           </motion.div>
         </div>
@@ -68,7 +68,7 @@ export default function About() {
                   At <Brand />, we construct systems that understand context, execute multi-step reasoning, and operate with supervised autonomy. We are moving from software that requires operation to software that operates itself.
                 </p>
                 <p>
-                  By creating foundational intelligence layers—both internal and external—we enable organizations to scale logic, precision, and execution far beyond human constraints.
+                  By creating foundational intelligence layers-both internal and external-we enable organizations to scale logic, precision, and execution far beyond human constraints.
                 </p>
               </div>
             </motion.div>

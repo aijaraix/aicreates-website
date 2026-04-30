@@ -18,6 +18,8 @@ import Products from "@/pages/Products";
 import Fin from "@/pages/Fin";
 import Services from "@/pages/Services";
 import Contact from "@/pages/Contact";
+import Privacy from "@/pages/Privacy";
+import Terms from "@/pages/Terms";
 import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient();
@@ -59,6 +61,8 @@ function Router() {
         <Route path="/products/fin" component={() => <PageTransition><Fin /></PageTransition>} />
         <Route path="/services" component={() => <PageTransition><Services /></PageTransition>} />
         <Route path="/contact" component={() => <PageTransition><Contact /></PageTransition>} />
+        <Route path="/privacy" component={() => <PageTransition><Privacy /></PageTransition>} />
+        <Route path="/terms" component={() => <PageTransition><Terms /></PageTransition>} />
         <Route component={() => <PageTransition><NotFound /></PageTransition>} />
       </Switch>
     </AnimatePresence>

@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "wouter";
 import { MessageCircle, X, Send, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import eveAvatar from "@/assets/eve.png";
+import eveAvatar from "@/assets/eve-portrait.png";
 
 /**
  * Eve API URL.
@@ -29,7 +29,7 @@ const OPEN_KEY = "eve.opened.v1";
 const GREETING: EveMessage = {
   role: "assistant",
   content:
-    "Hi — I'm Eve. I help visitors get to know what we're building at AIcreatesAI. What brings you here today?",
+    "Hi - I'm Eve. I help visitors get to know what we're building at AIcreatesAI. What brings you here today?",
 };
 
 function loadConversation(): EveMessage[] {
@@ -64,6 +64,8 @@ const ALLOWED_PATHS = new Set([
   "/products/fin",
   "/services",
   "/contact",
+  "/privacy",
+  "/terms",
 ]);
 
 /**
@@ -81,7 +83,7 @@ function MessageBody({ text }: { text: string }) {
         if (pattern.test(part)) {
           const [pathOnly] = part.split("#");
           if (!ALLOWED_PATHS.has(pathOnly)) {
-            // Hallucinated route — render as plain text, don't make it a broken link.
+            // Hallucinated route - render as plain text, don't make it a broken link.
             return <span key={i}>{part}</span>;
           }
           return (
@@ -399,7 +401,7 @@ export function EveWidget() {
         )}
       </AnimatePresence>
 
-      {/* Mobile-only chat icon (no label) — shown when launcher hidden because panel open */}
+      {/* Mobile-only chat icon (no label) - shown when launcher hidden because panel open */}
       {/* No additional render here; layout handled inside the launcher above */}
       {/* Reusable icon import marker (keeps unused import warnings away) */}
       <span className="hidden">

@@ -72,3 +72,9 @@ id = "fbQfGZQoBLUNnVQ6Szdf_"
 uri = "file://artifacts/web/src/assets/fin-mascot.png"
 type = "image"
 title = "generated_image"
+
+[[generated]]
+id = "pqmWwgHgufEJp5q-gQ6Y4"
+uri = "file://artifacts/web/src/assets/eve-portrait.png"
+type = "image"
+title = "eve russian woman portrait"
