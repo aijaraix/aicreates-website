@@ -1,6 +1,9 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
 import {
   ArrowRight,
   Wallet,
@@ -14,6 +17,8 @@ import {
   Briefcase,
   ShieldCheck,
   CreditCard,
+  Loader2,
+  CheckCircle2,
 } from "lucide-react";
 import finMascot from "@/assets/fin-mascot.png";
 import appWelcome from "@/assets/app-welcome.jpg";
@@ -28,6 +33,8 @@ import appLiveMap from "@/assets/app-livemap.jpg";
 import bizTreasury from "@/assets/biz-treasury.jpg";
 import bizCards from "@/assets/biz-cards.jpg";
 
+const WAITLIST_ENDPOINT = "https://formsubmit.co/ajax/sholom@aicreates.ai";
+
 const consumerScreens = [
   { src: appWelcome, label: "Sign In" },
   { src: appHome, label: "NeoBank Home" },
@@ -39,6 +46,148 @@ const consumerScreens = [
   { src: appArDrops, label: "AR GEO Drops" },
   { src: appLiveMap, label: "Live Drop Map" },
 ];
+
+function WaitlistForm() {
+  const { toast } = useToast();
+  const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [tier, setTier] = useState<"Personal" | "Business" | "Enterprise">("Personal");
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (submitting || submitted) return;
+    setSubmitting(true);
+
+    const form = e.target as HTMLFormElement;
+    const fd = new FormData(form);
+    const payload: Record<string, string> = {
+      _subject: `Fin waitlist · ${tier} · ${fd.get("name") || "Anonymous"}`,
+      _captcha: "false",
+      _template: "table",
+      product: "Fin (agentic neobank)",
+      interest: tier,
+      name: String(fd.get("name") || ""),
+      email: String(fd.get("email") || ""),
+      country: String(fd.get("country") || ""),
+      _honey: String(fd.get("_honey") || ""),
+    };
+
+    try {
+      const res = await fetch(WAITLIST_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      setSubmitted(true);
+      toast({
+        title: "You're on the list.",
+        description: "Welcome aboard. We'll be in touch the moment Fin opens to your tier.",
+        className: "glass-card border-white/20 text-white",
+      });
+      form.reset();
+    } catch (err) {
+      toast({
+        title: "Couldn't reach the server.",
+        description: "Please email us directly at sholom@aicreates.ai and we'll add you manually.",
+        className: "glass-card border-red-400/30 text-white",
+      });
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  if (submitted) {
+    return (
+      <div className="text-center py-8">
+        <div className="w-16 h-16 rounded-full bg-emerald-400/10 border border-emerald-400/30 flex items-center justify-center mx-auto mb-5">
+          <CheckCircle2 className="w-8 h-8 text-emerald-400" strokeWidth={1.75} />
+        </div>
+        <h3 className="text-2xl font-serif font-bold text-white mb-3">You're on the list.</h3>
+        <p className="text-white/60 max-w-md mx-auto mb-6">
+          Thanks for joining the Fin waitlist. We'll reach out from <span className="text-white/90">sholom@aicreates.ai</span> the moment your tier opens.
+        </p>
+        <button
+          type="button"
+          onClick={() => setSubmitted(false)}
+          className="text-sm text-white/50 hover:text-white underline underline-offset-4"
+        >
+          Add another person
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-5 relative z-10" noValidate>
+      <input type="text" name="_honey" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
+
+      <div className="space-y-2">
+        <Label className="text-white/70 text-xs uppercase tracking-wider">I'm interested as</Label>
+        <div className="grid grid-cols-3 gap-2">
+          {(["Personal", "Business", "Enterprise"] as const).map((t) => (
+            <button
+              key={t}
+              type="button"
+              onClick={() => setTier(t)}
+              className={`h-11 rounded-lg text-sm font-medium border transition-all ${
+                tier === t
+                  ? "bg-white text-black border-white"
+                  : "bg-white/5 text-white/70 border-white/10 hover:bg-white/10 hover:text-white"
+              }`}
+            >
+              {t}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div className="space-y-2">
+          <Label htmlFor="wl-name" className="text-white/70 text-xs uppercase tracking-wider">Full Name</Label>
+          <Input
+            id="wl-name" name="name" required
+            className="bg-white/5 border-white/10 text-white placeholder:text-white/20 h-12 focus-visible:ring-primary"
+            placeholder="Jane Doe"
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="wl-email" className="text-white/70 text-xs uppercase tracking-wider">Email Address</Label>
+          <Input
+            id="wl-email" name="email" type="email" required
+            className="bg-white/5 border-white/10 text-white placeholder:text-white/20 h-12 focus-visible:ring-primary"
+            placeholder="you@email.com"
+          />
+        </div>
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="wl-country" className="text-white/70 text-xs uppercase tracking-wider">Country / Region (optional)</Label>
+        <Input
+          id="wl-country" name="country"
+          className="bg-white/5 border-white/10 text-white placeholder:text-white/20 h-12 focus-visible:ring-primary"
+          placeholder="United States"
+        />
+      </div>
+
+      <Button
+        type="submit"
+        disabled={submitting}
+        size="lg"
+        className="w-full rounded-full bg-white text-black hover:bg-white/90 h-14 px-8 text-base disabled:opacity-70"
+      >
+        {submitting ? (
+          <><Loader2 className="mr-2 w-4 h-4 animate-spin" /> Joining…</>
+        ) : (
+          <>Join the Fin Waitlist <ArrowRight className="ml-2 w-4 h-4" /></>
+        )}
+      </Button>
+      <p className="text-xs text-white/40 text-center">
+        Or email us directly at <a href="mailto:sholom@aicreates.ai" className="text-white/70 hover:text-primary">sholom@aicreates.ai</a>.
+      </p>
+    </form>
+  );
+}
 
 export default function Fin() {
   return (
@@ -69,11 +218,11 @@ export default function Fin() {
                 After three and a half years building our own AI operating system, Fin is the first product we're bringing to the world.
               </p>
               <div className="flex flex-wrap gap-4">
-                <Link href="/contact">
+                <a href="#waitlist">
                   <Button size="lg" className="rounded-full bg-white text-black hover:bg-white/90 h-14 px-8 text-base">
                     Join the Waitlist <ArrowRight className="ml-2 w-4 h-4" />
                   </Button>
-                </Link>
+                </a>
                 <a href="#how-it-works">
                   <Button size="lg" variant="outline" className="rounded-full h-14 px-8 text-base border-white/15 bg-white/5 text-white hover:bg-white/10">
                     See How It Works
@@ -388,20 +537,24 @@ export default function Fin() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-32 relative z-20 bg-background text-center border-t border-white/5">
+      {/* WAITLIST */}
+      <section id="waitlist" className="py-32 relative z-20 bg-background border-t border-white/5 scroll-mt-24">
         <div className="container mx-auto px-4">
-          <div className="glass-card max-w-4xl mx-auto p-12 md:p-16 relative overflow-hidden">
+          <div className="glass-card max-w-3xl mx-auto p-8 md:p-12 relative overflow-hidden">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom,rgba(59,130,246,0.18),transparent_60%)] pointer-events-none" />
-            <h2 className="text-3xl md:text-5xl font-serif font-bold text-white mb-6 relative z-10">Be among the first to meet Fin.</h2>
-            <p className="text-lg text-white/60 mb-8 max-w-xl mx-auto relative z-10">
-              Personal early access, business pilots, and enterprise treasury partnerships are open now.
-            </p>
-            <Link href="/contact">
-              <Button size="lg" className="rounded-full bg-white text-black hover:bg-white/90 h-14 px-8 text-base relative z-10">
-                Join the Waitlist <ArrowRight className="ml-2 w-4 h-4" />
-              </Button>
-            </Link>
+            <div className="relative z-10 text-center mb-10">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass border-white/10 mb-5">
+                <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+                <span className="text-xs font-medium text-white/80 tracking-wide uppercase">Early Access · Limited Spots</span>
+              </div>
+              <h2 className="text-3xl md:text-5xl font-serif font-bold text-white mb-4">Be among the first to meet Fin.</h2>
+              <p className="text-lg text-white/60 max-w-xl mx-auto">
+                Personal early access, business pilots, and enterprise treasury partnerships are open now.
+              </p>
+            </div>
+            <div className="relative z-10 max-w-xl mx-auto">
+              <WaitlistForm />
+            </div>
           </div>
         </div>
       </section>

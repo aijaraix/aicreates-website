@@ -26,7 +26,7 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "PORT=22333 BASE_PATH=/ pnpm --filter @workspace/web run dev"
+args = "pnpm --filter @workspace/web run dev"
 waitForPort = 22333
 
 [agent]

@@ -1,26 +1,59 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Mail, MapPin, Send } from "lucide-react";
+import { Mail, MapPin, Send, Loader2 } from "lucide-react";
 import contactVisual from "@/assets/contact.png";
+
+const CONTACT_ENDPOINT = "https://formsubmit.co/ajax/sholom@aicreates.ai";
 
 export default function Contact() {
   const { toast } = useToast();
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // TODO: connect form backend — Formspree (action="https://formspree.io/f/<id>"), Tally embed, Supabase REST/Edge Function, or a serverless email function (Resend/Postmark). Replace the simulated submit handler below.
-    
-    toast({
-      title: "Message received.",
-      description: "We will review your inquiry and be in touch shortly.",
-      className: "glass-card border-white/20 text-white",
-    });
+    if (submitting) return;
+    setSubmitting(true);
 
-    (e.target as HTMLFormElement).reset();
+    const form = e.target as HTMLFormElement;
+    const fd = new FormData(form);
+    const payload: Record<string, string> = {
+      _subject: `New AIcreatesAI inquiry from ${fd.get("name") || "Anonymous"}`,
+      _captcha: "false",
+      _template: "table",
+      name: String(fd.get("name") || ""),
+      email: String(fd.get("email") || ""),
+      company: String(fd.get("company") || ""),
+      message: String(fd.get("message") || ""),
+      _honey: String(fd.get("_honey") || ""),
+    };
+
+    try {
+      const res = await fetch(CONTACT_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      toast({
+        title: "Message sent.",
+        description: "Thank you. We will be in touch shortly at the email you provided.",
+        className: "glass-card border-white/20 text-white",
+      });
+      form.reset();
+    } catch (err) {
+      toast({
+        title: "Something went wrong.",
+        description: "Please email us directly at sholom@aicreates.ai and we will respond promptly.",
+        className: "glass-card border-red-400/30 text-white",
+      });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -57,7 +90,9 @@ export default function Contact() {
                   </div>
                   <div>
                     <h4 className="text-sm font-medium text-white/50 mb-1 uppercase tracking-wider">Direct Inquiry</h4>
-                    <p className="text-lg text-white">partners@aicreates.ai</p>
+                    <a href="mailto:sholom@aicreates.ai" className="text-lg text-white hover:text-primary transition-colors">
+                      sholom@aicreates.ai
+                    </a>
                   </div>
                 </div>
                 
@@ -66,8 +101,8 @@ export default function Contact() {
                     <MapPin className="w-4 h-4 text-white/70" />
                   </div>
                   <div>
-                    <h4 className="text-sm font-medium text-white/50 mb-1 uppercase tracking-wider">Headquarters</h4>
-                    <p className="text-lg text-white">San Francisco, CA<br/>Global Operations</p>
+                    <h4 className="text-sm font-medium text-white/50 mb-1 uppercase tracking-wider">Global Headquarters</h4>
+                    <p className="text-lg text-white">Miami, Florida<br/>United States</p>
                   </div>
                 </div>
               </div>
@@ -81,11 +116,15 @@ export default function Contact() {
               <div className="glass-card p-8 md:p-10 border-white/10 relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-blue-500/5 pointer-events-none" />
                 
-                <form onSubmit={handleSubmit} className="space-y-6 relative z-10">
+                <form onSubmit={handleSubmit} className="space-y-6 relative z-10" noValidate>
+                  {/* Honeypot for bots */}
+                  <input type="text" name="_honey" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
+
                   <div className="space-y-2">
                     <Label htmlFor="name" className="text-white/70 text-xs uppercase tracking-wider">Full Name</Label>
                     <Input 
                       id="name" 
+                      name="name"
                       required 
                       className="bg-white/5 border-white/10 text-white placeholder:text-white/20 h-12 focus-visible:ring-primary"
                       placeholder="Jane Doe"
@@ -97,6 +136,7 @@ export default function Contact() {
                       <Label htmlFor="email" className="text-white/70 text-xs uppercase tracking-wider">Email Address</Label>
                       <Input 
                         id="email" 
+                        name="email"
                         type="email" 
                         required 
                         className="bg-white/5 border-white/10 text-white placeholder:text-white/20 h-12 focus-visible:ring-primary"
@@ -107,6 +147,7 @@ export default function Contact() {
                       <Label htmlFor="company" className="text-white/70 text-xs uppercase tracking-wider">Company</Label>
                       <Input 
                         id="company" 
+                        name="company"
                         required 
                         className="bg-white/5 border-white/10 text-white placeholder:text-white/20 h-12 focus-visible:ring-primary"
                         placeholder="Organization"
@@ -118,15 +159,27 @@ export default function Contact() {
                     <Label htmlFor="message" className="text-white/70 text-xs uppercase tracking-wider">Message</Label>
                     <Textarea 
                       id="message" 
+                      name="message"
                       required 
                       className="bg-white/5 border-white/10 text-white placeholder:text-white/20 min-h-[120px] resize-none focus-visible:ring-primary"
                       placeholder="How can we collaborate?"
                     />
                   </div>
 
-                  <Button type="submit" className="w-full bg-white text-black hover:bg-white/90 h-14 text-base mt-4 group">
-                    Submit Inquiry <Send className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  <Button
+                    type="submit"
+                    disabled={submitting}
+                    className="w-full bg-white text-black hover:bg-white/90 h-14 text-base mt-4 group disabled:opacity-70"
+                  >
+                    {submitting ? (
+                      <><Loader2 className="mr-2 w-4 h-4 animate-spin" /> Sending…</>
+                    ) : (
+                      <>Submit Inquiry <Send className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" /></>
+                    )}
                   </Button>
+                  <p className="text-xs text-white/40 text-center pt-2">
+                    Or email us directly at <a href="mailto:sholom@aicreates.ai" className="text-white/70 hover:text-primary">sholom@aicreates.ai</a>.
+                  </p>
                 </form>
               </div>
             </motion.div>
