@@ -31,27 +31,21 @@ The output is written to `artifacts/web/dist/public` — that folder is what get
 
 ## Deploying to GitHub Pages
 
-The repository ships with a GitHub Actions workflow at `.github/workflows/deploy.yml` that automatically builds and deploys the site to GitHub Pages on every push to `main`.
+The site is deployed automatically by a GitHub Actions workflow that builds the Vite project and publishes it to GitHub Pages on every push to `main`.
 
 Follow the steps below once to wire everything up.
 
-### 1. Push the project from Replit to GitHub
+### 1. Add the deploy workflow (one-time, manual)
 
-1. In Replit, open the **Tools → Git** panel (or the version-control sidebar).
-2. Click **Connect to GitHub** and authorize Replit.
-3. Create a new GitHub repository (suggested name: `aicreates-ai-website`). Make it **public** so GitHub Pages can host it for free, or use a private repo if you have GitHub Pages on a paid plan.
-4. Commit all files and push to the `main` branch.
+For security reasons, automated agents cannot write files under `.github/workflows/`. You need to add the workflow file once via the GitHub web UI:
 
-If you prefer the command line:
+1. On GitHub, open this repository.
+2. Click the **Actions** tab → **New workflow** → **set up a workflow yourself**.
+3. Set the file name to `deploy.yml` (the path becomes `.github/workflows/deploy.yml`).
+4. Open `MANUAL-WORKFLOW-SETUP.md` in this repo, copy the YAML inside the code block, and paste it as the file contents.
+5. Click **Commit changes…** → commit directly to `main`.
 
-```bash
-git init
-git add .
-git commit -m "Initial commit: AIcreatesAI website"
-git branch -M main
-git remote add origin https://github.com/<your-username>/<your-repo>.git
-git push -u origin main
-```
+That single commit will trigger the first build immediately. From then on, every push to `main` re-deploys the site.
 
 ### 2. Enable GitHub Pages
 

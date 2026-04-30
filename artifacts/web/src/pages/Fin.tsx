@@ -16,15 +16,15 @@ import {
   CreditCard,
 } from "lucide-react";
 import finMascot from "@/assets/fin-mascot.png";
-import appWelcome from "@assets/Screenshot_20260430_164944_WhatsAppBusiness_1777582227277.jpg";
-import appHome from "@assets/Screenshot_20260430_164947_WhatsAppBusiness_1777582227273.jpg";
-import appInvest from "@assets/Screenshot_20260430_164950_WhatsAppBusiness_1777582227269.jpg";
-import appMarkets from "@assets/Screenshot_20260430_164952_WhatsAppBusiness_1777582227263.jpg";
-import appPredict from "@assets/Screenshot_20260430_164956_WhatsAppBusiness_1777582227258.jpg";
-import appGames from "@assets/Screenshot_20260430_164959_WhatsAppBusiness_1777582227252.jpg";
-import appTournaments from "@assets/Screenshot_20260430_165003_WhatsAppBusiness_1777582227247.jpg";
-import appArDrops from "@assets/Screenshot_20260430_165008_WhatsAppBusiness_1777582227237.jpg";
-import appLiveMap from "@assets/Screenshot_20260430_165011_WhatsAppBusiness_1777582227232.jpg";
+import appWelcome from "@/assets/app-welcome.jpg";
+import appHome from "@/assets/app-home.jpg";
+import appInvest from "@/assets/app-invest.jpg";
+import appMarkets from "@/assets/app-markets.jpg";
+import appPredict from "@/assets/app-predict.jpg";
+import appGames from "@/assets/app-games.jpg";
+import appTournaments from "@/assets/app-tournaments.jpg";
+import appArDrops from "@/assets/app-ardrops.jpg";
+import appLiveMap from "@/assets/app-livemap.jpg";
 import bizTreasury from "@/assets/biz-treasury.jpg";
 import bizCards from "@/assets/biz-cards.jpg";
 
