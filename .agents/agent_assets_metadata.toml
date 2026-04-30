@@ -1,0 +1,62 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "BLptG0Pz6Fm-ZeijE8g3u"
+uri = "file://artifacts/web/public/social-preview.png"
+type = "image"
+title = "social preview cover"
+
+[[generated]]
+id = "ikZtc8E0fn7kf0IKI95K2"
+uri = "file://artifacts/web/src/assets/hero-orb.png"
+type = "image"
+title = "hero orb"
+
+[[generated]]
+id = "i31D7oCixwfY9NmuKgbkP"
+uri = "file://artifacts/web/src/assets/about-architecture.png"
+type = "image"
+title = "about architecture"
+
+[[generated]]
+id = "0OODg_UTnXbYk5o39qMgH"
+uri = "file://artifacts/web/src/assets/adam.png"
+type = "image"
+title = "adam executive ai"
+
+[[generated]]
+id = "PvuTJUejlAjS71FbRTQC0"
+uri = "file://artifacts/web/src/assets/eve.png"
+type = "image"
+title = "eve customer ai"
+
+[[generated]]
+id = "e1-_N3OWpMeGgNa_ByBn7"
+uri = "file://artifacts/web/src/assets/fin.png"
+type = "image"
+title = "fin tokenized neobank"
+
+[[generated]]
+id = "Q3uzBQhwh3w4fGxJvlM3c"
+uri = "file://artifacts/web/src/assets/technology.png"
+type = "image"
+title = "agentic technology"
+
+[[generated]]
+id = "yhKSn_tnhZRA3k10kU5PY"
+uri = "file://artifacts/web/src/assets/services.png"
+type = "image"
+title = "services lattice"
+
+[[generated]]
+id = "e3bkJyMy7rjpDqPxj4pF_"
+uri = "file://artifacts/web/src/assets/contact.png"
+type = "image"
+title = "contact wave"
+
+[[generated]]
+id = "NQohcarKXeAfow0nBne_x"
+uri = "file://artifacts/web/public/icon-source.png"
+type = "image"
+title = "favicon logomark"
