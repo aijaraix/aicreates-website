@@ -60,3 +60,9 @@ id = "NQohcarKXeAfow0nBne_x"
 uri = "file://artifacts/web/public/icon-source.png"
 type = "image"
 title = "favicon logomark"
+
+[[generated]]
+id = "ItAcXgY4HM5Y75wFolaoi"
+uri = "file://attached_assets/generated_images/generated_image.png"
+type = "image"
+title = "generated_image"

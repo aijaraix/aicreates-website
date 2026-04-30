@@ -15,7 +15,7 @@ import {
   ShieldCheck,
   CreditCard,
 } from "lucide-react";
-import finMascot from "@assets/Screenshot_20260430_164634_WhatsAppBusiness_1777582028651.jpg";
+import finMascot from "@/assets/fin-mascot.png";
 import appWelcome from "@assets/Screenshot_20260430_164944_WhatsAppBusiness_1777582227277.jpg";
 import appHome from "@assets/Screenshot_20260430_164947_WhatsAppBusiness_1777582227273.jpg";
 import appInvest from "@assets/Screenshot_20260430_164950_WhatsAppBusiness_1777582227269.jpg";
@@ -25,8 +25,8 @@ import appGames from "@assets/Screenshot_20260430_164959_WhatsAppBusiness_177758
 import appTournaments from "@assets/Screenshot_20260430_165003_WhatsAppBusiness_1777582227247.jpg";
 import appArDrops from "@assets/Screenshot_20260430_165008_WhatsAppBusiness_1777582227237.jpg";
 import appLiveMap from "@assets/Screenshot_20260430_165011_WhatsAppBusiness_1777582227232.jpg";
-import bizTreasury from "@assets/Screenshot_20260430_164925_WhatsAppBusiness_1777582227282.jpg";
-import bizCards from "@assets/Screenshot_20260430_164913_WhatsAppBusiness_1777582227287.jpg";
+import bizTreasury from "@/assets/biz-treasury.jpg";
+import bizCards from "@/assets/biz-cards.jpg";
 
 const consumerScreens = [
   { src: appWelcome, label: "Sign In" },
