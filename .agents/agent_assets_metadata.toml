@@ -66,3 +66,9 @@ id = "ItAcXgY4HM5Y75wFolaoi"
 uri = "file://attached_assets/generated_images/generated_image.png"
 type = "image"
 title = "generated_image"
+
+[[generated]]
+id = "fbQfGZQoBLUNnVQ6Szdf_"
+uri = "file://artifacts/web/src/assets/fin-mascot.png"
+type = "image"
+title = "generated_image"
