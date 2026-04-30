@@ -48,10 +48,38 @@ In Replit, the `artifacts/web: web` workflow runs the dev server automatically.
 
 See `README.md` for the full GitHub Pages + GoDaddy DNS setup. The GitHub Actions workflow installs pnpm, builds the site with `BASE_PATH=/`, and deploys `artifacts/web/dist/public` to Pages. The `public/CNAME` file provides the custom domain.
 
-## Contact form
+## Contact & waitlist forms
 
-The form on `/contact` is static — submission shows a success toast and does not POST anywhere. A `// TODO: connect form backend` comment in `src/pages/Contact.tsx` documents how to wire up Formspree, Tally, Supabase, or a serverless email function.
+Both forms POST via AJAX to `https://formsubmit.co/ajax/sholom@aicreates.ai`:
+
+- `/contact` — full inquiry form (name, email, company, role, interest, message) with loading / success / error states.
+- `/products/fin` — inline waitlist form with Personal / Business / Enterprise tier selector.
+
+`formsubmit.co` requires a one-time activation by clicking the verification email it sends to `sholom@aicreates.ai` on the very first submission.
+
+## Eve chat widget (NEW)
+
+A floating "Chat with Eve" widget in the bottom-right corner of every page. It's a lead-gen / brand-ambassador chatbot that drives visitors toward the Fin waitlist, the contact form, or sharing their email.
+
+**Architecture (split between two hosts):**
+
+- **Frontend** — `artifacts/web/src/components/EveWidget.tsx` mounted in `App.tsx`. Lives on GitHub Pages (`www.aicreates.ai`). Calls the backend at `EVE_API_BASE`.
+- **Backend** — `artifacts/api-server/src/routes/eve.ts` with one route: `POST /api/eve/chat`. Uses Anthropic's `claude-haiku-4-5` via Replit AI Integrations (env vars `AI_INTEGRATIONS_ANTHROPIC_BASE_URL` and `AI_INTEGRATIONS_ANTHROPIC_API_KEY` are auto-provisioned by Replit). The system prompt locks Eve to AIcreatesAI topics, refuses tech-stack/pricing/team details, and pushes conversion at every turn.
+- **Lead capture** — when a visitor's message contains an email, the backend fires-and-forgets a POST to `formsubmit.co/ajax/sholom@aicreates.ai` with the full conversation transcript.
+- **Hosting model** — frontend on GitHub Pages (free, static), backend on a Replit Deployment (the user clicks "Publish" once on Replit; the deployed URL is wired into `EVE_API_BASE` in `EveWidget.tsx`).
+- **CORS** — `artifacts/api-server/src/app.ts` allow-lists `aicreates.ai`, `www.aicreates.ai`, `aijaraix.github.io`, localhost, and `*.replit.{dev,app}` / `*.repl.co`.
+
+To run locally:
+
+```bash
+# Terminal 1 — backend on :8080
+pnpm --filter @workspace/api-server run dev
+# Terminal 2 — frontend on :22333 (or whatever PORT)
+pnpm --filter @workspace/web run dev
+```
+
+In Replit both run as workflows automatically.
 
 ## Security
 
-Static public website only. No API keys, secrets, customer data, or backend credentials are committed.
+Static public website. The api-server has CORS allow-lists, sanitizes Eve's message history (max 20 turns, 4000 chars each), caps payload at 256kb, and never exposes the Anthropic API key to the client.

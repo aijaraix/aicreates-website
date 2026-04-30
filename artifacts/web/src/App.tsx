@@ -8,6 +8,7 @@ import React, { useEffect } from "react";
 // Components
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
+import { EveWidget } from "@/components/EveWidget";
 
 // Pages
 import Home from "@/pages/Home";
@@ -76,6 +77,7 @@ function App() {
               <Router />
             </main>
             <Footer />
+            <EveWidget />
           </div>
         </WouterRouter>
         <Toaster />

@@ -20,6 +20,10 @@ author = "agent"
 task = "workflow.run"
 args = "artifacts/web: web"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "api-server"
+
 [[workflows.workflow]]
 name = "artifacts/web: web"
 author = "agent"
@@ -28,6 +32,18 @@ author = "agent"
 task = "shell.exec"
 args = "pnpm --filter @workspace/web run dev"
 waitForPort = 22333
+
+[[workflows.workflow]]
+name = "api-server"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "PORT=${PORT:-8080} NODE_ENV=development pnpm --filter @workspace/api-server run dev"
+waitForPort = 8080
+
+[workflows.workflow.metadata]
+outputType = "console"
 
 [agent]
 stack = "PNPM_WORKSPACE"
