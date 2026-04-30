@@ -17,6 +17,11 @@ localPort = 22333
 [services.development]
 run = "pnpm --filter @workspace/web run dev"
 
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/web", "run", "build" ]
+publicDir = "artifacts/web/dist/public"
+serve = "static"
+
 [services.env]
 PORT = "22333"
 BASE_PATH = "/"
