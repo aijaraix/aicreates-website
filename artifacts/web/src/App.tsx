@@ -8,7 +8,9 @@ import React, { useEffect } from "react";
 // Components
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
-import { EveWidget } from "@/components/EveWidget";
+// Eve chat widget temporarily disabled until the API endpoint is live.
+// To re-enable: uncomment the import and the <EveWidget /> mount below.
+// import { EveWidget } from "@/components/EveWidget";
 
 // Pages
 import Home from "@/pages/Home";
@@ -81,7 +83,7 @@ function App() {
               <Router />
             </main>
             <Footer />
-            <EveWidget />
+            {/* <EveWidget /> */}
           </div>
         </WouterRouter>
         <Toaster />
