@@ -260,6 +260,61 @@ export default function Home() {
         </div>
       </section>
 
+      {/* PRODUCT SPOTLIGHT (Eve OS / NeoBank carousel) */}
+      <ProductSpotlight />
+
+      {/* ABOUT US */}
+      <section className="py-24 md:py-32 relative">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_50%_60%_at_50%_50%,rgba(0,245,212,0.05),transparent_70%)] pointer-events-none" />
+        <div className="container mx-auto px-4 md:px-6 relative">
+          <div className="max-w-4xl mx-auto">
+            <SectionLabel>About Us</SectionLabel>
+            <motion.h2
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.6 }}
+              className="mt-6 text-4xl md:text-6xl font-serif font-semibold text-gradient leading-[1.05]"
+            >
+              We're Building the Operating System for the Agentic Era.
+            </motion.h2>
+
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="mt-10 space-y-6 text-lg md:text-xl text-white/65 leading-relaxed"
+            >
+              <p>
+                AICreatesAi is a deep-tech company creating intelligent systems that will power the next generation of business and life.
+              </p>
+              <p>
+                We use advanced AI to build platforms that act as complete operating systems - giving individuals and companies the ability to operate with greater intelligence, efficiency, and autonomy.
+              </p>
+              <p>
+                Our mission is to create a self-improving intelligence layer that compounds in value over time, laying the foundation for how humans and businesses will work in the future.
+              </p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="mt-12 pt-8 border-t border-white/10"
+            >
+              <p className="text-base md:text-lg text-white/80 font-medium">
+                One company. One vision.
+              </p>
+              <p className="text-base md:text-lg text-white/45 mt-1">
+                Building the infrastructure for an agentic world.
+              </p>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
       {/* THESIS */}
       <section className="py-24 md:py-32 relative">
         <div className="container mx-auto px-4 md:px-6">
@@ -317,61 +372,6 @@ export default function Home() {
                 <p className="text-white/55 text-sm leading-relaxed">{p.desc}</p>
               </motion.div>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* PRODUCT SPOTLIGHT (Eve OS / NeoBank carousel) */}
-      <ProductSpotlight />
-
-      {/* ABOUT US */}
-      <section className="py-24 md:py-32 relative">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_50%_60%_at_50%_50%,rgba(0,245,212,0.05),transparent_70%)] pointer-events-none" />
-        <div className="container mx-auto px-4 md:px-6 relative">
-          <div className="max-w-4xl mx-auto">
-            <SectionLabel>About Us</SectionLabel>
-            <motion.h2
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 0.6 }}
-              className="mt-6 text-4xl md:text-6xl font-serif font-semibold text-gradient leading-[1.05]"
-            >
-              We're Building the Operating System for the Agentic Era.
-            </motion.h2>
-
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="mt-10 space-y-6 text-lg md:text-xl text-white/65 leading-relaxed"
-            >
-              <p>
-                AIcreatesAI is a deep-tech company creating intelligent systems that will power the next generation of business and life.
-              </p>
-              <p>
-                We use advanced AI to build platforms that act as complete operating systems - giving individuals and companies the ability to operate with greater intelligence, efficiency, and autonomy.
-              </p>
-              <p>
-                Our mission is to create a self-improving intelligence layer that compounds in value over time, laying the foundation for how humans and businesses will work in the future.
-              </p>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="mt-12 pt-8 border-t border-white/10"
-            >
-              <p className="text-base md:text-lg text-white/80 font-medium">
-                One company. One vision.
-              </p>
-              <p className="text-base md:text-lg text-white/45 mt-1">
-                Building the infrastructure for an agentic world.
-              </p>
-            </motion.div>
           </div>
         </div>
       </section>
