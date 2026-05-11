@@ -6,6 +6,7 @@
   "scripts": {
     "hello": "tsx ./src/hello.ts",
     "seed-tiers": "tsx ./src/seed-tiers.ts",
+    "build-deck": "tsx ./src/build-deck.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "devDependencies": {

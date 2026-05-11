@@ -304,6 +304,8 @@ export default function Checkout() {
                     "ACH routing": WIRE_INSTRUCTIONS.achRouting,
                     "SWIFT (USD)": WIRE_INSTRUCTIONS.swift,
                     "SWIFT (foreign currency)": WIRE_INSTRUCTIONS.swiftForeign,
+                    "Intermediary (USD)": WIRE_INSTRUCTIONS.intermediaryUS,
+                    "Intermediary (foreign)": WIRE_INSTRUCTIONS.intermediaryForeign,
                   }).map(([k, v]) => (
                     <div key={k}>
                       <dt className="text-[11px] uppercase tracking-[0.14em] text-white/40">

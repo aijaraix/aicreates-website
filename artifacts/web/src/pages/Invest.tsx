@@ -13,6 +13,34 @@ import {
 } from "lucide-react";
 import DeckCarousel from "@/components/DeckCarousel";
 import aicaCoinShield from "@/assets/aica-coin-shield.png";
+import aicaCoin from "@/assets/aica-coin.png";
+
+function AicaGlyph({ className = "" }: { className?: string }) {
+  return (
+    <img
+      src={aicaCoin}
+      alt=""
+      aria-hidden="true"
+      className={`inline-block align-[-0.18em] w-[1.05em] h-[1.05em] mx-1 select-none drop-shadow-[0_0_8px_rgba(0,245,212,0.35)] ${className}`}
+      draggable={false}
+    />
+  );
+}
+
+function withGlyphs(text: string): React.ReactNode {
+  const parts = text.split(/(\$AICA)/g);
+  if (parts.length === 1) return text;
+  return parts.map((p, i) =>
+    p === "$AICA" ? (
+      <span key={i} className="inline-flex items-baseline">
+        <AicaGlyph />
+        <span className="font-medium text-[#00F5D4]">$AICA</span>
+      </span>
+    ) : (
+      <span key={i}>{p}</span>
+    ),
+  );
+}
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
@@ -280,10 +308,12 @@ export default function Invest() {
               <div className="md:col-span-3">
                 <SectionLabel>The Token</SectionLabel>
                 <h2 className="mt-5 text-3xl sm:text-4xl md:text-5xl font-serif font-semibold text-gradient leading-[1.05]">
-                  $AICA powers the layer.
+                  {withGlyphs("$AICA powers the layer.")}
                 </h2>
                 <p className="mt-5 text-base sm:text-lg text-white/65 leading-relaxed">
-                  The $AICA token underwrites subscriptions, compute network participation, and contributor rewards across the agentic intelligence layer. Fixed supply, vested allocations, and a sustainable economic model designed around real usage.
+                  {withGlyphs(
+                    "The $AICA token underwrites subscriptions, compute network participation, and contributor rewards across the agentic intelligence layer. Fixed supply, vested allocations, and a sustainable economic model designed around real usage.",
+                  )}
                 </p>
                 <div className="mt-6 flex flex-wrap gap-3">
                   <Link href="/litepaper#tokenomics">

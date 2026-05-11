@@ -539,6 +539,37 @@ export default function Saft() {
                 Your draft SAFT has been recorded. Choose a payment method
                 to fund your commitment.
               </p>
+
+              {/* Commitment ID / wire memo block */}
+              <div
+                className="mx-auto mt-6 max-w-xl rounded-2xl border border-[#00F5D4]/30 bg-[#00F5D4]/5 p-4 text-left"
+                data-testid="block-wire-memo"
+              >
+                <div className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#00F5D4]">
+                  Use this as your wire reference / memo
+                </div>
+                <div className="mt-2 flex items-center justify-between gap-3">
+                  <code
+                    className="font-mono text-sm sm:text-base text-white break-all"
+                    data-testid="text-commitment-id"
+                  >
+                    {c.id}
+                  </code>
+                  <button
+                    type="button"
+                    onClick={() => navigator.clipboard?.writeText(c.id)}
+                    className="shrink-0 inline-flex items-center gap-1.5 px-3 h-8 rounded-full border border-white/15 bg-black/30 text-xs text-white/80 hover:bg-white/[0.06]"
+                    data-testid="button-copy-commitment-id"
+                  >
+                    Copy
+                  </button>
+                </div>
+                <p className="mt-2 text-xs text-white/55">
+                  Paste this Commitment ID exactly into the wire reference
+                  / memo field so we can match your funds to your SAFT.
+                </p>
+              </div>
+
               <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
                 <button
                   type="button"
@@ -565,7 +596,7 @@ export default function Saft() {
                   className="inline-flex items-center justify-center h-11 px-6 rounded-full border border-[#00F5D4]/40 bg-[#00F5D4]/10 text-[#00F5D4] hover:bg-[#00F5D4]/20"
                   data-testid="link-download-wire-instructions"
                 >
-                  Download wire instructions
+                  Download wire transfer instructions (PDF)
                 </a>
               </div>
             </div>
