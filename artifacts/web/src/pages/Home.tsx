@@ -71,8 +71,8 @@ function ProductSpotlight() {
   const slide = SLIDES[active];
 
   return (
-    <section className="py-14 md:py-24 relative">
-      <div className="container mx-auto px-4 md:px-6">
+    <section className="py-14 md:py-24 relative min-h-[100dvh] sm:min-h-0 flex items-center">
+      <div className="container mx-auto px-4 md:px-6 w-full">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -220,7 +220,7 @@ export default function Home() {
               transition={{ duration: 0.7, delay: 0.15 }}
               className="text-base sm:text-lg md:text-xl text-white/60 max-w-2xl mx-auto leading-relaxed mb-8"
             >
-              AIcreatesAI builds the intelligence infrastructure that companies, capital, and consumers will run on. One layer. Many products. Self-improving by design.
+              AICreatesAi builds the intelligence infrastructure that companies, capital, and consumers will run on. One layer. Many products. Self-improving by design.
             </motion.p>
 
             <motion.div
@@ -261,9 +261,9 @@ export default function Home() {
       <ProductSpotlight />
 
       {/* ABOUT US */}
-      <section className="py-16 md:py-24 relative">
+      <section className="py-16 md:py-24 relative min-h-[100dvh] sm:min-h-0 flex items-center">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_50%_60%_at_50%_50%,rgba(0,245,212,0.05),transparent_70%)] pointer-events-none" />
-        <div className="container mx-auto px-4 md:px-6 relative">
+        <div className="container mx-auto px-4 md:px-6 relative w-full">
           <div className="max-w-4xl mx-auto">
             <SectionLabel>About Us</SectionLabel>
             <motion.h2
@@ -313,8 +313,8 @@ export default function Home() {
       </section>
 
       {/* MISSION */}
-      <section className="py-16 md:py-24 relative">
-        <div className="container mx-auto px-4 md:px-6">
+      <section className="py-16 md:py-24 relative min-h-[100dvh] sm:min-h-0 flex items-center">
+        <div className="container mx-auto px-4 md:px-6 w-full">
           <div className="max-w-4xl mx-auto">
             <SectionLabel>Our Mission</SectionLabel>
             <motion.h2
@@ -383,8 +383,8 @@ export default function Home() {
       </section>
 
       {/* CTA */}
-      <section className="py-16 md:py-24 relative">
-        <div className="container mx-auto px-4 md:px-6">
+      <section className="py-16 md:py-24 relative min-h-[100dvh] sm:min-h-0 flex items-center">
+        <div className="container mx-auto px-4 md:px-6 w-full">
           <div className="relative max-w-5xl mx-auto rounded-3xl border border-white/10 bg-gradient-to-b from-[#0E0E0E] to-[#0A0A0A] p-10 sm:p-12 md:p-20 overflow-hidden text-center">
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,245,212,0.10),transparent_70%)] pointer-events-none" />
             <div className="absolute inset-x-0 top-0 h-px divider-line" />
