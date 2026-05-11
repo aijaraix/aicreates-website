@@ -18,7 +18,6 @@ const PRODUCT_LINKS = [
 const NAV_LINKS = [
   { name: "Home", path: "/" },
   { name: "Litepaper", path: "/litepaper" },
-  { name: "Invest", path: "/invest" },
   { name: "Contact", path: "/contact" },
 ];
 

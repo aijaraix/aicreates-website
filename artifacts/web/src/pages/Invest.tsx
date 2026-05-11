@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { motion, useReducedMotion } from "framer-motion";
@@ -52,6 +53,15 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 }
 
 export default function Invest() {
+  useEffect(() => {
+    const meta = document.createElement("meta");
+    meta.name = "robots";
+    meta.content = "noindex, nofollow";
+    document.head.appendChild(meta);
+    return () => {
+      document.head.removeChild(meta);
+    };
+  }, []);
   const reduce = useReducedMotion();
   const fadeUp = (delay = 0) =>
     reduce

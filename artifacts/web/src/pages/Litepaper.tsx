@@ -378,9 +378,9 @@ export default function Litepaper() {
                 View Pitch Deck
                 <span className="ml-3 text-[10px] font-mono uppercase tracking-[0.18em] text-black/55">Coming soon</span>
               </Button>
-              <Link href="/invest">
-                <Button size="lg" variant="outline" className="rounded-full h-12 px-7 border-white/15 bg-white/[0.02] text-white hover:bg-white/[0.06]" data-testid="button-invest-with-us-hero">
-                  Invest with us
+              <Link href="/contact">
+                <Button size="lg" variant="outline" className="rounded-full h-12 px-7 border-white/15 bg-white/[0.02] text-white hover:bg-white/[0.06]" data-testid="button-get-in-touch-hero">
+                  Get in touch
                 </Button>
               </Link>
             </motion.div>
@@ -476,9 +476,9 @@ export default function Litepaper() {
               <p className="text-base md:text-lg text-white/55 max-w-xl mx-auto mb-8">
                 Reach out for the full investor materials, product walkthroughs, or partnership conversations.
               </p>
-              <Link href="/invest">
-                <Button size="lg" className="rounded-full h-12 px-8 bg-[#00F5D4] text-black hover:bg-[#00F5D4]/90 font-medium" data-testid="button-invest-with-us-final">
-                  Invest with us <ArrowRight className="ml-2 w-4 h-4" />
+              <Link href="/contact">
+                <Button size="lg" className="rounded-full h-12 px-8 bg-[#00F5D4] text-black hover:bg-[#00F5D4]/90 font-medium" data-testid="button-get-in-touch-final">
+                  Get in touch <ArrowRight className="ml-2 w-4 h-4" />
                 </Button>
               </Link>
             </div>
