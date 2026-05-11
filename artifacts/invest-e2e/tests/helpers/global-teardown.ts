@@ -19,7 +19,7 @@ import { INVESTOR_EMAIL } from "./users";
 export default async function globalTeardown(): Promise<void> {
   if (!process.env.DATABASE_URL) {
     console.warn(
-      "[portal-e2e teardown] DATABASE_URL not set; skipping cleanup.",
+      "[invest-e2e teardown] DATABASE_URL not set; skipping cleanup.",
     );
     return;
   }
@@ -59,10 +59,10 @@ export default async function globalTeardown(): Promise<void> {
       .returning({ id: commitmentsTable.id });
 
     console.log(
-      `[portal-e2e teardown] Removed ${deleted.length} test commitment(s) for ${INVESTOR_EMAIL}.`,
+      `[invest-e2e teardown] Removed ${deleted.length} test commitment(s) for ${INVESTOR_EMAIL}.`,
     );
   } catch (err) {
-    console.warn("[portal-e2e teardown] Cleanup failed:", err);
+    console.warn("[invest-e2e teardown] Cleanup failed:", err);
   } finally {
     await pool.end().catch(() => {});
   }

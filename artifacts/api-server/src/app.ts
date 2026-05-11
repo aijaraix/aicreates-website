@@ -14,6 +14,18 @@ import { WebhookHandlers } from "./lib/webhookHandlers";
 
 const app: Express = express();
 
+// 0. Permanent redirect from the legacy portal subdomain to the new
+// invest subdomain. Both subdomains are expected to point at the same
+// Replit deployment, so the redirect runs before anything else.
+app.use((req, res, next) => {
+  const host = (req.headers.host ?? "").toLowerCase().split(":")[0];
+  if (host === "portal.aicreates.ai") {
+    res.redirect(301, `https://invest.aicreates.ai${req.originalUrl}`);
+    return;
+  }
+  next();
+});
+
 app.use(
   pinoHttp({
     logger,
@@ -34,7 +46,7 @@ app.use(
 
 export const ALLOWED_ORIGIN_PATTERNS: RegExp[] = [
   /^https?:\/\/(www\.)?aicreates\.ai$/i,
-  /^https?:\/\/portal\.aicreates\.ai$/i,
+  /^https?:\/\/invest\.aicreates\.ai$/i,
   /^https?:\/\/aijaraix\.github\.io$/i,
   /^http:\/\/localhost(:\d+)?$/i,
   /^http:\/\/127\.0\.0\.1(:\d+)?$/i,

@@ -8,7 +8,7 @@ test.describe("SAFT signing", () => {
   test("complete all 6 steps and reach the Done screen", async ({ page }) => {
     await signIn(page, "investor");
     const c = await createCommitment(page, 5_000);
-    await page.goto(`/portal/saft/${c.id}`);
+    await page.goto(`/invest/saft/${c.id}`);
 
     await completeSaft(page, {
       legalName: "Portal Investor",

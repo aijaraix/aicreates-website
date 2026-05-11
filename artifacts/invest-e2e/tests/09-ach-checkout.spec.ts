@@ -69,14 +69,14 @@ test.describe("Stripe-hosted ACH (us_bank_account) checkout", () => {
     await signIn(page, "investor");
     const c = await createCommitment(page, 5_000);
 
-    await page.goto(`/portal/saft/${c.id}`);
+    await page.goto(`/invest/saft/${c.id}`);
     await completeSaft(page, {
       legalName: "Portal Investor",
       email: INVESTOR_EMAIL,
       paymentMethod: "ach",
     });
 
-    await page.goto(`/portal/checkout/${c.id}`);
+    await page.goto(`/invest/checkout/${c.id}`);
     await expect(page.getByTestId("checkout-method-picker")).toBeVisible();
     await page.getByTestId("radio-method-ach").click();
     await page.getByTestId("button-checkout-pay").click();
@@ -111,7 +111,7 @@ test.describe("Stripe-hosted ACH (us_bank_account) checkout", () => {
     }
 
     // Redirect back to the portal dashboard.
-    await page.waitForURL(/\/portal\/dashboard/, { timeout: 120_000 });
+    await page.waitForURL(/\/invest\/dashboard/, { timeout: 120_000 });
 
     // Webhook is async; poll allocations until funded.
     const funded = await pollFunded(page, c.id, 180_000);

@@ -1,6 +1,6 @@
-# @workspace/portal-e2e
+# @workspace/invest-e2e
 
-Playwright end-to-end suite for the investor portal (`artifacts/portal` +
+Playwright end-to-end suite for the investor portal (`artifacts/invest` +
 `artifacts/api-server`). Drives real browsers against the dev workflows on
 `http://localhost:80`.
 
@@ -8,7 +8,7 @@ Playwright end-to-end suite for the investor portal (`artifacts/portal` +
 
 1. The following workflows must be running:
    - `api-server`
-   - `artifacts/portal: web`
+   - `artifacts/invest: web`
 2. Required env vars (already populated by the Replit Clerk integration in
    the workspace; the suite reads them via `dotenv`):
    - `CLERK_SECRET_KEY`
@@ -18,26 +18,26 @@ Playwright end-to-end suite for the investor portal (`artifacts/portal` +
 
    ```bash
    pnpm install
-   pnpm --filter @workspace/portal-e2e exec playwright install chromium
+   pnpm --filter @workspace/invest-e2e exec playwright install chromium
    ```
 
 ## Run
 
 ```bash
 # Headless run, full suite
-pnpm --filter @workspace/portal-e2e run test
+pnpm --filter @workspace/invest-e2e run test
 
 # Watch a single spec
-pnpm --filter @workspace/portal-e2e run test -- tests/03-saft-flow.spec.ts
+pnpm --filter @workspace/invest-e2e run test -- tests/03-saft-flow.spec.ts
 
 # Headed, interactive UI mode
-pnpm --filter @workspace/portal-e2e run test:ui
+pnpm --filter @workspace/invest-e2e run test:ui
 
 # Open the last HTML report
-pnpm --filter @workspace/portal-e2e run report
+pnpm --filter @workspace/invest-e2e run report
 ```
 
-Override the base URL with `PORTAL_E2E_BASE_URL` (defaults to
+Override the base URL with `INVEST_E2E_BASE_URL` (defaults to
 `http://localhost:80`).
 
 ## What is covered
@@ -81,7 +81,7 @@ Notes:
 `tests/helpers/users.ts` provisions two users idempotently in the Clerk
 dev tenant on every run, both with the password `PortalE2E!Pass1234`:
 
-- `portal-e2e-investor@example.com` — regular investor
+- `invest-e2e-investor@example.com` — regular investor
 - The first email in `ADMIN_EMAILS` — admin
 
 Sign-in is fully programmatic via `@clerk/testing/playwright` — the suite

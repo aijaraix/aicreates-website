@@ -7,7 +7,7 @@ const PASSWORD = "PortalE2E!Pass1234";
  * Clerk dev tenant tidy and means we can sign in deterministically across
  * runs without leaking new users every time.
  */
-export const INVESTOR_EMAIL = "portal-e2e-investor@example.com";
+export const INVESTOR_EMAIL = "invest-e2e-investor@example.com";
 
 function adminEmailFromEnv(): string | null {
   const list = (process.env.ADMIN_EMAILS ?? "")

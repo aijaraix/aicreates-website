@@ -8,7 +8,7 @@ import {
 
 /**
  * Sign the given Page in as one of the seeded portal e2e users. We always
- * land on `/portal/sign-in` first because Clerk's testing helper requires
+ * land on `/invest/sign-in` first because Clerk's testing helper requires
  * the SDK to be loaded on the page before `clerk.signIn` will work.
  */
 export async function signIn(
@@ -22,7 +22,7 @@ export async function signIn(
     );
   }
   await setupClerkTestingToken({ page });
-  await page.goto("/portal/sign-in");
+  await page.goto("/invest/sign-in");
   await clerk.loaded({ page });
   await clerk.signIn({
     page,
@@ -32,8 +32,8 @@ export async function signIn(
       password: TEST_PASSWORD,
     },
   });
-  await page.goto("/portal/dashboard");
-  await page.waitForURL(/\/portal\/dashboard/);
+  await page.goto("/invest/dashboard");
+  await page.waitForURL(/\/invest\/dashboard/);
   return email;
 }
 

@@ -140,7 +140,7 @@ export default function Home() {
               <ArrowRight className="ml-2 w-4 h-4" />
             </Link>
             <a
-              href="/portal/litepaper.pdf"
+              href="/invest/litepaper.pdf"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center h-12 px-7 rounded-full border border-white/15 hover:bg-white/[0.06] transition"
@@ -599,7 +599,7 @@ export default function Home() {
               tokenomics, and roadmap.
             </p>
             <a
-              href="/portal/litepaper.pdf"
+              href="/invest/litepaper.pdf"
               target="_blank"
               rel="noopener noreferrer"
               className="mt-6 inline-flex items-center justify-center h-11 px-5 rounded-full bg-[#00F5D4] text-black font-medium hover:bg-[#00F5D4]/90 transition"

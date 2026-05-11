@@ -147,7 +147,7 @@ This is a static public website. Do **not** add API keys, secrets, customer data
 
 ## Investor portal (separate deployment)
 
-In addition to this static site, the repo contains an authenticated investor portal at `artifacts/portal/` that deploys to **https://portal.aicreates.ai** via Replit Deployments. Highlights:
+In addition to this static site, the repo contains an authenticated investor portal at `artifacts/invest/` that deploys to **https://invest.aicreates.ai** via Replit Deployments. Highlights:
 
 - Auth: Clerk (white-labeled).
 - Payments: Stripe one-time Checkout for "Founders Commitment" tiers.
@@ -161,4 +161,4 @@ One-time setup (in Replit):
 3. `pnpm --filter @workspace/db run push` to sync the `app_users` schema.
 4. `pnpm --filter @workspace/scripts run seed-tiers` to create Founders / Architect / Catalyst products and prices.
 
-See `replit.md` → "Investor portal" for full details. The marketing site's `/invest` page links to `https://portal.aicreates.ai/` from the hero "Reserve Your Allocation" button.
+See `replit.md` → "Investor portal" for full details. The marketing site's `/invest` page links to `https://invest.aicreates.ai/` from the hero "Reserve Your Allocation" button.

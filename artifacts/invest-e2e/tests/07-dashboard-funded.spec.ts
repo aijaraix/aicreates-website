@@ -17,7 +17,7 @@ test.describe("dashboard funded state", () => {
   }) => {
     await signIn(page, "investor");
     const c = await createCommitment(page, 5_000);
-    await page.goto(`/portal/saft/${c.id}`);
+    await page.goto(`/invest/saft/${c.id}`);
     await completeSaft(page, {
       legalName: "Portal Investor",
       email: INVESTOR_EMAIL,
@@ -38,7 +38,7 @@ test.describe("dashboard funded state", () => {
     await adminCtx.close();
 
     // Investor reloads the dashboard and sees the funded commitment.
-    await page.goto("/portal/dashboard");
+    await page.goto("/invest/dashboard");
     await expect(page.getByTestId(`row-commitment-${c.id}`)).toBeVisible({
       timeout: 30_000,
     });

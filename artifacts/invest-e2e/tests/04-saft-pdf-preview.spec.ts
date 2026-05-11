@@ -8,13 +8,13 @@ test.describe("SAFT PDF preview", () => {
   }) => {
     await signIn(page, "investor");
     const c = await createCommitment(page, 2_500);
-    await page.goto(`/portal/saft/${c.id}`);
+    await page.goto(`/invest/saft/${c.id}`);
 
     // Fill the minimum required fields to advance to step 4.
     await page.getByTestId("input-saft-name").fill("Portal Investor");
     await page
       .getByTestId("input-saft-email")
-      .fill("portal-e2e-investor@example.com");
+      .fill("invest-e2e-investor@example.com");
     await page
       .getByTestId("input-saft-address")
       .fill("123 Test Street, Wilmington, DE 19801");
@@ -56,7 +56,7 @@ test.describe("SAFT PDF preview", () => {
     const res = await page.request.post(`/api/saft/${c.id}/preview`, {
       data: {
         legalName: "Portal Investor",
-        email: "portal-e2e-investor@example.com",
+        email: "invest-e2e-investor@example.com",
         address: "123 Test Street",
         jurisdiction: "Delaware, USA",
         taxId: "123-45-6789",

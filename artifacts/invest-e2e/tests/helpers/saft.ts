@@ -20,7 +20,7 @@ const ACK_KEYS = [
 
 /**
  * Drive the 6-step SAFT wizard end-to-end. Assumes the page is already on
- * `/portal/saft/:commitId` and the user is signed in.
+ * `/invest/saft/:commitId` and the user is signed in.
  */
 export async function completeSaft(
   page: Page,

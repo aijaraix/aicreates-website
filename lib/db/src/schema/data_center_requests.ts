@@ -1,7 +1,7 @@
 import { pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 
 /**
- * "Request Data Center Access" form submissions from /portal/.
+ * "Request Data Center Access" form submissions from /invest/.
  */
 export const dataCenterRequestsTable = pgTable("data_center_requests", {
   id: uuid("id").primaryKey().defaultRandom(),

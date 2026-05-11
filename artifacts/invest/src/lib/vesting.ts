@@ -1,6 +1,6 @@
 /**
  * Client-side mirror of the server's computeVestingSchedule. Used for
- * the AllocationCalculator preview on /portal/ where we have no funded
+ * the AllocationCalculator preview on /invest/ where we have no funded
  * date yet. The dashboard always uses server-computed values.
  */
 export interface VestingPoint {

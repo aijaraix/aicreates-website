@@ -77,9 +77,9 @@ See `README.md` for the full GitHub Pages + GoDaddy DNS setup. The GitHub Action
 
 `formsubmit.co` requires a one-time activation by clicking the verification email it sends to `sholom@aicreates.ai` on the very first submission.
 
-## Investor portal (`artifacts/portal`)
+## Investor portal (`artifacts/invest`)
 
-A full investor experience at `artifacts/portal`, intended to deploy to **https://portal.aicreates.ai** (Replit Deployments, autoscale). It is not part of the GitHub Pages marketing build.
+A full investor experience at `artifacts/invest`, intended to deploy to **https://invest.aicreates.ai** (Replit Deployments, autoscale). It is not part of the GitHub Pages marketing build.
 
 - Auth: Clerk (white-labeled via the api-server's Clerk proxy at `/api/__clerk`). Set `VITE_CLERK_PROXY_URL=/api/__clerk` in the **production** environment only — the api-server's `clerkProxyMiddleware` is a no-op in dev, so passing `proxyUrl` to `ClerkProvider` in dev will blank the portal. The portal client also gates this with `import.meta.env.PROD`.
 - Payments: Stripe Checkout (card / ACH / crypto) plus a wire-transfer flow that skips Stripe and is manually confirmed by an admin.
@@ -112,7 +112,9 @@ The api-server gracefully skips Stripe init if the integration is not connected,
 
 ### Production deploy
 
-Use Replit Deployments (autoscale) for `portal.aicreates.ai`. The api-server serves both `/api/*` and `/portal/*` (static). Point a `CNAME` for `portal.aicreates.ai` at the Replit deployment and add the domain in Clerk's allowed origins.
+Use Replit Deployments (autoscale) for `invest.aicreates.ai`. The api-server serves both `/api/*` and `/invest/*` (static). Point a `CNAME` for `invest.aicreates.ai` at the Replit deployment and add the domain in Clerk's allowed origins.
+
+The legacy `portal.aicreates.ai` subdomain is permanently retired. The api-server includes a host-based 301 redirect at the top of `app.ts` that sends any request whose `Host` header is `portal.aicreates.ai` to `https://invest.aicreates.ai${originalUrl}`. To activate it, leave the existing `portal.aicreates.ai` `CNAME` pointed at the same Replit deployment (or add one) so the redirect runs before Clerk and CORS.
 
 ## Eve chat widget (hidden)
 
@@ -122,7 +124,7 @@ The Eve widget (`artifacts/web/src/components/EveWidget.tsx`) and its backend ro
 
 Static public website. The api-server has CORS allow-lists and never exposes any third-party API keys to the client.
 
-## Investor portal e2e tests (`artifacts/portal-e2e`)
+## Investor portal e2e tests (`artifacts/invest-e2e`)
 
 A Playwright suite that drives the portal through the dev workflows on `http://localhost:80`. Sign-in is fully programmatic via `@clerk/testing/playwright`; two test users are provisioned idempotently on every run (a regular investor and the first email in `ADMIN_EMAILS`).
 
@@ -130,8 +132,8 @@ Specs cover: sign-in, create commitment, complete the 6-step SAFT, SAFT PDF prev
 
 ```bash
 pnpm install
-pnpm --filter @workspace/portal-e2e exec playwright install chromium
-pnpm --filter @workspace/portal-e2e run test
+pnpm --filter @workspace/invest-e2e exec playwright install chromium
+pnpm --filter @workspace/invest-e2e run test
 ```
 
-See `artifacts/portal-e2e/README.md` for full details.
+See `artifacts/invest-e2e/README.md` for full details.

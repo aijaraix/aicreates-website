@@ -58,9 +58,6 @@ task = "shell.exec"
 args = "PORT=25265 BASE_PATH=/invest/ pnpm --filter @workspace/invest run dev"
 waitForPort = 25265
 
-[workflows.workflow.metadata]
-outputType = "webview"
-
 [agent]
 stack = "PNPM_WORKSPACE"
 expertMode = true

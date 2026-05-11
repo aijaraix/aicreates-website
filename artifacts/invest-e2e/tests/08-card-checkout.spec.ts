@@ -18,14 +18,14 @@ test.describe("Stripe-hosted card checkout", () => {
     await signIn(page, "investor");
     const c = await createCommitment(page, 1_000);
 
-    await page.goto(`/portal/saft/${c.id}`);
+    await page.goto(`/invest/saft/${c.id}`);
     await completeSaft(page, {
       legalName: "Portal Investor",
       email: INVESTOR_EMAIL,
       paymentMethod: "card",
     });
 
-    await page.goto(`/portal/checkout/${c.id}`);
+    await page.goto(`/invest/checkout/${c.id}`);
     await expect(page.getByTestId("checkout-method-picker")).toBeVisible();
     await page.getByTestId("radio-method-card").click();
     await page.getByTestId("button-checkout-pay").click();
@@ -48,8 +48,8 @@ test.describe("Stripe-hosted card checkout", () => {
 
     await page.locator('button[type="submit"]').first().click();
 
-    // Redirected back to /portal/dashboard?paid=<id>
-    await page.waitForURL(/\/portal\/dashboard/, { timeout: 120_000 });
+    // Redirected back to /invest/dashboard?paid=<id>
+    await page.waitForURL(/\/invest\/dashboard/, { timeout: 120_000 });
 
     const funded = await pollFunded(page, c.id);
     expect(

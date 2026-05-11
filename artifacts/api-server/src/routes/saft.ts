@@ -275,7 +275,7 @@ router.post("/saft/:commitId", requireAuth, async (req, res) => {
 
 /**
  * Live PDF preview from in-progress form data. Does NOT persist anything —
- * used by the Signature step in /portal/saft/:commitId so investors see
+ * used by the Signature step in /invest/saft/:commitId so investors see
  * exactly what they are about to sign.
  */
 router.post("/saft/:commitId/preview", requireAuth, async (req, res) => {

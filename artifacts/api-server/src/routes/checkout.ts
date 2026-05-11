@@ -33,7 +33,7 @@ interface CommitBody {
 
 /**
  * Create a `pending_saft` commitment row from a tier or custom amount.
- * The user is then routed to /portal/saft/:id in the client.
+ * The user is then routed to /invest/saft/:id in the client.
  */
 router.post("/commitments", requireAuth, async (req, res) => {
   const { tierSlug, customAmountCents, roundSlug } = (req.body ?? {}) as CommitBody;
@@ -193,7 +193,7 @@ router.post("/checkout", requireAuth, async (req, res) => {
       .where(eq(commitmentsTable.id, commitmentId!));
     await notifyTeam({
       subject: `[AICA] Wire commitment awaiting funds: $${(amountCents / 100).toLocaleString()} from ${user.email}`,
-      message: `${user.fullName ?? user.email} committed via wire.\n\nCommitment: ${commitmentId}\nAmount: $${(amountCents / 100).toLocaleString()}\nDisplay: ${displayName}\nRound: ${roundSlug}\nTokens: ${tokenAllocation.toLocaleString()} AICA\n\nMark wire received in /portal/admin once funds arrive.`,
+      message: `${user.fullName ?? user.email} committed via wire.\n\nCommitment: ${commitmentId}\nAmount: $${(amountCents / 100).toLocaleString()}\nDisplay: ${displayName}\nRound: ${roundSlug}\nTokens: ${tokenAllocation.toLocaleString()} AICA\n\nMark wire received in /invest/admin once funds arrive.`,
       payload: {
         kind: "wire",
         commitmentId,
@@ -222,7 +222,7 @@ router.post("/checkout", requireAuth, async (req, res) => {
       .where(eq(commitmentsTable.id, commitmentId!));
     await notifyTeam({
       subject: `[AICA] Crypto commitment awaiting funds: $${(amountCents / 100).toLocaleString()} from ${user.email}`,
-      message: `${user.fullName ?? user.email} committed via crypto.\n\nCommitment: ${commitmentId}\nAmount: $${(amountCents / 100).toLocaleString()}\nDisplay: ${displayName}\nRound: ${roundSlug}\nTokens: ${tokenAllocation.toLocaleString()} AICA\n\nReply with the escrow address. Mark received in /portal/admin once on-chain confirmations are finalized.`,
+      message: `${user.fullName ?? user.email} committed via crypto.\n\nCommitment: ${commitmentId}\nAmount: $${(amountCents / 100).toLocaleString()}\nDisplay: ${displayName}\nRound: ${roundSlug}\nTokens: ${tokenAllocation.toLocaleString()} AICA\n\nReply with the escrow address. Mark received in /invest/admin once on-chain confirmations are finalized.`,
       payload: {
         kind: "crypto",
         commitmentId,
@@ -286,8 +286,8 @@ router.post("/checkout", requireAuth, async (req, res) => {
         quantity: 1,
       },
     ],
-    success_url: `${origin}/portal/dashboard?paid=${commitmentId}`,
-    cancel_url: `${origin}/portal/checkout/${commitmentId}?canceled=1`,
+    success_url: `${origin}/invest/dashboard?paid=${commitmentId}`,
+    cancel_url: `${origin}/invest/checkout/${commitmentId}?canceled=1`,
     billing_address_collection: "required",
     customer_update: { address: "auto", name: "auto" },
     metadata: {

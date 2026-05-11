@@ -26,7 +26,7 @@ test.describe("wire checkout + admin confirm", () => {
   }) => {
     await signIn(page, "investor");
     const c = await createCommitment(page, 25_000);
-    await page.goto(`/portal/saft/${c.id}`);
+    await page.goto(`/invest/saft/${c.id}`);
     await completeSaft(page, {
       legalName: "Portal Investor",
       email: INVESTOR_EMAIL,
@@ -34,7 +34,7 @@ test.describe("wire checkout + admin confirm", () => {
     });
 
     // Move to checkout, pick wire, confirm.
-    await page.goto(`/portal/checkout/${c.id}`);
+    await page.goto(`/invest/checkout/${c.id}`);
     await expect(page.getByTestId("checkout-method-picker")).toBeVisible();
     await page.getByTestId("radio-method-wire").click();
     await expect(page.getByTestId("wire-instructions")).toBeVisible();
@@ -45,7 +45,7 @@ test.describe("wire checkout + admin confirm", () => {
     const adminCtx = await browser.newContext();
     const adminPage = await adminCtx.newPage();
     await signIn(adminPage, "admin");
-    await adminPage.goto("/portal/admin");
+    await adminPage.goto("/invest/admin");
     await adminPage.getByTestId("button-filter-awaiting_wire").click();
     adminPage.once("dialog", (d) => d.accept());
     await adminPage.getByTestId(`button-confirm-wire-${c.id}`).click();

@@ -10,7 +10,7 @@ import { appUsersTable } from "./app_users";
 
 /**
  * First-party Founders Commitment record. Created when a user picks a
- * tier or custom amount on /portal/invest. Lifecycle:
+ * tier or custom amount on the /invest page in the invest artifact. Lifecycle:
  *   pending_saft -> pending_payment -> awaiting_wire | funded | failed
  *                                                    |        |
  *                                                    +-> refunded

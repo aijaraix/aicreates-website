@@ -63,7 +63,7 @@ export const WIRE_INSTRUCTIONS = {
 /**
  * Authenticated download URLs for the wire-instructions PDF / image.
  * The api-server gates these by Clerk session + commitment ownership, so
- * the static files no longer need to live in `portal/public/`.
+ * the static files no longer need to live in `invest/public/`.
  */
 export function wireInstructionsPdfUrl(commitId: string): string {
   return `/api/wire-instructions/${encodeURIComponent(commitId)}/pdf`;
@@ -73,7 +73,7 @@ export function wireInstructionsImageUrl(commitId: string): string {
   return `/api/wire-instructions/${encodeURIComponent(commitId)}/image`;
 }
 
-/** Base-path-safe URL for assets in the portal `public/` folder. */
+/** Base-path-safe URL for assets in the invest `public/` folder. */
 export function publicAsset(path: string): string {
   const base = import.meta.env.BASE_URL || "/";
   return `${base.replace(/\/$/, "")}/${path.replace(/^\//, "")}`;
