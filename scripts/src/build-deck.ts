@@ -41,15 +41,36 @@ function main() {
   }
 
   console.log(`Rendering ${src} -> ${OUT_DIR}`);
+  // Determine page count to pick a zero-pad width that prevents lexicographic mis-ordering.
+  const pageCountRaw = execFileSync("pdfinfo", [src], { encoding: "utf8" });
+  const pageMatch = /^Pages:\s+(\d+)/m.exec(pageCountRaw);
+  const totalPages = pageMatch ? Number(pageMatch[1]) : 0;
+  const padWidth = Math.max(2, String(totalPages || 99).length);
+
   execFileSync(
     "pdftoppm",
-    ["-jpeg", "-jpegopt", "quality=82", "-r", "110", src, resolve(OUT_DIR, "slide")],
+    [
+      "-jpeg",
+      "-jpegopt",
+      "quality=82",
+      "-r",
+      "110",
+      "-digits",
+      String(padWidth),
+      src,
+      resolve(OUT_DIR, "slide"),
+    ],
     { stdio: "inherit" },
   );
 
+  // Natural-numeric sort so slide-2 < slide-10 even if any pad slips through.
   const slides = readdirSync(OUT_DIR)
     .filter((f) => /^slide-\d+\.jpg$/.test(f))
-    .sort();
+    .sort((a, b) => {
+      const na = Number(/\d+/.exec(a)![0]);
+      const nb = Number(/\d+/.exec(b)![0]);
+      return na - nb;
+    });
 
   if (slides.length === 0) {
     console.error("pdftoppm produced no slides.");
@@ -60,6 +81,8 @@ function main() {
     slides,
     count: slides.length,
     source: "AICA Visual Whitepaper",
+    format: "jpeg",
+    densityDpi: 110,
     generatedAt: new Date().toISOString(),
   };
   writeFileSync(resolve(OUT_DIR, "manifest.json"), JSON.stringify(manifest, null, 2));
