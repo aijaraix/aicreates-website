@@ -45,7 +45,38 @@ export const TIER_BY_SLUG: Map<string, TierDefinition> = new Map(
 );
 
 /**
- * Countries the Founders Commitment is open to. Restrict here when ready.
- * `null` = no restriction (current default during the soft launch).
+ * Countries the Founders Commitment is open to. Comma-separated env var
+ * `ALLOWED_BILLING_COUNTRIES` overrides this default. Set to "*" to disable.
+ * Stripe Checkout enforces this at the address-collection step.
  */
-export const ALLOWED_BILLING_COUNTRIES: readonly string[] | null = null;
+const DEFAULT_ALLOWED_COUNTRIES = [
+  "US",
+  "CA",
+  "GB",
+  "AU",
+  "NZ",
+  "IE",
+  "SG",
+  "AE",
+  "CH",
+  "DE",
+  "FR",
+  "NL",
+  "SE",
+  "NO",
+  "DK",
+  "FI",
+  "IL",
+  "JP",
+  "HK",
+];
+
+export function getAllowedBillingCountries(): readonly string[] | null {
+  const raw = process.env.ALLOWED_BILLING_COUNTRIES;
+  if (!raw) return DEFAULT_ALLOWED_COUNTRIES;
+  if (raw.trim() === "*") return null;
+  return raw
+    .split(",")
+    .map((s) => s.trim().toUpperCase())
+    .filter(Boolean);
+}

@@ -29,6 +29,7 @@ router.get("/admin/commitments", async (req, res) => {
       fullName: appUsersTable.fullName,
       stripeCheckoutSessionId: commitmentsTable.stripeCheckoutSessionId,
       stripePaymentIntentId: commitmentsTable.stripePaymentIntentId,
+      stripeCustomerId: commitmentsTable.stripeCustomerId,
       amountCents: commitmentsTable.amountCents,
       currency: commitmentsTable.currency,
       status: commitmentsTable.status,
@@ -67,6 +68,7 @@ router.get("/admin/commitments", async (req, res) => {
       "token_allocation",
       "billing_country",
       "stripe_payment_intent_id",
+      "stripe_customer_id",
       "stripe_checkout_session_id",
       "receipt_url",
     ].join(",");
@@ -96,6 +98,7 @@ router.get("/admin/commitments", async (req, res) => {
         r.tokenAllocation,
         r.billingCountry,
         r.stripePaymentIntentId,
+        r.stripeCustomerId,
         r.stripeCheckoutSessionId,
         r.receiptUrl,
       ]

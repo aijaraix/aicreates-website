@@ -30,6 +30,7 @@ interface AdminCommitment {
   completedAt: string | null;
   refundedAt: string | null;
   stripePaymentIntentId: string | null;
+  stripeCustomerId: string | null;
   stripeCheckoutSessionId: string;
 }
 
@@ -239,7 +240,8 @@ export default function Admin() {
                     <th className="text-left px-6 py-3 font-medium">Allocation</th>
                     <th className="text-left px-6 py-3 font-medium">Country</th>
                     <th className="text-left px-6 py-3 font-medium">Status</th>
-                    <th className="text-left px-6 py-3 font-medium">Stripe</th>
+                    <th className="text-left px-6 py-3 font-medium">Customer</th>
+                    <th className="text-left px-6 py-3 font-medium">Payment</th>
                     <th className="text-right px-6 py-3 font-medium">Actions</th>
                   </tr>
                 </thead>
@@ -277,6 +279,21 @@ export default function Admin() {
                         >
                           {c.status}
                         </span>
+                      </td>
+                      <td className="px-6 py-3 font-mono text-xs text-white/50">
+                        {c.stripeCustomerId ? (
+                          <a
+                            href={`https://dashboard.stripe.com/customers/${c.stripeCustomerId}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 hover:text-white"
+                          >
+                            {c.stripeCustomerId.slice(0, 14)}…
+                            <ExternalLink className="w-3 h-3" />
+                          </a>
+                        ) : (
+                          "—"
+                        )}
                       </td>
                       <td className="px-6 py-3 font-mono text-xs text-white/50">
                         {c.stripePaymentIntentId ? (

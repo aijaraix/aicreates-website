@@ -1,7 +1,7 @@
 import { Router, type IRouter } from "express";
 import { requireAuth } from "../lib/auth";
 import { getUncachableStripeClient } from "../lib/stripeClient";
-import { TIER_BY_SLUG, ALLOWED_BILLING_COUNTRIES } from "../lib/tiers";
+import { TIER_BY_SLUG, getAllowedBillingCountries } from "../lib/tiers";
 import { db, appUsersTable, commitmentsTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
 
@@ -110,16 +110,15 @@ router.post("/checkout", requireAuth, async (req, res) => {
     },
   };
 
-  // Geo allow-list (collect-only when null; restrict via shipping address
-  // when set). When ALLOWED_BILLING_COUNTRIES is non-null, we also use
-  // shipping_address_collection to refuse unsupported jurisdictions at the
-  // Stripe Checkout layer rather than after-the-fact via Radar.
-  if (ALLOWED_BILLING_COUNTRIES && ALLOWED_BILLING_COUNTRIES.length > 0) {
+  // Geo allow-list — restrict to approved jurisdictions at the Stripe
+  // Checkout layer (rather than after-the-fact via Radar). The list is
+  // applied to shipping_address_collection so Stripe refuses billing
+  // addresses outside the allow-list during checkout.
+  const allowedCountries = getAllowedBillingCountries();
+  if (allowedCountries && allowedCountries.length > 0) {
     sessionParams.shipping_address_collection = {
       allowed_countries:
-        ALLOWED_BILLING_COUNTRIES as unknown as Array<
-          "US" | "CA" | "GB" | "AU"
-        >,
+        allowedCountries as unknown as Array<"US" | "CA" | "GB" | "AU">,
     };
   }
 
