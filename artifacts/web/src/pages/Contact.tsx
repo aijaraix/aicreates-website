@@ -9,7 +9,7 @@ import { Mail, Send, Loader2, MapPin, CheckCircle2 } from "lucide-react";
 
 const CONTACT_ENDPOINT = "https://formsubmit.co/ajax/sholom@aicreates.ai";
 
-const INTERESTS = ["Company in a Box", "NeoBank", "Investor", "Press", "Other"] as const;
+const INTERESTS = ["Eve OS", "NeoBank", "Investor", "Press", "Other"] as const;
 type Interest = typeof INTERESTS[number];
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
@@ -25,7 +25,7 @@ export default function Contact() {
   const { toast } = useToast();
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [interest, setInterest] = useState<Interest>("Company in a Box");
+  const [interest, setInterest] = useState<Interest>("Eve OS");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

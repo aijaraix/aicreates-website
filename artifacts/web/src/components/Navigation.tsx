@@ -1,13 +1,22 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
-import { Menu } from "lucide-react";
+import { Menu, ChevronDown } from "lucide-react";
 import { Button } from "./ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
+
+const PRODUCT_LINKS = [
+  { name: "Eve OS", path: "/eve-os", desc: "The Agentic Business Operating System" },
+  { name: "NeoBank", path: "/neobank", desc: "Capital that thinks" },
+];
 
 const NAV_LINKS = [
   { name: "Home", path: "/" },
-  { name: "Company in a Box", path: "/company-in-a-box" },
-  { name: "NeoBank", path: "/neobank" },
   { name: "Litepaper", path: "/litepaper" },
   { name: "Contact", path: "/contact" },
 ];
@@ -35,6 +44,8 @@ export function Navigation() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  const productsActive = PRODUCT_LINKS.some((l) => l.path === location);
+
   return (
     <header
       className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
@@ -50,7 +61,55 @@ export function Navigation() {
         </Link>
 
         <nav className="hidden md:flex items-center gap-1">
-          {NAV_LINKS.map((link) => {
+          <Link href="/">
+            <span
+              className={`relative px-4 py-2 text-sm font-medium transition-colors rounded-full ${
+                location === "/"
+                  ? "text-white bg-white/[0.06]"
+                  : "text-white/60 hover:text-white hover:bg-white/[0.03]"
+              }`}
+            >
+              Home
+            </span>
+          </Link>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                className={`relative inline-flex items-center gap-1 px-4 py-2 text-sm font-medium transition-colors rounded-full focus:outline-none ${
+                  productsActive
+                    ? "text-white bg-white/[0.06]"
+                    : "text-white/60 hover:text-white hover:bg-white/[0.03]"
+                }`}
+                data-testid="nav-products"
+              >
+                Products
+                <ChevronDown className="w-3.5 h-3.5 opacity-70" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align="start"
+              sideOffset={10}
+              className="w-72 bg-[#0E0E0E]/95 backdrop-blur-xl border border-white/10 rounded-2xl p-2 shadow-[0_20px_60px_rgba(0,0,0,0.6)]"
+            >
+              {PRODUCT_LINKS.map((p) => (
+                <DropdownMenuItem
+                  key={p.path}
+                  className="rounded-xl focus:bg-white/[0.06] focus:text-white p-0"
+                >
+                  <Link
+                    href={p.path}
+                    className="flex flex-col gap-0.5 px-4 py-3 cursor-pointer w-full"
+                  >
+                    <span className="text-sm font-semibold text-white">{p.name}</span>
+                    <span className="text-xs text-white/50">{p.desc}</span>
+                  </Link>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          {NAV_LINKS.filter((l) => l.path !== "/").map((link) => {
             const active = location === link.path;
             return (
               <Link key={link.path} href={link.path}>
@@ -93,7 +152,34 @@ export function Navigation() {
                 </div>
 
                 <nav className="flex flex-col gap-1">
-                  {NAV_LINKS.map((link) => {
+                  <Link href="/" onClick={() => setOpen(false)}>
+                    <span
+                      className={`block px-3 py-3 rounded-lg text-base font-medium ${
+                        location === "/" ? "text-white bg-white/[0.06]" : "text-white/70"
+                      }`}
+                    >
+                      Home
+                    </span>
+                  </Link>
+
+                  <div className="px-3 pt-4 pb-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-white/40">
+                    Products
+                  </div>
+                  {PRODUCT_LINKS.map((p) => (
+                    <Link key={p.path} href={p.path} onClick={() => setOpen(false)}>
+                      <span
+                        className={`block px-3 py-3 rounded-lg text-base font-medium ${
+                          location === p.path ? "text-white bg-white/[0.06]" : "text-white/70"
+                        }`}
+                      >
+                        {p.name}
+                      </span>
+                    </Link>
+                  ))}
+
+                  <div className="h-2" />
+
+                  {NAV_LINKS.filter((l) => l.path !== "/").map((link) => {
                     const active = location === link.path;
                     return (
                       <Link key={link.path} href={link.path} onClick={() => setOpen(false)}>

@@ -30,7 +30,7 @@ export function Footer() {
           <div className="md:col-span-3">
             <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-white/40 mb-5">Explore</h4>
             <ul className="space-y-3">
-              <li><Link href="/company-in-a-box"><span className="text-sm text-white/70 hover:text-[#00F5D4] transition-colors cursor-pointer">Company in a Box</span></Link></li>
+              <li><Link href="/eve-os"><span className="text-sm text-white/70 hover:text-[#00F5D4] transition-colors cursor-pointer">Eve OS</span></Link></li>
               <li><Link href="/neobank"><span className="text-sm text-white/70 hover:text-[#00F5D4] transition-colors cursor-pointer">NeoBank</span></Link></li>
               <li><Link href="/litepaper"><span className="text-sm text-white/70 hover:text-[#00F5D4] transition-colors cursor-pointer">Litepaper</span></Link></li>
               <li><Link href="/contact"><span className="text-sm text-white/70 hover:text-[#00F5D4] transition-colors cursor-pointer">Contact</span></Link></li>

@@ -43,7 +43,7 @@ export default function Terms() {
           </div>
           <div>
             <h2 className="text-2xl font-serif font-semibold text-white mb-3">Forward-looking statements</h2>
-            <p>Descriptions of products, capabilities, and roadmap on this site - including the Agentic Intelligence Layer, Company in a Box, NeoBank, and the Litepaper - represent current intent and direction, not guarantees. Plans and timelines may change.</p>
+            <p>Descriptions of products, capabilities, and roadmap on this site - including the Agentic Intelligence Layer, Eve OS, NeoBank, and the Litepaper - represent current intent and direction, not guarantees. Plans and timelines may change.</p>
           </div>
           <div>
             <h2 className="text-2xl font-serif font-semibold text-white mb-3">Disclaimers</h2>

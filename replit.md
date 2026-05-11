@@ -34,13 +34,13 @@ Premium agentic-AI vocabulary: Agentic Intelligence Layer, Hybrid Compute Fabric
 Five-page structure:
 
 - `/` — Home (positions the agentic intelligence layer; flagship + secondary spotlights; three-audience entry: consumer / business / investor)
-- `/company-in-a-box` — Flagship product: end-to-end agentic operating system
+- `/eve-os` — Flagship product: Eve OS, the Agentic Business Operating System
 - `/neobank` — Secondary product line: consumer + business neobank built on the layer
 - `/litepaper` — Long-form positioning + architecture (placeholder sections, full content forthcoming)
-- `/contact` — Inquiry form with interest selector
+- `/contact` — Inquiry form with interest selector (Eve OS, NeoBank, Investor, Press, Other)
 - `/privacy` and `/terms` — Legal pages (linked from footer)
 
-Sticky glass navigation includes Home, Company in a Box, NeoBank, Litepaper, Contact. Mobile drawer mirrors the desktop nav. X-only social (`@theaicreatesai`).
+Sticky glass navigation: Home, Products (dropdown: Eve OS, NeoBank), Litepaper, Contact, plus Engage CTA. Mobile drawer mirrors the desktop nav with a "Products" section header. X-only social (`@theaicreatesai`).
 
 ## Key Files
 
@@ -49,7 +49,7 @@ Sticky glass navigation includes Home, Company in a Box, NeoBank, Litepaper, Con
 - `artifacts/web/public/CNAME` — `www.aicreates.ai`
 - `artifacts/web/public/sitemap.xml` — 5-route sitemap
 - `artifacts/web/src/components/Navigation.tsx`, `Footer.tsx`, `Brand.tsx`
-- `artifacts/web/src/pages/{Home,CompanyInABox,NeoBank,Litepaper,Contact,Privacy,Terms,not-found}.tsx`
+- `artifacts/web/src/pages/{Home,EveOS,NeoBank,Litepaper,Contact,Privacy,Terms,not-found}.tsx`
 - `artifacts/web/src/App.tsx` — wouter route table
 - `artifacts/web/src/components/EveWidget.tsx` — kept in the codebase but **not mounted**
 - `.github/workflows/deploy.yml` — GitHub Pages deploy workflow
@@ -72,7 +72,7 @@ See `README.md` for the full GitHub Pages + GoDaddy DNS setup. The GitHub Action
 
 ## Contact form
 
-`/contact` posts via AJAX to `https://formsubmit.co/ajax/sholom@aicreates.ai` with fields: name, email, company, role, message, plus an interest selector (`Company in a Box`, `NeoBank`, `Investor`, `Press`, `Other`).
+`/contact` posts via AJAX to `https://formsubmit.co/ajax/sholom@aicreates.ai` with fields: name, email, company, role, message, plus an interest selector (`Eve OS`, `NeoBank`, `Investor`, `Press`, `Other`).
 
 `formsubmit.co` requires a one-time activation by clicking the verification email it sends to `sholom@aicreates.ai` on the very first submission.
 

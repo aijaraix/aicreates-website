@@ -12,7 +12,7 @@ import { Footer } from "@/components/Footer";
 // import { EveWidget } from "@/components/EveWidget";
 
 import Home from "@/pages/Home";
-import CompanyInABox from "@/pages/CompanyInABox";
+import EveOS from "@/pages/EveOS";
 import NeoBank from "@/pages/NeoBank";
 import Litepaper from "@/pages/Litepaper";
 import Contact from "@/pages/Contact";
@@ -48,7 +48,7 @@ function Router() {
     <AnimatePresence mode="wait">
       <Switch location={location} key={location}>
         <Route path="/" component={() => <PageTransition><Home /></PageTransition>} />
-        <Route path="/company-in-a-box" component={() => <PageTransition><CompanyInABox /></PageTransition>} />
+        <Route path="/eve-os" component={() => <PageTransition><EveOS /></PageTransition>} />
         <Route path="/neobank" component={() => <PageTransition><NeoBank /></PageTransition>} />
         <Route path="/litepaper" component={() => <PageTransition><Litepaper /></PageTransition>} />
         <Route path="/contact" component={() => <PageTransition><Contact /></PageTransition>} />

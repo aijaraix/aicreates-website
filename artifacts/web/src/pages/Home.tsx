@@ -66,9 +66,9 @@ export default function Home() {
               transition={{ duration: 0.7, delay: 0.25 }}
               className="flex flex-col sm:flex-row gap-3 justify-center"
             >
-              <Link href="/company-in-a-box">
+              <Link href="/eve-os">
                 <Button size="lg" className="rounded-full h-12 px-7 bg-[#00F5D4] text-black hover:bg-[#00F5D4]/90 font-medium">
-                  Explore Company in a Box <ArrowRight className="ml-2 w-4 h-4" />
+                  Explore Eve OS <ArrowRight className="ml-2 w-4 h-4" />
                 </Button>
               </Link>
               <Link href="/contact">
@@ -171,18 +171,21 @@ export default function Home() {
             <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-12 p-10 md:p-16 lg:p-20">
               <div>
                 <SectionLabel>Flagship Product</SectionLabel>
-                <h2 className="mt-6 text-4xl md:text-6xl font-serif font-semibold text-white leading-[1.05] mb-6">
-                  Company<br/>in a Box.
+                <h2 className="mt-6 text-5xl md:text-7xl font-serif font-semibold text-white leading-[1.0] mb-4 tracking-tight">
+                  Eve OS.
                 </h2>
-                <p className="text-lg text-white/65 leading-relaxed mb-4">
-                  An end-to-end agentic operating system for a modern company. Strategy, operations, growth, finance, and customer surface - all running on one intelligence layer, supervised by you.
+                <p className="text-xl text-white/80 leading-tight mb-6 font-light">
+                  The Agentic Business Operating System.
+                </p>
+                <p className="text-base text-white/55 leading-relaxed mb-4">
+                  The first platform that doesn't just assist your business - it becomes your business. Plans, executes, reviews, and improves across every function from one native desktop experience.
                 </p>
                 <p className="text-base text-white/45 leading-relaxed mb-10">
-                  Plug it into your stack. Watch entire functions compress into agents that learn from every cycle.
+                  Marketing, Sales, Finance, Legal, Operations, Development - all coordinated on one intelligence layer.
                 </p>
-                <Link href="/company-in-a-box">
+                <Link href="/eve-os">
                   <Button size="lg" className="rounded-full h-12 px-7 bg-white text-black hover:bg-white/90 group">
-                    See how it runs <ArrowUpRight className="ml-1.5 w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                    Explore Eve OS <ArrowUpRight className="ml-1.5 w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                   </Button>
                 </Link>
               </div>
@@ -196,7 +199,7 @@ export default function Home() {
                   <div className="absolute w-3 h-3 rounded-full bg-[#00F5D4] shadow-[0_0_30px_rgba(0,245,212,0.9)]" />
                 </div>
                 <div className="relative z-10 grid grid-cols-2 gap-3 text-xs">
-                  {["Ops Agent","Growth Agent","Finance Agent","Voice Agent"].map((t) => (
+                  {["Marketing","Sales","Finance","Legal","Operations","Development"].map((t) => (
                     <div key={t} className="px-3 py-2 rounded-full bg-black/60 backdrop-blur border border-white/10 text-white/70 text-center">
                       {t}
                     </div>
@@ -283,8 +286,8 @@ export default function Home() {
                 tag: "Business",
                 title: "A whole company, run by agents.",
                 desc: "Compress functions, eliminate ops drag, and ship outcomes instead of tasks.",
-                cta: "Explore Company in a Box",
-                href: "/company-in-a-box",
+                cta: "Explore Eve OS",
+                href: "/eve-os",
               },
               {
                 icon: TrendingUp,

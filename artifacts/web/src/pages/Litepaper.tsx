@@ -36,7 +36,7 @@ const SECTIONS = [
   {
     n: "05",
     title: "Product Surface",
-    body: "Company in a Box and NeoBank as the first two consumer-grade and enterprise-grade products that prove the layer at scale.",
+    body: "Eve OS and NeoBank as the first two consumer-grade and enterprise-grade products that prove the layer at scale.",
   },
   {
     n: "06",

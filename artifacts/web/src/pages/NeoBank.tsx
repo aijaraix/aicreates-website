@@ -63,7 +63,7 @@ export default function NeoBank() {
                   Request access <ArrowRight className="ml-2 w-4 h-4" />
                 </Button>
               </Link>
-              <Link href="/company-in-a-box">
+              <Link href="/eve-os">
                 <Button size="lg" variant="outline" className="rounded-full h-12 px-7 border-white/15 bg-white/[0.02] text-white hover:bg-white/[0.06]">
                   See the layer behind it
                 </Button>
@@ -193,7 +193,7 @@ export default function NeoBank() {
             </div>
             <div className="md:col-span-7 space-y-6 text-white/65 text-lg leading-relaxed">
               <p>
-                NeoBank is built on the same agentic intelligence layer that powers Company in a Box. It does not bolt AI on top of legacy banking primitives. It rethinks them.
+                NeoBank is built on the same agentic intelligence layer that powers Eve OS. It does not bolt AI on top of legacy banking primitives. It rethinks them.
               </p>
               <p>
                 The same closed-loop quality engine that runs business operations runs treasury allocation. The same hybrid compute fabric that delivers low-latency decisions for ops delivers them for capital. Capital, like operations, becomes self-organizing.
