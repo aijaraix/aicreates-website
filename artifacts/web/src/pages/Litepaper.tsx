@@ -270,7 +270,7 @@ export default function Litepaper() {
   return (
     <div className="flex flex-col w-full">
       {/* HERO */}
-      <section className="relative pt-32 pb-16 md:pt-44 md:pb-24 overflow-hidden">
+      <section className="relative pt-28 pb-12 md:pt-36 md:pb-16 overflow-hidden">
         <div className="absolute inset-0 bg-grid bg-grid-fade pointer-events-none" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_0%,rgba(0,245,212,0.08),transparent_70%)] pointer-events-none" />
 
@@ -322,7 +322,7 @@ export default function Litepaper() {
       </section>
 
       {/* BODY */}
-      <section className="pb-24 md:pb-32 relative">
+      <section className="pb-16 md:pb-24 relative">
         <div className="container mx-auto px-4 md:px-6">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
             {/* SECTIONS */}
@@ -396,7 +396,7 @@ export default function Litepaper() {
       </section>
 
       {/* FINAL CTA */}
-      <section className="pb-24 md:pb-32 relative">
+      <section className="pb-16 md:pb-24 relative">
         <div className="container mx-auto px-4 md:px-6">
           <div className="relative max-w-5xl mx-auto rounded-3xl border border-white/10 bg-gradient-to-b from-[#0E0E0E] to-[#0A0A0A] p-12 md:p-16 overflow-hidden text-center">
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,245,212,0.10),transparent_70%)] pointer-events-none" />

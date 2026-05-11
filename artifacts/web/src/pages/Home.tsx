@@ -5,10 +5,10 @@ import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import {
   ArrowRight,
   ArrowUpRight,
-  Sparkles,
   Building2,
-  Briefcase,
-  TrendingUp,
+  Hammer,
+  Brain,
+  Infinity as InfinityIcon,
 } from "lucide-react";
 
 type Slide = {
@@ -71,7 +71,7 @@ function ProductSpotlight() {
   const slide = SLIDES[active];
 
   return (
-    <section className="py-24 md:py-32 relative">
+    <section className="py-14 md:py-24 relative">
       <div className="container mx-auto px-4 md:px-6">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -91,7 +91,7 @@ function ProductSpotlight() {
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(0,245,212,0.12),transparent_60%)] pointer-events-none" />
           <div className="absolute inset-0 bg-grid opacity-40 pointer-events-none [mask-image:radial-gradient(ellipse_60%_50%_at_80%_30%,black,transparent_70%)]" />
 
-          <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-12 p-10 md:p-16 lg:p-20 min-h-[520px]">
+          <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 p-7 sm:p-10 md:p-14 lg:p-20 min-h-[480px]">
             <AnimatePresence mode="wait">
               <motion.div
                 key={`text-${slide.id}`}
@@ -101,14 +101,14 @@ function ProductSpotlight() {
                 transition={{ duration: 0.5 }}
               >
                 <SectionLabel>{slide.label}</SectionLabel>
-                <h2 className="mt-6 text-5xl md:text-7xl font-serif font-semibold text-white leading-[1.0] mb-4 tracking-tight">
+                <h2 className="mt-5 text-4xl sm:text-5xl md:text-7xl font-serif font-semibold text-white leading-[1.0] mb-4 tracking-tight">
                   {slide.title}
                 </h2>
-                <p className="text-xl text-white/80 leading-tight mb-6 font-light">
+                <p className="text-lg sm:text-xl text-white/80 leading-tight mb-5 font-light">
                   {slide.subline}
                 </p>
-                <p className="text-base text-white/55 leading-relaxed mb-4">{slide.body1}</p>
-                <p className="text-base text-white/45 leading-relaxed mb-10">{slide.body2}</p>
+                <p className="text-sm sm:text-base text-white/55 leading-relaxed mb-3">{slide.body1}</p>
+                <p className="text-sm sm:text-base text-white/45 leading-relaxed mb-8">{slide.body2}</p>
                 <Link href={slide.ctaHref}>
                   <Button
                     size="lg"
@@ -189,7 +189,7 @@ export default function Home() {
   return (
     <div className="flex flex-col w-full">
       {/* HERO */}
-      <section className="relative min-h-[100dvh] flex items-center pt-28 pb-24 overflow-hidden">
+      <section className="relative min-h-[100dvh] flex items-center pt-24 pb-16 md:pt-28 md:pb-20 overflow-hidden">
         <div className="absolute inset-0 bg-grid bg-grid-fade pointer-events-none" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_0%,rgba(0,245,212,0.10),transparent_70%)] pointer-events-none" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/3 w-[900px] h-[900px] rounded-full bg-[radial-gradient(circle,rgba(0,245,212,0.06),transparent_60%)] blur-3xl pointer-events-none" />
@@ -209,7 +209,7 @@ export default function Home() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.05 }}
-              className="text-5xl md:text-7xl lg:text-[88px] font-serif font-semibold leading-[1.02] mb-7 text-gradient"
+              className="text-[40px] sm:text-5xl md:text-7xl lg:text-[88px] font-serif font-semibold leading-[1.02] mb-6 text-gradient"
             >
               The operating layer for the agentic era.
             </motion.h1>
@@ -218,7 +218,7 @@ export default function Home() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.15 }}
-              className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto leading-relaxed mb-10"
+              className="text-base sm:text-lg md:text-xl text-white/60 max-w-2xl mx-auto leading-relaxed mb-8"
             >
               AIcreatesAI builds the intelligence infrastructure that companies, capital, and consumers will run on. One layer. Many products. Self-improving by design.
             </motion.p>
@@ -245,7 +245,7 @@ export default function Home() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 1, delay: 0.5 }}
-              className="mt-24 flex flex-wrap items-center justify-center gap-x-10 gap-y-4 text-xs uppercase tracking-[0.2em] text-white/35"
+              className="mt-14 md:mt-20 flex flex-wrap items-center justify-center gap-x-10 gap-y-4 text-xs uppercase tracking-[0.2em] text-white/35"
             >
               <span>Hybrid Compute Fabric</span>
               <span className="hidden md:inline w-1 h-1 rounded-full bg-white/20" />
@@ -261,7 +261,7 @@ export default function Home() {
       <ProductSpotlight />
 
       {/* ABOUT US */}
-      <section className="py-24 md:py-32 relative">
+      <section className="py-16 md:py-24 relative">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_50%_60%_at_50%_50%,rgba(0,245,212,0.05),transparent_70%)] pointer-events-none" />
         <div className="container mx-auto px-4 md:px-6 relative">
           <div className="max-w-4xl mx-auto">
@@ -271,7 +271,7 @@ export default function Home() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-80px" }}
               transition={{ duration: 0.6 }}
-              className="mt-6 text-4xl md:text-6xl font-serif font-semibold text-gradient leading-[1.05]"
+              className="mt-5 text-3xl sm:text-4xl md:text-6xl font-serif font-semibold text-gradient leading-[1.05]"
             >
               We're Building the Operating System for the Agentic Era.
             </motion.h2>
@@ -281,7 +281,7 @@ export default function Home() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-80px" }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="mt-10 space-y-6 text-lg md:text-xl text-white/65 leading-relaxed"
+              className="mt-8 space-y-5 text-base sm:text-lg md:text-xl text-white/65 leading-relaxed"
             >
               <p>
                 AICreatesAi is a deep-tech company creating intelligent systems that will power the next generation of business and life.
@@ -299,7 +299,7 @@ export default function Home() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-80px" }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="mt-12 pt-8 border-t border-white/10"
+              className="mt-10 pt-6 border-t border-white/10"
             >
               <p className="text-base md:text-lg text-white/80 font-medium">
                 One company. One vision.
@@ -312,82 +312,88 @@ export default function Home() {
         </div>
       </section>
 
-      {/* AUDIENCES */}
-      <section className="py-24 md:py-32 relative">
+      {/* MISSION */}
+      <section className="py-16 md:py-24 relative">
         <div className="container mx-auto px-4 md:px-6">
-          <div className="max-w-3xl mb-14">
-            <SectionLabel>Who we serve</SectionLabel>
-            <h2 className="mt-6 text-4xl md:text-5xl font-serif font-semibold text-gradient leading-[1.05]">
-              One layer. Three audiences. Compounding outcomes.
-            </h2>
-          </div>
+          <div className="max-w-4xl mx-auto">
+            <SectionLabel>Our Mission</SectionLabel>
+            <motion.h2
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.6 }}
+              className="mt-5 text-3xl sm:text-4xl md:text-5xl font-serif font-semibold text-gradient leading-[1.05]"
+            >
+              Applying AI to build the services people actually live and work on.
+            </motion.h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {[
-              {
-                icon: Sparkles,
-                tag: "Consumer",
-                title: "An intelligent edge for everyday life.",
-                desc: "Banking, decisions, and capital that work on your behalf, around the clock.",
-                cta: "Join NeoBank",
-                href: "/neobank",
-              },
-              {
-                icon: Briefcase,
-                tag: "Business",
-                title: "A whole company, run by agents.",
-                desc: "Compress functions, eliminate ops drag, and ship outcomes instead of tasks.",
-                cta: "Explore Eve OS",
-                href: "/eve-os",
-              },
-              {
-                icon: TrendingUp,
-                tag: "Investor",
-                title: "An infrastructure thesis you can underwrite.",
-                desc: "A self-reinforcing intelligence layer with multiple flagship products on top.",
-                cta: "Read the Litepaper",
-                href: "/litepaper",
-              },
-            ].map((a, i) => (
-              <motion.div
-                key={a.tag}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.08 }}
-                className="glass-card p-8 flex flex-col group hover:border-[#00F5D4]/30 transition-colors"
-              >
-                <div className="flex items-center justify-between mb-8">
-                  <div className="w-10 h-10 rounded-lg bg-white/[0.04] border border-white/10 flex items-center justify-center">
-                    <a.icon className="w-5 h-5 text-white/80" strokeWidth={1.5} />
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="mt-8 space-y-5 text-base sm:text-lg text-white/60 leading-relaxed"
+            >
+              <p>
+                We exist to take AI out of the demo and turn it into real services. Real software, real infrastructure, real workflows that hold up under daily use. Our work is to design, build, and operate intelligent systems that make individuals, teams, and institutions measurably more capable.
+              </p>
+              <p>
+                Every system we build feeds the same agentic intelligence layer. The more it runs, the sharper it gets. That compounding is the long arc of our mission - an intelligence foundation that quietly improves the surface of how the world operates.
+              </p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-4"
+            >
+              {[
+                {
+                  icon: Hammer,
+                  t: "Build",
+                  d: "We engineer real systems and ship working services, not prototypes.",
+                },
+                {
+                  icon: Brain,
+                  t: "Apply",
+                  d: "We use AI where it earns its place - inside execution, not on top of it.",
+                },
+                {
+                  icon: InfinityIcon,
+                  t: "Compound",
+                  d: "Every cycle feeds the layer. Quality and capability grow with usage.",
+                },
+              ].map((p) => (
+                <div
+                  key={p.t}
+                  className="rounded-2xl border border-white/10 bg-white/[0.02] p-5 hover:border-[#00F5D4]/30 transition-colors"
+                >
+                  <div className="flex items-center gap-2.5 mb-2.5">
+                    <p.icon className="w-4 h-4 text-[#00F5D4]" strokeWidth={1.75} />
+                    <span className="text-xs font-semibold uppercase tracking-[0.18em] text-white/80">{p.t}</span>
                   </div>
-                  <span className="text-[10px] uppercase tracking-[0.2em] text-white/40">{a.tag}</span>
+                  <p className="text-white/55 text-sm leading-relaxed">{p.d}</p>
                 </div>
-                <h3 className="text-xl font-serif font-semibold text-white mb-3 leading-tight">{a.title}</h3>
-                <p className="text-white/55 text-sm leading-relaxed mb-8 flex-1">{a.desc}</p>
-                <Link href={a.href}>
-                  <span className="text-sm text-[#00F5D4] font-medium inline-flex items-center gap-1.5 group-hover:gap-2.5 transition-all">
-                    {a.cta} <ArrowRight className="w-4 h-4" />
-                  </span>
-                </Link>
-              </motion.div>
-            ))}
+              ))}
+            </motion.div>
           </div>
         </div>
       </section>
 
       {/* CTA */}
-      <section className="py-24 md:py-32 relative">
+      <section className="py-16 md:py-24 relative">
         <div className="container mx-auto px-4 md:px-6">
-          <div className="relative max-w-5xl mx-auto rounded-3xl border border-white/10 bg-gradient-to-b from-[#0E0E0E] to-[#0A0A0A] p-12 md:p-20 overflow-hidden text-center">
+          <div className="relative max-w-5xl mx-auto rounded-3xl border border-white/10 bg-gradient-to-b from-[#0E0E0E] to-[#0A0A0A] p-10 sm:p-12 md:p-20 overflow-hidden text-center">
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,245,212,0.10),transparent_70%)] pointer-events-none" />
             <div className="absolute inset-x-0 top-0 h-px divider-line" />
             <div className="relative">
-              <Building2 className="w-7 h-7 text-[#00F5D4] mx-auto mb-6" strokeWidth={1.5} />
-              <h2 className="text-4xl md:text-6xl font-serif font-semibold text-gradient leading-[1.05] mb-6">
+              <Building2 className="w-7 h-7 text-[#00F5D4] mx-auto mb-5" strokeWidth={1.5} />
+              <h2 className="text-3xl sm:text-4xl md:text-6xl font-serif font-semibold text-gradient leading-[1.05] mb-5">
                 The agentic era is not waiting.
               </h2>
-              <p className="text-lg text-white/55 max-w-xl mx-auto mb-10">
+              <p className="text-base sm:text-lg text-white/55 max-w-xl mx-auto mb-8">
                 If your industry has not been rebuilt agentically yet, we should be the conversation you have first.
               </p>
               <Link href="/contact">

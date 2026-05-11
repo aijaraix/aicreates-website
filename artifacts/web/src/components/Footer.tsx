@@ -33,7 +33,6 @@ export function Footer() {
               <li><Link href="/eve-os"><span className="text-sm text-white/70 hover:text-[#00F5D4] transition-colors cursor-pointer">Eve OS</span></Link></li>
               <li><Link href="/neobank"><span className="text-sm text-white/70 hover:text-[#00F5D4] transition-colors cursor-pointer">NeoBank</span></Link></li>
               <li><Link href="/litepaper"><span className="text-sm text-white/70 hover:text-[#00F5D4] transition-colors cursor-pointer">Litepaper</span></Link></li>
-              <li><Link href="/contact"><span className="text-sm text-white/70 hover:text-[#00F5D4] transition-colors cursor-pointer">Contact</span></Link></li>
             </ul>
           </div>
 
@@ -47,18 +46,23 @@ export function Footer() {
 
           <div className="md:col-span-3">
             <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-white/40 mb-5">Connect</h4>
-            <a
-              href="https://x.com/theaicreatesai"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="AIcreatesAI on X"
-              className="inline-flex items-center gap-2 text-sm text-white/70 hover:text-[#00F5D4] transition-colors group"
-            >
-              <span className="w-9 h-9 rounded-full border border-white/10 flex items-center justify-center group-hover:border-[#00F5D4]/40 transition-colors">
-                <XIcon className="w-4 h-4" />
-              </span>
-              @theaicreatesai
-            </a>
+            <div className="flex flex-col gap-4">
+              <Link href="/contact" className="text-sm text-white/70 hover:text-[#00F5D4] transition-colors">
+                Contact
+              </Link>
+              <a
+                href="https://x.com/theaicreatesai"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="AIcreatesAI on X"
+                className="inline-flex items-center gap-2 text-sm text-white/70 hover:text-[#00F5D4] transition-colors group"
+              >
+                <span className="w-9 h-9 rounded-full border border-white/10 flex items-center justify-center group-hover:border-[#00F5D4]/40 transition-colors">
+                  <XIcon className="w-4 h-4" />
+                </span>
+                @theaicreatesai
+              </a>
+            </div>
           </div>
         </div>
 

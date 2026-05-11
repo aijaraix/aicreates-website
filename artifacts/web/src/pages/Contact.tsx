@@ -74,7 +74,7 @@ export default function Contact() {
 
   return (
     <div className="flex flex-col w-full">
-      <section className="relative pt-32 pb-24 md:pt-44 md:pb-32 overflow-hidden">
+      <section className="relative pt-28 pb-16 md:pt-36 md:pb-24 overflow-hidden">
         <div className="absolute inset-0 bg-grid bg-grid-fade pointer-events-none" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_0%,rgba(0,245,212,0.10),transparent_70%)] pointer-events-none" />
 

@@ -12,7 +12,7 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 export default function Terms() {
   return (
     <div className="flex flex-col w-full">
-      <section className="relative pt-32 pb-16 md:pt-44 md:pb-20 overflow-hidden">
+      <section className="relative pt-28 pb-12 md:pt-36 md:pb-16 overflow-hidden">
         <div className="absolute inset-0 bg-grid bg-grid-fade pointer-events-none" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_0%,rgba(0,245,212,0.08),transparent_70%)] pointer-events-none" />
         <div className="container mx-auto px-4 md:px-6 relative z-10 max-w-3xl">
@@ -31,7 +31,7 @@ export default function Terms() {
         </div>
       </section>
 
-      <section className="pb-24 md:pb-32">
+      <section className="pb-16 md:pb-24">
         <div className="container mx-auto px-4 md:px-6 max-w-3xl space-y-10 text-white/65 leading-relaxed">
           <div>
             <h2 className="text-2xl font-serif font-semibold text-white mb-3">Use of the site</h2>

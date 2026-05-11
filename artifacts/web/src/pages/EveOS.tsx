@@ -33,7 +33,7 @@ export default function EveOS() {
   return (
     <div className="flex flex-col w-full">
       {/* HERO */}
-      <section className="relative pt-32 pb-20 md:pt-44 md:pb-28 overflow-hidden">
+      <section className="relative pt-28 pb-14 md:pt-36 md:pb-20 overflow-hidden">
         <div className="absolute inset-0 bg-grid bg-grid-fade pointer-events-none" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_0%,rgba(0,245,212,0.10),transparent_70%)] pointer-events-none" />
 
@@ -89,7 +89,7 @@ export default function EveOS() {
       </section>
 
       {/* WHAT IS EVE OS */}
-      <section className="py-20 md:py-28 relative">
+      <section className="py-14 md:py-20 relative">
         <div className="container mx-auto px-4 md:px-6">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-12 items-start">
             <div className="md:col-span-5">
@@ -111,7 +111,7 @@ export default function EveOS() {
       </section>
 
       {/* HOW IT WORKS */}
-      <section className="py-20 md:py-28 relative">
+      <section className="py-14 md:py-20 relative">
         <div className="container mx-auto px-4 md:px-6">
           <div className="max-w-3xl mb-14">
             <SectionLabel>How It Works</SectionLabel>
@@ -179,7 +179,7 @@ export default function EveOS() {
       </section>
 
       {/* KEY CAPABILITIES */}
-      <section className="py-20 md:py-28 relative">
+      <section className="py-14 md:py-20 relative">
         <div className="container mx-auto px-4 md:px-6">
           <div className="max-w-3xl mb-14">
             <SectionLabel>Key Capabilities</SectionLabel>
@@ -242,7 +242,7 @@ export default function EveOS() {
       </section>
 
       {/* WHY EVE OS STANDS OUT */}
-      <section className="py-20 md:py-28 relative">
+      <section className="py-14 md:py-20 relative">
         <div className="container mx-auto px-4 md:px-6">
           <div className="max-w-3xl mb-14">
             <SectionLabel>Why Eve OS Stands Out</SectionLabel>
@@ -298,7 +298,7 @@ export default function EveOS() {
       </section>
 
       {/* THE VISION */}
-      <section className="py-20 md:py-28 relative">
+      <section className="py-14 md:py-20 relative">
         <div className="container mx-auto px-4 md:px-6">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-12 items-start">
             <div className="md:col-span-5">
@@ -323,7 +323,7 @@ export default function EveOS() {
       </section>
 
       {/* WHO EVE OS IS FOR */}
-      <section className="py-20 md:py-28 relative">
+      <section className="py-14 md:py-20 relative">
         <div className="container mx-auto px-4 md:px-6">
           <div className="max-w-3xl mb-14">
             <SectionLabel>Who Eve OS Is For</SectionLabel>
@@ -357,7 +357,7 @@ export default function EveOS() {
       </section>
 
       {/* FINAL CTA */}
-      <section className="py-24 md:py-32 relative">
+      <section className="py-16 md:py-24 relative">
         <div className="container mx-auto px-4 md:px-6">
           <div className="relative max-w-5xl mx-auto rounded-3xl border border-white/10 bg-gradient-to-b from-[#0E0E0E] to-[#0A0A0A] p-12 md:p-20 overflow-hidden text-center">
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,245,212,0.10),transparent_70%)] pointer-events-none" />
