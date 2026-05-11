@@ -5,36 +5,34 @@ import { api } from "@/lib/api";
 import { ArrowLeft, Loader2 } from "lucide-react";
 
 interface Tier {
-  productId: string;
-  name: string;
-  description: string | null;
-  priceId: string | null;
-  amountCents: number | null;
-  currency: string | null;
-  metadata: Record<string, string> | null;
+  slug: string;
+  displayName: string;
+  description: string;
+  amountCents: number;
+  currency: string;
+  tokenAllocation: number;
 }
 
-function formatMoney(cents: number | null, currency: string | null) {
-  if (cents == null) return "—";
+function formatMoney(cents: number, currency: string) {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
-    currency: (currency ?? "usd").toUpperCase(),
+    currency: currency.toUpperCase(),
     maximumFractionDigits: 0,
   }).format(cents / 100);
 }
 
 export default function InvestPicker() {
-  const [pendingId, setPendingId] = useState<string | null>(null);
+  const [pendingSlug, setPendingSlug] = useState<string | null>(null);
   const { data, isLoading } = useQuery({
     queryKey: ["tiers"],
     queryFn: () => api<{ tiers: Tier[] }>("/tiers"),
   });
 
   const checkout = useMutation({
-    mutationFn: async (priceId: string) => {
-      setPendingId(priceId);
+    mutationFn: async (slug: string) => {
+      setPendingSlug(slug);
       const res = await api<{ url: string }>("/checkout", {
-        body: { priceId },
+        body: { tierSlug: slug },
       });
       return res.url;
     },
@@ -42,7 +40,7 @@ export default function InvestPicker() {
       window.location.href = url;
     },
     onError: (err) => {
-      setPendingId(null);
+      setPendingSlug(null);
       alert(`Checkout failed: ${(err as Error).message}`);
     },
   });
@@ -83,50 +81,38 @@ export default function InvestPicker() {
 
         {isLoading ? (
           <div className="text-white/50">Loading tiers...</div>
-        ) : tiers.length === 0 ? (
-          <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-8 text-white/60">
-            <p className="font-medium text-white">Tiers not yet available.</p>
-            <p className="mt-2 text-sm">
-              The Stripe integration is still being configured. Please check
-              back shortly, or contact{" "}
-              <a
-                href="mailto:sholom@aicreates.ai"
-                className="text-[#00F5D4] hover:underline"
-              >
-                sholom@aicreates.ai
-              </a>{" "}
-              to commit directly.
-            </p>
-          </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {tiers.map((t) => (
               <div
-                key={t.productId}
+                key={t.slug}
                 className="rounded-2xl border border-white/10 bg-white/[0.02] p-7 flex flex-col hover:border-[#00F5D4]/30 transition"
-                data-testid={`card-tier-${t.priceId ?? t.productId}`}
+                data-testid={`card-tier-${t.slug}`}
               >
                 <h3
                   className="text-xl font-semibold"
                   style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}
                 >
-                  {t.name}
+                  {t.displayName}
                 </h3>
                 <div className="mt-3 text-3xl font-semibold text-[#00F5D4]">
                   {formatMoney(t.amountCents, t.currency)}
                 </div>
+                <div className="mt-1 text-xs uppercase tracking-[0.16em] text-white/40">
+                  {t.tokenAllocation.toLocaleString()} token allocation
+                </div>
                 {t.description && (
-                  <p className="mt-3 text-sm text-white/60 flex-1">
+                  <p className="mt-4 text-sm text-white/60 flex-1">
                     {t.description}
                   </p>
                 )}
                 <button
-                  disabled={!t.priceId || checkout.isPending}
-                  onClick={() => t.priceId && checkout.mutate(t.priceId)}
+                  disabled={checkout.isPending}
+                  onClick={() => checkout.mutate(t.slug)}
                   className="mt-6 inline-flex items-center justify-center h-11 px-5 rounded-full bg-[#00F5D4] text-black font-medium hover:bg-[#00F5D4]/90 transition disabled:opacity-50 disabled:cursor-not-allowed"
-                  data-testid={`button-commit-${t.priceId ?? t.productId}`}
+                  data-testid={`button-commit-${t.slug}`}
                 >
-                  {pendingId === t.priceId && checkout.isPending ? (
+                  {pendingSlug === t.slug && checkout.isPending ? (
                     <>
                       <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                       Redirecting…

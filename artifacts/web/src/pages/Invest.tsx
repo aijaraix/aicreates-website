@@ -67,7 +67,7 @@ export default function Invest() {
               className="mt-10 flex flex-col sm:flex-row gap-3"
             >
               <a
-                href="https://portal.aicreates.ai/"
+                href="https://portal.aicreates.ai/invest"
                 target="_blank"
                 rel="noopener noreferrer"
               >

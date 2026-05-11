@@ -1,36 +1,18 @@
 import { Router, type IRouter } from "express";
 import { requireAuth } from "../lib/auth";
-import { db, appUsersTable } from "@workspace/db";
-import { eq, sql } from "drizzle-orm";
+import { db, appUsersTable, commitmentsTable } from "@workspace/db";
+import { eq, desc } from "drizzle-orm";
 
 const router: IRouter = Router();
 
 router.get("/me", requireAuth, async (req, res) => {
   const user = req.appUser!;
-
-  let commitments: unknown[] = [];
-  try {
-    if (user.stripeCustomerId) {
-      const result = await db.execute(sql`
-        SELECT
-          id,
-          amount_total,
-          currency,
-          payment_status,
-          status,
-          created,
-          metadata
-        FROM stripe.checkout_sessions
-        WHERE customer = ${user.stripeCustomerId}
-        ORDER BY created DESC
-        LIMIT 50
-      `);
-      commitments = result.rows;
-    }
-  } catch (err) {
-    req.log?.warn({ err }, "Could not fetch commitments (stripe schema may not be ready)");
-  }
-
+  const commitments = await db
+    .select()
+    .from(commitmentsTable)
+    .where(eq(commitmentsTable.userId, user.id))
+    .orderBy(desc(commitmentsTable.createdAt))
+    .limit(100);
   res.json({ user, commitments });
 });
 

@@ -1,39 +1,47 @@
 /**
  * Seed AIcreatesAI Founders Commitment tiers in Stripe.
+ * Idempotent: looks up products by metadata.tier_slug and re-uses them.
  *
- * Idempotent: looks up products by name and skips creation if they exist.
- * Run with: pnpm --filter @workspace/scripts exec tsx src/seed-tiers.ts
+ * Run with: pnpm --filter @workspace/scripts run seed-tiers
  */
 import Stripe from "stripe";
 
 interface Tier {
-  name: string;
+  slug: "founders" | "architect" | "catalyst";
+  displayName: string;
   description: string;
   amountUsd: number;
-  metadata: Record<string, string>;
+  tokenAllocation: number;
+  order: string;
 }
 
 const TIERS: Tier[] = [
   {
-    name: "Founders Circle",
+    slug: "founders",
+    displayName: "Founders Circle",
     description:
       "Earliest backers of the Agentic Intelligence Layer. Founders Commitment - not a security; refundable until terms are finalized.",
     amountUsd: 1000,
-    metadata: { tier: "founders", order: "1" },
+    tokenAllocation: 1000,
+    order: "1",
   },
   {
-    name: "Architect Circle",
+    slug: "architect",
+    displayName: "Architect Circle",
     description:
-      "Backers shaping Eve OS and the Hybrid Compute Fabric. Founders Commitment - not a security; refundable until terms are finalized.",
+      "Backers shaping Eve OS and the Hybrid Compute Fabric. 10% allocation bonus. Founders Commitment - not a security; refundable until terms are finalized.",
     amountUsd: 5000,
-    metadata: { tier: "architect", order: "2" },
+    tokenAllocation: 5500,
+    order: "2",
   },
   {
-    name: "Catalyst Circle",
+    slug: "catalyst",
+    displayName: "Catalyst Circle",
     description:
-      "Strategic backers of the GPU cluster + flagship rollout. Founders Commitment - not a security; refundable until terms are finalized.",
+      "Strategic backers of the GPU cluster + flagship rollout. 20% allocation bonus. Founders Commitment - not a security; refundable until terms are finalized.",
     amountUsd: 25000,
-    metadata: { tier: "catalyst", order: "3" },
+    tokenAllocation: 30000,
+    order: "3",
   },
 ];
 
@@ -51,9 +59,7 @@ async function getStripeCredentials(): Promise<{ secretKey: string }> {
   }
   const resp = await fetch(
     `https://${hostname}/api/v2/connection?include_secrets=true&connector_names=stripe`,
-    {
-      headers: { Accept: "application/json", X_REPLIT_TOKEN: xReplitToken },
-    },
+    { headers: { Accept: "application/json", X_REPLIT_TOKEN: xReplitToken } },
   );
   const data = (await resp.json()) as {
     items?: Array<{ settings?: { secret_key?: string } }>;
@@ -70,25 +76,41 @@ async function main(): Promise<void> {
   const stripe = new Stripe(secretKey);
 
   for (const tier of TIERS) {
-    const existing = await stripe.products.search({
-      query: `name:'${tier.name}' AND active:'true'`,
+    const search = await stripe.products.search({
+      query: `active:'true' AND metadata['tier_slug']:'${tier.slug}'`,
     });
-    let product = existing.data[0];
+    let product = search.data[0];
+    const metadata: Record<string, string> = {
+      tier_slug: tier.slug,
+      display_name: tier.displayName,
+      token_allocation: String(tier.tokenAllocation),
+      order: tier.order,
+    };
     if (!product) {
       product = await stripe.products.create({
-        name: tier.name,
+        name: tier.displayName,
         description: tier.description,
-        metadata: tier.metadata,
+        metadata,
       });
       console.log(`Created product: ${product.name} (${product.id})`);
     } else {
-      console.log(`Product exists: ${product.name} (${product.id})`);
+      product = await stripe.products.update(product.id, {
+        name: tier.displayName,
+        description: tier.description,
+        metadata,
+      });
+      console.log(`Updated product: ${product.name} (${product.id})`);
     }
 
-    const prices = await stripe.prices.list({ product: product.id, active: true });
+    const prices = await stripe.prices.list({
+      product: product.id,
+      active: true,
+      limit: 100,
+    });
     const priceCents = tier.amountUsd * 100;
     const hasPrice = prices.data.some(
-      (p) => p.unit_amount === priceCents && p.currency === "usd" && !p.recurring,
+      (p) =>
+        p.unit_amount === priceCents && p.currency === "usd" && !p.recurring,
     );
     if (!hasPrice) {
       const price = await stripe.prices.create({

@@ -15,11 +15,16 @@ declare module "express-serve-static-core" {
   }
 }
 
-function adminEmails(): string[] {
+export function adminEmails(): string[] {
   return (process.env.ADMIN_EMAILS ?? "")
     .split(",")
     .map((s) => s.trim().toLowerCase())
     .filter(Boolean);
+}
+
+export function isEmailAdmin(email: string | null | undefined): boolean {
+  if (!email) return false;
+  return adminEmails().includes(email.toLowerCase());
 }
 
 export async function requireAuth(
@@ -56,16 +61,11 @@ export async function requireAuth(
           .filter(Boolean)
           .join(" ")
           .trim() || null;
-      const isAdmin = adminEmails().includes(email.toLowerCase());
+      const desiredRole = isEmailAdmin(email) ? "admin" : "investor";
 
       const inserted = await db
         .insert(appUsersTable)
-        .values({
-          id: userId,
-          email,
-          fullName,
-          role: isAdmin ? "admin" : "investor",
-        })
+        .values({ id: userId, email, fullName, role: desiredRole })
         .onConflictDoNothing()
         .returning();
       row =
@@ -78,12 +78,14 @@ export async function requireAuth(
             .limit(1)
         )[0];
     } else {
-      // Promote to admin if email is on allow-list and currently not admin.
-      const isAdmin = adminEmails().includes(row.email.toLowerCase());
-      if (isAdmin && row.role !== "admin") {
+      // Reconcile role with the env allow-list every request: promote when
+      // added to the list, DEMOTE when removed. The DB role is cosmetic;
+      // requireAdmin re-checks the live allow-list as the source of truth.
+      const desiredRole = isEmailAdmin(row.email) ? "admin" : "investor";
+      if (row.role !== desiredRole) {
         const updated = await db
           .update(appUsersTable)
-          .set({ role: "admin", updatedAt: new Date() })
+          .set({ role: desiredRole, updatedAt: new Date() })
           .where(eq(appUsersTable.id, userId))
           .returning();
         row = updated[0] ?? row;
@@ -109,12 +111,19 @@ export async function requireAuth(
   }
 }
 
+/**
+ * Live allow-list check on every admin request. Does NOT trust the
+ * persisted `app_users.role` value alone — instead re-evaluates the
+ * `ADMIN_EMAILS` env var per request so removed admins lose access
+ * immediately on the next call.
+ */
 export function requireAdmin(
   req: Request,
   res: Response,
   next: NextFunction,
 ): void {
-  if (req.appUser?.role !== "admin") {
+  const email = req.appUser?.email;
+  if (!email || !isEmailAdmin(email)) {
     res.status(403).json({ error: "Forbidden" });
     return;
   }

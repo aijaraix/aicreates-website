@@ -2,7 +2,22 @@ import { Link } from "wouter";
 import { useUser, useClerk } from "@clerk/react";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
-import { ArrowRight, LogOut } from "lucide-react";
+import { ArrowRight, ExternalLink, LogOut } from "lucide-react";
+
+interface Commitment {
+  id: string;
+  amountCents: number;
+  currency: string;
+  status: string;
+  tierSlug: string;
+  displayName: string;
+  tokenAllocation: number;
+  receiptUrl: string | null;
+  createdAt: string;
+  completedAt: string | null;
+  refundedAt: string | null;
+  stripePaymentIntentId: string | null;
+}
 
 interface MeResponse {
   user: {
@@ -12,36 +27,44 @@ interface MeResponse {
     role: string;
     stripeCustomerId: string | null;
   };
-  commitments: Array<{
-    id: string;
-    amount_total: number | null;
-    currency: string | null;
-    payment_status: string | null;
-    status: string | null;
-    created: number | string | null;
-    metadata: Record<string, string> | null;
-  }>;
+  commitments: Commitment[];
 }
 
-function formatMoney(cents: number | null, currency: string | null) {
-  if (cents == null) return "—";
-  const amount = cents / 100;
+function fmtMoney(cents: number, currency: string) {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
-    currency: (currency ?? "usd").toUpperCase(),
+    currency: currency.toUpperCase(),
     maximumFractionDigits: 0,
-  }).format(amount);
+  }).format(cents / 100);
 }
 
-function formatDate(value: number | string | null) {
-  if (!value) return "—";
-  const ms = typeof value === "number" ? value * 1000 : Date.parse(String(value));
+function fmtDate(v: string | null) {
+  if (!v) return "—";
+  const ms = Date.parse(v);
   if (Number.isNaN(ms)) return "—";
   return new Date(ms).toLocaleDateString("en-US", {
     year: "numeric",
     month: "short",
     day: "numeric",
   });
+}
+
+function StatusBadge({ status }: { status: string }) {
+  const map: Record<string, string> = {
+    succeeded: "bg-[#00F5D4]/15 text-[#00F5D4]",
+    pending: "bg-amber-400/15 text-amber-300",
+    failed: "bg-red-500/15 text-red-300",
+    refunded: "bg-white/10 text-white/60 line-through",
+  };
+  const cls = map[status] ?? "bg-white/10 text-white/70";
+  return (
+    <span
+      className={`px-2 py-0.5 rounded-full text-xs ${cls}`}
+      data-testid={`badge-status-${status}`}
+    >
+      {status}
+    </span>
+  );
 }
 
 export default function Dashboard() {
@@ -53,10 +76,9 @@ export default function Dashboard() {
   });
 
   const isAdmin = data?.user.role === "admin";
-  const succeeded = data?.commitments.filter(
-    (c) => c.payment_status === "paid",
-  ) ?? [];
-  const total = succeeded.reduce((s, c) => s + (c.amount_total ?? 0), 0);
+  const succeeded = data?.commitments.filter((c) => c.status === "succeeded") ?? [];
+  const totalCents = succeeded.reduce((s, c) => s + c.amountCents, 0);
+  const totalTokens = succeeded.reduce((s, c) => s + c.tokenAllocation, 0);
 
   return (
     <div className="min-h-[100dvh] bg-[#0A0A0A] text-white">
@@ -107,14 +129,21 @@ export default function Dashboard() {
           </p>
         </div>
 
-        {/* Summary card */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-10">
           <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6">
             <div className="text-xs uppercase tracking-[0.18em] text-white/40">
               Total committed
             </div>
             <div className="mt-3 text-3xl font-semibold text-[#00F5D4]">
-              {formatMoney(total, succeeded[0]?.currency ?? "usd")}
+              {fmtMoney(totalCents, succeeded[0]?.currency ?? "usd")}
+            </div>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6">
+            <div className="text-xs uppercase tracking-[0.18em] text-white/40">
+              Token allocation
+            </div>
+            <div className="mt-3 text-3xl font-semibold">
+              {totalTokens.toLocaleString()}
             </div>
           </div>
           <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6">
@@ -134,14 +163,13 @@ export default function Dashboard() {
               className="mt-3 inline-flex items-center justify-center h-11 px-5 rounded-full bg-[#00F5D4] text-black font-medium hover:bg-[#00F5D4]/90 transition"
               data-testid="link-make-commitment"
             >
-              Make a new commitment <ArrowRight className="ml-2 w-4 h-4" />
+              New commitment <ArrowRight className="ml-2 w-4 h-4" />
             </Link>
           </div>
         </div>
 
-        {/* Commitments table */}
         <div className="rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden">
-          <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between">
+          <div className="px-6 py-4 border-b border-white/5">
             <h2 className="text-lg font-medium">Commitment history</h2>
           </div>
           {isLoading ? (
@@ -155,44 +183,58 @@ export default function Dashboard() {
               No commitments yet. Reserve your allocation to begin.
             </div>
           ) : (
-            <table className="w-full text-sm">
-              <thead className="text-xs uppercase tracking-[0.14em] text-white/40">
-                <tr>
-                  <th className="text-left px-6 py-3 font-medium">Date</th>
-                  <th className="text-left px-6 py-3 font-medium">Amount</th>
-                  <th className="text-left px-6 py-3 font-medium">Status</th>
-                  <th className="text-left px-6 py-3 font-medium">Reference</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.commitments.map((c) => (
-                  <tr
-                    key={c.id}
-                    className="border-t border-white/5"
-                    data-testid={`row-commitment-${c.id}`}
-                  >
-                    <td className="px-6 py-3">{formatDate(c.created)}</td>
-                    <td className="px-6 py-3 font-medium">
-                      {formatMoney(c.amount_total, c.currency)}
-                    </td>
-                    <td className="px-6 py-3">
-                      <span
-                        className={
-                          c.payment_status === "paid"
-                            ? "px-2 py-0.5 rounded-full text-xs bg-[#00F5D4]/15 text-[#00F5D4]"
-                            : "px-2 py-0.5 rounded-full text-xs bg-white/10 text-white/70"
-                        }
-                      >
-                        {c.payment_status ?? c.status ?? "pending"}
-                      </span>
-                    </td>
-                    <td className="px-6 py-3 font-mono text-xs text-white/50">
-                      {c.id.slice(0, 16)}…
-                    </td>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead className="text-xs uppercase tracking-[0.14em] text-white/40">
+                  <tr>
+                    <th className="text-left px-6 py-3 font-medium">Date</th>
+                    <th className="text-left px-6 py-3 font-medium">Tier</th>
+                    <th className="text-left px-6 py-3 font-medium">Amount</th>
+                    <th className="text-left px-6 py-3 font-medium">Allocation</th>
+                    <th className="text-left px-6 py-3 font-medium">Status</th>
+                    <th className="text-left px-6 py-3 font-medium">Receipt</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {data.commitments.map((c) => (
+                    <tr
+                      key={c.id}
+                      className="border-t border-white/5"
+                      data-testid={`row-commitment-${c.id}`}
+                    >
+                      <td className="px-6 py-3 text-white/70">
+                        {fmtDate(c.completedAt ?? c.createdAt)}
+                      </td>
+                      <td className="px-6 py-3">{c.displayName}</td>
+                      <td className="px-6 py-3 font-medium">
+                        {fmtMoney(c.amountCents, c.currency)}
+                      </td>
+                      <td className="px-6 py-3">
+                        {c.tokenAllocation.toLocaleString()}
+                      </td>
+                      <td className="px-6 py-3">
+                        <StatusBadge status={c.status} />
+                      </td>
+                      <td className="px-6 py-3">
+                        {c.receiptUrl ? (
+                          <a
+                            href={c.receiptUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 text-[#00F5D4] hover:underline"
+                            data-testid={`link-receipt-${c.id}`}
+                          >
+                            View <ExternalLink className="w-3 h-3" />
+                          </a>
+                        ) : (
+                          <span className="text-white/30">—</span>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
         </div>
       </main>

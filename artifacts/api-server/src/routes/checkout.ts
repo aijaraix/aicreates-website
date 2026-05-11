@@ -1,47 +1,27 @@
 import { Router, type IRouter } from "express";
 import { requireAuth } from "../lib/auth";
 import { getUncachableStripeClient } from "../lib/stripeClient";
-import { db, appUsersTable } from "@workspace/db";
-import { eq, sql } from "drizzle-orm";
+import { TIER_BY_SLUG, ALLOWED_BILLING_COUNTRIES } from "../lib/tiers";
+import { db, appUsersTable, commitmentsTable } from "@workspace/db";
+import { eq } from "drizzle-orm";
 
 const router: IRouter = Router();
 
-// Server-side allow-list of approved Founders Commitment tier identifiers.
-// A price is allowed if its product has metadata.tier in this set.
-const ALLOWED_TIER_KEYS = new Set(["founders", "architect", "catalyst"]);
+interface CheckoutBody {
+  tierSlug?: string;
+}
 
 router.post("/checkout", requireAuth, async (req, res) => {
-  const { priceId } = req.body as { priceId?: string };
-  if (!priceId || typeof priceId !== "string" || !priceId.startsWith("price_")) {
-    res.status(400).json({ error: "priceId is required" });
+  const { tierSlug } = req.body as CheckoutBody;
+  if (!tierSlug || typeof tierSlug !== "string") {
+    res.status(400).json({ error: "tierSlug is required" });
     return;
   }
-
-  // Verify the price belongs to one of our approved commitment tiers.
-  // Uses the local stripe.* mirror so this is a fast DB lookup, not a Stripe round-trip.
-  let allowed = false;
-  try {
-    const result = await db.execute(sql`
-      SELECT p.metadata->>'tier' AS tier
-      FROM stripe.prices pr
-      JOIN stripe.products p ON p.id = pr.product
-      WHERE pr.id = ${priceId}
-        AND pr.active = true
-        AND p.active = true
-      LIMIT 1
-    `);
-    const row = result.rows[0] as { tier?: string } | undefined;
-    if (row && row.tier && ALLOWED_TIER_KEYS.has(row.tier)) {
-      allowed = true;
-    }
-  } catch (err) {
-    req.log?.error({ err }, "Failed to validate priceId against stripe mirror");
-  }
-  if (!allowed) {
-    res.status(403).json({
-      error:
-        "This price is not an approved Founders Commitment tier. Please pick a tier from the portal.",
-    });
+  // Server-authoritative tier lookup. Client can never inject arbitrary
+  // Stripe priceIds — they pick by slug and we resolve to the seeded price.
+  const tier = TIER_BY_SLUG.get(tierSlug);
+  if (!tier) {
+    res.status(400).json({ error: "Unknown tier" });
     return;
   }
 
@@ -55,6 +35,34 @@ router.post("/checkout", requireAuth, async (req, res) => {
       error:
         "Payments are not yet configured. Please connect Stripe via the Replit Integrations tab.",
     });
+    return;
+  }
+
+  // Resolve the active Stripe price for this tier by metadata.tier_slug.
+  const products = await stripe.products.search({
+    query: `active:'true' AND metadata['tier_slug']:'${tier.slug}'`,
+  });
+  const product = products.data[0];
+  if (!product) {
+    res.status(503).json({
+      error:
+        "This tier has not been seeded into Stripe yet. Run `pnpm --filter @workspace/scripts run seed-tiers`.",
+    });
+    return;
+  }
+  const prices = await stripe.prices.list({
+    product: product.id,
+    active: true,
+    limit: 100,
+  });
+  const price = prices.data.find(
+    (p) =>
+      p.unit_amount === tier.amountCents &&
+      p.currency === "usd" &&
+      !p.recurring,
+  );
+  if (!price) {
+    res.status(503).json({ error: "Tier price missing in Stripe." });
     return;
   }
 
@@ -77,24 +85,64 @@ router.post("/checkout", requireAuth, async (req, res) => {
     (req.headers["origin"] as string | undefined) ??
     `${req.protocol}://${req.get("host")}`;
 
-  const session = await stripe.checkout.sessions.create({
+  const sessionParams: Parameters<typeof stripe.checkout.sessions.create>[0] = {
     customer: customerId,
     mode: "payment",
     payment_method_types: ["card"],
-    line_items: [{ price: priceId, quantity: 1 }],
+    line_items: [{ price: price.id, quantity: 1 }],
     success_url: `${origin}/portal/dashboard?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${origin}/portal/invest?canceled=1`,
+    billing_address_collection: "required",
+    customer_update: { address: "auto", name: "auto" },
     metadata: {
-      userId: user.id,
-      priceId,
+      user_id: user.id,
+      tier_slug: tier.slug,
+      display_name: tier.displayName,
+      token_allocation: String(tier.tokenAllocation),
     },
     payment_intent_data: {
       metadata: {
-        userId: user.id,
-        priceId,
+        user_id: user.id,
+        tier_slug: tier.slug,
+        display_name: tier.displayName,
+        token_allocation: String(tier.tokenAllocation),
       },
     },
-  });
+  };
+
+  // Geo allow-list (collect-only when null; restrict via shipping address
+  // when set). When ALLOWED_BILLING_COUNTRIES is non-null, we also use
+  // shipping_address_collection to refuse unsupported jurisdictions at the
+  // Stripe Checkout layer rather than after-the-fact via Radar.
+  if (ALLOWED_BILLING_COUNTRIES && ALLOWED_BILLING_COUNTRIES.length > 0) {
+    sessionParams.shipping_address_collection = {
+      allowed_countries:
+        ALLOWED_BILLING_COUNTRIES as unknown as Array<
+          "US" | "CA" | "GB" | "AU"
+        >,
+    };
+  }
+
+  const session = await stripe.checkout.sessions.create(sessionParams);
+
+  // Create the first-party commitment row immediately, BEFORE the user is
+  // redirected to Stripe. Webhook updates will move it to succeeded /
+  // failed / refunded. This guarantees we never lose a commitment record
+  // even if the webhook is delayed.
+  await db
+    .insert(commitmentsTable)
+    .values({
+      userId: user.id,
+      stripeCheckoutSessionId: session.id,
+      stripeCustomerId: customerId,
+      amountCents: tier.amountCents,
+      currency: "usd",
+      status: "pending",
+      tierSlug: tier.slug,
+      displayName: tier.displayName,
+      tokenAllocation: tier.tokenAllocation,
+    })
+    .onConflictDoNothing();
 
   res.json({ url: session.url, sessionId: session.id });
 });
