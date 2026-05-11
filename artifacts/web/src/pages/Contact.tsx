@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,6 +26,16 @@ export default function Contact() {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [interest, setInterest] = useState<Interest>("Eve OS");
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const raw = params.get("interest") || window.location.hash.replace(/^#/, "");
+    if (!raw) return;
+    const decoded = decodeURIComponent(raw).toLowerCase();
+    const match = INTERESTS.find((i) => i.toLowerCase() === decoded);
+    if (match) setInterest(match);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

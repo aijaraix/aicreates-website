@@ -31,16 +31,17 @@ Premium agentic-AI vocabulary: Agentic Intelligence Layer, Hybrid Compute Fabric
 
 ## Pages
 
-Five-page structure:
+Page structure:
 
 - `/` — Home (positions the agentic intelligence layer; flagship + secondary spotlights; three-audience entry: consumer / business / investor)
 - `/eve-os` — Flagship product: Eve OS, the Agentic Business Operating System
 - `/neobank` — Secondary product line: consumer + business neobank built on the layer
-- `/litepaper` — Long-form positioning + architecture (placeholder sections, full content forthcoming)
-- `/contact` — Inquiry form with interest selector (Eve OS, NeoBank, Investor, Press, Other)
+- `/litepaper` — Long-form positioning + architecture
+- `/invest` — Investor page (opportunity, $50M raise + $3.5M GPU cluster, deck/litepaper materials, why-invest pillars). Pitch deck buttons are visibly disabled "Coming soon" until the PDF lands. CTAs link to `/contact?interest=Investor`.
+- `/contact` — Inquiry form with interest selector (Eve OS, NeoBank, Investor, Press, Other). Reads `?interest=` (or `#`) on mount and preselects the matching pill.
 - `/privacy` and `/terms` — Legal pages (linked from footer)
 
-Sticky glass navigation: Home, Products (dropdown: Eve OS, NeoBank), Litepaper, Contact, plus Engage CTA. Mobile drawer mirrors the desktop nav with a "Products" section header. X-only social (`@theaicreatesai`).
+Sticky glass navigation: Home, Products (dropdown: Eve OS, NeoBank), Litepaper, Invest, Contact, plus Engage CTA. Mobile drawer mirrors the desktop nav with a "Products" section header. X-only social (`@theaicreatesai`).
 
 ## Key Files
 

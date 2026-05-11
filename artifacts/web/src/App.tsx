@@ -15,6 +15,7 @@ import Home from "@/pages/Home";
 import EveOS from "@/pages/EveOS";
 import NeoBank from "@/pages/NeoBank";
 import Litepaper from "@/pages/Litepaper";
+import Invest from "@/pages/Invest";
 import Contact from "@/pages/Contact";
 import Privacy from "@/pages/Privacy";
 import Terms from "@/pages/Terms";
@@ -51,6 +52,7 @@ function Router() {
         <Route path="/eve-os" component={() => <PageTransition><EveOS /></PageTransition>} />
         <Route path="/neobank" component={() => <PageTransition><NeoBank /></PageTransition>} />
         <Route path="/litepaper" component={() => <PageTransition><Litepaper /></PageTransition>} />
+        <Route path="/invest" component={() => <PageTransition><Invest /></PageTransition>} />
         <Route path="/contact" component={() => <PageTransition><Contact /></PageTransition>} />
         <Route path="/privacy" component={() => <PageTransition><Privacy /></PageTransition>} />
         <Route path="/terms" component={() => <PageTransition><Terms /></PageTransition>} />

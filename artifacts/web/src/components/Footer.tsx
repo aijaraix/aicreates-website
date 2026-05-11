@@ -25,6 +25,7 @@ export function Footer() {
               <li><Link href="/eve-os"><span className="text-sm text-white/70 hover:text-[#00F5D4] transition-colors cursor-pointer">Eve OS</span></Link></li>
               <li><Link href="/neobank"><span className="text-sm text-white/70 hover:text-[#00F5D4] transition-colors cursor-pointer">NeoBank</span></Link></li>
               <li><Link href="/litepaper"><span className="text-sm text-white/70 hover:text-[#00F5D4] transition-colors cursor-pointer">Litepaper</span></Link></li>
+              <li><Link href="/invest"><span className="text-sm text-white/70 hover:text-[#00F5D4] transition-colors cursor-pointer">Invest</span></Link></li>
             </ul>
           </div>
 
