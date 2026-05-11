@@ -129,15 +129,6 @@ export function Navigation() {
         </nav>
 
         <div className="flex items-center gap-3">
-          <Link href="/contact" className="hidden md:block">
-            <Button
-              size="sm"
-              className="rounded-full h-9 px-5 bg-[#00F5D4] text-black hover:bg-[#00F5D4]/90 font-medium"
-            >
-              Engage
-            </Button>
-          </Link>
-
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="md:hidden text-white hover:bg-white/10">
@@ -195,14 +186,6 @@ export function Navigation() {
                     );
                   })}
                 </nav>
-
-                <div className="mt-auto pt-10">
-                  <Link href="/contact" onClick={() => setOpen(false)}>
-                    <Button className="w-full rounded-full bg-[#00F5D4] text-black hover:bg-[#00F5D4]/90">
-                      Engage
-                    </Button>
-                  </Link>
-                </div>
               </div>
             </SheetContent>
           </Sheet>
