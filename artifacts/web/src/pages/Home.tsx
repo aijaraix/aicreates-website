@@ -1,6 +1,7 @@
+import { useEffect, useRef, useState } from "react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import {
   ArrowRight,
   ArrowUpRight,
@@ -12,6 +13,171 @@ import {
   Briefcase,
   TrendingUp,
 } from "lucide-react";
+
+type Slide = {
+  id: string;
+  label: string;
+  title: string;
+  subline: string;
+  body1: string;
+  body2: string;
+  ctaText: string;
+  ctaHref: string;
+  pills: string[];
+};
+
+const SLIDES: Slide[] = [
+  {
+    id: "eve-os",
+    label: "Flagship Product",
+    title: "Eve OS.",
+    subline: "The Agentic Business Operating System.",
+    body1:
+      "The first platform that doesn't just assist your business - it becomes your business. Plans, executes, reviews, and improves across every function from one native desktop experience.",
+    body2:
+      "Marketing, Sales, Finance, Legal, Operations, Development - all coordinated on one intelligence layer.",
+    ctaText: "Explore Eve OS",
+    ctaHref: "/eve-os",
+    pills: ["Marketing", "Sales", "Finance", "Legal", "Operations", "Development"],
+  },
+  {
+    id: "neobank",
+    label: "Secondary Product Line",
+    title: "NeoBank.",
+    subline: "Capital that thinks.",
+    body1:
+      "A consumer and business neobank built directly on top of our intelligence layer. Capital that thinks, allocates, and protects itself.",
+    body2:
+      "Treasury, Payments, Credit, Yield, Compliance, Identity - one agentic surface for every flow of money.",
+    ctaText: "Inside NeoBank",
+    ctaHref: "/neobank",
+    pills: ["Treasury", "Payments", "Credit", "Yield", "Compliance", "Identity"],
+  },
+];
+
+function ProductSpotlight() {
+  const [active, setActive] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const reduce = useReducedMotion();
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  useEffect(() => {
+    if (reduce || paused) return;
+    intervalRef.current = setInterval(() => {
+      setActive((i) => (i + 1) % SLIDES.length);
+    }, 7000);
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [reduce, paused, active]);
+
+  const slide = SLIDES[active];
+
+  return (
+    <section className="py-24 md:py-32 relative">
+      <div className="container mx-auto px-4 md:px-6">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.7 }}
+          className="relative rounded-3xl overflow-hidden border border-white/10 bg-gradient-to-b from-[#0E0E0E] to-[#0A0A0A]"
+          onMouseEnter={() => setPaused(true)}
+          onMouseLeave={() => setPaused(false)}
+          onFocusCapture={() => setPaused(true)}
+          onBlurCapture={(e) => {
+            if (!e.currentTarget.contains(e.relatedTarget as Node | null)) {
+              setPaused(false);
+            }
+          }}
+        >
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(0,245,212,0.12),transparent_60%)] pointer-events-none" />
+          <div className="absolute inset-0 bg-grid opacity-40 pointer-events-none [mask-image:radial-gradient(ellipse_60%_50%_at_80%_30%,black,transparent_70%)]" />
+
+          <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-12 p-10 md:p-16 lg:p-20 min-h-[520px]">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={`text-${slide.id}`}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.5 }}
+              >
+                <SectionLabel>{slide.label}</SectionLabel>
+                <h2 className="mt-6 text-5xl md:text-7xl font-serif font-semibold text-white leading-[1.0] mb-4 tracking-tight">
+                  {slide.title}
+                </h2>
+                <p className="text-xl text-white/80 leading-tight mb-6 font-light">
+                  {slide.subline}
+                </p>
+                <p className="text-base text-white/55 leading-relaxed mb-4">{slide.body1}</p>
+                <p className="text-base text-white/45 leading-relaxed mb-10">{slide.body2}</p>
+                <Link href={slide.ctaHref}>
+                  <Button
+                    size="lg"
+                    className="rounded-full h-12 px-7 bg-white text-black hover:bg-white/90 group"
+                    data-testid={`button-cta-${slide.id}`}
+                  >
+                    {slide.ctaText}{" "}
+                    <ArrowUpRight className="ml-1.5 w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                  </Button>
+                </Link>
+              </motion.div>
+            </AnimatePresence>
+
+            <div className="relative min-h-[320px] flex items-center justify-center">
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-72 h-72 md:w-96 md:h-96 rounded-full border border-[#00F5D4]/20 animate-[spin_40s_linear_infinite]" />
+                <div className="absolute w-56 h-56 md:w-72 md:h-72 rounded-full border border-white/10 animate-[spin_30s_linear_infinite_reverse]" />
+                <div className="absolute w-40 h-40 md:w-52 md:h-52 rounded-full border border-white/5" />
+                <div className="absolute w-24 h-24 rounded-full bg-gradient-to-br from-[#00F5D4]/30 to-transparent blur-xl" />
+                <div className="absolute w-3 h-3 rounded-full bg-[#00F5D4] shadow-[0_0_30px_rgba(0,245,212,0.9)]" />
+              </div>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={`pills-${slide.id}`}
+                  initial={{ opacity: 0, scale: 0.96 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.96 }}
+                  transition={{ duration: 0.5 }}
+                  className="relative z-10 grid grid-cols-2 gap-3 text-xs"
+                >
+                  {slide.pills.map((t) => (
+                    <div
+                      key={t}
+                      className="px-3 py-2 rounded-full bg-black/60 backdrop-blur border border-white/10 text-white/70 text-center"
+                    >
+                      {t}
+                    </div>
+                  ))}
+                </motion.div>
+              </AnimatePresence>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Pagination dots */}
+        <div className="flex justify-center items-center gap-3 mt-8">
+          {SLIDES.map((s, i) => (
+            <button
+              key={s.id}
+              type="button"
+              onClick={() => setActive(i)}
+              aria-label={`Show ${s.title.replace(".", "")}`}
+              aria-current={active === i}
+              data-testid={`dot-${s.id}`}
+              className={`h-2 rounded-full transition-all ${
+                active === i
+                  ? "w-8 bg-[#00F5D4] shadow-[0_0_10px_rgba(0,245,212,0.6)]"
+                  : "w-2 bg-white/20 hover:bg-white/40"
+              }`}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
@@ -155,109 +321,58 @@ export default function Home() {
         </div>
       </section>
 
-      {/* FLAGSHIP - COMPANY IN A BOX */}
+      {/* PRODUCT SPOTLIGHT (Eve OS / NeoBank carousel) */}
+      <ProductSpotlight />
+
+      {/* ABOUT US */}
       <section className="py-24 md:py-32 relative">
-        <div className="container mx-auto px-4 md:px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.7 }}
-            className="relative rounded-3xl overflow-hidden border border-white/10 bg-gradient-to-b from-[#0E0E0E] to-[#0A0A0A]"
-          >
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(0,245,212,0.12),transparent_60%)] pointer-events-none" />
-            <div className="absolute inset-0 bg-grid opacity-40 pointer-events-none [mask-image:radial-gradient(ellipse_60%_50%_at_80%_30%,black,transparent_70%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_50%_60%_at_50%_50%,rgba(0,245,212,0.05),transparent_70%)] pointer-events-none" />
+        <div className="container mx-auto px-4 md:px-6 relative">
+          <div className="max-w-4xl mx-auto">
+            <SectionLabel>About Us</SectionLabel>
+            <motion.h2
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.6 }}
+              className="mt-6 text-4xl md:text-6xl font-serif font-semibold text-gradient leading-[1.05]"
+            >
+              We're Building the Operating System for the Agentic Era.
+            </motion.h2>
 
-            <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-12 p-10 md:p-16 lg:p-20">
-              <div>
-                <SectionLabel>Flagship Product</SectionLabel>
-                <h2 className="mt-6 text-5xl md:text-7xl font-serif font-semibold text-white leading-[1.0] mb-4 tracking-tight">
-                  Eve OS.
-                </h2>
-                <p className="text-xl text-white/80 leading-tight mb-6 font-light">
-                  The Agentic Business Operating System.
-                </p>
-                <p className="text-base text-white/55 leading-relaxed mb-4">
-                  The first platform that doesn't just assist your business - it becomes your business. Plans, executes, reviews, and improves across every function from one native desktop experience.
-                </p>
-                <p className="text-base text-white/45 leading-relaxed mb-10">
-                  Marketing, Sales, Finance, Legal, Operations, Development - all coordinated on one intelligence layer.
-                </p>
-                <Link href="/eve-os">
-                  <Button size="lg" className="rounded-full h-12 px-7 bg-white text-black hover:bg-white/90 group">
-                    Explore Eve OS <ArrowUpRight className="ml-1.5 w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                  </Button>
-                </Link>
-              </div>
-
-              <div className="relative min-h-[320px] flex items-center justify-center">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-72 h-72 md:w-96 md:h-96 rounded-full border border-[#00F5D4]/20 animate-[spin_40s_linear_infinite]" />
-                  <div className="absolute w-56 h-56 md:w-72 md:h-72 rounded-full border border-white/10 animate-[spin_30s_linear_infinite_reverse]" />
-                  <div className="absolute w-40 h-40 md:w-52 md:h-52 rounded-full border border-white/5" />
-                  <div className="absolute w-24 h-24 rounded-full bg-gradient-to-br from-[#00F5D4]/30 to-transparent blur-xl" />
-                  <div className="absolute w-3 h-3 rounded-full bg-[#00F5D4] shadow-[0_0_30px_rgba(0,245,212,0.9)]" />
-                </div>
-                <div className="relative z-10 grid grid-cols-2 gap-3 text-xs">
-                  {["Marketing","Sales","Finance","Legal","Operations","Development"].map((t) => (
-                    <div key={t} className="px-3 py-2 rounded-full bg-black/60 backdrop-blur border border-white/10 text-white/70 text-center">
-                      {t}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* SECONDARY - NEOBANK */}
-      <section className="py-24 relative">
-        <div className="container mx-auto px-4 md:px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.6 }}
-            className="grid grid-cols-1 md:grid-cols-12 gap-10 items-center"
-          >
-            <div className="md:col-span-5">
-              <SectionLabel>Secondary Product Line</SectionLabel>
-              <h2 className="mt-6 text-3xl md:text-5xl font-serif font-semibold text-gradient leading-[1.05] mb-6">
-                NeoBank.
-              </h2>
-              <p className="text-lg text-white/60 leading-relaxed mb-8">
-                A consumer and business neobank built directly on top of our intelligence layer. Capital that thinks, allocates, and protects itself.
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="mt-10 space-y-6 text-lg md:text-xl text-white/65 leading-relaxed"
+            >
+              <p>
+                AIcreatesAI is a deep-tech company creating intelligent systems that will power the next generation of business and life.
               </p>
-              <Link href="/neobank">
-                <Button variant="outline" className="rounded-full h-11 px-6 border-white/15 bg-white/[0.02] text-white hover:bg-white/[0.06]">
-                  Inside NeoBank <ArrowRight className="ml-2 w-4 h-4" />
-                </Button>
-              </Link>
-            </div>
+              <p>
+                We use advanced AI to build platforms that act as complete operating systems - giving individuals and companies the ability to operate with greater intelligence, efficiency, and autonomy.
+              </p>
+              <p>
+                Our mission is to create a self-improving intelligence layer that compounds in value over time, laying the foundation for how humans and businesses will work in the future.
+              </p>
+            </motion.div>
 
-            <div className="md:col-span-7">
-              <div className="relative aspect-[16/10] rounded-2xl border border-white/10 bg-[#0E0E0E] overflow-hidden">
-                <div className="absolute inset-0 bg-grid opacity-50" />
-                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,245,212,0.10),transparent_70%)]" />
-                <div className="absolute inset-0 flex items-center justify-center p-10">
-                  <div className="w-full max-w-md grid grid-cols-2 gap-3">
-                    {[
-                      { l: "Yield Engine", v: "Active" },
-                      { l: "Risk Mesh", v: "Stable" },
-                      { l: "Treasury Agent", v: "Allocating" },
-                      { l: "Settlement", v: "On-chain" },
-                    ].map((c) => (
-                      <div key={c.l} className="rounded-xl border border-white/10 bg-black/50 backdrop-blur p-4">
-                        <div className="text-[10px] uppercase tracking-widest text-white/40 mb-1.5">{c.l}</div>
-                        <div className="text-sm text-[#00F5D4] font-mono">{c.v}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="mt-12 pt-8 border-t border-white/10"
+            >
+              <p className="text-base md:text-lg text-white/80 font-medium">
+                One company. One vision.
+              </p>
+              <p className="text-base md:text-lg text-white/45 mt-1">
+                Building the infrastructure for an agentic world.
+              </p>
+            </motion.div>
+          </div>
         </div>
       </section>
 
