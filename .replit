@@ -93,6 +93,7 @@ channel = "stable-25_05"
 [userenv]
 
 [userenv.shared]
+ADMIN_EMAILS = "Sholom@aicreates.ai,  chris@aicreates.ai"
 
 [userenv.production]
 VITE_CLERK_PROXY_URL = "/api/__clerk"
