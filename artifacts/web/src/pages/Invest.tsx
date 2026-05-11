@@ -77,16 +77,6 @@ export default function Invest() {
                   Reserve Your Allocation <ArrowRight className="ml-2 w-4 h-4" />
                 </Button>
               </a>
-              <Link href="/contact?interest=Investor">
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="rounded-full h-12 px-7 border-white/15 bg-white/[0.02] text-white hover:bg-white/[0.06]"
-                  data-testid="button-invest-now"
-                >
-                  Talk to the Team
-                </Button>
-              </Link>
               <Button
                 size="lg"
                 variant="outline"
