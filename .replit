@@ -89,3 +89,10 @@ externalPort = 3001
 
 [nix]
 channel = "stable-25_05"
+
+[userenv]
+
+[userenv.shared]
+
+[userenv.production]
+VITE_CLERK_PROXY_URL = "/api/__clerk"

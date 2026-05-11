@@ -81,7 +81,7 @@ See `README.md` for the full GitHub Pages + GoDaddy DNS setup. The GitHub Action
 
 A separate authenticated investor portal lives at `artifacts/portal` and is intended to deploy to **https://portal.aicreates.ai** (Replit Deployments, autoscale). It is not part of the GitHub Pages marketing build.
 
-- Auth: Clerk (white-labeled via the api-server's Clerk proxy at `/api/__clerk`; set `VITE_CLERK_PROXY_URL=/api/__clerk` in the portal env).
+- Auth: Clerk (white-labeled via the api-server's Clerk proxy at `/api/__clerk`). Set `VITE_CLERK_PROXY_URL=/api/__clerk` in the **production** environment only — the api-server's `clerkProxyMiddleware` is a no-op in dev, so passing `proxyUrl` to `ClerkProvider` in dev will blank the portal. The portal client also gates this with `import.meta.env.PROD`.
 - Payments: Stripe one-time Checkout for "Founders Commitment" tiers.
 - Stripe data is mirrored locally via `stripe-replit-sync` (schema `stripe.*` in Postgres).
 - App-side users are stored in `app_users` (`lib/db/src/schema/app_users.ts`).

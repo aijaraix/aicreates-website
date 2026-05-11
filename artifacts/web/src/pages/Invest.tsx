@@ -7,11 +7,9 @@ import {
   FileText,
   BookOpen,
   Cpu,
-  TrendingUp,
   Layers,
   Network,
   Users,
-  Sparkles,
 } from "lucide-react";
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
@@ -171,7 +169,7 @@ export default function Invest() {
         </div>
       </section>
 
-      {/* PITCH DECK & WHITEPAPER */}
+      {/* PITCH DECK & LITEPAPER */}
       <section className="py-14 md:py-24 relative">
         <div className="container mx-auto px-4 md:px-6">
           <div className="max-w-3xl mb-12 mx-auto text-center">
@@ -206,11 +204,11 @@ export default function Invest() {
               },
               {
                 icon: BookOpen,
-                title: "Read the Full Whitepaper",
+                title: "Read the Full Litepaper",
                 desc: "The full positioning, architecture, roadmap, and tokenomics.",
                 disabled: false,
                 href: "/litepaper",
-                cta: "Read the Full Whitepaper",
+                cta: "Read the Full Litepaper",
                 testId: "button-read-litepaper",
               },
             ].map((card) => (
@@ -306,38 +304,6 @@ export default function Invest() {
                 <p className="text-white/55 text-sm sm:text-base leading-relaxed">{p.desc}</p>
               </motion.div>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* FINAL CTA */}
-      <section className="py-14 md:py-24 relative">
-        <div className="container mx-auto px-4 md:px-6">
-          <div className="relative max-w-5xl mx-auto rounded-3xl border border-white/10 bg-gradient-to-b from-[#0E0E0E] to-[#0A0A0A] p-10 sm:p-12 md:p-20 overflow-hidden text-center">
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,245,212,0.10),transparent_70%)] pointer-events-none" />
-            <div className="absolute inset-x-0 top-0 h-px divider-line" />
-            <div className="relative">
-              <Sparkles className="w-7 h-7 text-[#00F5D4] mx-auto mb-5" strokeWidth={1.5} />
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-semibold text-gradient leading-[1.05] mb-5">
-                Talk to the team.
-              </h2>
-              <p className="text-base sm:text-lg text-white/55 max-w-xl mx-auto mb-8">
-                Open the conversation. We will share investor materials, walk through the architecture, and discuss participation in the round.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                <Link href="/contact?interest=Investor">
-                  <Button size="lg" className="rounded-full h-12 px-8 bg-[#00F5D4] text-black hover:bg-[#00F5D4]/90 font-medium">
-                    Talk to the team <ArrowRight className="ml-2 w-4 h-4" />
-                  </Button>
-                </Link>
-                <Link href="/litepaper">
-                  <Button size="lg" variant="outline" className="rounded-full h-12 px-7 border-white/15 bg-white/[0.02] text-white hover:bg-white/[0.06]">
-                    <TrendingUp className="mr-2 w-4 h-4" />
-                    Read the Full Whitepaper
-                  </Button>
-                </Link>
-              </div>
-            </div>
           </div>
         </div>
       </section>
