@@ -42,6 +42,7 @@ export default function Contact() {
       name: String(fd.get("name") || ""),
       email: String(fd.get("email") || ""),
       company: String(fd.get("company") || ""),
+      role: String(fd.get("role") || ""),
       message: String(fd.get("message") || ""),
       _honey: String(fd.get("_honey") || ""),
     };
@@ -186,13 +187,23 @@ export default function Contact() {
                       </div>
                     </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="company" className="text-white/60 text-[10px] uppercase tracking-[0.18em]">Company (optional)</Label>
-                      <Input
-                        id="company" name="company"
-                        className="bg-white/[0.02] border-white/10 text-white placeholder:text-white/25 h-11 focus-visible:ring-[#00F5D4] focus-visible:border-[#00F5D4]/40"
-                        placeholder="Organization"
-                      />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="company" className="text-white/60 text-[10px] uppercase tracking-[0.18em]">Company</Label>
+                        <Input
+                          id="company" name="company"
+                          className="bg-white/[0.02] border-white/10 text-white placeholder:text-white/25 h-11 focus-visible:ring-[#00F5D4] focus-visible:border-[#00F5D4]/40"
+                          placeholder="Organization"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="role" className="text-white/60 text-[10px] uppercase tracking-[0.18em]">Role</Label>
+                        <Input
+                          id="role" name="role"
+                          className="bg-white/[0.02] border-white/10 text-white placeholder:text-white/25 h-11 focus-visible:ring-[#00F5D4] focus-visible:border-[#00F5D4]/40"
+                          placeholder="Founder, investor, operator"
+                        />
+                      </div>
                     </div>
 
                     <div className="space-y-2">

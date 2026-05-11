@@ -16,6 +16,8 @@ import CompanyInABox from "@/pages/CompanyInABox";
 import NeoBank from "@/pages/NeoBank";
 import Litepaper from "@/pages/Litepaper";
 import Contact from "@/pages/Contact";
+import Privacy from "@/pages/Privacy";
+import Terms from "@/pages/Terms";
 import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient();
@@ -50,6 +52,8 @@ function Router() {
         <Route path="/neobank" component={() => <PageTransition><NeoBank /></PageTransition>} />
         <Route path="/litepaper" component={() => <PageTransition><Litepaper /></PageTransition>} />
         <Route path="/contact" component={() => <PageTransition><Contact /></PageTransition>} />
+        <Route path="/privacy" component={() => <PageTransition><Privacy /></PageTransition>} />
+        <Route path="/terms" component={() => <PageTransition><Terms /></PageTransition>} />
         <Route component={() => <PageTransition><NotFound /></PageTransition>} />
       </Switch>
     </AnimatePresence>

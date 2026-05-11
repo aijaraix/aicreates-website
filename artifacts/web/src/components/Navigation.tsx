@@ -5,6 +5,7 @@ import { Button } from "./ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 
 const NAV_LINKS = [
+  { name: "Home", path: "/" },
   { name: "Company in a Box", path: "/company-in-a-box" },
   { name: "NeoBank", path: "/neobank" },
   { name: "Litepaper", path: "/litepaper" },
