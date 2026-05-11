@@ -120,6 +120,7 @@ test.describe("Stripe-hosted ACH (us_bank_account) checkout", () => {
       "commitment never reached funded after ACH payment",
     ).not.toBeNull();
     expect(funded!.state).toBe("funded");
-    expect(funded!.status).toBe("succeeded");
+    expect(funded!.isFunded).toBe(true);
+    expect(funded!.fundedAt).not.toBeNull();
   });
 });

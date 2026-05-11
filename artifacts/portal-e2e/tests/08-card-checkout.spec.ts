@@ -57,6 +57,7 @@ test.describe("Stripe-hosted card checkout", () => {
       "commitment never reached funded after card payment",
     ).not.toBeNull();
     expect(funded!.state).toBe("funded");
-    expect(funded!.status).toBe("succeeded");
+    expect(funded!.isFunded).toBe(true);
+    expect(funded!.fundedAt).not.toBeNull();
   });
 });
