@@ -5,9 +5,6 @@ import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import {
   ArrowRight,
   ArrowUpRight,
-  Cpu,
-  Layers,
-  Network,
   Sparkles,
   Building2,
   Briefcase,
@@ -311,67 +308,6 @@ export default function Home() {
                 Building the infrastructure for an agentic world.
               </p>
             </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* THESIS */}
-      <section className="py-24 md:py-32 relative">
-        <div className="container mx-auto px-4 md:px-6">
-          <div className="max-w-4xl mx-auto">
-            <SectionLabel>The Thesis</SectionLabel>
-            <h2 className="mt-6 text-4xl md:text-6xl font-serif font-semibold text-gradient leading-[1.05]">
-              Software is becoming a workforce.
-            </h2>
-            <p className="mt-8 text-lg md:text-xl text-white/60 leading-relaxed">
-              The next generation of value will not be created by larger models. It will be created by intelligence that organizes itself - that perceives intent, decomposes it, executes across systems, and improves with every cycle. We build that layer, and we build the products that prove what it can do.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* PILLARS */}
-      <section className="py-24 relative">
-        <div className="container mx-auto px-4 md:px-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {[
-              {
-                icon: Layers,
-                k: "01",
-                title: "Agentic Intelligence Layer",
-                desc: "A unified substrate where specialized agents reason, coordinate, and act across any system of record.",
-              },
-              {
-                icon: Cpu,
-                k: "02",
-                title: "Hybrid Compute Fabric",
-                desc: "Inference, retrieval, and execution distributed across the right surface for the task. Latency where it matters, depth where it counts.",
-              },
-              {
-                icon: Network,
-                k: "03",
-                title: "Closed-Loop Quality Engine",
-                desc: "Every output is verified, scored, and fed back. The system gets sharper the more it runs.",
-              },
-            ].map((p, i) => (
-              <motion.div
-                key={p.k}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-80px" }}
-                transition={{ duration: 0.5, delay: i * 0.08 }}
-                className="glass-card p-8 group hover:border-[#00F5D4]/30 transition-colors"
-              >
-                <div className="flex items-center justify-between mb-8">
-                  <div className="w-10 h-10 rounded-lg bg-[#00F5D4]/10 border border-[#00F5D4]/20 flex items-center justify-center">
-                    <p.icon className="w-5 h-5 text-[#00F5D4]" strokeWidth={1.5} />
-                  </div>
-                  <span className="text-xs font-mono text-white/30 tracking-widest">{p.k}</span>
-                </div>
-                <h3 className="text-xl font-serif font-semibold text-white mb-3">{p.title}</h3>
-                <p className="text-white/55 text-sm leading-relaxed">{p.desc}</p>
-              </motion.div>
-            ))}
           </div>
         </div>
       </section>
