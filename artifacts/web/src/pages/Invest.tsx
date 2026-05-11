@@ -1,6 +1,6 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import {
   ArrowRight,
   Download,
@@ -24,6 +24,19 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 }
 
 export default function Invest() {
+  const reduce = useReducedMotion();
+  const fadeUp = (delay = 0) =>
+    reduce
+      ? { initial: { opacity: 0 }, animate: { opacity: 1 }, transition: { duration: 0.3, delay } }
+      : { initial: { opacity: 0, y: 16 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.7, delay } };
+  const fadeIn = (delay = 0) =>
+    reduce
+      ? { initial: { opacity: 0 }, animate: { opacity: 1 }, transition: { duration: 0.3, delay } }
+      : { initial: { opacity: 0, y: 12 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.6, delay } };
+  const inView = (delay = 0) =>
+    reduce
+      ? { initial: { opacity: 0 }, whileInView: { opacity: 1 }, viewport: { once: true, margin: "-80px" }, transition: { duration: 0.3, delay } }
+      : { initial: { opacity: 0, y: 20 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, margin: "-80px" }, transition: { duration: 0.5, delay } };
   return (
     <div className="flex flex-col w-full">
       {/* HERO */}
@@ -33,30 +46,24 @@ export default function Invest() {
 
         <div className="container mx-auto px-4 md:px-6 relative z-10 w-full">
           <div className="max-w-5xl">
-            <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+            <motion.div {...fadeIn(0)}>
               <SectionLabel>Invest</SectionLabel>
             </motion.div>
             <motion.h1
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.05 }}
+              {...fadeUp(0.05)}
               className="mt-6 text-[40px] sm:text-5xl md:text-7xl lg:text-[88px] font-serif font-semibold leading-[1.02] text-gradient tracking-tight"
             >
               Invest in the Future of Intelligent Business.
             </motion.h1>
             <motion.p
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.15 }}
+              {...fadeUp(0.15)}
               className="mt-7 text-lg sm:text-xl md:text-2xl text-white/70 max-w-3xl leading-relaxed font-light"
             >
               Join us in building the operating system for the agentic era.
             </motion.p>
 
             <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.25 }}
+              {...fadeUp(0.25)}
               className="mt-10 flex flex-col sm:flex-row gap-3"
             >
               <Link href="/contact?interest=Investor">
@@ -185,20 +192,17 @@ export default function Invest() {
               },
               {
                 icon: BookOpen,
-                title: "Read the Litepaper",
+                title: "Read the Full Whitepaper",
                 desc: "The full positioning, architecture, roadmap, and tokenomics.",
                 disabled: false,
                 href: "/litepaper",
-                cta: "Open Litepaper",
+                cta: "Read the Full Whitepaper",
                 testId: "button-read-litepaper",
               },
             ].map((card) => (
               <motion.div
                 key={card.title}
-                initial={{ opacity: 0, y: 18 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-80px" }}
-                transition={{ duration: 0.5 }}
+                {...inView(0)}
                 className="glass-card p-7 flex flex-col"
               >
                 <div className="w-10 h-10 rounded-lg bg-[#00F5D4]/10 border border-[#00F5D4]/20 flex items-center justify-center mb-5">
@@ -275,10 +279,7 @@ export default function Invest() {
             ].map((p, i) => (
               <motion.div
                 key={p.tag}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-80px" }}
-                transition={{ duration: 0.5, delay: i * 0.06 }}
+                {...inView(i * 0.06)}
                 className="glass-card p-7 hover:border-[#00F5D4]/30 transition-colors"
               >
                 <div className="flex items-center justify-between mb-6">
@@ -312,13 +313,13 @@ export default function Invest() {
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
                 <Link href="/contact?interest=Investor">
                   <Button size="lg" className="rounded-full h-12 px-8 bg-[#00F5D4] text-black hover:bg-[#00F5D4]/90 font-medium">
-                    Invest Now <ArrowRight className="ml-2 w-4 h-4" />
+                    Talk to the team <ArrowRight className="ml-2 w-4 h-4" />
                   </Button>
                 </Link>
                 <Link href="/litepaper">
                   <Button size="lg" variant="outline" className="rounded-full h-12 px-7 border-white/15 bg-white/[0.02] text-white hover:bg-white/[0.06]">
                     <TrendingUp className="mr-2 w-4 h-4" />
-                    Read the Litepaper
+                    Read the Full Whitepaper
                   </Button>
                 </Link>
               </div>
