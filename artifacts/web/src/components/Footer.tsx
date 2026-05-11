@@ -13,7 +13,7 @@ export function Footer() {
     <footer className="bg-[#0A0A0A] relative border-t border-white/5 pt-20 pb-10 mt-24">
       <div className="container mx-auto px-4 md:px-6">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-16">
-          <div className="md:col-span-4">
+          <div className="md:col-span-3">
             <Link href="/" className="flex items-center gap-2.5 mb-5">
               <div className="w-2.5 h-2.5 rounded-full bg-[#00F5D4] shadow-[0_0_10px_rgba(0,245,212,0.6)]" />
               <span className="font-sans font-semibold tracking-tight text-white text-lg leading-none">
@@ -44,25 +44,27 @@ export function Footer() {
             </ul>
           </div>
 
-          <div className="md:col-span-3">
+          <div className="md:col-span-2">
             <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-white/40 mb-5">Connect</h4>
-            <div className="flex flex-col gap-4">
-              <Link href="/contact" className="text-sm text-white/70 hover:text-[#00F5D4] transition-colors">
-                Contact
-              </Link>
-              <a
-                href="https://x.com/theaicreatesai"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="AIcreatesAI on X"
-                className="inline-flex items-center gap-2 text-sm text-white/70 hover:text-[#00F5D4] transition-colors group"
-              >
-                <span className="w-9 h-9 rounded-full border border-white/10 flex items-center justify-center group-hover:border-[#00F5D4]/40 transition-colors">
-                  <XIcon className="w-4 h-4" />
-                </span>
-                @theaicreatesai
-              </a>
-            </div>
+            <ul className="space-y-3">
+              <li><Link href="/contact"><span className="text-sm text-white/70 hover:text-[#00F5D4] transition-colors cursor-pointer">Contact</span></Link></li>
+            </ul>
+          </div>
+
+          <div className="md:col-span-2">
+            <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-white/40 mb-5">Social</h4>
+            <a
+              href="https://x.com/theaicreatesai"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="AIcreatesAI on X"
+              className="inline-flex items-center gap-2 text-sm text-white/70 hover:text-[#00F5D4] transition-colors group"
+            >
+              <span className="w-9 h-9 rounded-full border border-white/10 flex items-center justify-center group-hover:border-[#00F5D4]/40 transition-colors">
+                <XIcon className="w-4 h-4" />
+              </span>
+              @theaicreatesai
+            </a>
           </div>
         </div>
 
