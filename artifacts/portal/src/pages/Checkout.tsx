@@ -15,7 +15,12 @@ import {
   Download,
   ImageIcon,
 } from "lucide-react";
-import { WIRE_INSTRUCTIONS, CRYPTO_INSTRUCTIONS, publicAsset } from "@/data/rounds";
+import {
+  WIRE_INSTRUCTIONS,
+  CRYPTO_INSTRUCTIONS,
+  wireInstructionsPdfUrl,
+  wireInstructionsImageUrl,
+} from "@/data/rounds";
 
 interface SaftResponse {
   commitment: {
@@ -331,7 +336,7 @@ export default function Checkout() {
                 </dl>
                 <div className="mt-5 flex flex-wrap gap-2">
                   <a
-                    href={publicAsset(WIRE_INSTRUCTIONS.pdfPath)}
+                    href={wireInstructionsPdfUrl(c.id)}
                     target="_blank"
                     rel="noopener noreferrer"
                     download
@@ -341,7 +346,7 @@ export default function Checkout() {
                     <Download className="w-3.5 h-3.5" /> Download wire instructions (PDF)
                   </a>
                   <a
-                    href={publicAsset(WIRE_INSTRUCTIONS.imagePath)}
+                    href={wireInstructionsImageUrl(c.id)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 px-4 h-9 rounded-full border border-white/15 bg-white/[0.02] text-white/80 text-sm hover:bg-white/[0.06]"

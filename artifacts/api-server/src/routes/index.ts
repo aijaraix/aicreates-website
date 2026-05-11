@@ -7,6 +7,7 @@ import checkoutRouter from "./checkout";
 import adminRouter from "./admin";
 import saftRouter from "./saft";
 import dataCenterRouter from "./dataCenter";
+import wireInstructionsRouter from "./wireInstructions";
 
 const router: IRouter = Router();
 
@@ -18,5 +19,6 @@ router.use(checkoutRouter);
 router.use(adminRouter);
 router.use(saftRouter);
 router.use(dataCenterRouter);
+router.use(wireInstructionsRouter);
 
 export default router;

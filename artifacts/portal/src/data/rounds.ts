@@ -58,9 +58,20 @@ export const WIRE_INSTRUCTIONS = {
   intermediaryUS: "Bank of America, N.A. - 222 Broadway, New York, NY 10038",
   intermediaryForeign: "Bank of America, N.A. - 555 California St, San Francisco, CA 94104",
   reference: "Use your Commitment ID as the wire reference",
-  pdfPath: "wire-instructions.pdf",
-  imagePath: "wire-instructions.png",
 };
+
+/**
+ * Authenticated download URLs for the wire-instructions PDF / image.
+ * The api-server gates these by Clerk session + commitment ownership, so
+ * the static files no longer need to live in `portal/public/`.
+ */
+export function wireInstructionsPdfUrl(commitId: string): string {
+  return `/api/wire-instructions/${encodeURIComponent(commitId)}/pdf`;
+}
+
+export function wireInstructionsImageUrl(commitId: string): string {
+  return `/api/wire-instructions/${encodeURIComponent(commitId)}/image`;
+}
 
 /** Base-path-safe URL for assets in the portal `public/` folder. */
 export function publicAsset(path: string): string {

@@ -9,7 +9,7 @@ import {
   PAYMENT_METHODS,
   type AckKey,
 } from "@/data/saftFields";
-import { WIRE_INSTRUCTIONS, publicAsset } from "@/data/rounds";
+import { wireInstructionsPdfUrl } from "@/data/rounds";
 import {
   ArrowLeft,
   ArrowRight,
@@ -589,7 +589,7 @@ export default function Saft() {
                   Download draft SAFT
                 </a>
                 <a
-                  href={publicAsset(WIRE_INSTRUCTIONS.pdfPath)}
+                  href={wireInstructionsPdfUrl(c.id)}
                   target="_blank"
                   rel="noopener noreferrer"
                   download
