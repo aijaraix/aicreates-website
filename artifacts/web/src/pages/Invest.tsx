@@ -66,13 +66,27 @@ export default function Invest() {
               {...fadeUp(0.25)}
               className="mt-10 flex flex-col sm:flex-row gap-3"
             >
-              <Link href="/contact?interest=Investor">
+              <a
+                href="https://portal.aicreates.ai/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <Button
                   size="lg"
                   className="rounded-full h-12 px-7 bg-[#00F5D4] text-black hover:bg-[#00F5D4]/90 font-medium"
+                  data-testid="button-reserve-allocation"
+                >
+                  Reserve Your Allocation <ArrowRight className="ml-2 w-4 h-4" />
+                </Button>
+              </a>
+              <Link href="/contact?interest=Investor">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="rounded-full h-12 px-7 border-white/15 bg-white/[0.02] text-white hover:bg-white/[0.06]"
                   data-testid="button-invest-now"
                 >
-                  Invest Now <ArrowRight className="ml-2 w-4 h-4" />
+                  Talk to the Team
                 </Button>
               </Link>
               <Button

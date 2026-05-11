@@ -1,0 +1,32 @@
+@layer theme, base, clerk, components, utilities;
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  color-scheme: dark;
+  --background: 0 0% 4%;
+  --foreground: 0 0% 96%;
+  --muted: 240 4% 12%;
+  --muted-foreground: 240 5% 65%;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  background: #0a0a0a;
+  color: #f5f5f5;
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  margin: 0;
+}
+
+.cl-formFieldInput::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+  opacity: 1;
+}

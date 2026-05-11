@@ -77,6 +77,29 @@ See `README.md` for the full GitHub Pages + GoDaddy DNS setup. The GitHub Action
 
 `formsubmit.co` requires a one-time activation by clicking the verification email it sends to `sholom@aicreates.ai` on the very first submission.
 
+## Investor portal (`artifacts/portal`)
+
+A separate authenticated investor portal lives at `artifacts/portal` and is intended to deploy to **https://portal.aicreates.ai** (Replit Deployments, autoscale). It is not part of the GitHub Pages marketing build.
+
+- Auth: Clerk (white-labeled via the api-server's Clerk proxy at `/api/__clerk`; set `VITE_CLERK_PROXY_URL=/api/__clerk` in the portal env).
+- Payments: Stripe one-time Checkout for "Founders Commitment" tiers.
+- Stripe data is mirrored locally via `stripe-replit-sync` (schema `stripe.*` in Postgres).
+- App-side users are stored in `app_users` (`lib/db/src/schema/app_users.ts`).
+- Portal pages: `/` (landing), `/sign-in`, `/sign-up`, `/dashboard` (per-user commitments), `/invest` (tier picker + Checkout), `/admin` (admin-only overview).
+
+### One-time setup
+
+1. **Connect Stripe** via the Replit Integrations tab (no API keys to copy by hand).
+2. **Set admin emails:** add `ADMIN_EMAILS=you@example.com,other@example.com` (comma-separated) to the api-server env. Matching users are auto-promoted to `admin` on next request.
+3. **Seed tiers:** `pnpm --filter @workspace/scripts run seed-tiers` — idempotent; creates Founders ($1k), Architect ($5k), Catalyst ($25k) products + USD one-time prices in Stripe.
+4. **Push DB schema:** `pnpm --filter @workspace/db run push` (already includes `app_users`).
+
+The api-server gracefully skips Stripe init if the integration is not connected, so the rest of the app keeps working.
+
+### Production deploy
+
+Use Replit Deployments (autoscale) for `portal.aicreates.ai`. The api-server serves both `/api/*` and `/portal/*` (static). Point a `CNAME` for `portal.aicreates.ai` at the Replit deployment and add the domain in Clerk's allowed origins.
+
 ## Eve chat widget (hidden)
 
 The Eve widget (`artifacts/web/src/components/EveWidget.tsx`) and its backend route (`artifacts/api-server/src/routes/eve.ts`) remain in the codebase but the widget is not mounted in `App.tsx`. To re-enable: uncomment the import and the `<EveWidget />` mount in `App.tsx`.

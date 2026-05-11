@@ -144,3 +144,21 @@ Look for the `// TODO: connect form backend` comment in `src/pages/Contact.tsx`.
 ## Security
 
 This is a static public website. Do **not** add API keys, secrets, customer data, or backend credentials to the repository — anything committed here ends up publicly served by GitHub Pages.
+
+## Investor portal (separate deployment)
+
+In addition to this static site, the repo contains an authenticated investor portal at `artifacts/portal/` that deploys to **https://portal.aicreates.ai** via Replit Deployments. Highlights:
+
+- Auth: Clerk (white-labeled).
+- Payments: Stripe one-time Checkout for "Founders Commitment" tiers.
+- Stripe data is mirrored to Postgres via `stripe-replit-sync`.
+- Pages: `/sign-in`, `/sign-up`, `/dashboard`, `/invest`, `/admin`.
+
+One-time setup (in Replit):
+
+1. Connect Stripe via the Integrations tab.
+2. Set `ADMIN_EMAILS=you@example.com` on the api-server env.
+3. `pnpm --filter @workspace/db run push` to sync the `app_users` schema.
+4. `pnpm --filter @workspace/scripts run seed-tiers` to create Founders / Architect / Catalyst products and prices.
+
+See `replit.md` → "Investor portal" for full details. The marketing site's `/invest` page links to `https://portal.aicreates.ai/` from the hero "Reserve Your Allocation" button.
