@@ -7,6 +7,22 @@ interface StripeCredentials {
 }
 
 async function getStripeCredentials(): Promise<StripeCredentials> {
+  // In a deployed environment we prefer the operator-supplied live keys
+  // (STRIPE_SECRET_KEY / optional STRIPE_WEBHOOK_SECRET) over the Replit
+  // connector. This is how we accept real payments in production without
+  // requiring the (currently dismissed) production Stripe connector.
+  // In development we keep using the sandbox connector so we never charge
+  // real money during local work.
+  if (
+    process.env.REPLIT_DEPLOYMENT === "1" &&
+    process.env.STRIPE_SECRET_KEY
+  ) {
+    return {
+      secretKey: process.env.STRIPE_SECRET_KEY,
+      webhookSecret: process.env.STRIPE_WEBHOOK_SECRET,
+    };
+  }
+
   const hostname = process.env.REPLIT_CONNECTORS_HOSTNAME;
   const xReplitToken = process.env.REPL_IDENTITY
     ? "repl " + process.env.REPL_IDENTITY

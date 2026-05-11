@@ -57,6 +57,15 @@ async function getStripeCredentials(): Promise<{ secretKey: string }> {
       "Missing Replit env vars. Connect Stripe via the Integrations tab.",
     );
   }
+  // Same priority as the api-server: in production prefer the
+  // operator-supplied STRIPE_SECRET_KEY env var; otherwise fall back to
+  // the Replit connector.
+  if (
+    process.env.REPLIT_DEPLOYMENT === "1" &&
+    process.env.STRIPE_SECRET_KEY
+  ) {
+    return { secretKey: process.env.STRIPE_SECRET_KEY };
+  }
   const isProduction = process.env.REPLIT_DEPLOYMENT === "1";
   const targetEnvironment = isProduction ? "production" : "development";
   const url = new URL(`https://${hostname}/api/v2/connection`);
