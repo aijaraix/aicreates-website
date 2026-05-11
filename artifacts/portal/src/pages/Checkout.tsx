@@ -12,8 +12,10 @@ import {
   Loader2,
   Copy,
   CheckCircle2,
+  Download,
+  ImageIcon,
 } from "lucide-react";
-import { WIRE_INSTRUCTIONS, CRYPTO_INSTRUCTIONS } from "@/data/rounds";
+import { WIRE_INSTRUCTIONS, CRYPTO_INSTRUCTIONS, publicAsset } from "@/data/rounds";
 
 interface SaftResponse {
   commitment: {
@@ -294,10 +296,14 @@ export default function Checkout() {
                 <dl className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
                   {Object.entries({
                     Beneficiary: WIRE_INSTRUCTIONS.beneficiary,
+                    "Beneficiary address": WIRE_INSTRUCTIONS.beneficiaryAddress,
                     Bank: WIRE_INSTRUCTIONS.bankName,
+                    "Bank branch": WIRE_INSTRUCTIONS.bankBranch,
                     Account: WIRE_INSTRUCTIONS.accountNumber,
-                    Routing: WIRE_INSTRUCTIONS.routingNumber,
-                    SWIFT: WIRE_INSTRUCTIONS.swift,
+                    "Wire routing": WIRE_INSTRUCTIONS.routingNumber,
+                    "ACH routing": WIRE_INSTRUCTIONS.achRouting,
+                    "SWIFT (USD)": WIRE_INSTRUCTIONS.swift,
+                    "SWIFT (foreign currency)": WIRE_INSTRUCTIONS.swiftForeign,
                   }).map(([k, v]) => (
                     <div key={k}>
                       <dt className="text-[11px] uppercase tracking-[0.14em] text-white/40">
@@ -321,6 +327,27 @@ export default function Checkout() {
                     </dd>
                   </div>
                 </dl>
+                <div className="mt-5 flex flex-wrap gap-2">
+                  <a
+                    href={publicAsset(WIRE_INSTRUCTIONS.pdfPath)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    download
+                    className="inline-flex items-center gap-2 px-4 h-9 rounded-full border border-[#00F5D4]/40 bg-[#00F5D4]/10 text-[#00F5D4] text-sm hover:bg-[#00F5D4]/20"
+                    data-testid="link-wire-instructions-pdf"
+                  >
+                    <Download className="w-3.5 h-3.5" /> Download wire instructions (PDF)
+                  </a>
+                  <a
+                    href={publicAsset(WIRE_INSTRUCTIONS.imagePath)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 h-9 rounded-full border border-white/15 bg-white/[0.02] text-white/80 text-sm hover:bg-white/[0.06]"
+                    data-testid="link-wire-instructions-image"
+                  >
+                    <ImageIcon className="w-3.5 h-3.5" /> View as image
+                  </a>
+                </div>
               </div>
             )}
 

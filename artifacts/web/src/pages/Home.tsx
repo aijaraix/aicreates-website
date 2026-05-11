@@ -10,6 +10,7 @@ import {
   Brain,
   Infinity as InfinityIcon,
 } from "lucide-react";
+import DeckCarousel from "@/components/DeckCarousel";
 
 type Slide = {
   id: string;
@@ -379,6 +380,32 @@ export default function Home() {
               ))}
             </motion.div>
           </div>
+        </div>
+      </section>
+
+      {/* VISUAL DECK */}
+      <section className="py-14 md:py-20 relative">
+        <div className="container mx-auto px-4 md:px-6 max-w-6xl">
+          <div className="mb-8 text-center max-w-3xl mx-auto">
+            <SectionLabel>Visual Whitepaper</SectionLabel>
+            <motion.h2
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.6 }}
+              className="mt-5 text-3xl sm:text-4xl md:text-5xl font-serif font-semibold text-gradient leading-[1.05]"
+            >
+              See the layer in motion.
+            </motion.h2>
+            <p className="mt-4 text-base sm:text-lg text-white/55 leading-relaxed">
+              A visual walkthrough of the agentic intelligence layer, the products, and the economic engine.
+            </p>
+          </div>
+          <DeckCarousel
+            title="AICA Visual Whitepaper"
+            subline="28 slides - swipe, arrow keys, or fullscreen."
+            testIdPrefix="deck-home"
+          />
         </div>
       </section>
 

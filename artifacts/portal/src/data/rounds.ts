@@ -47,12 +47,26 @@ export const TIER_ROWS = [
 
 export const WIRE_INSTRUCTIONS = {
   beneficiary: "AICreatesAI Inc.",
-  bankName: "(Provided after SAFT signing)",
-  accountNumber: "(Provided after SAFT signing)",
-  routingNumber: "(Provided after SAFT signing)",
-  swift: "(Provided after SAFT signing)",
+  beneficiaryAddress: "8310 Byron Ave, Miami Beach, Florida 33141",
+  bankName: "Bank of America, N.A.",
+  bankBranch: "7474 Collins Ave, Miami Beach, FL",
+  accountNumber: "898167849109",
+  routingNumber: "026009593",
+  achRouting: "063100277",
+  swift: "BOFAUS3N",
+  swiftForeign: "BOFAUS6S",
+  intermediaryUS: "Bank of America, N.A. - 222 Broadway, New York, NY 10038",
+  intermediaryForeign: "Bank of America, N.A. - 555 California St, San Francisco, CA 94104",
   reference: "Use your Commitment ID as the wire reference",
+  pdfPath: "wire-instructions.pdf",
+  imagePath: "wire-instructions.png",
 };
+
+/** Base-path-safe URL for assets in the portal `public/` folder. */
+export function publicAsset(path: string): string {
+  const base = import.meta.env.BASE_URL || "/";
+  return `${base.replace(/\/$/, "")}/${path.replace(/^\//, "")}`;
+}
 
 export const CRYPTO_INSTRUCTIONS = {
   asset: "USDC (ERC-20 / Polygon / Base)",

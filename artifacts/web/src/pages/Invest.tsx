@@ -11,6 +11,8 @@ import {
   Network,
   Users,
 } from "lucide-react";
+import DeckCarousel from "@/components/DeckCarousel";
+import aicaCoinShield from "@/assets/aica-coin-shield.png";
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
@@ -260,6 +262,47 @@ export default function Invest() {
         </div>
       </section>
 
+      {/* TOKEN */}
+      <section className="py-14 md:py-20 relative">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="relative max-w-6xl mx-auto rounded-3xl border border-white/10 bg-gradient-to-b from-[#101010] to-[#0A0A0A] p-8 sm:p-10 md:p-14 overflow-hidden">
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(0,245,212,0.10),transparent_60%)] pointer-events-none" />
+            <div className="relative grid grid-cols-1 md:grid-cols-5 gap-8 md:gap-12 items-center">
+              <div className="md:col-span-2 flex justify-center">
+                <img
+                  src={aicaCoinShield}
+                  alt="$AICA token"
+                  className="w-48 sm:w-56 md:w-full max-w-[280px] aspect-square object-contain drop-shadow-[0_0_40px_rgba(0,245,212,0.4)]"
+                  draggable={false}
+                  data-testid="img-aica-coin"
+                />
+              </div>
+              <div className="md:col-span-3">
+                <SectionLabel>The Token</SectionLabel>
+                <h2 className="mt-5 text-3xl sm:text-4xl md:text-5xl font-serif font-semibold text-gradient leading-[1.05]">
+                  $AICA powers the layer.
+                </h2>
+                <p className="mt-5 text-base sm:text-lg text-white/65 leading-relaxed">
+                  The $AICA token underwrites subscriptions, compute network participation, and contributor rewards across the agentic intelligence layer. Fixed supply, vested allocations, and a sustainable economic model designed around real usage.
+                </p>
+                <div className="mt-6 flex flex-wrap gap-3">
+                  <Link href="/litepaper#tokenomics">
+                    <Button
+                      variant="outline"
+                      className="rounded-full h-10 px-5 border-white/15 bg-white/[0.02] text-white hover:bg-white/[0.06] hover:text-[#00F5D4] group"
+                      data-testid="button-token-litepaper"
+                    >
+                      Read tokenomics{" "}
+                      <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* WHY INVEST */}
       <section className="py-14 md:py-24 relative">
         <div className="container mx-auto px-4 md:px-6">
@@ -316,6 +359,26 @@ export default function Invest() {
               </motion.div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* VISUAL DECK */}
+      <section className="py-14 md:py-20 relative">
+        <div className="container mx-auto px-4 md:px-6 max-w-6xl">
+          <div className="mb-8 text-center max-w-3xl mx-auto">
+            <SectionLabel>Visual Deck</SectionLabel>
+            <h2 className="mt-5 text-3xl sm:text-4xl md:text-5xl font-serif font-semibold text-gradient leading-[1.05]">
+              The agentic thesis at a glance.
+            </h2>
+            <p className="mt-4 text-base sm:text-lg text-white/55 leading-relaxed">
+              Step through the visual whitepaper. Use arrows, swipe, or open it fullscreen.
+            </p>
+          </div>
+          <DeckCarousel
+            title="AICA Visual Whitepaper"
+            subline="28 slides - swipe, arrow keys, or fullscreen."
+            testIdPrefix="deck-invest"
+          />
         </div>
       </section>
 

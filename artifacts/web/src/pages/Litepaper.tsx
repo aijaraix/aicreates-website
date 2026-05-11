@@ -2,6 +2,34 @@ import { motion } from "framer-motion";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Download } from "lucide-react";
+import aicaCoin from "@/assets/aica-coin.png";
+
+function AicaGlyph({ className = "" }: { className?: string }) {
+  return (
+    <img
+      src={aicaCoin}
+      alt=""
+      aria-hidden="true"
+      className={`inline-block align-[-0.18em] w-[1.1em] h-[1.1em] mx-1 select-none drop-shadow-[0_0_8px_rgba(0,245,212,0.35)] ${className}`}
+      draggable={false}
+    />
+  );
+}
+
+function withGlyphs(text: string): React.ReactNode {
+  const parts = text.split(/(\$AICA)/g);
+  if (parts.length === 1) return text;
+  return parts.map((p, i) =>
+    p === "$AICA" ? (
+      <span key={i} className="inline-flex items-baseline">
+        <AicaGlyph />
+        <span className="font-medium text-[#00F5D4]">$AICA</span>
+      </span>
+    ) : (
+      <span key={i}>{p}</span>
+    ),
+  );
+}
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
@@ -239,13 +267,17 @@ const SECTIONS: Section[] = [
 
 function BlockRenderer({ block }: { block: Block }) {
   if (block.kind === "p") {
-    return <p className="text-white/70 text-base md:text-lg leading-relaxed">{block.text}</p>;
+    return (
+      <p className="text-white/70 text-base md:text-lg leading-relaxed">
+        {withGlyphs(block.text)}
+      </p>
+    );
   }
   if (block.kind === "sub") {
     return (
       <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6">
         <div className="text-xs font-mono text-[#00F5D4] tracking-widest uppercase mb-2">{block.title}</div>
-        <p className="text-white/70 text-base leading-relaxed">{block.text}</p>
+        <p className="text-white/70 text-base leading-relaxed">{withGlyphs(block.text)}</p>
       </div>
     );
   }
@@ -253,15 +285,49 @@ function BlockRenderer({ block }: { block: Block }) {
   const intro = "intro" in block ? block.intro : undefined;
   return (
     <div className="space-y-4">
-      {intro && <p className="text-white/70 text-base md:text-lg leading-relaxed">{intro}</p>}
+      {intro && (
+        <p className="text-white/70 text-base md:text-lg leading-relaxed">
+          {withGlyphs(intro)}
+        </p>
+      )}
       <ul className="space-y-3">
         {block.items.map((it, i) => (
           <li key={i} className="flex items-start gap-3">
             <span className="mt-2.5 w-1.5 h-1.5 rounded-full bg-[#00F5D4] shrink-0 shadow-[0_0_6px_rgba(0,245,212,0.6)]" />
-            <span className="text-white/70 text-base leading-relaxed">{it}</span>
+            <span className="text-white/70 text-base leading-relaxed">{withGlyphs(it)}</span>
           </li>
         ))}
       </ul>
+    </div>
+  );
+}
+
+function TokenomicsCoin() {
+  return (
+    <div className="relative my-8 rounded-3xl border border-white/10 bg-gradient-to-b from-[#0E0E0E] to-[#0A0A0A] overflow-hidden">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,245,212,0.18),transparent_60%)] pointer-events-none" />
+      <div className="absolute inset-0 bg-grid opacity-30 pointer-events-none [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,black,transparent_75%)]" />
+      <div className="relative grid grid-cols-1 md:grid-cols-5 gap-6 p-7 md:p-10 items-center">
+        <div className="md:col-span-2 flex justify-center">
+          <img
+            src={aicaCoin}
+            alt="$AICA token"
+            className="w-56 sm:w-64 md:w-full max-w-[320px] aspect-square object-contain drop-shadow-[0_0_40px_rgba(0,245,212,0.35)]"
+            draggable={false}
+          />
+        </div>
+        <div className="md:col-span-3">
+          <div className="text-xs font-mono text-[#00F5D4] tracking-widest uppercase mb-2">
+            $AICA Token
+          </div>
+          <div className="text-2xl md:text-3xl font-serif font-semibold text-white leading-tight">
+            The native asset of the Agentic Intelligence Layer.
+          </div>
+          <p className="mt-3 text-white/60 text-sm md:text-base leading-relaxed">
+            Subscription discounts, compute network participation, and contributor rewards - all settled in $AICA. Total supply is fixed at 10,000,000,000 tokens.
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
@@ -347,6 +413,7 @@ export default function Litepaper() {
                     <h2 className="text-3xl md:text-4xl font-serif font-semibold text-white mb-7 leading-tight">
                       {s.title}
                     </h2>
+                    {s.id === "tokenomics" && <TokenomicsCoin />}
                     <div className="space-y-5">
                       {s.blocks.map((b, i) => (
                         <BlockRenderer key={i} block={b} />
