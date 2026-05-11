@@ -1,16 +1,17 @@
 /**
  * Build the AICA visual whitepaper deck for the marketing site.
  *
- * Reads a source PDF (default: ./aica-deck.pdf at the repo root) and writes
- * one JPEG per page to artifacts/web/public/deck/slide-NN.jpg, plus a
- * manifest.json describing the slide order.
+ * Reads a source PDF (default: the attached visual whitepaper), renders each
+ * page to a high-resolution master JPEG, then emits a responsive set of WebP
+ * variants (640w / 1024w / 1467w) plus a manifest.json describing the deck.
+ * The final files live under artifacts/web/public/deck/.
  *
  * Usage:
- *   pnpm --filter @workspace/scripts run build-deck                # uses ./aica-deck.pdf
+ *   pnpm --filter @workspace/scripts run build-deck                # uses default attached PDF
  *   pnpm --filter @workspace/scripts run build-deck path/to/src.pdf
  *
- * Requires `pdftoppm` (poppler-utils) on PATH, which is provided by the
- * Replit Nix environment.
+ * Requires `pdftoppm` (poppler-utils) and `magick` (ImageMagick) on PATH,
+ * both provided by the Replit Nix environment.
  */
 import { execFileSync } from "node:child_process";
 import { existsSync, mkdirSync, readdirSync, rmSync, writeFileSync } from "node:fs";
@@ -33,9 +34,20 @@ function main() {
     process.exit(1);
   }
 
+  /** Responsive widths to emit per slide (in CSS pixels). */
+  const RESPONSIVE_WIDTHS = [640, 1024, 1467];
+  /** Width chosen as the `<img>` fallback `src`. */
+  const DEFAULT_WIDTH = 1024;
+  /** WebP encoder quality (1-100). */
+  const WEBP_QUALITY = 80;
+
   if (existsSync(OUT_DIR)) {
     for (const f of readdirSync(OUT_DIR)) {
-      if (/^slide-\d+\.jpg$/.test(f) || f === "manifest.json") {
+      if (
+        /^slide-\d+(-\d+)?\.(jpg|webp)$/.test(f) ||
+        f === "manifest.json" ||
+        f.startsWith("_master-")
+      ) {
         rmSync(resolve(OUT_DIR, f));
       }
     }
@@ -50,62 +62,87 @@ function main() {
   const totalPages = pageMatch ? Number(pageMatch[1]) : 0;
   const padWidth = Math.max(2, String(totalPages || 99).length);
 
+  // Render high-resolution master JPEGs; we'll downscale these into WebPs.
   execFileSync(
     "pdftoppm",
     [
       "-jpeg",
       "-jpegopt",
-      "quality=82",
+      "quality=92",
       "-r",
-      "110",
+      "150",
       "-digits",
       String(padWidth),
       src,
-      resolve(OUT_DIR, "slide"),
+      resolve(OUT_DIR, "_master"),
     ],
     { stdio: "inherit" },
   );
 
-  // Natural-numeric sort so slide-2 < slide-10 even if any pad slips through.
-  const slides = readdirSync(OUT_DIR)
-    .filter((f) => /^slide-\d+\.jpg$/.test(f))
+  // Natural-numeric sort so master-2 < master-10 even if any pad slips through.
+  const masters = readdirSync(OUT_DIR)
+    .filter((f) => /^_master-\d+\.jpg$/.test(f))
     .sort((a, b) => {
       const na = Number(/\d+/.exec(a)![0]);
       const nb = Number(/\d+/.exec(b)![0]);
       return na - nb;
     });
 
-  if (slides.length === 0) {
+  if (masters.length === 0) {
     console.error("pdftoppm produced no slides.");
     process.exit(1);
   }
 
-  // Pull rendered pixel dimensions per page so the front-end can reserve space.
-  const sizeRaw = execFileSync("pdfinfo", ["-f", "1", "-l", String(slides.length), src], {
-    encoding: "utf8",
-  });
-  const ptMatch = /Page size:\s+([0-9.]+)\s+x\s+([0-9.]+)\s+pts/.exec(sizeRaw);
-  let widthPx: number | null = null;
-  let heightPx: number | null = null;
-  if (ptMatch) {
-    widthPx = Math.round((Number(ptMatch[1]) / 72) * 110);
-    heightPx = Math.round((Number(ptMatch[2]) / 72) * 110);
+  // Capture native dimensions from the first master so the carousel can reserve space.
+  const dimsRaw = execFileSync(
+    "magick",
+    ["identify", "-format", "%w %h", resolve(OUT_DIR, masters[0])],
+    { encoding: "utf8" },
+  );
+  const [mw, mh] = dimsRaw.trim().split(/\s+/).map(Number);
+
+  // Emit WebP variants per slide, then drop the master.
+  const slideStems: string[] = [];
+  for (const m of masters) {
+    const num = /\d+/.exec(m)![0];
+    const stem = `slide-${num}`;
+    slideStems.push(stem);
+    for (const w of RESPONSIVE_WIDTHS) {
+      execFileSync(
+        "magick",
+        [
+          resolve(OUT_DIR, m),
+          "-resize",
+          `${w}x`,
+          "-quality",
+          String(WEBP_QUALITY),
+          "-define",
+          "webp:method=6",
+          resolve(OUT_DIR, `${stem}-${w}.webp`),
+        ],
+        { stdio: "inherit" },
+      );
+    }
+    rmSync(resolve(OUT_DIR, m));
   }
 
   const manifest = {
-    slides,
-    count: slides.length,
+    slides: slideStems,
+    count: slideStems.length,
+    widths: RESPONSIVE_WIDTHS,
+    defaultWidth: DEFAULT_WIDTH,
+    format: "webp" as const,
+    width: mw || null,
+    height: mh || null,
+    aspectRatio: mw && mh ? mw / mh : null,
     source: "AICA Visual Whitepaper",
     sourceFile: src,
-    format: "jpeg",
-    densityDpi: 110,
-    width: widthPx,
-    height: heightPx,
-    aspectRatio: widthPx && heightPx ? widthPx / heightPx : null,
     generatedAt: new Date().toISOString(),
   };
   writeFileSync(resolve(OUT_DIR, "manifest.json"), JSON.stringify(manifest, null, 2));
-  console.log(`Wrote ${slides.length} slides + manifest.json`);
+  console.log(
+    `Wrote ${slideStems.length} slides x ${RESPONSIVE_WIDTHS.length} widths (webp) + manifest.json`,
+  );
 }
 
 main();

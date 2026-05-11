@@ -8,8 +8,19 @@ import {
 } from "lucide-react";
 
 type Manifest = {
+  /** Per-slide stem (e.g. `slide-01`); the carousel composes file URLs from this + width + format. */
   slides: string[];
   count: number;
+  /** Available widths in pixels for the responsive `srcset` (e.g. [640, 1024, 1467]). */
+  widths?: number[];
+  /** Width chosen for the `<img>` fallback `src`. */
+  defaultWidth?: number;
+  /** Asset format - currently only `"webp"`. */
+  format?: "webp" | "jpeg";
+  /** Native rendered dimensions of the source slides (for aspect-ratio reservation). */
+  width?: number;
+  height?: number;
+  aspectRatio?: number;
   source?: string;
 };
 
@@ -55,6 +66,24 @@ export default function DeckCarousel({
 
   const slides = manifest?.slides ?? [];
   const count = slides.length;
+  const widths = manifest?.widths;
+  // Pick a fallback width that actually exists in `widths`; if the manifest
+  // declares a `defaultWidth` not in the set, snap to the nearest one so the
+  // `<img>` `src` always points at a real generated file.
+  const defaultWidth = (() => {
+    if (!widths || widths.length === 0) return undefined;
+    const declared = manifest?.defaultWidth;
+    if (declared && widths.includes(declared)) return declared;
+    if (declared) {
+      return widths.reduce((best, w) =>
+        Math.abs(w - declared) < Math.abs(best - declared) ? w : best,
+      );
+    }
+    return widths[Math.floor((widths.length - 1) / 2)];
+  })();
+  const format: "webp" | "jpeg" = manifest?.format ?? "webp";
+  const nativeWidth = manifest?.width ?? null;
+  const nativeHeight = manifest?.height ?? null;
 
   const go = useCallback(
     (delta: number) => {
@@ -212,17 +241,49 @@ export default function DeckCarousel({
         {!error && count === 0 && (
           <div className="text-white/40 text-sm">Loading deck…</div>
         )}
-        {slides.map((src, i) => {
+        {slides.map((stem, i) => {
           if (!renderable.has(i)) return null;
           const isActive = i === active;
+          // Backwards-compat: if the manifest still ships full filenames (e.g.
+          // `slide-01.jpg`), strip the extension so the srcset composer works.
+          const base = stem.replace(/\.(webp|jpe?g|png)$/i, "");
+          // Legacy single-format manifest (no `widths`): fall back to the
+          // original `<img>` rendering.
+          if (!widths || widths.length === 0) {
+            return (
+              <img
+                key={stem}
+                src={`${basePath}/${stem}`}
+                alt={`Slide ${i + 1} of ${count}`}
+                loading={isActive ? "eager" : "lazy"}
+                decoding="async"
+                draggable={false}
+                data-testid={isActive ? `${testIdPrefix}-slide-active` : undefined}
+                width={nativeWidth ?? undefined}
+                height={nativeHeight ?? undefined}
+                className={`absolute inset-0 m-auto max-w-full max-h-full object-contain transition-opacity duration-300 ${
+                  isActive ? "opacity-100" : "opacity-0 pointer-events-none"
+                }`}
+              />
+            );
+          }
+          const ext = format === "jpeg" ? "jpg" : "webp";
+          const srcSet = widths
+            .map((w) => `${basePath}/${base}-${w}.${ext} ${w}w`)
+            .join(", ");
+          const fallbackSrc = `${basePath}/${base}-${defaultWidth}.${ext}`;
           return (
             <img
-              key={src}
-              src={`${basePath}/${src}`}
+              key={stem}
+              src={fallbackSrc}
+              srcSet={srcSet}
+              sizes="(min-width: 1280px) 1280px, (min-width: 640px) 100vw, 100vw"
               alt={`Slide ${i + 1} of ${count}`}
               loading={isActive ? "eager" : "lazy"}
               decoding="async"
               draggable={false}
+              width={nativeWidth ?? undefined}
+              height={nativeHeight ?? undefined}
               data-testid={isActive ? `${testIdPrefix}-slide-active` : undefined}
               className={`absolute inset-0 m-auto max-w-full max-h-full object-contain transition-opacity duration-300 ${
                 isActive ? "opacity-100" : "opacity-0 pointer-events-none"
