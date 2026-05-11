@@ -40,6 +40,11 @@ function main() {
   const DEFAULT_WIDTH = 1024;
   /** WebP encoder quality (1-100). */
   const WEBP_QUALITY = 80;
+  /** Width used for the single JPEG fallback served via the `<img>` element
+   *  inside `<picture>`. Picked from RESPONSIVE_WIDTHS. */
+  const FALLBACK_WIDTH = 1024;
+  /** JPEG encoder quality (1-100) for the `<picture>` fallback. */
+  const FALLBACK_JPEG_QUALITY = 82;
 
   if (existsSync(OUT_DIR)) {
     for (const f of readdirSync(OUT_DIR)) {
@@ -123,6 +128,20 @@ function main() {
         { stdio: "inherit" },
       );
     }
+    // Single JPEG fallback for the `<picture>` element's `<img>` tag, used
+    // only by browsers that don't support WebP.
+    execFileSync(
+      "magick",
+      [
+        resolve(OUT_DIR, m),
+        "-resize",
+        `${FALLBACK_WIDTH}x`,
+        "-quality",
+        String(FALLBACK_JPEG_QUALITY),
+        resolve(OUT_DIR, `${stem}-${FALLBACK_WIDTH}.jpg`),
+      ],
+      { stdio: "inherit" },
+    );
     rmSync(resolve(OUT_DIR, m));
   }
 
@@ -132,6 +151,8 @@ function main() {
     widths: RESPONSIVE_WIDTHS,
     defaultWidth: DEFAULT_WIDTH,
     format: "webp" as const,
+    fallbackFormat: "jpg" as const,
+    fallbackWidth: FALLBACK_WIDTH,
     width: mw || null,
     height: mh || null,
     aspectRatio: mw && mh ? mw / mh : null,

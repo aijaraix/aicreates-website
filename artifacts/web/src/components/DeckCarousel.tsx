@@ -15,8 +15,13 @@ type Manifest = {
   widths?: number[];
   /** Width chosen for the `<img>` fallback `src`. */
   defaultWidth?: number;
-  /** Asset format - currently only `"webp"`. */
+  /** Primary asset format served via the `<source>` element. */
   format?: "webp" | "jpeg";
+  /** Optional fallback format served via the `<img>` element for browsers
+   *  that don't support `format` (e.g. very old browsers without WebP). */
+  fallbackFormat?: "jpg" | "jpeg" | "png";
+  /** Width used for the `<img>` fallback file. Defaults to `defaultWidth`. */
+  fallbackWidth?: number;
   /** Native rendered dimensions of the source slides (for aspect-ratio reservation). */
   width?: number;
   height?: number;
@@ -82,6 +87,8 @@ export default function DeckCarousel({
     return widths[Math.floor((widths.length - 1) / 2)];
   })();
   const format: "webp" | "jpeg" = manifest?.format ?? "webp";
+  const fallbackFormat = manifest?.fallbackFormat ?? "jpg";
+  const fallbackWidth = manifest?.fallbackWidth ?? defaultWidth;
   const nativeWidth = manifest?.width ?? null;
   const nativeHeight = manifest?.height ?? null;
 
@@ -267,28 +274,36 @@ export default function DeckCarousel({
               />
             );
           }
-          const ext = format === "jpeg" ? "jpg" : "webp";
-          const srcSet = widths
-            .map((w) => `${basePath}/${base}-${w}.${ext} ${w}w`)
+          const sourceExt = format === "jpeg" ? "jpg" : "webp";
+          const sourceMime = format === "jpeg" ? "image/jpeg" : "image/webp";
+          const sourceSrcSet = widths
+            .map((w) => `${basePath}/${base}-${w}.${sourceExt} ${w}w`)
             .join(", ");
-          const fallbackSrc = `${basePath}/${base}-${defaultWidth}.${ext}`;
+          const sizes = "(min-width: 1280px) 1280px, (min-width: 640px) 100vw, 100vw";
+          // The fallback `<img>` is what older browsers (e.g. browsers
+          // without WebP support) actually render; we ship a single JPEG
+          // size at `fallbackWidth` so we don't bloat the deploy.
+          const fallbackSrc = `${basePath}/${base}-${fallbackWidth}.${fallbackFormat}`;
           return (
-            <img
+            <picture
               key={stem}
-              src={fallbackSrc}
-              srcSet={srcSet}
-              sizes="(min-width: 1280px) 1280px, (min-width: 640px) 100vw, 100vw"
-              alt={`Slide ${i + 1} of ${count}`}
-              loading={isActive ? "eager" : "lazy"}
-              decoding="async"
-              draggable={false}
-              width={nativeWidth ?? undefined}
-              height={nativeHeight ?? undefined}
-              data-testid={isActive ? `${testIdPrefix}-slide-active` : undefined}
-              className={`absolute inset-0 m-auto max-w-full max-h-full object-contain transition-opacity duration-300 ${
+              className={`absolute inset-0 m-auto flex items-center justify-center transition-opacity duration-300 ${
                 isActive ? "opacity-100" : "opacity-0 pointer-events-none"
               }`}
-            />
+            >
+              <source type={sourceMime} srcSet={sourceSrcSet} sizes={sizes} />
+              <img
+                src={fallbackSrc}
+                alt={`Slide ${i + 1} of ${count}`}
+                loading={isActive ? "eager" : "lazy"}
+                decoding="async"
+                draggable={false}
+                width={nativeWidth ?? undefined}
+                height={nativeHeight ?? undefined}
+                data-testid={isActive ? `${testIdPrefix}-slide-active` : undefined}
+                className="max-w-full max-h-full object-contain"
+              />
+            </picture>
           );
         })}
 

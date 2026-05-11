@@ -41,5 +41,7 @@
   "height": 825,
   "aspectRatio": 1.778181818181818,
   "source": "AICA Visual Whitepaper",
-  "generatedAt": "2026-05-11T23:15:07.226Z"
+  "generatedAt": "2026-05-11T23:15:07.226Z",
+  "fallbackFormat": "jpg",
+  "fallbackWidth": 1024
 }
