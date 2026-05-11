@@ -168,20 +168,22 @@ const SECTIONS: Section[] = [
     blocks: [
       {
         kind: "p",
-        text: "AICreatesAi plans to introduce a utility token ($AICA) to support long-term ecosystem participation and contributor rewards.",
+        text: "AICreatesAi Token ($AICA) is to support subscriptions, long-term ecosystem participation and contributor rewards as well as other utilities planned.",
+      },
+      {
+        kind: "sub",
+        title: "Token Overview",
+        text: "Total Supply: 10,000,000,000 $AICA",
       },
       {
         kind: "list",
-        intro: "Key Principles:",
+        intro: "Key Token Principles:",
         items: [
-          "Core platform revenue will initially be driven by stablecoin and fiat subscriptions to ensure operational stability.",
-          "The token will provide utility through subscription discounts, participation in the compute network, governance rights, and rewards for contributors.",
+          "Core platform revenue will initially be driven by subscriptions to ensure operational stability then the use of the Token will be integrated where necessary.",
+          "The token will provide utility through subscription discounts, participation in the compute network & rewards distributed to contributors. GPU, Data, etc.",
+          "All tokens sold in private rounds will be subject to appropriate vesting schedules.",
           "A sustainable economic model is being designed with a focus on real usage, long-term alignment, and ecosystem health.",
         ],
-      },
-      {
-        kind: "p",
-        text: "Detailed tokenomics, including allocation, vesting schedules, and full utility mechanics, will be provided separately on a dedicated Tokenomics page.",
       },
     ],
   },
@@ -192,17 +194,17 @@ const SECTIONS: Section[] = [
     blocks: [
       {
         kind: "sub",
-        title: "Phase 0-1 (2026)",
+        title: "Phase 0-1",
         text: "Build core platform, closed-loop quality systems, and initial workflows. Achieve early product-market fit.",
       },
       {
         kind: "sub",
-        title: "Phase 2 (2027)",
+        title: "Phase 2",
         text: "Expand capabilities, launch marketplace features, deepen proprietary model development, and scale user base.",
       },
       {
         kind: "sub",
-        title: "Phase 3 (2028+)",
+        title: "Phase 3",
         text: "Scale intelligence and compute participation, deliver advanced autonomous capabilities, and grow ecosystem.",
       },
     ],
@@ -275,7 +277,7 @@ export default function Litepaper() {
         <div className="container mx-auto px-4 md:px-6 relative z-10">
           <div className="max-w-4xl">
             <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-              <SectionLabel>Whitepaper · v3.2</SectionLabel>
+              <SectionLabel>Litepaper</SectionLabel>
             </motion.div>
             <motion.h1
               initial={{ opacity: 0, y: 16 }}
@@ -283,7 +285,7 @@ export default function Litepaper() {
               transition={{ duration: 0.7, delay: 0.05 }}
               className="mt-6 text-5xl md:text-7xl font-serif font-semibold leading-[1.04] text-gradient"
             >
-              AICreatesAi Whitepaper v3.2
+              AICreatesAi Litepaper
             </motion.h1>
             <motion.p
               initial={{ opacity: 0, y: 16 }}
@@ -323,31 +325,8 @@ export default function Litepaper() {
       <section className="pb-24 md:pb-32 relative">
         <div className="container mx-auto px-4 md:px-6">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-            {/* TABLE OF CONTENTS (desktop) */}
-            <aside className="hidden lg:block lg:col-span-3">
-              <div className="sticky top-28">
-                <div className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/40 mb-5">
-                  Contents
-                </div>
-                <nav className="flex flex-col gap-1.5">
-                  {SECTIONS.map((s) => (
-                    <a
-                      key={s.id}
-                      href={`#${s.id}`}
-                      className="group flex items-baseline gap-3 py-1.5 px-2 -mx-2 rounded text-sm text-white/55 hover:text-white hover:bg-white/[0.04] transition-colors"
-                    >
-                      <span className="font-mono text-[10px] text-white/30 group-hover:text-[#00F5D4] transition-colors w-5">
-                        {s.n}
-                      </span>
-                      <span className="leading-snug">{s.title}</span>
-                    </a>
-                  ))}
-                </nav>
-              </div>
-            </aside>
-
             {/* SECTIONS */}
-            <article className="lg:col-span-9 max-w-3xl">
+            <article className="lg:col-span-9 lg:order-1 order-2">
               <div className="space-y-16">
                 {SECTIONS.map((s, idx) => (
                   <motion.section
@@ -383,12 +362,35 @@ export default function Litepaper() {
                       Disclaimer
                     </div>
                     <p className="text-white/50 text-sm leading-relaxed">
-                      This whitepaper is for informational purposes only and does not constitute an offer to sell securities or tokens. Early-stage technology and cryptocurrency investments involve significant risk. Forward-looking statements are subject to change based on development progress, market conditions, and other factors.
+                      This litepaper is for informational purposes only and does not constitute an offer to sell securities or tokens. Early-stage technology and cryptocurrency investments involve significant risk. Forward-looking statements are subject to change based on development progress, market conditions, and other factors.
                     </p>
                   </div>
                 </div>
               </div>
             </article>
+
+            {/* TABLE OF CONTENTS (desktop, right rail) */}
+            <aside className="hidden lg:block lg:col-span-3 lg:order-2">
+              <div className="sticky top-28">
+                <div className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/40 mb-5">
+                  Contents
+                </div>
+                <nav className="flex flex-col gap-1.5">
+                  {SECTIONS.map((s) => (
+                    <a
+                      key={s.id}
+                      href={`#${s.id}`}
+                      className="group flex items-baseline gap-3 py-1.5 px-2 -mx-2 rounded text-sm text-white/55 hover:text-white hover:bg-white/[0.04] transition-colors"
+                    >
+                      <span className="font-mono text-[10px] text-white/30 group-hover:text-[#00F5D4] transition-colors w-5">
+                        {s.n}
+                      </span>
+                      <span className="leading-snug">{s.title}</span>
+                    </a>
+                  ))}
+                </nav>
+              </div>
+            </aside>
           </div>
         </div>
       </section>
