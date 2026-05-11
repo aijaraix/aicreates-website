@@ -51,29 +51,30 @@ Override the base URL with `PORTAL_E2E_BASE_URL` (defaults to
 | `05-wire-checkout` | Wire flow → `awaiting_wire` → admin confirm → `funded`. |
 | `06-crypto-checkout` | Crypto flow → `awaiting_crypto` → admin confirm → `funded`. |
 | `07-dashboard-funded` | Funded commitment + vesting schedule on the dashboard. |
-| `08-card-checkout` | (opt-in) Drives Stripe-hosted Checkout with test card 4242, asserts webhook flips commitment to `funded`. |
-| `09-ach-checkout` | (opt-in) ACH (us_bank_account) checkout returns a valid Stripe session URL and the page renders the bank-account UI. |
+| `08-card-checkout` | Drives Stripe-hosted Checkout with test card 4242 and asserts the webhook flips the commitment to `funded`. Auto-skipped when Stripe is not configured. |
+| `09-ach-checkout` | Drives Stripe Financial Connections "Test Institution" sandbox and asserts the webhook flips the commitment to `funded`. Auto-skipped when Stripe is not configured. |
 
-## Stripe-hosted Checkout specs (opt-in)
+## Stripe-hosted Checkout specs (auto-detected)
 
-The card and ACH specs (`08-*`, `09-*`) drive the Stripe-hosted Checkout
-page, which is Stripe's UI and can change without notice. They are
-**skipped by default** to keep the suite stable. To run them:
+The card and ACH specs (`08-*`, `09-*`) drive the Stripe-hosted
+Checkout page. They run automatically when Stripe is configured
+(`STRIPE_SECRET_KEY` is set OR `REPLIT_CONNECTORS_HOSTNAME` is set so
+the api-server can fetch sandbox credentials from the Replit Stripe
+integration). They auto-skip otherwise, the same way admin specs
+skip when `ADMIN_EMAILS` is empty.
 
-```bash
-STRIPE_E2E_DRIVE_CHECKOUT=1 pnpm --filter @workspace/portal-e2e run test
-```
+Notes:
 
-Prerequisites:
-
-- The api-server's dev Stripe sandbox connector must be connected (the
-  workspace already does this via the Replit Stripe integration).
-- The card spec uses test card `4242 4242 4242 4242`, exp `12/34`, CVC
-  `123`. It waits for the asynchronous Stripe webhook to flip the
-  commitment to `funded` (poll up to 90s).
-- The ACH spec only verifies the Checkout session is created with the
-  correct shape and the hosted page renders the bank-account UI; it
-  does not drive the Financial Connections modal end-to-end.
+- The card spec uses test card `4242 4242 4242 4242`, exp `12/34`,
+  CVC `123`, then polls `/api/me/allocations` for up to 2 min for the
+  Stripe webhook to flip the commitment to `funded`.
+- The ACH spec drives Stripe's Financial Connections sandbox by
+  picking the "Test Institution", agreeing to terms, and completing
+  the connection. Selectors are intentionally tolerant of small UI
+  revisions (we try several role/text matchers).
+- These specs DO drive Stripe's hosted UI, so they can break when
+  Stripe ships UI changes. If a spec breaks, update the matchers in
+  `tests/08-card-checkout.spec.ts` / `tests/09-ach-checkout.spec.ts`.
 
 ## Test users
 
@@ -91,7 +92,6 @@ never interacts with Clerk's sign-in UI.
 - Tests share the dev database. Each run creates new commitment rows; old
   rows are not cleaned up, mirroring the rest of the workspace's testing
   posture.
-- The default suite does not exercise Stripe. The wire and crypto
-  paths cover the full state machine without leaving our own surface.
-  The opt-in card/ACH specs (above) drive the Stripe-hosted page when
-  `STRIPE_E2E_DRIVE_CHECKOUT=1` is set.
+- The wire and crypto paths cover the full state machine without
+  leaving our own surface. The card/ACH specs (above) auto-run when
+  Stripe is configured and drive the Stripe-hosted page end-to-end.

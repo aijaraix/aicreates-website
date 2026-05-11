@@ -2,42 +2,15 @@ import { test, expect } from "@playwright/test";
 import { signIn } from "./helpers/auth";
 import { createCommitment } from "./helpers/commitment";
 import { completeSaft } from "./helpers/saft";
-import { getJson } from "./helpers/api";
 import { INVESTOR_EMAIL } from "./helpers/users";
-
-const SHOULD_RUN = process.env.STRIPE_E2E_DRIVE_CHECKOUT === "1";
-
-interface Allocation {
-  commitmentId: string;
-  state: string;
-  status: string;
-}
-interface AllocationsResp {
-  allocations: Allocation[];
-}
-
-async function pollFunded(
-  page: import("@playwright/test").Page,
-  commitmentId: string,
-  timeoutMs = 90_000,
-): Promise<Allocation | null> {
-  const deadline = Date.now() + timeoutMs;
-  let last: Allocation | null = null;
-  while (Date.now() < deadline) {
-    const a = await getJson<AllocationsResp>(page, "/me/allocations");
-    last = a.allocations.find((x) => x.commitmentId === commitmentId) ?? null;
-    if (last && last.state === "funded") return last;
-    await page.waitForTimeout(2_000);
-  }
-  return last;
-}
+import { STRIPE_CONFIGURED, pollFunded } from "./helpers/stripe";
 
 test.describe("Stripe-hosted card checkout", () => {
   test.skip(
-    !SHOULD_RUN,
-    "Set STRIPE_E2E_DRIVE_CHECKOUT=1 to opt in. This test drives the live Stripe-hosted Checkout page (4242... test card) and depends on Stripe's UI staying stable. Requires the dev Stripe sandbox connector to be connected.",
+    !STRIPE_CONFIGURED,
+    "Stripe is not configured (no STRIPE_SECRET_KEY and no REPLIT_CONNECTORS_HOSTNAME).",
   );
-  test.setTimeout(180_000);
+  test.setTimeout(240_000);
 
   test("4242 test card flips the commitment to funded via the Stripe webhook", async ({
     page,
@@ -76,11 +49,14 @@ test.describe("Stripe-hosted card checkout", () => {
     await page.locator('button[type="submit"]').first().click();
 
     // Redirected back to /portal/dashboard?paid=<id>
-    await page.waitForURL(/\/portal\/dashboard/, { timeout: 90_000 });
+    await page.waitForURL(/\/portal\/dashboard/, { timeout: 120_000 });
 
-    // Webhook is async; poll the allocations endpoint until funded.
     const funded = await pollFunded(page, c.id);
-    expect(funded, "commitment never reached funded").not.toBeNull();
+    expect(
+      funded,
+      "commitment never reached funded after card payment",
+    ).not.toBeNull();
     expect(funded!.state).toBe("funded");
+    expect(funded!.status).toBe("succeeded");
   });
 });

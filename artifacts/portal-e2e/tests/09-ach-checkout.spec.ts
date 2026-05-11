@@ -1,29 +1,69 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, type FrameLocator } from "@playwright/test";
 import { signIn } from "./helpers/auth";
 import { createCommitment } from "./helpers/commitment";
 import { completeSaft } from "./helpers/saft";
-import { postJson, getJson } from "./helpers/api";
 import { INVESTOR_EMAIL } from "./helpers/users";
+import { STRIPE_CONFIGURED, pollFunded } from "./helpers/stripe";
 
-const SHOULD_RUN = process.env.STRIPE_E2E_DRIVE_CHECKOUT === "1";
-
-interface Allocation {
-  commitmentId: string;
-  state: string;
-  status: string;
+/**
+ * Drive Stripe's Financial Connections sandbox to "Test Institution",
+ * which is the canonical way to complete a us_bank_account payment in
+ * test mode without real Plaid credentials. The FC widget renders
+ * inside a Stripe-served iframe; we accept either matcher.
+ */
+async function pickFcTestInstitution(
+  fc: FrameLocator,
+): Promise<void> {
+  // Stripe shows "Test Institution" as a featured option in test mode.
+  // Several layouts exist (button, list item, role=option); try them in
+  // turn so the test survives small UI revisions.
+  const candidates = [
+    fc.getByRole("button", { name: /test institution/i }),
+    fc.getByText(/^test institution$/i).first(),
+    fc.locator('[data-test="institution-row"]', {
+      hasText: /test institution/i,
+    }),
+  ];
+  for (const c of candidates) {
+    if (await c.isVisible().catch(() => false)) {
+      await c.click();
+      return;
+    }
+  }
+  throw new Error(
+    'Could not find "Test Institution" in the Financial Connections modal.',
+  );
 }
-interface AllocationsResp {
-  allocations: Allocation[];
+
+async function clickAny(
+  fc: FrameLocator,
+  patterns: RegExp[],
+  timeoutMs = 10_000,
+): Promise<void> {
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    for (const p of patterns) {
+      const btn = fc.getByRole("button", { name: p }).first();
+      if (await btn.isVisible().catch(() => false)) {
+        await btn.click();
+        return;
+      }
+    }
+    await new Promise((r) => setTimeout(r, 500));
+  }
+  throw new Error(
+    `Could not find a button matching any of: ${patterns.map(String).join(", ")}`,
+  );
 }
 
 test.describe("Stripe-hosted ACH (us_bank_account) checkout", () => {
   test.skip(
-    !SHOULD_RUN,
-    "Set STRIPE_E2E_DRIVE_CHECKOUT=1 to opt in. The ACH test depends on Stripe's hosted us_bank_account flow, which uses Financial Connections by default and may require the dev Stripe account to have manual entry enabled. Brittle; opt in deliberately.",
+    !STRIPE_CONFIGURED,
+    "Stripe is not configured (no STRIPE_SECRET_KEY and no REPLIT_CONNECTORS_HOSTNAME).",
   );
-  test.setTimeout(180_000);
+  test.setTimeout(240_000);
 
-  test("ACH checkout returns a valid Stripe Checkout url for the us_bank_account method", async ({
+  test("ACH via Financial Connections Test Institution flips the commitment to funded", async ({
     page,
   }) => {
     await signIn(page, "investor");
@@ -36,32 +76,50 @@ test.describe("Stripe-hosted ACH (us_bank_account) checkout", () => {
       paymentMethod: "ach",
     });
 
-    // Hit the API directly so we can assert the session shape regardless of
-    // whether the hosted page UI changes. The card spec already covers the
-    // full UI -> webhook -> funded round-trip.
-    const checkout = await postJson<{
-      url: string;
-      sessionId: string;
-      commitmentId: string;
-    }>(page, "/checkout", { commitmentId: c.id, paymentMethod: "ach" });
+    await page.goto(`/portal/checkout/${c.id}`);
+    await expect(page.getByTestId("checkout-method-picker")).toBeVisible();
+    await page.getByTestId("radio-method-ach").click();
+    await page.getByTestId("button-checkout-pay").click();
 
-    expect(checkout.url).toMatch(/^https:\/\/checkout\.stripe\.com\//);
-    expect(checkout.sessionId).toMatch(/^cs_(test|live)_/);
-    expect(checkout.commitmentId).toBe(c.id);
+    // Stripe-hosted Checkout page (us_bank_account only).
+    await page.waitForURL(/checkout\.stripe\.com/, { timeout: 60_000 });
 
-    // Sanity: load the hosted page and confirm Stripe rendered an ACH UI
-    // (the page mentions "bank account" somewhere). We do not drive the
-    // Financial Connections modal here; that is left to follow-up work.
-    await page.goto(checkout.url);
-    await expect(page.locator("body")).toContainText(/bank account/i, {
-      timeout: 30_000,
-    });
+    const emailField = page.locator('input[name="email"]');
+    if (await emailField.isVisible().catch(() => false)) {
+      await emailField.fill(INVESTOR_EMAIL);
+    }
+    const billingName = page.locator('input[name="billingName"]');
+    if (await billingName.isVisible().catch(() => false)) {
+      await billingName.fill("Portal Investor");
+    }
 
-    // Allocations endpoint should still see the commitment as
-    // pending_payment (Stripe webhook has not fired yet).
-    const a = await getJson<AllocationsResp>(page, "/me/allocations");
-    const mine = a.allocations.find((x) => x.commitmentId === c.id);
-    expect(mine).toBeTruthy();
-    expect(mine!.state).toBe("pending_payment");
+    // Trigger the Financial Connections modal.
+    await page.locator('button[type="submit"]').first().click();
+
+    // The Financial Connections widget renders in a Stripe iframe.
+    const fc = page.frameLocator('iframe[src*="stripe.com"]').first();
+
+    await pickFcTestInstitution(fc);
+    // FC sandbox typically asks for an Agree -> Connect/Authorize sequence.
+    await clickAny(fc, [/agree|continue/i], 15_000);
+    await clickAny(fc, [/connect|authori[sz]e|allow|done/i], 15_000);
+
+    // Back on the Stripe Checkout page; complete payment.
+    const finalPay = page.locator('button[type="submit"]').first();
+    if (await finalPay.isEnabled().catch(() => false)) {
+      await finalPay.click();
+    }
+
+    // Redirect back to the portal dashboard.
+    await page.waitForURL(/\/portal\/dashboard/, { timeout: 120_000 });
+
+    // Webhook is async; poll allocations until funded.
+    const funded = await pollFunded(page, c.id, 180_000);
+    expect(
+      funded,
+      "commitment never reached funded after ACH payment",
+    ).not.toBeNull();
+    expect(funded!.state).toBe("funded");
+    expect(funded!.status).toBe("succeeded");
   });
 });
