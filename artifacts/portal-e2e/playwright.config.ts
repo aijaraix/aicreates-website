@@ -12,6 +12,7 @@ export default defineConfig({
   timeout: 60_000,
   expect: { timeout: 10_000 },
   globalSetup: "./tests/helpers/global-setup.ts",
+  globalTeardown: "./tests/helpers/global-teardown.ts",
   use: {
     baseURL: BASE_URL,
     trace: "retain-on-failure",

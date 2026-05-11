@@ -643,9 +643,15 @@ importers:
       '@types/node':
         specifier: 'catalog:'
         version: 25.3.5
+      '@workspace/db':
+        specifier: workspace:*
+        version: link:../../lib/db
       dotenv:
         specifier: ^16.4.7
         version: 16.6.1
+      drizzle-orm:
+        specifier: 'catalog:'
+        version: 0.45.2(@types/pg@8.18.0)(pg@8.20.0)
       typescript:
         specifier: ~5.9.2
         version: 5.9.3

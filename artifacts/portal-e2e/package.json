@@ -15,7 +15,9 @@
     "@clerk/testing": "^1.5.5",
     "@playwright/test": "^1.49.1",
     "@types/node": "catalog:",
+    "@workspace/db": "workspace:*",
     "dotenv": "^16.4.7",
+    "drizzle-orm": "catalog:",
     "typescript": "~5.9.2"
   }
 }
