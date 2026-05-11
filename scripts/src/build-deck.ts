@@ -19,7 +19,10 @@ import { fileURLToPath } from "node:url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = resolve(__dirname, "..", "..");
-const DEFAULT_SRC = resolve(REPO_ROOT, "aica-deck.pdf");
+const DEFAULT_SRC = resolve(
+  REPO_ROOT,
+  "attached_assets/AICA_v8_visual_whitepaper_1778530504544.pdf",
+);
 const OUT_DIR = resolve(REPO_ROOT, "artifacts/web/public/deck");
 
 function main() {
@@ -77,12 +80,28 @@ function main() {
     process.exit(1);
   }
 
+  // Pull rendered pixel dimensions per page so the front-end can reserve space.
+  const sizeRaw = execFileSync("pdfinfo", ["-f", "1", "-l", String(slides.length), src], {
+    encoding: "utf8",
+  });
+  const ptMatch = /Page size:\s+([0-9.]+)\s+x\s+([0-9.]+)\s+pts/.exec(sizeRaw);
+  let widthPx: number | null = null;
+  let heightPx: number | null = null;
+  if (ptMatch) {
+    widthPx = Math.round((Number(ptMatch[1]) / 72) * 110);
+    heightPx = Math.round((Number(ptMatch[2]) / 72) * 110);
+  }
+
   const manifest = {
     slides,
     count: slides.length,
     source: "AICA Visual Whitepaper",
+    sourceFile: src,
     format: "jpeg",
     densityDpi: 110,
+    width: widthPx,
+    height: heightPx,
+    aspectRatio: widthPx && heightPx ? widthPx / heightPx : null,
     generatedAt: new Date().toISOString(),
   };
   writeFileSync(resolve(OUT_DIR, "manifest.json"), JSON.stringify(manifest, null, 2));

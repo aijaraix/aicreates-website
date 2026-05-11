@@ -201,7 +201,7 @@ export default function DeckCarousel({
       {/* Slide stage */}
       <div
         className={`relative w-full ${
-          isFullscreen ? "h-[calc(100dvh-90px)]" : "aspect-[4/3] sm:aspect-[16/10]"
+          isFullscreen ? "h-[100dvh]" : "aspect-[4/3] sm:aspect-[16/10]"
         } bg-black flex items-center justify-center select-none`}
       >
         {error && (
