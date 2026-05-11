@@ -2,44 +2,65 @@
 
 ## Overview
 
-Premium static React website for **AIcreatesAI** — a technology company building agentic AI systems, intelligent business infrastructure, and next-generation digital products (Adam, Eve, Fin).
+Premium static React website for **AIcreatesAI** — a technology company building the agentic intelligence layer that companies, capital, and consumers will run on.
 
 The site is developed in Replit and deployed to **GitHub Pages** at the custom domain **https://www.aicreates.ai**. Replit is the dev environment; GitHub is the permanent code repository; GitHub Pages is the production host.
 
+## Brand & Visual Identity
+
+Dark futuristic, NVIDIA / AMD-inspired aesthetic.
+
+- Background: `#0A0A0A` / `#121212`
+- Text: `#F5F5F5` (primary) / `#A1A1AA` (muted)
+- Accent: `#00F5D4` electric teal (single accent across the entire site)
+- Display type: Space Grotesk
+- Body: Inter
+- Mono: JetBrains Mono
+
+Copy convention: hyphens only. No em dashes, no en dashes.
+
+Premium agentic-AI vocabulary: Agentic Intelligence Layer, Hybrid Compute Fabric, Closed-Loop Quality Engine, Self-Healing Workflows. No technical reveal of the underlying stack.
+
 ## Stack
 
-- **Framework**: React 18 + Vite + TypeScript
-- **Styling**: TailwindCSS v4, shadcn/ui (new-york), framer-motion for animation
-- **Routing**: wouter (client-side)
-- **Fonts**: Inter (body) and Space Grotesk (display) from Google Fonts
-- **Hosting**: GitHub Pages with custom domain (CNAME) and HTTPS
-- **CI**: GitHub Actions workflow at `.github/workflows/deploy.yml` builds and deploys on push to `main`
+- React 18 + Vite + TypeScript
+- TailwindCSS v4, shadcn/ui (new-york), framer-motion
+- Routing: wouter (client-side)
+- Hosting: GitHub Pages with custom domain (CNAME) and HTTPS
+- CI: GitHub Actions workflow at `.github/workflows/deploy.yml`
 
 ## Pages
 
-`/`, `/about`, `/technology`, `/products`, `/products/fin`, `/services`, `/contact`
+Five-page structure:
 
-Sticky glass-morphism navigation with a Products dropdown (containing Fin) and a mobile drawer. Consistent footer.
+- `/` — Home (positions the agentic intelligence layer; flagship + secondary spotlights; three-audience entry: consumer / business / investor)
+- `/company-in-a-box` — Flagship product: end-to-end agentic operating system
+- `/neobank` — Secondary product line: consumer + business neobank built on the layer
+- `/litepaper` — Long-form positioning + architecture (placeholder sections, full content forthcoming)
+- `/contact` — Inquiry form with interest selector
+
+Sticky glass navigation, mobile drawer, X-only social (`@theaicreatesai`).
 
 ## Key Files
 
-- `artifacts/web/index.html` — full SEO meta, Open Graph, Twitter cards, favicon, manifest
+- `artifacts/web/index.html` — SEO meta, Open Graph, Twitter cards, theme color `#0A0A0A`
+- `artifacts/web/src/index.css` — design tokens, grid + glass + accent utilities
 - `artifacts/web/public/CNAME` — `www.aicreates.ai`
-- `artifacts/web/public/social-preview.png` — Open Graph / Twitter card image
-- `artifacts/web/public/favicon.ico` and the `favicon-*.png`, `apple-touch-icon.png`, `android-chrome-*.png`, `site.webmanifest`, `robots.txt`, `sitemap.xml`
-- `artifacts/web/src/components/Brand.tsx` — branded `<Brand />` component used in body copy so `AIcreatesAI` always reads unambiguously
-- `artifacts/web/src/components/Navigation.tsx`, `Footer.tsx`
-- `artifacts/web/src/pages/*.tsx` — Home, About, Technology, Products, Fin, Services, Contact, NotFound
-- `artifacts/web/src/assets/*.png` — AI-generated brand imagery (no stock photos)
+- `artifacts/web/public/sitemap.xml` — 5-route sitemap
+- `artifacts/web/src/components/Navigation.tsx`, `Footer.tsx`, `Brand.tsx`
+- `artifacts/web/src/pages/{Home,CompanyInABox,NeoBank,Litepaper,Contact,not-found}.tsx`
+- `artifacts/web/src/App.tsx` — wouter route table
+- `artifacts/web/src/components/EveWidget.tsx` — kept in the codebase but **not mounted**
 - `.github/workflows/deploy.yml` — GitHub Pages deploy workflow
-- `README.md` — step-by-step instructions for connecting Replit → GitHub → GitHub Pages → custom domain (GoDaddy DNS)
+- `README.md` — Replit → GitHub → GitHub Pages → custom domain (GoDaddy DNS) instructions
 
 ## Development
 
 ```bash
 pnpm install
-pnpm --filter @workspace/web run dev          # local dev (defaults to BASE_PATH "/" and PORT 5173 if not set)
+pnpm --filter @workspace/web run dev          # local dev (BASE_PATH "/" by default)
 pnpm --filter @workspace/web run build         # production build → artifacts/web/dist/public
+pnpm --filter @workspace/web run typecheck     # TypeScript check
 ```
 
 In Replit, the `artifacts/web: web` workflow runs the dev server automatically.
@@ -48,38 +69,16 @@ In Replit, the `artifacts/web: web` workflow runs the dev server automatically.
 
 See `README.md` for the full GitHub Pages + GoDaddy DNS setup. The GitHub Actions workflow installs pnpm, builds the site with `BASE_PATH=/`, and deploys `artifacts/web/dist/public` to Pages. The `public/CNAME` file provides the custom domain.
 
-## Contact & waitlist forms
+## Contact form
 
-Both forms POST via AJAX to `https://formsubmit.co/ajax/sholom@aicreates.ai`:
-
-- `/contact` — full inquiry form (name, email, company, role, interest, message) with loading / success / error states.
-- `/products/fin` — inline waitlist form with Personal / Business / Enterprise tier selector.
+`/contact` posts via AJAX to `https://formsubmit.co/ajax/sholom@aicreates.ai` with an interest selector (`Company in a Box`, `NeoBank`, `Investor`, `Press`, `Other`).
 
 `formsubmit.co` requires a one-time activation by clicking the verification email it sends to `sholom@aicreates.ai` on the very first submission.
 
-## Eve chat widget (NEW)
+## Eve chat widget (hidden)
 
-A floating "Chat with Eve" widget in the bottom-right corner of every page. It's a lead-gen / brand-ambassador chatbot that drives visitors toward the Fin waitlist, the contact form, or sharing their email.
-
-**Architecture (split between two hosts):**
-
-- **Frontend** — `artifacts/web/src/components/EveWidget.tsx` mounted in `App.tsx`. Lives on GitHub Pages (`www.aicreates.ai`). Calls the backend at `EVE_API_BASE`.
-- **Backend** — `artifacts/api-server/src/routes/eve.ts` with one route: `POST /api/eve/chat`. Uses Anthropic's `claude-haiku-4-5` via Replit AI Integrations (env vars `AI_INTEGRATIONS_ANTHROPIC_BASE_URL` and `AI_INTEGRATIONS_ANTHROPIC_API_KEY` are auto-provisioned by Replit). The system prompt locks Eve to AIcreatesAI topics, refuses tech-stack/pricing/team details, and pushes conversion at every turn.
-- **Lead capture** — when a visitor's message contains an email, the backend fires-and-forgets a POST to `formsubmit.co/ajax/sholom@aicreates.ai` with the full conversation transcript.
-- **Hosting model** — frontend on GitHub Pages (free, static), backend on a Replit Deployment (the user clicks "Publish" once on Replit; the deployed URL is wired into `EVE_API_BASE` in `EveWidget.tsx`).
-- **CORS** — `artifacts/api-server/src/app.ts` allow-lists `aicreates.ai`, `www.aicreates.ai`, `aijaraix.github.io`, localhost, and `*.replit.{dev,app}` / `*.repl.co`.
-
-To run locally:
-
-```bash
-# Terminal 1 — backend on :8080
-pnpm --filter @workspace/api-server run dev
-# Terminal 2 — frontend on :22333 (or whatever PORT)
-pnpm --filter @workspace/web run dev
-```
-
-In Replit both run as workflows automatically.
+The Eve widget (`artifacts/web/src/components/EveWidget.tsx`) and its backend route (`artifacts/api-server/src/routes/eve.ts`) remain in the codebase but the widget is not mounted in `App.tsx`. To re-enable: uncomment the import and the `<EveWidget />` mount in `App.tsx`.
 
 ## Security
 
-Static public website. The api-server has CORS allow-lists, sanitizes Eve's message history (max 20 turns, 4000 chars each), caps payload at 256kb, and never exposes the Anthropic API key to the client.
+Static public website. The api-server has CORS allow-lists and never exposes any third-party API keys to the client.

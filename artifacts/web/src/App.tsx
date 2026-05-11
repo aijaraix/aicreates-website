@@ -5,43 +5,33 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { AnimatePresence, motion } from "framer-motion";
 import React, { useEffect } from "react";
 
-// Components
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
-// Eve chat widget temporarily disabled until the API endpoint is live.
+// Eve chat widget kept in the codebase but not mounted.
 // To re-enable: uncomment the import and the <EveWidget /> mount below.
 // import { EveWidget } from "@/components/EveWidget";
 
-// Pages
 import Home from "@/pages/Home";
-import About from "@/pages/About";
-import Technology from "@/pages/Technology";
-import Products from "@/pages/Products";
-import Fin from "@/pages/Fin";
-import Services from "@/pages/Services";
+import CompanyInABox from "@/pages/CompanyInABox";
+import NeoBank from "@/pages/NeoBank";
+import Litepaper from "@/pages/Litepaper";
 import Contact from "@/pages/Contact";
-import Privacy from "@/pages/Privacy";
-import Terms from "@/pages/Terms";
 import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient();
 
-// Page Transition Wrapper
-const PageTransition = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -10 }}
-      transition={{ duration: 0.3, ease: "easeOut" }}
-      className="flex flex-col min-h-[100dvh]"
-    >
-      {children}
-    </motion.div>
-  );
-};
+const PageTransition = ({ children }: { children: React.ReactNode }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 8 }}
+    animate={{ opacity: 1, y: 0 }}
+    exit={{ opacity: 0, y: -8 }}
+    transition={{ duration: 0.25, ease: "easeOut" }}
+    className="flex flex-col min-h-[100dvh]"
+  >
+    {children}
+  </motion.div>
+);
 
-// Scroll to top on route change
 const ScrollToTop = () => {
   const [location] = useLocation();
   useEffect(() => {
@@ -52,19 +42,14 @@ const ScrollToTop = () => {
 
 function Router() {
   const [location] = useLocation();
-  
   return (
     <AnimatePresence mode="wait">
       <Switch location={location} key={location}>
         <Route path="/" component={() => <PageTransition><Home /></PageTransition>} />
-        <Route path="/about" component={() => <PageTransition><About /></PageTransition>} />
-        <Route path="/technology" component={() => <PageTransition><Technology /></PageTransition>} />
-        <Route path="/products" component={() => <PageTransition><Products /></PageTransition>} />
-        <Route path="/products/fin" component={() => <PageTransition><Fin /></PageTransition>} />
-        <Route path="/services" component={() => <PageTransition><Services /></PageTransition>} />
+        <Route path="/company-in-a-box" component={() => <PageTransition><CompanyInABox /></PageTransition>} />
+        <Route path="/neobank" component={() => <PageTransition><NeoBank /></PageTransition>} />
+        <Route path="/litepaper" component={() => <PageTransition><Litepaper /></PageTransition>} />
         <Route path="/contact" component={() => <PageTransition><Contact /></PageTransition>} />
-        <Route path="/privacy" component={() => <PageTransition><Privacy /></PageTransition>} />
-        <Route path="/terms" component={() => <PageTransition><Terms /></PageTransition>} />
         <Route component={() => <PageTransition><NotFound /></PageTransition>} />
       </Switch>
     </AnimatePresence>
