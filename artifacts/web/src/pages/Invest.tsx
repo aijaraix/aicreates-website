@@ -77,17 +77,21 @@ export default function Invest() {
                   Reserve Your Allocation <ArrowRight className="ml-2 w-4 h-4" />
                 </Button>
               </a>
-              <Button
-                size="lg"
-                variant="outline"
-                disabled
-                className="rounded-full h-12 px-7 border-white/15 bg-white/[0.02] text-white hover:bg-white/[0.06] disabled:opacity-100 disabled:cursor-default"
-                data-testid="button-hero-download-deck"
+              <a
+                href="/portal/litepaper.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
               >
-                <Download className="mr-2 w-4 h-4" />
-                Download Pitch Deck
-                <span className="ml-3 text-[10px] font-mono uppercase tracking-[0.18em] text-white/40">Coming soon</span>
-              </Button>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="rounded-full h-12 px-7 border-white/15 bg-white/[0.02] text-white hover:bg-white/[0.06]"
+                  data-testid="button-hero-download-deck"
+                >
+                  <Download className="mr-2 w-4 h-4" />
+                  Download Pitch Deck
+                </Button>
+              </a>
             </motion.div>
           </div>
         </div>
@@ -176,20 +180,22 @@ export default function Invest() {
             {[
               {
                 icon: FileText,
-                title: "View Pitch Deck",
-                desc: "An interactive walk-through of the company, the layer, and the raise.",
-                disabled: true,
-                href: undefined as string | undefined,
-                cta: "Coming soon",
+                title: "View Investor Portal",
+                desc: "Long-scroll thesis, vesting calculator, and reserve-allocation flow.",
+                disabled: false,
+                href: "/portal/" as string | undefined,
+                external: true,
+                cta: "Open the portal",
                 testId: "button-view-deck",
               },
               {
                 icon: Download,
                 title: "Download Pitch Deck",
                 desc: "PDF version of the investor deck for offline review.",
-                disabled: true,
-                href: undefined as string | undefined,
-                cta: "Coming soon",
+                disabled: false,
+                href: "/portal/litepaper.pdf" as string | undefined,
+                external: true,
+                cta: "Download PDF",
                 testId: "button-download-deck",
               },
               {
@@ -198,6 +204,7 @@ export default function Invest() {
                 desc: "The full positioning, architecture, roadmap, and tokenomics.",
                 disabled: false,
                 href: "/litepaper",
+                external: false,
                 cta: "Read the Litepaper",
                 testId: "button-read-litepaper",
               },
@@ -222,6 +229,20 @@ export default function Invest() {
                     <span>{card.cta}</span>
                     <span className="text-[10px] font-mono uppercase tracking-[0.18em] text-white/35">Soon</span>
                   </Button>
+                ) : card.external ? (
+                  <a
+                    href={card.href!}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Button
+                      variant="outline"
+                      className="w-full rounded-full h-10 px-5 border-white/15 bg-white/[0.02] text-white hover:bg-white/[0.06] hover:text-[#00F5D4] group"
+                      data-testid={card.testId}
+                    >
+                      {card.cta} <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                    </Button>
+                  </a>
                 ) : (
                   <Link href={card.href!}>
                     <Button

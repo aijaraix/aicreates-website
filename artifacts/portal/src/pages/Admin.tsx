@@ -2,7 +2,13 @@ import { Link, Redirect } from "wouter";
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
-import { ArrowLeft, Download, ExternalLink, RefreshCw } from "lucide-react";
+import {
+  ArrowLeft,
+  CheckCircle2,
+  Download,
+  ExternalLink,
+  RefreshCw,
+} from "lucide-react";
 
 interface AppUser {
   id: string;
@@ -21,9 +27,15 @@ interface AdminCommitment {
   amountCents: number;
   currency: string;
   status: string;
+  state: string;
   tierSlug: string;
+  roundSlug: string;
   displayName: string;
   tokenAllocation: number;
+  paymentMethod: string | null;
+  saftSignedAt: string | null;
+  saftSignerName: string | null;
+  fundedAt: string | null;
   receiptUrl: string | null;
   billingCountry: string | null;
   createdAt: string;
@@ -31,7 +43,7 @@ interface AdminCommitment {
   refundedAt: string | null;
   stripePaymentIntentId: string | null;
   stripeCustomerId: string | null;
-  stripeCheckoutSessionId: string;
+  stripeCheckoutSessionId: string | null;
 }
 
 interface MeResponse {
@@ -41,6 +53,8 @@ interface MeResponse {
 interface Stats {
   succeeded_count?: string | number;
   pending_count?: string | number;
+  awaiting_wire_count?: string | number;
+  awaiting_crypto_count?: string | number;
   refunded_count?: string | number;
   total_succeeded_cents?: string | number;
   total_tokens_allocated?: string | number;
@@ -48,16 +62,18 @@ interface Stats {
 
 const STATUS_FILTERS = [
   { label: "All", value: "" },
-  { label: "Succeeded", value: "succeeded" },
-  { label: "Pending", value: "pending" },
+  { label: "Pending SAFT", value: "pending_saft" },
+  { label: "Pending payment", value: "pending_payment" },
+  { label: "Awaiting wire", value: "awaiting_wire" },
+  { label: "Awaiting crypto", value: "awaiting_crypto" },
+  { label: "Funded", value: "succeeded" },
   { label: "Refunded", value: "refunded" },
-  { label: "Failed", value: "failed" },
 ];
 
-function fmtMoney(cents: number, currency: string) {
+function fmt(cents: number) {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
-    currency: currency.toUpperCase(),
+    currency: "USD",
     maximumFractionDigits: 0,
   }).format(cents / 100);
 }
@@ -107,10 +123,27 @@ export default function Admin() {
         method: "POST",
         body: {},
       }),
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["admin"] });
-    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["admin"] }),
     onError: (err) => alert(`Refund failed: ${(err as Error).message}`),
+  });
+
+  const confirmWire = useMutation({
+    mutationFn: (id: string) =>
+      api<{ ok: boolean }>(`/admin/commitments/${id}/confirm-wire`, {
+        method: "POST",
+        body: {},
+      }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["admin"] }),
+    onError: (err) => alert(`Confirm wire failed: ${(err as Error).message}`),
+  });
+  const confirmCrypto = useMutation({
+    mutationFn: (id: string) =>
+      api<{ ok: boolean }>(`/admin/commitments/${id}/confirm-crypto`, {
+        method: "POST",
+        body: {},
+      }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["admin"] }),
+    onError: (err) => alert(`Confirm crypto failed: ${(err as Error).message}`),
   });
 
   if (me.isLoading) {
@@ -158,39 +191,14 @@ export default function Admin() {
         </h1>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
-          <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6">
-            <div className="text-xs uppercase tracking-[0.18em] text-white/40">
-              Total raised
-            </div>
-            <div className="mt-3 text-3xl font-semibold text-[#00F5D4]">
-              {fmtMoney(totalCents, "usd")}
-            </div>
-          </div>
-          <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6">
-            <div className="text-xs uppercase tracking-[0.18em] text-white/40">
-              Tokens allocated
-            </div>
-            <div className="mt-3 text-3xl font-semibold">
-              {totalTokens.toLocaleString()}
-            </div>
-          </div>
-          <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6">
-            <div className="text-xs uppercase tracking-[0.18em] text-white/40">
-              Investors
-            </div>
-            <div className="mt-3 text-3xl font-semibold">
-              {users.data?.users.length ?? 0}
-            </div>
-          </div>
-          <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6">
-            <div className="text-xs uppercase tracking-[0.18em] text-white/40">
-              Succeeded / Pending / Refunded
-            </div>
-            <div className="mt-3 text-2xl font-semibold">
-              {s.succeeded_count ?? 0} / {s.pending_count ?? 0} /{" "}
-              {s.refunded_count ?? 0}
-            </div>
-          </div>
+          <Card label="Total raised" value={fmt(totalCents)} accent />
+          <Card label="Tokens allocated" value={totalTokens.toLocaleString()} />
+          <Card label="Investors" value={String(users.data?.users.length ?? 0)} />
+          <Card
+            label="Funded / Pending / Wire / Crypto / Refunded"
+            value={`${s.succeeded_count ?? 0} / ${s.pending_count ?? 0} / ${s.awaiting_wire_count ?? 0} / ${s.awaiting_crypto_count ?? 0} / ${s.refunded_count ?? 0}`}
+            small
+          />
         </div>
 
         <section className="rounded-2xl border border-white/10 bg-white/[0.02] mb-10 overflow-hidden">
@@ -233,101 +241,143 @@ export default function Admin() {
               <table className="w-full text-sm">
                 <thead className="text-xs uppercase tracking-[0.14em] text-white/40">
                   <tr>
-                    <th className="text-left px-6 py-3 font-medium">Date</th>
-                    <th className="text-left px-6 py-3 font-medium">Investor</th>
-                    <th className="text-left px-6 py-3 font-medium">Tier</th>
-                    <th className="text-left px-6 py-3 font-medium">Amount</th>
-                    <th className="text-left px-6 py-3 font-medium">Allocation</th>
-                    <th className="text-left px-6 py-3 font-medium">Country</th>
-                    <th className="text-left px-6 py-3 font-medium">Status</th>
-                    <th className="text-left px-6 py-3 font-medium">Customer</th>
-                    <th className="text-left px-6 py-3 font-medium">Payment</th>
-                    <th className="text-right px-6 py-3 font-medium">Actions</th>
+                    <th className="text-left px-4 py-3 font-medium">Date</th>
+                    <th className="text-left px-4 py-3 font-medium">Investor</th>
+                    <th className="text-left px-4 py-3 font-medium">Tier</th>
+                    <th className="text-left px-4 py-3 font-medium">Amount</th>
+                    <th className="text-left px-4 py-3 font-medium">State</th>
+                    <th className="text-left px-4 py-3 font-medium">Method</th>
+                    <th className="text-left px-4 py-3 font-medium">SAFT</th>
+                    <th className="text-left px-4 py-3 font-medium">Funded</th>
+                    <th className="text-right px-4 py-3 font-medium">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {commitments.data.commitments.map((c) => (
                     <tr key={c.id} className="border-t border-white/5">
-                      <td className="px-6 py-3 text-white/70">
-                        {fmtDate(c.completedAt ?? c.createdAt)}
+                      <td className="px-4 py-3 text-white/70">
+                        {fmtDate(c.createdAt)}
                       </td>
-                      <td className="px-6 py-3">
+                      <td className="px-4 py-3">
                         <div className="font-medium">{c.fullName ?? "—"}</div>
                         <div className="text-xs text-white/50">{c.email}</div>
                       </td>
-                      <td className="px-6 py-3">{c.displayName}</td>
-                      <td className="px-6 py-3 font-medium">
-                        {fmtMoney(c.amountCents, c.currency)}
+                      <td className="px-4 py-3">
+                        <div>{c.displayName}</div>
+                        <div className="text-[10px] text-white/40 uppercase tracking-wider">
+                          {c.roundSlug}
+                        </div>
                       </td>
-                      <td className="px-6 py-3">
-                        {c.tokenAllocation.toLocaleString()}
+                      <td className="px-4 py-3 font-medium">
+                        {fmt(c.amountCents)}
+                        <div className="text-[10px] text-white/40">
+                          {c.tokenAllocation.toLocaleString()} AICA
+                        </div>
                       </td>
-                      <td className="px-6 py-3">
-                        {c.billingCountry ?? "—"}
-                      </td>
-                      <td className="px-6 py-3">
+                      <td className="px-4 py-3">
                         <span
-                          className={
-                            c.status === "succeeded"
-                              ? "px-2 py-0.5 rounded-full text-xs bg-[#00F5D4]/15 text-[#00F5D4]"
-                              : c.status === "refunded"
-                                ? "px-2 py-0.5 rounded-full text-xs bg-white/10 text-white/60"
-                                : c.status === "pending"
-                                  ? "px-2 py-0.5 rounded-full text-xs bg-amber-400/15 text-amber-300"
-                                  : "px-2 py-0.5 rounded-full text-xs bg-red-500/15 text-red-300"
-                          }
+                          className={`px-2 py-0.5 rounded-full text-xs ${
+                            c.state === "funded" || c.status === "succeeded"
+                              ? "bg-[#00F5D4]/15 text-[#00F5D4]"
+                              : c.state === "awaiting_wire" ||
+                                  c.state === "awaiting_crypto"
+                                ? "bg-blue-400/15 text-blue-300"
+                                : c.state === "refunded"
+                                  ? "bg-white/10 text-white/60"
+                                  : c.state === "failed"
+                                    ? "bg-red-500/15 text-red-300"
+                                    : "bg-amber-400/15 text-amber-300"
+                          }`}
                         >
-                          {c.status}
+                          {c.state.replace(/_/g, " ")}
                         </span>
                       </td>
-                      <td className="px-6 py-3 font-mono text-xs text-white/50">
-                        {c.stripeCustomerId ? (
+                      <td className="px-4 py-3 text-xs uppercase tracking-wider text-white/60">
+                        {c.paymentMethod ?? "—"}
+                      </td>
+                      <td className="px-4 py-3">
+                        {c.saftSignedAt ? (
                           <a
-                            href={`https://dashboard.stripe.com/customers/${c.stripeCustomerId}`}
+                            href={`/api/saft/${c.id}/pdf`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 hover:text-white"
+                            className="text-[#00F5D4] text-xs hover:underline"
                           >
-                            {c.stripeCustomerId.slice(0, 14)}…
-                            <ExternalLink className="w-3 h-3" />
+                            {c.saftSignerName ?? "View"}
                           </a>
                         ) : (
-                          "—"
+                          <span className="text-white/30 text-xs">—</span>
                         )}
                       </td>
-                      <td className="px-6 py-3 font-mono text-xs text-white/50">
-                        {c.stripePaymentIntentId ? (
-                          <a
-                            href={`https://dashboard.stripe.com/payments/${c.stripePaymentIntentId}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 hover:text-white"
-                          >
-                            {c.stripePaymentIntentId.slice(0, 14)}…
-                            <ExternalLink className="w-3 h-3" />
-                          </a>
-                        ) : (
-                          "—"
-                        )}
+                      <td className="px-4 py-3 text-white/60 text-xs">
+                        {fmtDate(c.fundedAt)}
                       </td>
-                      <td className="px-6 py-3 text-right">
-                        {c.status === "succeeded" && c.stripePaymentIntentId && (
+                      <td className="px-4 py-3 text-right">
+                        {c.state === "awaiting_wire" && (
                           <button
                             onClick={() => {
                               if (
                                 confirm(
-                                  `Refund ${fmtMoney(c.amountCents, c.currency)} to ${c.email}?`,
+                                  `Mark wire received for ${fmt(c.amountCents)} from ${c.email}?`,
                                 )
                               ) {
-                                refund.mutate(c.id);
+                                confirmWire.mutate(c.id);
                               }
                             }}
-                            disabled={refund.isPending}
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-full border border-red-400/40 text-red-300 hover:bg-red-500/10 disabled:opacity-50"
-                            data-testid={`button-refund-${c.id}`}
+                            disabled={confirmWire.isPending}
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-full border border-[#00F5D4]/40 text-[#00F5D4] hover:bg-[#00F5D4]/10 disabled:opacity-50"
+                            data-testid={`button-confirm-wire-${c.id}`}
                           >
-                            <RefreshCw className="w-3 h-3" /> Refund
+                            <CheckCircle2 className="w-3 h-3" /> Mark received
                           </button>
+                        )}
+                        {c.state === "awaiting_crypto" && (
+                          <button
+                            onClick={() => {
+                              if (
+                                confirm(
+                                  `Mark crypto received for ${fmt(c.amountCents)} from ${c.email}?`,
+                                )
+                              ) {
+                                confirmCrypto.mutate(c.id);
+                              }
+                            }}
+                            disabled={confirmCrypto.isPending}
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-full border border-[#00F5D4]/40 text-[#00F5D4] hover:bg-[#00F5D4]/10 disabled:opacity-50"
+                            data-testid={`button-confirm-crypto-${c.id}`}
+                          >
+                            <CheckCircle2 className="w-3 h-3" /> Mark received
+                          </button>
+                        )}
+                        {(c.state === "funded" || c.status === "succeeded") &&
+                          c.stripePaymentIntentId && (
+                            <button
+                              onClick={() => {
+                                if (
+                                  confirm(
+                                    `Refund ${fmt(c.amountCents)} to ${c.email}?`,
+                                  )
+                                ) {
+                                  refund.mutate(c.id);
+                                }
+                              }}
+                              disabled={refund.isPending}
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-full border border-red-400/40 text-red-300 hover:bg-red-500/10 disabled:opacity-50 ml-2"
+                              data-testid={`button-refund-${c.id}`}
+                            >
+                              <RefreshCw className="w-3 h-3" /> Refund
+                            </button>
+                          )}
+                        {c.stripePaymentIntentId && (
+                          <a
+                            href={`https://dashboard.stripe.com/payments/${c.stripePaymentIntentId}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="ml-2 inline-flex items-center text-white/40 hover:text-white"
+                            title="Stripe payment"
+                          >
+                            <ExternalLink className="w-3.5 h-3.5" />
+                          </a>
                         )}
                       </td>
                     </tr>
@@ -370,6 +420,32 @@ export default function Admin() {
           </div>
         </section>
       </main>
+    </div>
+  );
+}
+
+function Card({
+  label,
+  value,
+  accent,
+  small,
+}: {
+  label: string;
+  value: string;
+  accent?: boolean;
+  small?: boolean;
+}) {
+  return (
+    <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6">
+      <div className="text-xs uppercase tracking-[0.18em] text-white/40">
+        {label}
+      </div>
+      <div
+        className={`mt-3 ${small ? "text-xl" : "text-3xl"} font-semibold ${accent ? "text-[#00F5D4]" : ""}`}
+        style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}
+      >
+        {value}
+      </div>
     </div>
   );
 }

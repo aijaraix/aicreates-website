@@ -30,3 +30,63 @@ body {
   color: rgba(255, 255, 255, 0.35);
   opacity: 1;
 }
+
+/* ============================================================
+   Portal neon utilities — used by the long-scroll deck on /portal/.
+   Each effect is a self-contained class so any section can opt in.
+   ============================================================ */
+
+.portal-grid {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 56px 56px;
+  background-position: center top;
+  mask-image: radial-gradient(circle at center, black 20%, transparent 70%);
+  -webkit-mask-image: radial-gradient(circle at center, black 20%, transparent 70%);
+}
+
+.portal-aurora {
+  background: conic-gradient(
+    from 0deg at 50% 50%,
+    rgba(0, 245, 212, 0.18),
+    rgba(124, 58, 237, 0.18),
+    rgba(59, 130, 246, 0.18),
+    rgba(0, 245, 212, 0.18)
+  );
+  filter: blur(80px);
+  opacity: 0.55;
+}
+
+.section-glow {
+  position: relative;
+}
+.section-glow::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: radial-gradient(
+    600px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(0, 245, 212, 0.08),
+    transparent 60%
+  );
+  pointer-events: none;
+}
+
+.accent-text {
+  color: #00f5d4;
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(8px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .portal-aurora,
+  .portal-grid {
+    animation: none !important;
+  }
+}

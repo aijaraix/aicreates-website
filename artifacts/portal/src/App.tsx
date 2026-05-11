@@ -23,6 +23,8 @@ import {
 import Home from "@/pages/Home";
 import Dashboard from "@/pages/Dashboard";
 import InvestPicker from "@/pages/InvestPicker";
+import Saft from "@/pages/Saft";
+import Checkout from "@/pages/Checkout";
 import Admin from "@/pages/Admin";
 import NotFound from "@/pages/not-found";
 
@@ -184,6 +186,16 @@ function ClerkProviderWithRoutes() {
           <Route path="/invest">
             <Protected>
               <InvestPicker />
+            </Protected>
+          </Route>
+          <Route path="/saft/:commitId">
+            <Protected>
+              <Saft />
+            </Protected>
+          </Route>
+          <Route path="/checkout/:commitId">
+            <Protected>
+              <Checkout />
             </Protected>
           </Route>
           <Route path="/admin">

@@ -79,13 +79,27 @@ See `README.md` for the full GitHub Pages + GoDaddy DNS setup. The GitHub Action
 
 ## Investor portal (`artifacts/portal`)
 
-A separate authenticated investor portal lives at `artifacts/portal` and is intended to deploy to **https://portal.aicreates.ai** (Replit Deployments, autoscale). It is not part of the GitHub Pages marketing build.
+A full investor experience at `artifacts/portal`, intended to deploy to **https://portal.aicreates.ai** (Replit Deployments, autoscale). It is not part of the GitHub Pages marketing build.
 
 - Auth: Clerk (white-labeled via the api-server's Clerk proxy at `/api/__clerk`). Set `VITE_CLERK_PROXY_URL=/api/__clerk` in the **production** environment only — the api-server's `clerkProxyMiddleware` is a no-op in dev, so passing `proxyUrl` to `ClerkProvider` in dev will blank the portal. The portal client also gates this with `import.meta.env.PROD`.
-- Payments: Stripe one-time Checkout for "Founders Commitment" tiers.
+- Payments: Stripe Checkout (card / ACH / crypto) plus a wire-transfer flow that skips Stripe and is manually confirmed by an admin.
 - Stripe data is mirrored locally via `stripe-replit-sync` (schema `stripe.*` in Postgres).
 - App-side users are stored in `app_users` (`lib/db/src/schema/app_users.ts`).
-- Portal pages: `/` (landing), `/sign-in`, `/sign-up`, `/dashboard` (per-user commitments), `/invest` (tier picker + Checkout), `/admin` (admin-only overview).
+- Portal pages: `/` (long-scroll deck + thesis), `/sign-in`, `/sign-up`, `/invest` (tier picker + custom amount $1k–$10M with bonus token tiers at $5k/$25k), `/saft/:commitId` (6-step SAFT e-sign flow that renders + persists a PDF), `/checkout/:commitId` (4 payment methods including wire instructions), `/dashboard` (vesting calendar with .ics export), `/admin` (commitments table with state filter, mark-wire-received, refund, CSV export).
+
+### Investor flow
+
+1. `/invest` → POST `/api/commitments` creates a commitment in `pending_saft`.
+2. `/saft/:commitId` → 6 steps (identity, address, KYC/wallet, payment method, accreditation, sign). On submit, server renders a PDF via `pdf-lib` (cover sheet + acknowledgments overlaid on `assets/saft-template.pdf`), persists it to `saft_submissions.pdfBytes` (bytea), and advances state to `pending_payment`.
+3. `/checkout/:commitId` → POST `/api/checkout` with chosen method. Card/ACH/crypto return a Stripe Checkout URL; wire returns a state transition to `awaiting_wire` plus on-screen bank instructions (placeholders in `data/rounds.ts WIRE_INSTRUCTIONS`).
+4. Stripe webhook → state `funded`, sets `fundedAt`. Admin manually confirms wire via `/admin` → `POST /api/admin/commitments/:id/confirm-wire`.
+5. `/dashboard` → reads `/api/me/allocations` which joins commitments + saft_submissions and computes a 24-month linear vesting schedule (6-month cliff) via `lib/vesting.ts`.
+
+### Schema additions
+
+- `commitments` extended: `state`, `roundSlug`, `customAmountCents`, `paymentMethod`, `saftSignedAt`, `saftPdfKey`, `fundedAt`. `stripeCheckoutSessionId` is now nullable (wire flow has no session).
+- `saft_submissions` (new): captured payload, signature metadata, IP/UA, and the rendered PDF bytes. PDF is intentionally stored in the DB as `bytea` (single source of truth, simple backups). Migrate to object storage if SAFTs grow large.
+- `data_center_requests` (new): captures inquiries from the data-center request form on the long-scroll home page.
 
 ### One-time setup
 

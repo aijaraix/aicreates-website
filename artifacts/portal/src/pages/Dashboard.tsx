@@ -1,39 +1,50 @@
 import { Link } from "wouter";
-import { useUser, useClerk } from "@clerk/react";
+import { useUser } from "@clerk/react";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
-import { ArrowRight, ExternalLink, LogOut } from "lucide-react";
+import { ArrowRight, Calendar, Download, FileText } from "lucide-react";
+import VestingCalendar from "@/components/VestingCalendar";
+import PortalNav from "@/components/PortalNav";
+import { buildIcs } from "@/lib/vesting";
 
-interface Commitment {
+interface VestingPoint {
+  date: string;
+  tokens: number;
+  cumulative: number;
+  label: string;
+}
+
+interface Allocation {
   id: string;
-  amountCents: number;
-  currency: string;
-  status: string;
+  roundSlug: string;
   tierSlug: string;
   displayName: string;
+  amountCents: number;
+  currency: string;
   tokenAllocation: number;
-  receiptUrl: string | null;
-  createdAt: string;
-  completedAt: string | null;
-  refundedAt: string | null;
-  stripePaymentIntentId: string | null;
+  state: string;
+  paymentMethod: string | null;
+  saftSignedAt: string | null;
+  saftStatus: string | null;
+  saftSignerName: string | null;
+  fundedAt: string | null;
+  isFunded: boolean;
+  vesting: {
+    tgeDate: string;
+    cliffDate: string;
+    schedule: VestingPoint[];
+  } | null;
 }
 
-interface MeResponse {
-  user: {
-    id: string;
-    email: string;
-    fullName: string | null;
-    role: string;
-    stripeCustomerId: string | null;
-  };
-  commitments: Commitment[];
+interface MeAllocations {
+  user: { id: string; email: string; role: string };
+  allocations: Allocation[];
 }
 
-function fmtMoney(cents: number, currency: string) {
+function fmt(cents: number) {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
-    currency: currency.toUpperCase(),
+    currency: "USD",
     maximumFractionDigits: 0,
   }).format(cents / 100);
 }
@@ -49,72 +60,102 @@ function fmtDate(v: string | null) {
   });
 }
 
-function StatusBadge({ status }: { status: string }) {
+function StateBadge({ state }: { state: string }) {
   const map: Record<string, string> = {
+    funded: "bg-[#00F5D4]/15 text-[#00F5D4]",
     succeeded: "bg-[#00F5D4]/15 text-[#00F5D4]",
+    pending_saft: "bg-amber-400/15 text-amber-300",
+    pending_payment: "bg-amber-400/15 text-amber-300",
     pending: "bg-amber-400/15 text-amber-300",
+    awaiting_wire: "bg-blue-400/15 text-blue-300",
     failed: "bg-red-500/15 text-red-300",
     refunded: "bg-white/10 text-white/60 line-through",
   };
-  const cls = map[status] ?? "bg-white/10 text-white/70";
   return (
     <span
-      className={`px-2 py-0.5 rounded-full text-xs ${cls}`}
-      data-testid={`badge-status-${status}`}
+      className={`px-2 py-0.5 rounded-full text-xs ${map[state] ?? "bg-white/10 text-white/70"}`}
+      data-testid={`badge-state-${state}`}
     >
-      {status}
+      {state.replace(/_/g, " ")}
     </span>
   );
 }
 
+function downloadIcs(a: Allocation) {
+  if (!a.vesting) return;
+  const ics = buildIcs(a.vesting.schedule, `commitment-${a.id.slice(0, 8)}`);
+  const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `aica-vesting-${a.id.slice(0, 8)}.ics`;
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
+function googleCalendarUrls(a: Allocation): Array<{ label: string; url: string }> {
+  if (!a.vesting) return [];
+  return a.vesting.schedule.map((point, i) => {
+    const start = point.date.replace(/[-:]/g, "").replace(/\.\d+/, "");
+    const endIso = new Date(
+      new Date(point.date).getTime() + 60 * 60 * 1000,
+    ).toISOString();
+    const end = endIso.replace(/[-:]/g, "").replace(/\.\d+/, "");
+    const text = `AICA unlock #${i + 1} - ${point.tokens.toLocaleString()} tokens`;
+    return {
+      label: `${new Date(point.date).toLocaleDateString()} - ${point.tokens.toLocaleString()} AICA`,
+      url: `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(text)}&dates=${start}/${end}&details=Commitment+${a.id}`,
+    };
+  });
+}
+
+function openAllGoogleCalendarEvents(a: Allocation) {
+  const items = googleCalendarUrls(a);
+  if (items.length === 0) return;
+  if (
+    items.length > 1 &&
+    !confirm(
+      `This will open ${items.length} new tabs - one per unlock. Continue?`,
+    )
+  ) {
+    return;
+  }
+  for (const item of items) {
+    window.open(item.url, "_blank", "noopener,noreferrer");
+  }
+}
+
 export default function Dashboard() {
   const { user } = useUser();
-  const { signOut } = useClerk();
-  const { data, isLoading, error } = useQuery({
+  const meQuery = useQuery({
     queryKey: ["me"],
-    queryFn: () => api<MeResponse>("/me"),
+    queryFn: () => api<{ user: { role: string } }>("/me"),
+  });
+  const isAdmin = meQuery.data?.user.role === "admin";
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["me", "allocations"],
+    queryFn: () => api<MeAllocations>("/me/allocations"),
   });
 
-  const isAdmin = data?.user.role === "admin";
-  const succeeded = data?.commitments.filter((c) => c.status === "succeeded") ?? [];
-  const totalCents = succeeded.reduce((s, c) => s + c.amountCents, 0);
-  const totalTokens = succeeded.reduce((s, c) => s + c.tokenAllocation, 0);
+  const allocations = data?.allocations ?? [];
+  const funded = allocations.filter((a) => a.isFunded);
+  const totalCents = funded.reduce((s, a) => s + a.amountCents, 0);
+  const totalTokens = funded.reduce((s, a) => s + a.tokenAllocation, 0);
+  const nextUnlock = funded
+    .flatMap((a) => a.vesting?.schedule ?? [])
+    .filter((p) => Date.parse(p.date) > Date.now())
+    .sort((a, b) => Date.parse(a.date) - Date.parse(b.date))[0];
+
+  const pendingActions = allocations.filter(
+    (a) =>
+      a.state === "pending_saft" ||
+      a.state === "pending_payment" ||
+      a.state === "awaiting_wire",
+  );
 
   return (
     <div className="min-h-[100dvh] bg-[#0A0A0A] text-white">
-      <header className="px-6 md:px-10 py-5 flex items-center justify-between border-b border-white/5">
-        <Link
-          href="/dashboard"
-          className="font-semibold tracking-tight"
-          style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}
-        >
-          AI<span className="text-[#00F5D4]">creates</span>AI
-          <span className="ml-2 text-xs text-white/40 uppercase tracking-[0.2em]">
-            Portal
-          </span>
-        </Link>
-        <div className="flex items-center gap-3 text-sm">
-          {isAdmin && (
-            <Link
-              href="/admin"
-              className="px-3 py-1.5 rounded-full border border-[#00F5D4]/40 text-[#00F5D4] hover:bg-[#00F5D4]/10"
-              data-testid="link-admin"
-            >
-              Admin
-            </Link>
-          )}
-          <span className="text-white/60 hidden sm:block">
-            {user?.primaryEmailAddress?.emailAddress}
-          </span>
-          <button
-            onClick={() => signOut({ redirectUrl: window.location.origin })}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/10 hover:bg-white/[0.04]"
-            data-testid="button-signout"
-          >
-            <LogOut className="w-3.5 h-3.5" /> Sign out
-          </button>
-        </div>
-      </header>
+      <PortalNav showAdmin={isAdmin} />
 
       <main className="mx-auto max-w-5xl px-6 py-10 md:py-16">
         <div className="mb-10">
@@ -125,119 +166,253 @@ export default function Dashboard() {
             Welcome{user?.firstName ? `, ${user.firstName}` : ""}.
           </h1>
           <p className="text-white/60 mt-2">
-            Your Founders Commitment dashboard for the AICreatesAi raise.
+            Your AICA Founders Commitment dashboard.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-10">
-          <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6">
-            <div className="text-xs uppercase tracking-[0.18em] text-white/40">
-              Total committed
+        {pendingActions.length > 0 && (
+          <div className="rounded-2xl border border-amber-400/30 bg-amber-400/5 p-5 mb-8 space-y-2">
+            <div className="text-xs uppercase tracking-[0.18em] text-amber-300">
+              Pending actions
             </div>
-            <div className="mt-3 text-3xl font-semibold text-[#00F5D4]">
-              {fmtMoney(totalCents, succeeded[0]?.currency ?? "usd")}
-            </div>
+            {pendingActions.map((a) => (
+              <div
+                key={a.id}
+                className="flex flex-wrap items-center justify-between gap-3"
+                data-testid={`pending-${a.state}-${a.id}`}
+              >
+                <div className="text-sm">
+                  <span className="font-medium">{a.displayName}</span>
+                  <span className="text-white/50 ml-2">
+                    {fmt(a.amountCents)}
+                  </span>
+                  <StateBadge state={a.state} />
+                </div>
+                {a.state === "pending_saft" ? (
+                  <Link
+                    href={`/saft/${a.id}`}
+                    className="text-sm inline-flex items-center px-4 h-9 rounded-full bg-[#00F5D4] text-black font-medium"
+                  >
+                    Sign SAFT <ArrowRight className="ml-2 w-4 h-4" />
+                  </Link>
+                ) : a.state === "pending_payment" ? (
+                  <Link
+                    href={`/checkout/${a.id}`}
+                    className="text-sm inline-flex items-center px-4 h-9 rounded-full bg-[#00F5D4] text-black font-medium"
+                  >
+                    Complete payment <ArrowRight className="ml-2 w-4 h-4" />
+                  </Link>
+                ) : (
+                  <Link
+                    href={`/checkout/${a.id}`}
+                    className="text-sm text-amber-200/80 underline"
+                  >
+                    View wire instructions
+                  </Link>
+                )}
+              </div>
+            ))}
           </div>
-          <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6">
-            <div className="text-xs uppercase tracking-[0.18em] text-white/40">
-              Token allocation
-            </div>
-            <div className="mt-3 text-3xl font-semibold">
-              {totalTokens.toLocaleString()}
-            </div>
-          </div>
-          <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6">
-            <div className="text-xs uppercase tracking-[0.18em] text-white/40">
-              Successful commitments
-            </div>
-            <div className="mt-3 text-3xl font-semibold">
-              {succeeded.length}
-            </div>
-          </div>
+        )}
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+          <Stat label="Total committed" value={fmt(totalCents)} accent />
+          <Stat label="Token allocation" value={totalTokens.toLocaleString()} />
+          <Stat
+            label="Funded commitments"
+            value={String(funded.length)}
+          />
           <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 flex flex-col">
             <div className="text-xs uppercase tracking-[0.18em] text-white/40">
-              Action
+              Next unlock
             </div>
-            <Link
-              href="/invest"
-              className="mt-3 inline-flex items-center justify-center h-11 px-5 rounded-full bg-[#00F5D4] text-black font-medium hover:bg-[#00F5D4]/90 transition"
-              data-testid="link-make-commitment"
+            <div
+              className="mt-2 text-lg font-semibold"
+              style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}
             >
-              New commitment <ArrowRight className="ml-2 w-4 h-4" />
-            </Link>
+              {nextUnlock
+                ? `${nextUnlock.tokens.toLocaleString()} AICA`
+                : "—"}
+            </div>
+            <div className="text-xs text-white/50">
+              {nextUnlock ? new Date(nextUnlock.date).toLocaleDateString() : ""}
+            </div>
           </div>
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden">
-          <div className="px-6 py-4 border-b border-white/5">
-            <h2 className="text-lg font-medium">Commitment history</h2>
-          </div>
-          {isLoading ? (
-            <div className="px-6 py-10 text-white/50">Loading...</div>
-          ) : error ? (
-            <div className="px-6 py-10 text-red-400">
-              Failed to load commitments.
-            </div>
-          ) : !data?.commitments.length ? (
-            <div className="px-6 py-10 text-white/50">
-              No commitments yet. Reserve your allocation to begin.
-            </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead className="text-xs uppercase tracking-[0.14em] text-white/40">
-                  <tr>
-                    <th className="text-left px-6 py-3 font-medium">Date</th>
-                    <th className="text-left px-6 py-3 font-medium">Tier</th>
-                    <th className="text-left px-6 py-3 font-medium">Amount</th>
-                    <th className="text-left px-6 py-3 font-medium">Allocation</th>
-                    <th className="text-left px-6 py-3 font-medium">Status</th>
-                    <th className="text-left px-6 py-3 font-medium">Receipt</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {data.commitments.map((c) => (
-                    <tr
-                      key={c.id}
-                      className="border-t border-white/5"
-                      data-testid={`row-commitment-${c.id}`}
-                    >
-                      <td className="px-6 py-3 text-white/70">
-                        {fmtDate(c.completedAt ?? c.createdAt)}
-                      </td>
-                      <td className="px-6 py-3">{c.displayName}</td>
-                      <td className="px-6 py-3 font-medium">
-                        {fmtMoney(c.amountCents, c.currency)}
-                      </td>
-                      <td className="px-6 py-3">
-                        {c.tokenAllocation.toLocaleString()}
-                      </td>
-                      <td className="px-6 py-3">
-                        <StatusBadge status={c.status} />
-                      </td>
-                      <td className="px-6 py-3">
-                        {c.receiptUrl ? (
-                          <a
-                            href={c.receiptUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 text-[#00F5D4] hover:underline"
-                            data-testid={`link-receipt-${c.id}`}
-                          >
-                            View <ExternalLink className="w-3 h-3" />
-                          </a>
-                        ) : (
-                          <span className="text-white/30">—</span>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+        <div className="flex items-center justify-between mb-4">
+          <h2
+            className="text-xl font-semibold"
+            style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}
+          >
+            Commitments
+          </h2>
+          <Link
+            href="/invest"
+            className="inline-flex items-center justify-center h-10 px-4 rounded-full bg-[#00F5D4] text-black font-medium"
+            data-testid="link-make-commitment"
+          >
+            New commitment <ArrowRight className="ml-2 w-4 h-4" />
+          </Link>
         </div>
+
+        {isLoading ? (
+          <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-8 text-white/50">
+            Loading…
+          </div>
+        ) : error ? (
+          <div className="rounded-2xl border border-red-500/30 bg-red-500/5 p-8 text-red-300">
+            Failed to load.
+          </div>
+        ) : allocations.length === 0 ? (
+          <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-8 text-white/50">
+            No commitments yet. Reserve your first allocation to get started.
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {allocations.map((a) => (
+              <div
+                key={a.id}
+                className="rounded-2xl border border-white/10 bg-white/[0.02] p-6"
+                data-testid={`row-commitment-${a.id}`}
+              >
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div>
+                    <div className="text-xs uppercase tracking-[0.18em] text-white/40">
+                      {a.roundSlug}
+                    </div>
+                    <div
+                      className="text-xl font-semibold mt-1"
+                      style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}
+                    >
+                      {a.displayName}
+                    </div>
+                    <div className="mt-1 text-sm text-white/60 flex flex-wrap items-center gap-2">
+                      <span className="font-medium text-[#00F5D4]">
+                        {fmt(a.amountCents)}
+                      </span>
+                      <span>•</span>
+                      <span>{a.tokenAllocation.toLocaleString()} AICA</span>
+                      <span>•</span>
+                      <StateBadge state={a.state} />
+                      {a.paymentMethod && (
+                        <>
+                          <span>•</span>
+                          <span className="uppercase tracking-wider text-[10px]">
+                            {a.paymentMethod}
+                          </span>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex flex-wrap gap-2 text-xs">
+                    {a.saftSignedAt ? (
+                      <a
+                        href={`/api/saft/${a.id}/pdf`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/10 hover:bg-white/[0.04]"
+                        data-testid={`link-saft-${a.id}`}
+                      >
+                        <FileText className="w-3.5 h-3.5" /> SAFT PDF
+                      </a>
+                    ) : (
+                      <Link
+                        href={`/saft/${a.id}`}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-amber-300/40 text-amber-300 hover:bg-amber-300/10"
+                      >
+                        Sign SAFT
+                      </Link>
+                    )}
+                    {a.isFunded && a.vesting && (
+                      <>
+                        <button
+                          onClick={() => downloadIcs(a)}
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/10 hover:bg-white/[0.04]"
+                          data-testid={`button-ics-${a.id}`}
+                        >
+                          <Download className="w-3.5 h-3.5" /> .ics
+                        </button>
+                        {googleCalendarUrls(a).length > 0 && (
+                          <button
+                            onClick={() => openAllGoogleCalendarEvents(a)}
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/10 hover:bg-white/[0.04]"
+                            data-testid={`button-gcal-${a.id}`}
+                            title="Opens one Google Calendar tab per unlock event"
+                          >
+                            <Calendar className="w-3.5 h-3.5" /> Google Cal
+                            ({googleCalendarUrls(a).length})
+                          </button>
+                        )}
+                      </>
+                    )}
+                  </div>
+                </div>
+
+                <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
+                  <Mini label="SAFT" value={a.saftSignedAt ? `Signed ${fmtDate(a.saftSignedAt)}` : "Not signed"} />
+                  <Mini label="Funded" value={fmtDate(a.fundedAt)} />
+                  <Mini
+                    label="TGE"
+                    value={a.vesting ? fmtDate(a.vesting.tgeDate) : "—"}
+                  />
+                  <Mini
+                    label="Cliff ends"
+                    value={a.vesting ? fmtDate(a.vesting.cliffDate) : "—"}
+                  />
+                </div>
+
+                {a.isFunded && a.vesting && (
+                  <div className="mt-6">
+                    <div className="text-xs uppercase tracking-[0.18em] text-white/40 mb-3">
+                      Vesting calendar
+                    </div>
+                    <VestingCalendar
+                      schedule={a.vesting.schedule}
+                      total={a.tokenAllocation}
+                    />
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
       </main>
+    </div>
+  );
+}
+
+function Stat({
+  label,
+  value,
+  accent,
+}: {
+  label: string;
+  value: string;
+  accent?: boolean;
+}) {
+  return (
+    <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6">
+      <div className="text-xs uppercase tracking-[0.18em] text-white/40">
+        {label}
+      </div>
+      <div
+        className={`mt-3 text-3xl font-semibold ${accent ? "text-[#00F5D4]" : ""}`}
+        style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}
+      >
+        {value}
+      </div>
+    </div>
+  );
+}
+
+function Mini({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-xl border border-white/10 bg-black/30 p-3">
+      <div className="text-[10px] uppercase tracking-[0.14em] text-white/40">
+        {label}
+      </div>
+      <div className="mt-1 text-sm">{value}</div>
     </div>
   );
 }

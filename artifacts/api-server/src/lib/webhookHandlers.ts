@@ -105,8 +105,15 @@ export class WebhookHandlers {
     }
 
     if (existing) {
+      const stateMap: Record<string, string> = {
+        succeeded: "funded",
+        failed: "failed",
+        refunded: "refunded",
+        pending: existing.state ?? "pending_payment",
+      };
       const patch: Record<string, unknown> = {
         status: args.status,
+        state: stateMap[args.status] ?? args.status,
         updatedAt: new Date(),
       };
       if (args.paymentIntentId && !existing.stripePaymentIntentId) {
@@ -116,6 +123,9 @@ export class WebhookHandlers {
       if (args.receiptUrl) patch["receiptUrl"] = args.receiptUrl;
       if (args.completedAt) patch["completedAt"] = args.completedAt;
       if (args.refundedAt) patch["refundedAt"] = args.refundedAt;
+      if (args.status === "succeeded" && !existing.fundedAt) {
+        patch["fundedAt"] = args.completedAt ?? new Date();
+      }
       await db
         .update(commitmentsTable)
         .set(patch)

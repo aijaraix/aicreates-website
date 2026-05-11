@@ -1,12 +1,16 @@
 import { Router, type IRouter } from "express";
 import { requireAuth, requireAdmin } from "../lib/auth";
 import { getUncachableStripeClient } from "../lib/stripeClient";
-import { db, appUsersTable, commitmentsTable } from "@workspace/db";
+import {
+  db,
+  appUsersTable,
+  commitmentsTable,
+  saftSubmissionsTable,
+} from "@workspace/db";
 import { desc, eq, sql } from "drizzle-orm";
 
 const router: IRouter = Router();
 
-// Live allow-list (env-driven) is re-checked in requireAdmin on every request.
 router.use("/admin", requireAuth, requireAdmin);
 
 router.get("/admin/users", async (_req, res) => {
@@ -33,17 +37,27 @@ router.get("/admin/commitments", async (req, res) => {
       amountCents: commitmentsTable.amountCents,
       currency: commitmentsTable.currency,
       status: commitmentsTable.status,
+      state: commitmentsTable.state,
       tierSlug: commitmentsTable.tierSlug,
       displayName: commitmentsTable.displayName,
       tokenAllocation: commitmentsTable.tokenAllocation,
       receiptUrl: commitmentsTable.receiptUrl,
       billingCountry: commitmentsTable.billingCountry,
+      roundSlug: commitmentsTable.roundSlug,
+      paymentMethod: commitmentsTable.paymentMethod,
+      saftSignedAt: commitmentsTable.saftSignedAt,
+      saftSignerName: saftSubmissionsTable.signatureName,
+      fundedAt: commitmentsTable.fundedAt,
       createdAt: commitmentsTable.createdAt,
       completedAt: commitmentsTable.completedAt,
       refundedAt: commitmentsTable.refundedAt,
     })
     .from(commitmentsTable)
     .leftJoin(appUsersTable, eq(appUsersTable.id, commitmentsTable.userId))
+    .leftJoin(
+      saftSubmissionsTable,
+      eq(saftSubmissionsTable.commitmentId, commitmentsTable.id),
+    )
     .orderBy(desc(commitmentsTable.createdAt))
     .limit(1000);
 
@@ -51,22 +65,27 @@ router.get("/admin/commitments", async (req, res) => {
     ? await baseQuery.where(eq(commitmentsTable.status, status))
     : await baseQuery;
 
-  // CSV export.
   if ((req.query["format"] as string | undefined) === "csv") {
     const header = [
       "id",
       "created_at",
       "completed_at",
+      "funded_at",
       "refunded_at",
       "email",
       "full_name",
       "tier_slug",
+      "round_slug",
       "display_name",
       "amount_cents",
       "currency",
+      "state",
       "status",
+      "payment_method",
       "token_allocation",
       "billing_country",
+      "saft_signed_at",
+      "saft_signer_name",
       "stripe_payment_intent_id",
       "stripe_customer_id",
       "stripe_checkout_session_id",
@@ -87,16 +106,22 @@ router.get("/admin/commitments", async (req, res) => {
         r.id,
         r.createdAt,
         r.completedAt,
+        r.fundedAt,
         r.refundedAt,
         r.email,
         r.fullName,
         r.tierSlug,
+        r.roundSlug,
         r.displayName,
         r.amountCents,
         r.currency,
+        r.state,
         r.status,
+        r.paymentMethod,
         r.tokenAllocation,
         r.billingCountry,
+        r.saftSignedAt,
+        r.saftSignerName,
         r.stripePaymentIntentId,
         r.stripeCustomerId,
         r.stripeCheckoutSessionId,
@@ -120,15 +145,64 @@ router.get("/admin/commitments", async (req, res) => {
 router.get("/admin/stats", async (_req, res) => {
   const result = await db.execute(sql`
     SELECT
-      COUNT(*) FILTER (WHERE status = 'succeeded') AS succeeded_count,
-      COUNT(*) FILTER (WHERE status = 'pending') AS pending_count,
+      COUNT(*) FILTER (WHERE status = 'succeeded' OR status = 'funded') AS succeeded_count,
+      COUNT(*) FILTER (WHERE status IN ('pending', 'pending_saft', 'pending_payment')) AS pending_count,
+      COUNT(*) FILTER (WHERE status = 'awaiting_wire') AS awaiting_wire_count,
+      COUNT(*) FILTER (WHERE status = 'awaiting_crypto') AS awaiting_crypto_count,
       COUNT(*) FILTER (WHERE status = 'refunded') AS refunded_count,
-      COALESCE(SUM(amount_cents) FILTER (WHERE status = 'succeeded'), 0) AS total_succeeded_cents,
-      COALESCE(SUM(token_allocation) FILTER (WHERE status = 'succeeded'), 0) AS total_tokens_allocated
+      COALESCE(SUM(amount_cents) FILTER (WHERE status IN ('succeeded', 'funded')), 0) AS total_succeeded_cents,
+      COALESCE(SUM(token_allocation) FILTER (WHERE status IN ('succeeded', 'funded')), 0) AS total_tokens_allocated
     FROM commitments
   `);
   res.json({ stats: result.rows[0] ?? {} });
 });
+
+router.post("/admin/commitments/:id/confirm-wire", async (req, res) => {
+  await confirmManual(req, res, "wire");
+});
+
+router.post("/admin/commitments/:id/confirm-crypto", async (req, res) => {
+  await confirmManual(req, res, "crypto");
+});
+
+async function confirmManual(
+  req: import("express").Request,
+  res: import("express").Response,
+  expectedMethod: "wire" | "crypto",
+): Promise<void> {
+  const id = req.params["id"] as string | undefined;
+  if (!id) {
+    res.status(400).json({ error: "id required" });
+    return;
+  }
+  const rows = await db
+    .select()
+    .from(commitmentsTable)
+    .where(eq(commitmentsTable.id, id))
+    .limit(1);
+  const c = rows[0];
+  if (!c) {
+    res.status(404).json({ error: "Not found" });
+    return;
+  }
+  if (c.paymentMethod !== expectedMethod) {
+    res
+      .status(400)
+      .json({ error: `Commitment is not a ${expectedMethod} payment` });
+    return;
+  }
+  await db
+    .update(commitmentsTable)
+    .set({
+      state: "funded",
+      status: "succeeded",
+      fundedAt: new Date(),
+      completedAt: new Date(),
+      updatedAt: new Date(),
+    })
+    .where(eq(commitmentsTable.id, c.id));
+  res.json({ ok: true });
+}
 
 router.post("/admin/commitments/:id/refund", async (req, res) => {
   const id = req.params["id"];
@@ -173,11 +247,11 @@ router.post("/admin/commitments/:id/refund", async (req, res) => {
         commitmentId: commitment.id,
       },
     });
-    // Optimistic local update; the charge.refunded webhook will also fire.
     await db
       .update(commitmentsTable)
       .set({
         status: "refunded",
+        state: "refunded",
         refundedAt: new Date(),
         updatedAt: new Date(),
       })
