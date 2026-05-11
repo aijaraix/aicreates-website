@@ -121,3 +121,17 @@ The Eve widget (`artifacts/web/src/components/EveWidget.tsx`) and its backend ro
 ## Security
 
 Static public website. The api-server has CORS allow-lists and never exposes any third-party API keys to the client.
+
+## Investor portal e2e tests (`artifacts/portal-e2e`)
+
+A Playwright suite that drives the portal through the dev workflows on `http://localhost:80`. Sign-in is fully programmatic via `@clerk/testing/playwright`; two test users are provisioned idempotently on every run (a regular investor and the first email in `ADMIN_EMAILS`).
+
+Specs cover: sign-in, create commitment, complete the 6-step SAFT, SAFT PDF preview, wire checkout + admin confirm, crypto checkout + admin confirm, and the funded-state dashboard with vesting.
+
+```bash
+pnpm install
+pnpm --filter @workspace/portal-e2e exec playwright install chromium
+pnpm --filter @workspace/portal-e2e run test
+```
+
+See `artifacts/portal-e2e/README.md` for full details.

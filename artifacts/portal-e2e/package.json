@@ -1,0 +1,21 @@
+{
+  "name": "@workspace/portal-e2e",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui",
+    "report": "playwright show-report",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@clerk/backend": "^1.31.4",
+    "@clerk/testing": "^1.5.5",
+    "@playwright/test": "^1.49.1",
+    "@types/node": "catalog:",
+    "dotenv": "^16.4.7",
+    "typescript": "~5.9.2"
+  }
+}
