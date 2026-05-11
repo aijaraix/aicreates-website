@@ -78,7 +78,7 @@ export default function Invest() {
                 </Button>
               </a>
               <a
-                href="/portal/litepaper.pdf"
+                href="/litepaper.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -172,7 +172,7 @@ export default function Invest() {
               Learn more about our vision.
             </h2>
             <p className="mt-5 text-base sm:text-lg text-white/55 leading-relaxed">
-              Read the full thesis. The pitch deck is being finalized for release.
+              Read the full thesis or download the pitch deck for offline review.
             </p>
           </div>
 
@@ -193,7 +193,7 @@ export default function Invest() {
                 title: "Download Pitch Deck",
                 desc: "PDF version of the investor deck for offline review.",
                 disabled: false,
-                href: "/portal/litepaper.pdf" as string | undefined,
+                href: "/litepaper.pdf" as string | undefined,
                 external: true,
                 cta: "Download PDF",
                 testId: "button-download-deck",
