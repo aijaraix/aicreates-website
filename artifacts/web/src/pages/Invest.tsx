@@ -194,11 +194,11 @@ export default function Invest() {
               },
               {
                 icon: BookOpen,
-                title: "Read the Full Litepaper",
+                title: "Read the Litepaper",
                 desc: "The full positioning, architecture, roadmap, and tokenomics.",
                 disabled: false,
                 href: "/litepaper",
-                cta: "Read the Full Litepaper",
+                cta: "Read the Litepaper",
                 testId: "button-read-litepaper",
               },
             ].map((card) => (
