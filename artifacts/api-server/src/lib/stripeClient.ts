@@ -21,16 +21,20 @@ async function getStripeCredentials(): Promise<StripeCredentials> {
     );
   }
 
-  const resp = await fetch(
-    `https://${hostname}/api/v2/connection?include_secrets=true&connector_names=stripe`,
-    {
-      headers: {
-        Accept: "application/json",
-        X_REPLIT_TOKEN: xReplitToken,
-      },
-      signal: AbortSignal.timeout(10_000),
+  const isProduction = process.env.REPLIT_DEPLOYMENT === "1";
+  const targetEnvironment = isProduction ? "production" : "development";
+  const url = new URL(`https://${hostname}/api/v2/connection`);
+  url.searchParams.set("include_secrets", "true");
+  url.searchParams.set("connector_names", "stripe");
+  url.searchParams.set("environment", targetEnvironment);
+
+  const resp = await fetch(url.toString(), {
+    headers: {
+      Accept: "application/json",
+      "X-Replit-Token": xReplitToken,
     },
-  );
+    signal: AbortSignal.timeout(10_000),
+  });
 
   if (!resp.ok) {
     throw new Error(
@@ -39,11 +43,20 @@ async function getStripeCredentials(): Promise<StripeCredentials> {
   }
 
   const data = (await resp.json()) as {
-    items?: Array<{ settings?: { secret_key?: string; webhook_secret?: string } }>;
+    items?: Array<{
+      settings?: {
+        secret?: string;
+        secret_key?: string;
+        publishable?: string;
+        webhook_secret?: string;
+      };
+    }>;
   };
   const settings = data.items?.[0]?.settings;
+  // The Replit Stripe connector returns `secret` (newer) or `secret_key` (older).
+  const secretKey = settings?.secret ?? settings?.secret_key;
 
-  if (!settings?.secret_key) {
+  if (!secretKey) {
     throw new Error(
       "Stripe integration not connected or missing secret key. " +
         "Connect Stripe via the Integrations tab first.",
@@ -51,8 +64,8 @@ async function getStripeCredentials(): Promise<StripeCredentials> {
   }
 
   return {
-    secretKey: settings.secret_key,
-    webhookSecret: settings.webhook_secret,
+    secretKey,
+    webhookSecret: settings?.webhook_secret,
   };
 }
 

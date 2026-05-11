@@ -57,16 +57,22 @@ async function getStripeCredentials(): Promise<{ secretKey: string }> {
       "Missing Replit env vars. Connect Stripe via the Integrations tab.",
     );
   }
-  const resp = await fetch(
-    `https://${hostname}/api/v2/connection?include_secrets=true&connector_names=stripe`,
-    { headers: { Accept: "application/json", X_REPLIT_TOKEN: xReplitToken } },
-  );
+  const isProduction = process.env.REPLIT_DEPLOYMENT === "1";
+  const targetEnvironment = isProduction ? "production" : "development";
+  const url = new URL(`https://${hostname}/api/v2/connection`);
+  url.searchParams.set("include_secrets", "true");
+  url.searchParams.set("connector_names", "stripe");
+  url.searchParams.set("environment", targetEnvironment);
+  const resp = await fetch(url.toString(), {
+    headers: { Accept: "application/json", "X-Replit-Token": xReplitToken },
+  });
   const data = (await resp.json()) as {
-    items?: Array<{ settings?: { secret_key?: string } }>;
+    items?: Array<{ settings?: { secret?: string; secret_key?: string } }>;
   };
-  const secretKey = data.items?.[0]?.settings?.secret_key;
+  const settings = data.items?.[0]?.settings;
+  const secretKey = settings?.secret ?? settings?.secret_key;
   if (!secretKey) {
-    throw new Error("Stripe not connected — secret_key missing.");
+    throw new Error("Stripe not connected — secret key missing.");
   }
   return { secretKey };
 }
