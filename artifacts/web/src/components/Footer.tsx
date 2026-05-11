@@ -1,13 +1,5 @@
 import { Link } from "wouter";
 
-function XIcon({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
-      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231L18.244 2.25Zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77Z" />
-    </svg>
-  );
-}
-
 export function Footer() {
   return (
     <footer className="bg-[#0A0A0A] relative border-t border-white/5 pt-20 pb-10 mt-24">
@@ -58,11 +50,8 @@ export function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="AIcreatesAI on X"
-              className="inline-flex items-center gap-2 text-sm text-white/70 hover:text-[#00F5D4] transition-colors group"
+              className="text-sm text-white/70 hover:text-[#00F5D4] transition-colors"
             >
-              <span className="w-9 h-9 rounded-full border border-white/10 flex items-center justify-center group-hover:border-[#00F5D4]/40 transition-colors">
-                <XIcon className="w-4 h-4" />
-              </span>
               @theaicreatesai
             </a>
           </div>
