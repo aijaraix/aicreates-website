@@ -96,13 +96,11 @@ function AuthShell({
   title,
   subtitle,
   children,
-  altCta,
 }: {
   eyebrow: string;
   title: React.ReactNode;
   subtitle: React.ReactNode;
   children: React.ReactNode;
-  altCta: { href: string; label: string; variant: "primary" | "outline" };
 }) {
   return (
     <div className="relative isolate min-h-[100dvh] bg-[#0A0A0A] text-white overflow-hidden">
@@ -131,7 +129,12 @@ function AuthShell({
             external: true,
             testId: "link-portal-litepaper",
           },
-          altCta,
+          {
+            href: "/sign-up",
+            label: "Reserve allocation",
+            variant: "primary",
+            testId: "link-portal-signup",
+          },
         ]}
       />
       <main className="px-4 pt-4 pb-16 md:pt-10 flex flex-col items-center">
@@ -156,7 +159,6 @@ function SignInPage() {
       eyebrow="Investor portal"
       title="Welcome back."
       subtitle="Sign in to manage your AICA Founders Round commitment, SAFTs, and vesting schedule."
-      altCta={{ href: "/sign-up", label: "Reserve allocation", variant: "primary" }}
     >
       <SignIn
         routing="path"
@@ -173,7 +175,6 @@ function SignUpPage() {
       eyebrow="AICA Founders Round - 2026"
       title="Reserve your allocation."
       subtitle="Create your investor account to access the deck, complete the SAFT, and fund a commitment."
-      altCta={{ href: "/sign-in", label: "Sign in", variant: "outline" }}
     >
       <SignUp
         routing="path"
