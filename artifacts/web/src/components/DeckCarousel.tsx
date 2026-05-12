@@ -35,6 +35,7 @@ interface DeckCarouselProps {
   title?: string;
   subline?: string;
   testIdPrefix?: string;
+  showHeader?: boolean;
 }
 
 export default function DeckCarousel({
@@ -43,6 +44,7 @@ export default function DeckCarousel({
   title = "Visual Whitepaper",
   subline = "Swipe through the deck or open it fullscreen.",
   testIdPrefix = "deck",
+  showHeader = true,
 }: DeckCarouselProps) {
   const [manifest, setManifest] = useState<Manifest | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -211,7 +213,7 @@ export default function DeckCarousel({
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(0,245,212,0.08),transparent_60%)] pointer-events-none" />
 
       {/* Header */}
-      {!isFullscreen && (
+      {!isFullscreen && showHeader && (
         <div className="relative px-5 sm:px-7 pt-5 pb-3 flex items-start justify-between gap-3">
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/[0.02]">

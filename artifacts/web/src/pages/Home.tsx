@@ -533,20 +533,15 @@ export default function Home() {
       </section>
 
       <Dialog open={deckOpen} onOpenChange={setDeckOpen}>
-        <DialogContent className="max-w-5xl bg-[#0A0A0A] border-white/10 text-white p-6 md:p-8">
-          <DialogHeader>
-            <DialogTitle className="text-2xl font-serif text-gradient">AICA Visual Whitepaper</DialogTitle>
-            <DialogDescription className="text-white/55">
-              Step through the deck - use arrows, swipe, or open it fullscreen.
-            </DialogDescription>
+        <DialogContent className="max-w-5xl bg-[#0A0A0A] border-white/10 text-white p-3 sm:p-4">
+          <DialogHeader className="sr-only">
+            <DialogTitle>AICA Visual Whitepaper</DialogTitle>
+            <DialogDescription>Step through the AIcreatesAI pitch deck.</DialogDescription>
           </DialogHeader>
-          <div className="mt-2">
-            <DeckCarousel
-              title="AICA Visual Whitepaper"
-              subline="Swipe, arrow keys, or fullscreen."
-              testIdPrefix="deck-home-modal"
-            />
-          </div>
+          <DeckCarousel
+            showHeader={false}
+            testIdPrefix="deck-home-modal"
+          />
         </DialogContent>
       </Dialog>
     </div>
