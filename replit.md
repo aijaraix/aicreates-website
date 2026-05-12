@@ -136,11 +136,11 @@ DNS at GoDaddy:
 - Add both custom domains in Clerk's allowed origins.
 
 Production env vars (set in Replit Deployments → Secrets):
-- `SESSION_SECRET` (random, already set)
-- `ADMIN_EMAILS` — comma-separated; first match becomes admin (already in `[userenv.shared]`)
+- `ADMIN_EMAILS` — comma-separated; every listed email is granted the `admin` role per-request (already in `[userenv.shared]`)
 - `VITE_CLERK_PROXY_URL=/api/__clerk` — production only (already in `[userenv.production]`)
 - `DATABASE_URL` — auto-provisioned when "Create production database" is checked at publish time
 - Stripe — managed by the Replit Stripe integration, don't set by hand
+- `SESSION_SECRET` is present as a Replit secret but not currently consumed by application code (Clerk owns auth state). Leave it unless you add session middleware later.
 
 See `README.md` for the full setup walkthrough.
 

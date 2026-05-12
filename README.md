@@ -100,11 +100,12 @@ The `web` artifact is **deliberately excluded** from Replit Deployments (no `[se
 
    | Variable | Value | Notes |
    | --- | --- | --- |
-   | `SESSION_SECRET` | (random, already set) | Used for cookie signing |
-   | `ADMIN_EMAILS` | `sholom@aicreates.ai,chris@aicreates.ai` | Comma-separated. First match becomes admin. Already set in `[userenv.shared]`. |
+   | `ADMIN_EMAILS` | `sholom@aicreates.ai,chris@aicreates.ai` | Comma-separated. **Every** email in this list is granted the `admin` role on next request (checked per-request, so removing an email from the list demotes that user immediately). Already set in `[userenv.shared]`. |
    | `VITE_CLERK_PROXY_URL` | `/api/__clerk` | **Production only.** Already set in `[userenv.production]`. Setting it in dev blanks the portal because the dev Clerk proxy is a no-op. |
    | `DATABASE_URL` | (Replit-managed Postgres) | Auto-provisioned when "Create production database" is checked. |
    | Stripe vars | (managed by integration) | Don't set by hand. |
+
+   `SESSION_SECRET` is also present as a Replit secret but is **not currently consumed by application code** (Clerk owns auth state); leave it alone unless you add session middleware later.
 4. **DNS at GoDaddy:**
    - `invest.aicreates.ai` → `CNAME` → your `*.replit.app` deployment hostname (visible in the Publishing dialog).
    - `portal.aicreates.ai` → `CNAME` → same `*.replit.app` (so the host-based 301 redirect runs).
