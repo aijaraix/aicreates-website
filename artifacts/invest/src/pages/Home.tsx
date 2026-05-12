@@ -20,6 +20,7 @@ import AllocationCalculator from "@/components/AllocationCalculator";
 import VestingCalendar from "@/components/VestingCalendar";
 import DataCenterRequestForm from "@/components/DataCenterRequestForm";
 import { Wordmark, SectionLabel } from "@/components/brand";
+import SiteHeader from "@/components/SiteHeader";
 import { computeVesting } from "@/lib/vesting";
 
 const sectionMotion = {
@@ -80,27 +81,24 @@ export default function Home() {
   return (
     <div className="min-h-[100dvh] bg-[#0A0A0A] text-white overflow-x-hidden">
       {/* ----------------------------- HERO ----------------------------- */}
-      <header className="px-6 md:px-10 py-5 flex items-center justify-between border-b border-white/5 relative z-20">
-        <a href="https://www.aicreates.ai" className="flex items-center">
-          <Wordmark />
-        </a>
-        <nav className="flex items-center gap-2 text-sm">
-          <Link
-            href="/sign-in"
-            className="inline-flex items-center justify-center rounded-full h-9 px-5 border border-white/15 bg-white/[0.02] text-white hover:bg-white/[0.06] hover:text-[#00F5D4] text-sm font-medium transition"
-            data-testid="link-portal-signin"
-          >
-            Sign in
-          </Link>
-          <Link
-            href="/sign-up"
-            className="inline-flex items-center justify-center rounded-full h-9 px-5 bg-[#00F5D4] text-black hover:bg-[#00F5D4]/90 text-sm font-medium transition"
-            data-testid="link-portal-signup"
-          >
-            Reserve allocation
-          </Link>
-        </nav>
-      </header>
+      <SiteHeader
+        homeHref="https://www.aicreates.ai"
+        homeExternal
+        ctas={[
+          {
+            href: "/sign-in",
+            label: "Sign in",
+            variant: "outline",
+            testId: "link-portal-signin",
+          },
+          {
+            href: "/sign-up",
+            label: "Reserve allocation",
+            variant: "primary",
+            testId: "link-portal-signup",
+          },
+        ]}
+      />
 
       <section className="relative isolate min-h-[100dvh] flex items-center px-6 md:px-10 pt-10 pb-24">
         <HeroAurora />

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useLocation } from "wouter";
 import { useUser, useClerk } from "@clerk/react";
 import { LogOut, Menu, X } from "lucide-react";
-import { Wordmark } from "@/components/brand";
+import SiteHeader, { type HeaderNavLink } from "@/components/SiteHeader";
 
 const NAV_LINKS = [
   { href: "/dashboard", label: "Dashboard" },
@@ -11,23 +11,11 @@ const NAV_LINKS = [
   { href: "/faq", label: "FAQ" },
 ];
 
-export default function PortalNav({
-  showAdmin,
-}: {
-  showAdmin?: boolean;
-}) {
+export default function PortalNav({ showAdmin }: { showAdmin?: boolean }) {
   const { user } = useUser();
   const { signOut } = useClerk();
   const [location] = useLocation();
-  const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   useEffect(() => {
     setOpen(false);
@@ -38,73 +26,55 @@ export default function PortalNav({
       ? location === "/dashboard"
       : location.startsWith(href);
 
+  const navLinks: HeaderNavLink[] = NAV_LINKS.map((l) => ({
+    href: l.href,
+    label: l.label,
+    active: isActive(l.href),
+    testId: `nav-link-${l.href.slice(1)}`,
+  }));
+
   return (
-    <header
-      className={`sticky top-0 z-40 transition-all ${
-        scrolled
-          ? "bg-[#0A0A0A]/75 backdrop-blur-xl border-b border-white/10"
-          : "bg-transparent border-b border-transparent"
-      }`}
-    >
-      <div className="mx-auto max-w-7xl px-6 md:px-10 h-16 flex items-center justify-between gap-4">
-        <Link
-          href="/dashboard"
-          className="flex items-center group"
-          data-testid="link-portal-home"
-        >
-          <Wordmark />
-        </Link>
-
-        <nav className="hidden md:flex items-center gap-1 text-sm">
-          {NAV_LINKS.map((l) => (
-            <Link
-              key={l.href}
-              href={l.href}
-              className={`px-3.5 py-1.5 rounded-full transition ${
-                isActive(l.href)
-                  ? "text-[#00F5D4] bg-[#00F5D4]/10 ring-1 ring-inset ring-[#00F5D4]/20"
-                  : "text-white/65 hover:text-white hover:bg-white/[0.04]"
-              }`}
-              data-testid={`nav-link-${l.href.slice(1)}`}
+    <>
+      <SiteHeader
+        homeHref="/dashboard"
+        homeTestId="link-portal-home"
+        sticky
+        navLinks={navLinks}
+        rightSlot={
+          <>
+            {showAdmin && (
+              <Link
+                href="/admin"
+                className="hidden sm:inline-flex items-center justify-center rounded-full h-9 px-5 border border-white/15 bg-white/[0.02] text-white hover:bg-white/[0.06] hover:text-[#00F5D4] text-sm font-medium transition"
+                data-testid="link-admin"
+              >
+                Admin
+              </Link>
+            )}
+            <span className="hidden lg:block text-white/55 text-xs font-mono truncate max-w-[180px]">
+              {user?.primaryEmailAddress?.emailAddress}
+            </span>
+            <button
+              onClick={() => signOut({ redirectUrl: window.location.origin })}
+              className="hidden md:inline-flex items-center justify-center gap-1.5 rounded-full h-9 px-5 border border-white/15 bg-white/[0.02] text-white hover:bg-white/[0.06] hover:text-[#00F5D4] text-sm font-medium transition"
+              data-testid="button-signout"
             >
-              {l.label}
-            </Link>
-          ))}
-        </nav>
-
-        <div className="flex items-center gap-2 text-sm">
-          {showAdmin && (
-            <Link
-              href="/admin"
-              className="hidden sm:inline-flex px-3 py-1.5 rounded-full border border-[#00F5D4]/40 text-[#00F5D4] hover:bg-[#00F5D4]/10 transition"
-              data-testid="link-admin"
+              <LogOut className="w-3.5 h-3.5" /> Sign out
+            </button>
+            <button
+              onClick={() => setOpen((v) => !v)}
+              className="md:hidden inline-flex items-center justify-center h-9 w-9 rounded-full border border-white/15 bg-white/[0.02] hover:bg-white/[0.06]"
+              aria-label="Open menu"
+              data-testid="button-mobile-menu"
             >
-              Admin
-            </Link>
-          )}
-          <span className="hidden lg:block text-white/55 text-xs font-mono truncate max-w-[180px]">
-            {user?.primaryEmailAddress?.emailAddress}
-          </span>
-          <button
-            onClick={() => signOut({ redirectUrl: window.location.origin })}
-            className="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/10 hover:bg-white/[0.04] transition"
-            data-testid="button-signout"
-          >
-            <LogOut className="w-3.5 h-3.5" /> Sign out
-          </button>
-          <button
-            onClick={() => setOpen((v) => !v)}
-            className="md:hidden inline-flex items-center justify-center h-9 w-9 rounded-full border border-white/10 hover:bg-white/[0.04]"
-            aria-label="Open menu"
-            data-testid="button-mobile-menu"
-          >
-            {open ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
-          </button>
-        </div>
-      </div>
+              {open ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+            </button>
+          </>
+        }
+      />
 
       {open && (
-        <div className="md:hidden border-t border-white/10 bg-[#0A0A0A]/90 backdrop-blur-xl">
+        <div className="md:hidden border-t border-white/10 bg-[#0A0A0A]/90 backdrop-blur-xl sticky top-[64px] z-30">
           <div className="px-6 py-4 flex flex-col gap-1">
             {NAV_LINKS.map((l) => (
               <Link
@@ -112,7 +82,7 @@ export default function PortalNav({
                 href={l.href}
                 className={`px-3 py-2.5 rounded-xl text-sm transition ${
                   isActive(l.href)
-                    ? "text-[#00F5D4] bg-[#00F5D4]/10"
+                    ? "text-white bg-white/[0.06]"
                     : "text-white/70 hover:bg-white/[0.04]"
                 }`}
               >
@@ -122,7 +92,7 @@ export default function PortalNav({
             {showAdmin && (
               <Link
                 href="/admin"
-                className="px-3 py-2.5 rounded-xl text-sm text-[#00F5D4] hover:bg-[#00F5D4]/10"
+                className="px-3 py-2.5 rounded-xl text-sm text-white hover:bg-white/[0.04]"
               >
                 Admin
               </Link>
@@ -133,7 +103,7 @@ export default function PortalNav({
               </span>
               <button
                 onClick={() => signOut({ redirectUrl: window.location.origin })}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/10 hover:bg-white/[0.04] text-xs"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/15 bg-white/[0.02] hover:bg-white/[0.06] text-xs"
               >
                 <LogOut className="w-3.5 h-3.5" /> Sign out
               </button>
@@ -141,6 +111,6 @@ export default function PortalNav({
           </div>
         </div>
       )}
-    </header>
+    </>
   );
 }

@@ -84,10 +84,6 @@ body {
   backdrop-filter: blur(8px);
 }
 
-/* Marketing-site-aligned utilities.
-   .text-gradient mirrors artifacts/web/src/index.css: bright white that
-   fades toward the bottom. This is the title gradient used on every page
-   of the main site, so we use it as the portal's title gradient too. */
 .text-gradient {
   background: linear-gradient(180deg, #ffffff 0%, #ffffff 55%, rgba(255, 255, 255, 0.4) 100%);
   -webkit-background-clip: text;
@@ -95,7 +91,6 @@ body {
   -webkit-text-fill-color: transparent;
   color: transparent;
 }
-/* Kept for any inner accent text that still needs the white-to-teal sweep. */
 .text-gradient-teal {
   background: linear-gradient(110deg, #f5f5f5 0%, #f5f5f5 40%, #00f5d4 100%);
   -webkit-background-clip: text;
@@ -196,27 +191,17 @@ body {
   height: 2.75rem;
   padding: 0 1.25rem;
   border-radius: 9999px;
-  background: linear-gradient(180deg, #00f5d4 0%, #00d9ba 100%);
+  background: #00f5d4;
   color: #000;
   font-weight: 500;
-  letter-spacing: -0.005em;
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.4) inset,
-    0 0 30px rgba(0, 245, 212, 0.35),
-    0 6px 24px -8px rgba(0, 245, 212, 0.55);
-  transition: filter 120ms ease, box-shadow 120ms ease;
+  font-size: 0.875rem;
+  transition: background 120ms ease;
 }
 .brand-cta:hover {
-  filter: brightness(1.05);
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.5) inset,
-    0 0 40px rgba(0, 245, 212, 0.45),
-    0 8px 28px -6px rgba(0, 245, 212, 0.7);
+  background: rgba(0, 245, 212, 0.9);
 }
 .brand-cta:disabled {
   opacity: 0.45;
-  filter: grayscale(0.2);
-  box-shadow: none;
   cursor: not-allowed;
 }
 
@@ -230,11 +215,12 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.15);
   background: rgba(255, 255, 255, 0.02);
   color: #f5f5f5;
-  transition: border-color 120ms ease, background 120ms ease;
+  font-size: 0.875rem;
+  transition: border-color 120ms ease, background 120ms ease, color 120ms ease;
 }
 .brand-cta-outline:hover {
-  border-color: rgba(0, 245, 212, 0.5);
-  background: rgba(0, 245, 212, 0.06);
+  background: rgba(255, 255, 255, 0.06);
+  color: #00f5d4;
 }
 
 .brand-input {
