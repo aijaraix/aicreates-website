@@ -388,7 +388,12 @@ router.post("/saft/:commitId", requireAuth, async (req, res) => {
   // the response. The email lib silently no-ops if Resend is not wired.
   const totalTokens = allocations.reduce((s, a) => s + a.tokens, 0);
   const totalCents = allocations.reduce((s, a) => s + a.usdCents, 0);
+  // Prefer the configured canonical portal origin for transactional email
+  // links so investor receipts always point at the live host even when the
+  // request originated from a preview or non-canonical origin. Falls back
+  // to the request origin in dev where PUBLIC_PORTAL_ORIGIN isn't set.
   const origin =
+    process.env["PUBLIC_PORTAL_ORIGIN"] ??
     (req.headers["origin"] as string | undefined) ??
     `${req.protocol}://${req.get("host")}`;
   void emailSaftSigned({
