@@ -1,6 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import WhitepaperVisual from "@/components/WhitepaperVisual";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import {
   ArrowRight,
@@ -217,6 +225,7 @@ export default function Home() {
       "AIcreatesAI builds the agentic intelligence layer that companies, capital, and consumers will run on. One layer. Many products. Self-improving by design.",
     path: "/",
   });
+  const [deckOpen, setDeckOpen] = useState(false);
   return (
     <div className="flex flex-col w-full">
       {/* HERO */}
@@ -475,18 +484,22 @@ export default function Home() {
                 The full thesis, architecture, and economic engine of the agentic intelligence layer - laid out in one document.
               </p>
               <div className="mt-8 flex flex-wrap gap-3 justify-center">
+                <Button
+                  size="lg"
+                  onClick={() => setDeckOpen(true)}
+                  className="rounded-full h-12 px-8 bg-[#00F5D4] text-black hover:bg-[#00F5D4]/90 font-medium"
+                  data-testid="button-view-pitch-deck"
+                >
+                  View Pitch Deck <ArrowRight className="ml-2 w-4 h-4" />
+                </Button>
                 <Link href="/litepaper">
-                  <Button size="lg" className="rounded-full h-12 px-8 bg-[#00F5D4] text-black hover:bg-[#00F5D4]/90 font-medium">
-                    Read the whitepaper <ArrowRight className="ml-2 w-4 h-4" />
-                  </Button>
-                </Link>
-                <Link href="/litepaper#tokenomics">
                   <Button
                     size="lg"
                     variant="outline"
                     className="rounded-full h-12 px-7 border-white/15 bg-transparent text-white hover:bg-white/5"
+                    data-testid="button-litepaper"
                   >
-                    Tokenomics
+                    Litepaper
                   </Button>
                 </Link>
               </div>
@@ -518,6 +531,46 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <Dialog open={deckOpen} onOpenChange={setDeckOpen}>
+        <DialogContent className="max-w-3xl bg-[#0A0A0A] border-white/10 text-white">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-serif text-gradient">Pitch Deck Preview</DialogTitle>
+            <DialogDescription className="text-white/55">
+              An at-a-glance preview of the AIcreatesAI deck. Full deck arrives soon - reach out for early access.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center mt-2">
+            <div className="flex justify-center">
+              <WhitepaperVisual className="w-64 sm:w-72 md:w-full max-w-[320px]" testId="img-deck-preview" />
+            </div>
+            <div className="space-y-4">
+              <div className="text-[10px] font-mono uppercase tracking-[0.22em] text-white/40">
+                Inside the deck
+              </div>
+              <ul className="space-y-2 text-sm text-white/75">
+                <li className="flex gap-3"><span className="text-[#00F5D4] font-mono text-xs mt-0.5">01</span> Architecture</li>
+                <li className="flex gap-3"><span className="text-[#00F5D4] font-mono text-xs mt-0.5">02</span> Hybrid Compute Fabric</li>
+                <li className="flex gap-3"><span className="text-[#00F5D4] font-mono text-xs mt-0.5">03</span> Quality Engine</li>
+                <li className="flex gap-3"><span className="text-[#00F5D4] font-mono text-xs mt-0.5">04</span> Tokenomics</li>
+                <li className="flex gap-3"><span className="text-[#00F5D4] font-mono text-xs mt-0.5">05</span> Roadmap</li>
+              </ul>
+              <div className="flex flex-wrap gap-2 pt-2">
+                <Link href="/litepaper">
+                  <Button onClick={() => setDeckOpen(false)} className="rounded-full bg-[#00F5D4] text-black hover:bg-[#00F5D4]/90 font-medium">
+                    Read the litepaper <ArrowRight className="ml-2 w-4 h-4" />
+                  </Button>
+                </Link>
+                <Link href="/contact?interest=Investor">
+                  <Button onClick={() => setDeckOpen(false)} variant="outline" className="rounded-full border-white/15 bg-transparent text-white hover:bg-white/5">
+                    Request full deck
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
