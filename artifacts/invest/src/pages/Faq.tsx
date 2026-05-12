@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import PortalNav from "@/components/PortalNav";
+import PageHeader from "@/components/PageHeader";
 import { ChevronDown } from "lucide-react";
 
 interface MeResponse {
@@ -117,24 +118,24 @@ export default function Faq() {
   return (
     <div className="min-h-[100dvh] bg-[#0A0A0A] text-white">
       <PortalNav showAdmin={isAdmin} />
-      <main className="mx-auto max-w-3xl px-6 py-10 md:py-14">
-        <h1
-          className="text-3xl md:text-4xl font-semibold tracking-tight mb-3"
-          style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}
-        >
-          <span className="text-[#00F5D4]">FAQ</span>
-        </h1>
-        <p className="text-white/60 mb-10">
-          The questions investors ask most. Reach out at{" "}
-          <a
-            href="mailto:sholom@aicreates.ai"
-            className="text-[#00F5D4] hover:underline"
-          >
-            sholom@aicreates.ai
-          </a>{" "}
-          for anything not covered here.
-        </p>
-
+      <PageHeader
+        eyebrow="Investor FAQ"
+        title={<>The questions investors ask most.</>}
+        subtitle={
+          <>
+            Round mechanics, token vesting, KYC and SAFT, payments, and risk -
+            in plain language. Anything missing? Email{" "}
+            <a
+              href="mailto:sholom@aicreates.ai"
+              className="text-[#00F5D4] hover:underline"
+            >
+              sholom@aicreates.ai
+            </a>
+            .
+          </>
+        }
+      />
+      <main className="mx-auto max-w-3xl px-6 py-10 md:py-12">
         <div className="space-y-10">
           {GROUPS.map((g) => (
             <section key={g.title}>

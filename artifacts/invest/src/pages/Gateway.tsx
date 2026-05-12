@@ -4,7 +4,8 @@ import { useUser } from "@clerk/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import PortalNav from "@/components/PortalNav";
-import { ArrowRight, Sparkles, Loader2, Check } from "lucide-react";
+import PageHeader from "@/components/PageHeader";
+import { ArrowRight, Loader2, Check } from "lucide-react";
 
 interface Application {
   id: string;
@@ -126,27 +127,18 @@ export default function Gateway() {
   return (
     <div className="min-h-[100dvh] bg-[#0A0A0A] text-white">
       <PortalNav showAdmin={isAdmin} />
-      <main className="mx-auto max-w-3xl px-6 py-10 md:py-14">
-        <div className="mb-8">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#00F5D4]/30 bg-[#00F5D4]/5 mb-5">
-            <Sparkles className="w-3.5 h-3.5 text-[#00F5D4]" />
-            <span className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#00F5D4]">
-              AI Allocation Gateway
-            </span>
-          </div>
-          <h1
-            className="text-3xl md:text-4xl font-semibold tracking-tight"
-            style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}
-          >
-            Tell us about <span className="text-[#00F5D4]">your fit</span>.
-          </h1>
-          <p className="mt-3 text-white/60">
-            We allocate the Founders Round selectively. Submit this short
-            intake so we can route you and prioritize your commitment.
+      <PageHeader
+        eyebrow="AI Allocation Gateway"
+        title={<>Tell us about your fit.</>}
+        subtitle={
+          <>
+            We allocate the Founders Round selectively. This short intake lets
+            us route you and prioritize your commitment.
             {user?.firstName ? ` Thanks, ${user.firstName}.` : ""}
-          </p>
-        </div>
-
+          </>
+        }
+      />
+      <main className="mx-auto max-w-3xl px-6 py-10 md:py-12">
         {app && (
           <div
             className="mb-8 rounded-2xl border border-[#00F5D4]/30 bg-[#00F5D4]/5 p-5"

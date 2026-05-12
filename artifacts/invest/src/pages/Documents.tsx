@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
 import { api } from "@/lib/api";
 import PortalNav from "@/components/PortalNav";
+import PageHeader from "@/components/PageHeader";
 import { FileText, Download, Lock } from "lucide-react";
 
 interface MeResponse {
@@ -87,18 +88,12 @@ export default function Documents() {
   return (
     <div className="min-h-[100dvh] bg-[#0A0A0A] text-white">
       <PortalNav showAdmin={isAdmin} />
-      <main className="mx-auto max-w-5xl px-6 py-10 md:py-14">
-        <h1
-          className="text-3xl md:text-4xl font-semibold tracking-tight mb-3"
-          style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}
-        >
-          <span className="text-[#00F5D4]">Documents</span>
-        </h1>
-        <p className="text-white/60 mb-10 max-w-2xl">
-          Everything you need to evaluate and finalize your AICA Founders
-          Commitment.
-        </p>
-
+      <PageHeader
+        eyebrow="Resources"
+        title={<>Documents.</>}
+        subtitle="Everything you need to evaluate, sign, and fund your AICA Founders Commitment - plus your signed SAFTs."
+      />
+      <main className="mx-auto max-w-5xl px-6 py-10 md:py-12">
         <section className="mb-12">
           <h2 className="text-xs uppercase tracking-[0.18em] text-white/40 mb-4">
             Round materials

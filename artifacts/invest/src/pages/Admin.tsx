@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import PortalNav from "@/components/PortalNav";
+import PageHeader from "@/components/PageHeader";
 import RoundContext from "@/components/RoundContext";
 import {
   CheckCircle2,
@@ -279,14 +280,13 @@ export default function Admin() {
     <div className="min-h-[100dvh] bg-[#0A0A0A] text-white">
       <PortalNav showAdmin={isAdmin} />
 
-      <main className="mx-auto max-w-7xl px-6 py-10 md:py-16 space-y-10">
-        <h1
-          className="text-3xl sm:text-4xl font-semibold tracking-tight"
-          style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}
-        >
-          Admin overview
-        </h1>
+      <PageHeader
+        eyebrow="Operator console"
+        title={<>Admin overview.</>}
+        subtitle="Round telemetry, applications, commitments, audit log, and per-investor notes."
+      />
 
+      <main className="mx-auto max-w-7xl px-6 py-10 md:py-12 space-y-10">
         <RoundContext />
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4" data-testid="admin-kpis">

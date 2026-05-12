@@ -2,12 +2,13 @@ import { Link, useLocation } from "wouter";
 import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { api } from "@/lib/api";
-import { ArrowLeft, ArrowRight, Loader2, Sparkles } from "lucide-react";
+import { ArrowRight, Loader2, Sparkles } from "lucide-react";
 import { tokensForAmount } from "@/lib/vesting";
 import { ROUNDS } from "@/data/rounds";
 import RoundContext from "@/components/RoundContext";
 import VestingPreview from "@/components/VestingPreview";
 import PortalNav from "@/components/PortalNav";
+import PageHeader from "@/components/PageHeader";
 
 interface Tier {
   slug: string;
@@ -95,14 +96,14 @@ export default function InvestPicker() {
     <div className="min-h-[100dvh] bg-[#0A0A0A] text-white">
       <PortalNav showAdmin={isAdmin} />
 
-      <main className="mx-auto max-w-6xl px-6 py-10 md:py-14 space-y-10">
-        <Link
-          href="/dashboard"
-          className="inline-flex items-center gap-2 text-sm text-white/60 hover:text-white"
-        >
-          <ArrowLeft className="w-4 h-4" /> Back to dashboard
-        </Link>
+      <PageHeader
+        eyebrow="Reserve allocation"
+        title={<>Pick a tier.</>}
+        subtitle="Choose a published tier or enter a custom amount. We'll route you straight to the SAFT after you reserve."
+        back={{ href: "/dashboard", label: "Back to dashboard" }}
+      />
 
+      <main className="mx-auto max-w-6xl px-6 py-10 md:py-12 space-y-10">
         <RoundContext />
 
         {needsGateway && (
@@ -134,22 +135,6 @@ export default function InvestPicker() {
 
         <div className="grid grid-cols-1 lg:grid-cols-[2fr,1fr] gap-6 items-start">
           <div>
-            <div className="mb-6">
-              <div className="text-xs uppercase tracking-[0.18em] text-white/40">
-                Choose your commitment
-              </div>
-              <h1
-                className="mt-1 text-3xl sm:text-4xl font-semibold tracking-tight"
-                style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}
-              >
-                Pick a <span className="text-[#00F5D4]">tier</span>.
-              </h1>
-              <p className="mt-3 text-white/60 max-w-xl">
-                Pick a tier or enter a custom amount. We'll route you to
-                the SAFT after you reserve.
-              </p>
-            </div>
-
             {isLoading ? (
               <div className="text-white/50">Loading tiers...</div>
             ) : (

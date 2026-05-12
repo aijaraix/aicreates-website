@@ -84,6 +84,45 @@ body {
   backdrop-filter: blur(8px);
 }
 
+/* Marketing-site-aligned utilities */
+.text-gradient-teal {
+  background: linear-gradient(110deg, #f5f5f5 0%, #f5f5f5 40%, #00f5d4 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.bg-grid-fade {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+  background-size: 64px 64px;
+  background-position: center top;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 0%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 0%, transparent 75%);
+}
+
+.glow-radial-teal {
+  background: radial-gradient(
+    600px 320px at 50% 0%,
+    rgba(0, 245, 212, 0.16),
+    transparent 70%
+  );
+}
+
+.font-display {
+  font-family: "Space Grotesk", Inter, system-ui, sans-serif;
+  letter-spacing: -0.02em;
+}
+
+@layer base {
+  h1, h2, h3, h4, h5, h6 {
+    font-family: "Space Grotesk", Inter, system-ui, sans-serif;
+    letter-spacing: -0.02em;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .portal-aurora,
   .portal-grid {

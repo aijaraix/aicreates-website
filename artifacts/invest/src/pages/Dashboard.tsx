@@ -5,6 +5,7 @@ import { api } from "@/lib/api";
 import { ArrowRight, Calendar, Download, FileText } from "lucide-react";
 import VestingCalendar from "@/components/VestingCalendar";
 import PortalNav from "@/components/PortalNav";
+import PageHeader from "@/components/PageHeader";
 import StatusTimeline from "@/components/StatusTimeline";
 import { buildIcs } from "@/lib/vesting";
 
@@ -142,19 +143,26 @@ export default function Dashboard() {
     <div className="min-h-[100dvh] bg-[#0A0A0A] text-white">
       <PortalNav showAdmin={isAdmin} />
 
-      <main className="mx-auto max-w-5xl px-6 py-10 md:py-16">
-        <div className="mb-10">
-          <h1
-            className="text-3xl sm:text-4xl font-semibold tracking-tight"
-            style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}
-          >
+      <PageHeader
+        eyebrow="Investor dashboard"
+        title={
+          <>
             Welcome{user?.firstName ? `, ${user.firstName}` : ""}.
-          </h1>
-          <p className="text-white/60 mt-2">
-            Your AICA Founders Commitment dashboard.
-          </p>
-        </div>
+          </>
+        }
+        subtitle="Track every AICA Founders commitment - SAFT status, funding, vesting, and unlocks - in one place."
+        actions={
+          <Link
+            href="/invest"
+            className="inline-flex items-center justify-center h-11 px-5 rounded-full bg-[#00F5D4] text-black font-medium hover:bg-[#00F5D4]/90 transition"
+            data-testid="link-make-commitment-header"
+          >
+            New commitment <ArrowRight className="ml-2 w-4 h-4" />
+          </Link>
+        }
+      />
 
+      <main className="mx-auto max-w-5xl px-6 py-10 md:py-12">
         {pendingActions.length > 0 && (
           <div className="rounded-2xl border border-amber-400/30 bg-amber-400/5 p-5 mb-8 space-y-2">
             <div className="text-xs uppercase tracking-[0.18em] text-amber-300">
