@@ -488,20 +488,24 @@ export default function Home() {
                   size="lg"
                   onClick={() => setDeckOpen(true)}
                   className="rounded-full h-12 px-8 bg-[#00F5D4] text-black hover:bg-[#00F5D4]/90 font-medium"
-                  data-testid="button-view-pitch-deck"
+                  data-testid="button-view-whitepaper"
                 >
-                  View Pitch Deck <ArrowRight className="ml-2 w-4 h-4" />
+                  View Whitepaper <ArrowRight className="ml-2 w-4 h-4" />
                 </Button>
-                <Link href="/litepaper">
+                <a
+                  href={`${import.meta.env.BASE_URL}litepaper.pdf`}
+                  download="AIcreatesAI-Litepaper.pdf"
+                  rel="noopener noreferrer"
+                  data-testid="button-download-litepaper"
+                >
                   <Button
                     size="lg"
                     variant="outline"
                     className="rounded-full h-12 px-7 border-white/15 bg-transparent text-white hover:bg-white/5"
-                    data-testid="button-litepaper"
                   >
-                    Litepaper
+                    Download
                   </Button>
-                </Link>
+                </a>
               </div>
             </div>
           </div>
