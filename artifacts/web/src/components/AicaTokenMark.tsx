@@ -1,3 +1,5 @@
+import { useId } from "react";
+
 type Props = {
   className?: string;
   testId?: string;
@@ -5,6 +7,11 @@ type Props = {
 
 export default function AicaTokenMark({ className = "", testId }: Props) {
   const C = "#00F5D4";
+  const uid = useId().replace(/:/g, "");
+  const idCore = `aicaCore-${uid}`;
+  const idRing = `aicaRing-${uid}`;
+  const idGrid = `aicaGrid-${uid}`;
+  const idMask = `aicaCoreMask-${uid}`;
   return (
     <div
       className={`relative aspect-square w-full ${className}`}
@@ -26,18 +33,18 @@ export default function AicaTokenMark({ className = "", testId }: Props) {
         role="img"
       >
         <defs>
-          <radialGradient id="aicaCore" cx="50%" cy="50%" r="50%">
+          <radialGradient id={idCore} cx="50%" cy="50%" r="50%">
             <stop offset="0%" stopColor="#0E1A1A" stopOpacity="1" />
             <stop offset="60%" stopColor="#0A0A0A" stopOpacity="1" />
             <stop offset="100%" stopColor="#0A0A0A" stopOpacity="1" />
           </radialGradient>
-          <linearGradient id="aicaRing" x1="0" y1="0" x2="1" y2="1">
+          <linearGradient id={idRing} x1="0" y1="0" x2="1" y2="1">
             <stop offset="0%" stopColor={C} stopOpacity="0.9" />
             <stop offset="50%" stopColor={C} stopOpacity="0.25" />
             <stop offset="100%" stopColor={C} stopOpacity="0.9" />
           </linearGradient>
           <pattern
-            id="aicaGrid"
+            id={idGrid}
             x="0"
             y="0"
             width="10"
@@ -52,7 +59,7 @@ export default function AicaTokenMark({ className = "", testId }: Props) {
               strokeWidth="0.5"
             />
           </pattern>
-          <mask id="aicaCoreMask">
+          <mask id={idMask}>
             <circle cx="100" cy="100" r="74" fill="white" />
           </mask>
         </defs>
@@ -63,7 +70,7 @@ export default function AicaTokenMark({ className = "", testId }: Props) {
           cy="100"
           r="92"
           fill="none"
-          stroke="url(#aicaRing)"
+          stroke={`url(#${idRing})`}
           strokeWidth="0.6"
           strokeOpacity="0.55"
         />
@@ -90,9 +97,9 @@ export default function AicaTokenMark({ className = "", testId }: Props) {
         />
 
         {/* core medallion */}
-        <circle cx="100" cy="100" r="74" fill="url(#aicaCore)" />
-        <g mask="url(#aicaCoreMask)">
-          <rect x="26" y="26" width="148" height="148" fill="url(#aicaGrid)" />
+        <circle cx="100" cy="100" r="74" fill={`url(#${idCore})`} />
+        <g mask={`url(#${idMask})`}>
+          <rect x="26" y="26" width="148" height="148" fill={`url(#${idGrid})`} />
         </g>
         <circle
           cx="100"
