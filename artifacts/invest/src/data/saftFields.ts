@@ -134,11 +134,6 @@ export const PAYMENT_METHODS = [
     blurb: "Fastest. Recommended under $5,000.",
   },
   {
-    value: "ach",
-    label: "ACH bank transfer",
-    blurb: "Recommended for $5,000+. Settles in 3-5 business days.",
-  },
-  {
     value: "wire",
     label: "Wire transfer",
     blurb: "Recommended for $25,000+. Bank instructions on confirmation.",

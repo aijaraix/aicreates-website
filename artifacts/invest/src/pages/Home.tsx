@@ -697,7 +697,7 @@ export default function Home() {
                 Reserve your allocation in the Strategic Seed Round.
               </h2>
               <p className="mt-5 text-base sm:text-lg text-white/65 leading-relaxed max-w-2xl mx-auto">
-                Sign up, sign the SAFT, and fund by card, ACH, wire, or crypto.
+                Sign up, sign the SAFT, and fund by card, wire, or crypto.
                 Your vesting calendar activates the moment your commitment
                 funds.
               </p>

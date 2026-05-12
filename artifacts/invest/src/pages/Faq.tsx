@@ -72,7 +72,7 @@ const GROUPS: FaqGroup[] = [
     items: [
       {
         q: "What payment methods do you accept?",
-        a: "Card and ACH via Stripe Checkout (recommended under $25k), wire transfer (recommended for $25k+), and crypto (BTC, ETH, SOL, USDC on Base or Ethereum, or USDT on Ethereum) via escrow addresses shown directly on the checkout page.",
+        a: "Card via Stripe Checkout (recommended under $25k), wire transfer (recommended for $25k+), and crypto (BTC, ETH, SOL, USDC on Base or Ethereum, or USDT on Ethereum) via escrow addresses shown directly on the checkout page.",
       },
       {
         q: "How does KYC work?",

@@ -6,7 +6,6 @@ import PortalNav from "@/components/PortalNav";
 import PageHeader from "@/components/PageHeader";
 import {
   ArrowRight,
-  Banknote,
   CreditCard,
   Bitcoin,
   Building2,
@@ -51,13 +50,6 @@ const METHODS: Array<{
     blurb: "Fastest. Settles instantly.",
     Icon: CreditCard,
     recommendedAtCents: 0,
-  },
-  {
-    value: "ach",
-    label: "ACH bank transfer",
-    blurb: "Recommended for $5,000+. 3-5 business days.",
-    Icon: Banknote,
-    recommendedAtCents: 500_000,
   },
   {
     value: "wire",
