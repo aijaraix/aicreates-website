@@ -77,7 +77,7 @@ export async function renderSaftPdf(input: SaftRenderInput): Promise<Buffer> {
     font: helvBold,
     color: ink,
   });
-  cover.drawText("Founders Commitment - Draft SAFT", {
+  cover.drawText("AICA Private Sale - Draft SAFT", {
     x: left + 110,
     y,
     size: 12,

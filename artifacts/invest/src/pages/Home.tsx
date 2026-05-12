@@ -342,6 +342,44 @@ export default function Home() {
             </div>
           ))}
         </div>
+        <div className="mt-8 flex flex-wrap gap-3">
+          <a
+            href="https://www.aicreates.ai/about"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center h-10 px-5 rounded-full border border-white/15 bg-white/[0.02] text-sm text-white hover:bg-white/[0.06] hover:text-[#00F5D4] transition"
+            data-testid="link-platform-about"
+          >
+            Read the layer architecture <ArrowRight className="ml-2 w-4 h-4" />
+          </a>
+          <a
+            href="https://www.aicreates.ai/eve-os"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center h-10 px-5 rounded-full border border-white/15 bg-white/[0.02] text-sm text-white hover:bg-white/[0.06] hover:text-[#00F5D4] transition"
+            data-testid="link-platform-eve-os"
+          >
+            Eve OS <ArrowRight className="ml-2 w-4 h-4" />
+          </a>
+          <a
+            href="https://www.aicreates.ai/neobank"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center h-10 px-5 rounded-full border border-white/15 bg-white/[0.02] text-sm text-white hover:bg-white/[0.06] hover:text-[#00F5D4] transition"
+            data-testid="link-platform-neobank"
+          >
+            NeoBank <ArrowRight className="ml-2 w-4 h-4" />
+          </a>
+          <a
+            href="https://www.aicreates.ai/litepaper#tokenomics"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center h-10 px-5 rounded-full border border-white/15 bg-white/[0.02] text-sm text-white hover:bg-white/[0.06] hover:text-[#00F5D4] transition"
+            data-testid="link-platform-tokenomics"
+          >
+            Tokenomics <ArrowRight className="ml-2 w-4 h-4" />
+          </a>
+        </div>
       </Section>
 
       {/* ----------------------------- EVE OS ----------------------------- */}

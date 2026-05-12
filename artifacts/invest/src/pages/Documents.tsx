@@ -91,7 +91,7 @@ export default function Documents() {
       <PageHeader
         eyebrow="Resources"
         title={<>Documents.</>}
-        subtitle="Everything you need to evaluate, sign, and fund your AICA Founders Commitment - plus your signed SAFTs."
+        subtitle="Everything you need to evaluate, sign, and fund your AICA Strategic Seed Round commitment - plus your signed SAFTs."
       />
       <main className="mx-auto max-w-5xl px-6 py-10 md:py-12">
         <section className="mb-12">
