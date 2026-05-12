@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { ArrowRight, Coins, Cpu, Users, ShieldCheck } from "lucide-react";
 import aicaCoin from "@/assets/aica-coin.png";
 import { useSeo } from "@/lib/useSeo";
+import Figure, { TokenUtilityFigure, TokenFlowFigure } from "@/components/Figure";
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
@@ -72,13 +73,16 @@ export default function Token() {
       {/* UTILITIES */}
       <section className="py-14 md:py-20 relative">
         <div className="container mx-auto px-4 md:px-6">
-          <div className="max-w-3xl mb-14">
-            <SectionLabel>Utility</SectionLabel>
+          <div className="max-w-3xl mb-10">
+            <SectionLabel>Utility map - Figure 6</SectionLabel>
             <h2 className="mt-6 text-4xl md:text-5xl font-serif font-semibold text-gradient leading-[1.05]">
               What $AICA actually does.
             </h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Figure number="Figure 6" caption="The $AICA utility map - the native asset connects subscription discounts, the compute network, contributor rewards, governance signals, credit top-ups, and marketplace settlement.">
+            <TokenUtilityFigure />
+          </Figure>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
             {UTILITIES.map((u, i) => (
               <motion.div
                 key={u.t}
@@ -96,6 +100,24 @@ export default function Token() {
               </motion.div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* CREDIT / TOKEN MOVEMENT - Figure 7 */}
+      <section className="py-14 md:py-20 relative">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="max-w-3xl mb-10">
+            <SectionLabel>Credit & token movement - Figure 7</SectionLabel>
+            <h2 className="mt-6 text-4xl md:text-5xl font-serif font-semibold text-gradient leading-[1.05]">
+              How credits and $AICA move.
+            </h2>
+            <p className="mt-6 text-white/55 leading-relaxed">
+              Operators top up credits. The Credit Ledger scopes and caps spend. Agents act against those credits. Value created flows back as $AICA rewards - and compounds into the next cycle.
+            </p>
+          </div>
+          <Figure number="Figure 7" caption="The credit and token movement loop - operators buy credits, the Credit Ledger gates agentic spend, and $AICA rewards flow back to those who create value.">
+            <TokenFlowFigure />
+          </Figure>
         </div>
       </section>
 

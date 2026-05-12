@@ -16,6 +16,7 @@ import {
   Wallet,
 } from "lucide-react";
 import { useSeo } from "@/lib/useSeo";
+import Figure, { PlatformArchitectureFigure, PrimitivesFigure, OperatingLoopFigure } from "@/components/Figure";
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
@@ -154,7 +155,7 @@ export default function Platform() {
       {/* ARCHITECTURE - Adam / Eve / Jarvis / UAL / QE / Credit Ledger */}
       <section id="architecture" className="py-14 md:py-20 relative">
         <div className="container mx-auto px-4 md:px-6">
-          <div className="max-w-3xl mb-14">
+          <div className="max-w-3xl mb-10">
             <SectionLabel>Architecture - Figure 1</SectionLabel>
             <h2 className="mt-6 text-4xl md:text-5xl font-serif font-semibold text-gradient leading-[1.05]">
               Six named components. One coherent system.
@@ -163,6 +164,9 @@ export default function Platform() {
               The intelligence layer is built around named architectural components, each with a distinct role and a clear contract with the others.
             </p>
           </div>
+          <Figure number="Figure 1" caption="The Agentic Intelligence Layer - Adam, Eve, Jarvis, the Unified Agent Layer, and the cross-cutting Quality Engine and Credit Ledger.">
+            <PlatformArchitectureFigure />
+          </Figure>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {ARCHITECTURE.map((c, i) => (
               <motion.div
@@ -191,12 +195,15 @@ export default function Platform() {
       {/* PILLARS */}
       <section id="primitives" className="py-14 md:py-20 relative">
         <div className="container mx-auto px-4 md:px-6">
-          <div className="max-w-3xl mb-14">
+          <div className="max-w-3xl mb-10">
             <SectionLabel>Primitives - Figure 3</SectionLabel>
             <h2 className="mt-6 text-4xl md:text-5xl font-serif font-semibold text-gradient leading-[1.05]">
               The foundations underneath.
             </h2>
           </div>
+          <Figure number="Figure 3" caption="The four primitives that the layer composes - hybrid compute, persistent memory, self-healing workflows, and the agentic wallet.">
+            <PrimitivesFigure />
+          </Figure>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {PILLARS.map((p, i) => (
               <motion.div
@@ -221,12 +228,15 @@ export default function Platform() {
       {/* FLOW */}
       <section id="flow" className="py-14 md:py-20 relative">
         <div className="container mx-auto px-4 md:px-6">
-          <div className="max-w-3xl mb-14">
+          <div className="max-w-3xl mb-10">
             <SectionLabel>Operating Loop - Figure 4</SectionLabel>
             <h2 className="mt-6 text-4xl md:text-5xl font-serif font-semibold text-gradient leading-[1.05]">
               Intent in. Coordinated action out.
             </h2>
           </div>
+          <Figure number="Figure 4" caption="The closed operating loop - intent flows in, coordinated action flows out, and outcomes feed back into Adam.">
+            <OperatingLoopFigure />
+          </Figure>
           <ol className="grid grid-cols-1 md:grid-cols-5 gap-4">
             {FLOW.map((s, i) => (
               <motion.li

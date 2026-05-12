@@ -7,6 +7,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { useSeo } from "@/lib/useSeo";
+import Figure, { WorkspaceAreasFigure } from "@/components/Figure";
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
@@ -29,14 +30,36 @@ const JOURNEY = [
 ];
 
 const WORKSPACE_AREAS = [
-  { area: "Marketing", agents: "Strategy, Content, Growth", outputs: "Positioning, content, campaigns, dashboards" },
-  { area: "Sales", agents: "Outreach, Qualifier, Closer", outputs: "Pipeline, sequences, quotes, follow-up" },
-  { area: "Finance", agents: "Bookkeeping, Treasury, Reporting", outputs: "Books, invoices, runway, P&L" },
-  { area: "Legal", agents: "Drafting, Review, Compliance", outputs: "Contracts, redlines, policy alignment" },
-  { area: "Operations", agents: "Coordinator, Procurement, PM", outputs: "Process design, vendor mgmt, projects" },
-  { area: "Development", agents: "Architect, Builder, QA", outputs: "Features, integrations, automation" },
-  { area: "Support", agents: "Triage, Resolver, Escalation", outputs: "Replies, knowledge base, handoffs" },
-  { area: "Strategy", agents: "Researcher, Analyst, Advisor", outputs: "Market, competitor, decision memos" },
+  {
+    area: "AI Command Center",
+    purpose: "Talk to Eve, set goals, approve plans, and see what every agent is doing.",
+    examples: "Goals, plans, approvals, status",
+  },
+  {
+    area: "Apps",
+    purpose: "The functional surfaces - marketing, sales, finance, legal, ops, support - each with resident agents.",
+    examples: "Marketing studio, CRM, books, contracts",
+  },
+  {
+    area: "Wallet & Credits",
+    purpose: "Programmable spend through the Credit Ledger - scoped budgets, caps, and audit per action.",
+    examples: "Top-ups, spend caps, action receipts",
+  },
+  {
+    area: "Memory & Files",
+    purpose: "Persistent business memory and document store the agents read from and write to.",
+    examples: "Decisions, briefs, contracts, transcripts",
+  },
+  {
+    area: "Activity Feed",
+    purpose: "The real-time stream of agent work, reviews, and outcomes across the company.",
+    examples: "Drafts, reviews, ships, alerts",
+  },
+  {
+    area: "Business Data",
+    purpose: "Connected systems of record - CRM, accounting, analytics, vertical tools - exposed safely to agents.",
+    examples: "Customers, ledgers, products, metrics",
+  },
 ];
 
 export default function CompanyInABox() {
@@ -125,17 +148,20 @@ export default function CompanyInABox() {
       {/* WORKSPACE AREAS TABLE */}
       <section id="workspace-areas" className="py-14 md:py-20 relative">
         <div className="container mx-auto px-4 md:px-6">
-          <div className="max-w-3xl mb-14">
-            <SectionLabel>Workspace Areas</SectionLabel>
+          <div className="max-w-3xl mb-10">
+            <SectionLabel>Workspace Areas - Figure 5</SectionLabel>
             <h2 className="mt-6 text-4xl md:text-5xl font-serif font-semibold text-gradient leading-[1.05]">
-              Every department your business needs.
+              Six surfaces. One Company in a Box.
             </h2>
           </div>
-          <div className="rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden">
+          <Figure number="Figure 5" caption="The six workspace areas of Eve OS - the AI Command Center sits at the center, with Apps, Wallet & Credits, Memory & Files, Activity Feed, and Business Data orbiting around it.">
+            <WorkspaceAreasFigure />
+          </Figure>
+          <div className="rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden mt-8">
             <div className="hidden md:grid grid-cols-12 gap-6 px-6 py-4 border-b border-white/10 bg-white/[0.03]">
               <div className="col-span-3 text-[10px] font-semibold uppercase tracking-[0.2em] text-white/45">Workspace area</div>
-              <div className="col-span-4 text-[10px] font-semibold uppercase tracking-[0.2em] text-white/45">Resident agents</div>
-              <div className="col-span-5 text-[10px] font-semibold uppercase tracking-[0.2em] text-white/45">Typical outputs</div>
+              <div className="col-span-5 text-[10px] font-semibold uppercase tracking-[0.2em] text-white/45">Purpose</div>
+              <div className="col-span-4 text-[10px] font-semibold uppercase tracking-[0.2em] text-white/45">What lives there</div>
             </div>
             <div className="divide-y divide-white/5">
               {WORKSPACE_AREAS.map((row, i) => (
@@ -151,8 +177,8 @@ export default function CompanyInABox() {
                     <span className="w-1.5 h-1.5 rounded-full bg-[#00F5D4] shadow-[0_0_8px_rgba(0,245,212,0.6)] shrink-0" />
                     <span className="text-base font-semibold text-white">{row.area}</span>
                   </div>
-                  <div className="md:col-span-4 text-sm text-white/65">{row.agents}</div>
-                  <div className="md:col-span-5 text-sm text-white/55">{row.outputs}</div>
+                  <div className="md:col-span-5 text-sm text-white/65">{row.purpose}</div>
+                  <div className="md:col-span-4 text-sm text-white/55">{row.examples}</div>
                 </motion.div>
               ))}
             </div>
