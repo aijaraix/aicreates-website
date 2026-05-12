@@ -14,6 +14,15 @@ import { Footer } from "@/components/Footer";
 import Home from "@/pages/Home";
 import EveOS from "@/pages/EveOS";
 import NeoBank from "@/pages/NeoBank";
+import Platform from "@/pages/Platform";
+import CompanyInABox from "@/pages/CompanyInABox";
+import Agents from "@/pages/Agents";
+import Business from "@/pages/Business";
+import Developers from "@/pages/Developers";
+import Token from "@/pages/Token";
+import Roadmap from "@/pages/Roadmap";
+import Faq from "@/pages/Faq";
+import Press from "@/pages/Press";
 import Litepaper from "@/pages/Litepaper";
 import Invest from "@/pages/Invest";
 import Contact from "@/pages/Contact";
@@ -49,6 +58,15 @@ function Router() {
     <AnimatePresence mode="wait">
       <Switch location={location} key={location}>
         <Route path="/" component={() => <PageTransition><Home /></PageTransition>} />
+        <Route path="/platform" component={() => <PageTransition><Platform /></PageTransition>} />
+        <Route path="/company-in-a-box" component={() => <PageTransition><CompanyInABox /></PageTransition>} />
+        <Route path="/agents" component={() => <PageTransition><Agents /></PageTransition>} />
+        <Route path="/business" component={() => <PageTransition><Business /></PageTransition>} />
+        <Route path="/developers" component={() => <PageTransition><Developers /></PageTransition>} />
+        <Route path="/token" component={() => <PageTransition><Token /></PageTransition>} />
+        <Route path="/roadmap" component={() => <PageTransition><Roadmap /></PageTransition>} />
+        <Route path="/faq" component={() => <PageTransition><Faq /></PageTransition>} />
+        <Route path="/press" component={() => <PageTransition><Press /></PageTransition>} />
         <Route path="/eve-os" component={() => <PageTransition><EveOS /></PageTransition>} />
         <Route path="/neobank" component={() => <PageTransition><NeoBank /></PageTransition>} />
         <Route path="/litepaper" component={() => <PageTransition><Litepaper /></PageTransition>} />
