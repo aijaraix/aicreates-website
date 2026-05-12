@@ -26,7 +26,7 @@ scripts/       → one-off scripts (seed-tiers, post-merge, …)
 .replit-artifact/artifact.toml in each artifact → per-artifact production config
 ```
 
-The pnpm workspace is the source of truth. Don't edit `.replit` directly — each artifact's `artifact.toml` controls its own build/run/serve in production.
+The pnpm workspace is the source of truth. In multi-artifact pnpm projects, the root `.replit`'s `[deployment]` block only declares the deployment target (`autoscale`) and router mode (`application`); the actual `build`/`run`/`serve` for each service comes from that artifact's own `.replit-artifact/artifact.toml`. Edit `.replit` only via Replit's tools (it is sandbox-protected); always edit `artifact.toml` files via the `artifact.edit.toml` flow so they stay in sync with the workspace.
 
 ---
 
