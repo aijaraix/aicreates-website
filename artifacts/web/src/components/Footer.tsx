@@ -72,6 +72,7 @@ function NewsletterSubscribe() {
           _subject: "Newsletter Subscription - aicreates.ai",
           _captcha: "false",
           _template: "table",
+          _honey: honey,
           email: trimmed,
           source_page: typeof window !== "undefined" ? window.location.pathname : "",
           submitted_at: new Date().toISOString(),
