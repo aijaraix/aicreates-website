@@ -3,17 +3,19 @@ import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
+  Compass,
+  Search,
+  Code2,
   Megaphone,
   Briefcase,
+  Headphones,
   Calculator,
   Scale,
-  Cog,
-  Code2,
-  Search,
-  Headphones,
   ShieldCheck,
+  Rocket,
   Bot,
 } from "lucide-react";
+import { useSeo } from "@/lib/useSeo";
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
@@ -24,19 +26,84 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
   );
 }
 
-const AGENTS = [
-  { icon: Megaphone, name: "Marketer", desc: "Positions, writes, schedules, and measures campaigns." },
-  { icon: Briefcase, name: "Seller", desc: "Builds pipeline, drafts outreach, and runs follow-through." },
-  { icon: Calculator, name: "Bookkeeper", desc: "Reconciles, categorizes, and keeps the books current." },
-  { icon: Scale, name: "Counsel", desc: "Drafts, reviews, and redlines documents within policy." },
-  { icon: Cog, name: "Operator", desc: "Designs processes and coordinates work across vendors." },
-  { icon: Code2, name: "Builder", desc: "Implements features, integrations, and automation." },
-  { icon: Search, name: "Researcher", desc: "Investigates markets, competitors, and decisions." },
-  { icon: Headphones, name: "Support", desc: "Handles inbound questions and routes escalations." },
-  { icon: ShieldCheck, name: "Auditor", desc: "Reviews work product, scores quality, and rewrites." },
+type Role = {
+  icon: typeof Compass;
+  name: string;
+  remit: string;
+  example: string;
+};
+
+// Appendix B - Role library.
+const ROLES: Role[] = [
+  {
+    icon: Compass,
+    name: "Strategy",
+    remit: "Frames goals, sequences priorities, and writes decision memos.",
+    example: "Quarterly plan with three prioritized bets and explicit trade-offs.",
+  },
+  {
+    icon: Search,
+    name: "Research",
+    remit: "Investigates markets, competitors, customers, and unknowns.",
+    example: "Competitive landscape brief with sourced citations and gap analysis.",
+  },
+  {
+    icon: Code2,
+    name: "Coding",
+    remit: "Implements features, integrations, and automation against your stack.",
+    example: "Pull request with diff, tests, and rollout notes for an API integration.",
+  },
+  {
+    icon: Megaphone,
+    name: "Marketing",
+    remit: "Positions, writes, schedules, and measures campaigns.",
+    example: "Launch campaign: positioning doc, three-channel content, and KPI dashboard.",
+  },
+  {
+    icon: Briefcase,
+    name: "Sales",
+    remit: "Builds pipeline, drafts outreach, qualifies leads, and runs follow-through.",
+    example: "Outbound sequence with personalized first-touch and CRM update on reply.",
+  },
+  {
+    icon: Headphones,
+    name: "Support",
+    remit: "Handles inbound questions, drafts replies, and escalates intelligently.",
+    example: "Triaged ticket with proposed reply, KB article suggestion, and tag.",
+  },
+  {
+    icon: Calculator,
+    name: "Finance",
+    remit: "Reconciles books, invoices, tracks runway, and prepares financial reporting.",
+    example: "Monthly close package: P&L, cash position, and runway commentary.",
+  },
+  {
+    icon: Scale,
+    name: "Compliance",
+    remit: "Reviews against policy, regulation, and contractual obligations.",
+    example: "Vendor agreement redline with flagged risks and suggested rewrites.",
+  },
+  {
+    icon: ShieldCheck,
+    name: "QA",
+    remit: "Reviews work product, scores it against rubrics, and rewrites for quality.",
+    example: "Score card with strengths, defects, and revised draft on every output.",
+  },
+  {
+    icon: Rocket,
+    name: "Deployment",
+    remit: "Ships changes through environments, monitors, and rolls back on failure.",
+    example: "Staged rollout with health checks, smoke tests, and post-deploy summary.",
+  },
 ];
 
 export default function Agents() {
+  useSeo({
+    title: "Agents - the role library",
+    description:
+      "Strategy, Research, Coding, Marketing, Sales, Support, Finance, Compliance, QA, and Deployment - the ten resident agents of the agentic intelligence layer.",
+    path: "/agents",
+  });
   return (
     <div className="flex flex-col w-full">
       {/* HERO */}
@@ -46,7 +113,7 @@ export default function Agents() {
         <div className="container mx-auto px-4 md:px-6 relative z-10">
           <div className="max-w-5xl">
             <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-              <SectionLabel>Agents</SectionLabel>
+              <SectionLabel>Agents - Appendix B</SectionLabel>
             </motion.div>
             <motion.h1
               initial={{ opacity: 0, y: 16 }}
@@ -54,7 +121,7 @@ export default function Agents() {
               transition={{ duration: 0.7, delay: 0.05 }}
               className="mt-6 text-5xl md:text-7xl lg:text-[88px] font-serif font-semibold leading-[1.02] text-gradient"
             >
-              A coordinated team. Every function covered.
+              The role library.
             </motion.h1>
             <motion.p
               initial={{ opacity: 0, y: 16 }}
@@ -62,24 +129,24 @@ export default function Agents() {
               transition={{ duration: 0.7, delay: 0.15 }}
               className="mt-8 text-lg md:text-2xl text-white/65 max-w-3xl leading-relaxed"
             >
-              Specialized agents that plan, execute, review, and improve - working together on one intelligence layer instead of in isolated chats.
+              Ten specialized agents that plan, execute, review, and improve - working together on one intelligence layer instead of in isolated chats.
             </motion.p>
           </div>
         </div>
       </section>
 
       {/* AGENT GRID */}
-      <section className="py-14 md:py-20 relative">
+      <section id="role-library" className="py-14 md:py-20 relative">
         <div className="container mx-auto px-4 md:px-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {AGENTS.map((a, i) => (
+            {ROLES.map((a, i) => (
               <motion.div
                 key={a.name}
                 initial={{ opacity: 0, y: 18 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-80px" }}
                 transition={{ duration: 0.45, delay: i * 0.03 }}
-                className="glass-card p-6 hover:border-[#00F5D4]/30 transition-colors"
+                className="glass-card p-6 flex flex-col hover:border-[#00F5D4]/30 transition-colors"
               >
                 <div className="flex items-center justify-between mb-5">
                   <div className="w-10 h-10 rounded-lg bg-[#00F5D4]/10 border border-[#00F5D4]/20 flex items-center justify-center">
@@ -88,7 +155,13 @@ export default function Agents() {
                   <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-white/35">Agent</span>
                 </div>
                 <h3 className="text-lg font-serif font-semibold text-white mb-2">{a.name}</h3>
-                <p className="text-white/55 text-sm leading-relaxed">{a.desc}</p>
+                <p className="text-white/55 text-sm leading-relaxed mb-5">{a.remit}</p>
+                <div className="mt-auto pt-4 border-t border-white/5">
+                  <div className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/35 mb-1.5">
+                    Example output
+                  </div>
+                  <p className="text-white/65 text-sm leading-relaxed font-mono">{a.example}</p>
+                </div>
               </motion.div>
             ))}
           </div>
@@ -107,13 +180,13 @@ export default function Agents() {
             </div>
             <div className="md:col-span-7 space-y-6 text-white/65 text-lg leading-relaxed">
               <p>
-                Agents share memory, context, and policy. A plan written by one is executed by another, reviewed by a third, and improved on the next cycle.
+                Agents share memory, context, and policy through the Unified Agent Layer. A plan written by Strategy is executed by Coding, reviewed by QA, and shipped by Deployment.
               </p>
               <p>
-                Every output is scored against quality rubrics. Failures are repaired automatically. Successful patterns are remembered and reused.
+                Every output is scored against quality rubrics by the closed-loop Quality Engine. Failures are repaired automatically. Successful patterns are remembered and reused.
               </p>
               <p>
-                You stay in the loop where it matters - approvals, spend, sensitive decisions - and out of the loop where it does not.
+                You stay in the loop where it matters - approvals, spend through the Credit Ledger, and sensitive decisions - and out of the loop where it does not.
               </p>
             </div>
           </div>
@@ -134,7 +207,7 @@ export default function Agents() {
                 A growing library of specialized skills.
               </h2>
               <p className="text-lg text-white/55 max-w-2xl">
-                Future releases of the platform will include a Skills Marketplace - new agent capabilities and verticalized workflows that plug straight into your company without configuration.
+                Future releases will extend the role library through a Skills Marketplace - new agent capabilities and verticalized workflows that plug straight into your company without configuration.
               </p>
               <div className="mt-8">
                 <Link href="/roadmap">

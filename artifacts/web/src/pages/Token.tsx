@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { ArrowRight, Coins, Cpu, Users, ShieldCheck } from "lucide-react";
 import aicaCoin from "@/assets/aica-coin.png";
+import { useSeo } from "@/lib/useSeo";
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
@@ -21,6 +22,12 @@ const UTILITIES = [
 ];
 
 export default function Token() {
+  useSeo({
+    title: "$AICA - the native asset of the layer",
+    description:
+      "$AICA powers subscription discounts, compute network participation, and contributor rewards across the agentic intelligence layer. Fixed supply: 10,000,000,000.",
+    path: "/token",
+  });
   return (
     <div className="flex flex-col w-full">
       {/* HERO */}

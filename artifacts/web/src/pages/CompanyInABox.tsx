@@ -3,15 +3,10 @@ import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
-  Megaphone,
-  Coins,
-  Scale,
   Wrench,
-  Cog,
-  Code2,
-  Sparkles,
   CheckCircle2,
 } from "lucide-react";
+import { useSeo } from "@/lib/useSeo";
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
@@ -22,25 +17,35 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
   );
 }
 
-const FUNCTIONS = [
-  { icon: Megaphone, name: "Marketing", desc: "Positioning, content, campaigns, and growth experiments." },
-  { icon: Sparkles, name: "Sales", desc: "Pipeline, outreach, qualification, and follow-through." },
-  { icon: Coins, name: "Finance", desc: "Bookkeeping, runway, invoicing, and treasury hygiene." },
-  { icon: Scale, name: "Legal", desc: "Drafting, review, redlines, and policy alignment." },
-  { icon: Cog, name: "Operations", desc: "Process design, vendor coordination, and project execution." },
-  { icon: Code2, name: "Development", desc: "Product builds, integrations, and engineering throughput." },
+const JOURNEY = [
+  { n: "01", t: "Intake", d: "Describe your business, goals, and constraints to Eve in plain language." },
+  { n: "02", t: "Setup", d: "The layer provisions your workspace, connects tools, and seeds business memory." },
+  { n: "03", t: "Plan", d: "A coordinated plan is drafted across every workspace area you operate in." },
+  { n: "04", t: "Execute", d: "Specialized agents run the plan against your data, tools, and approvals." },
+  { n: "05", t: "Review", d: "The Quality Engine scores, critiques, and rewrites every output before delivery." },
+  { n: "06", t: "Approve", d: "You approve, edit, or hand back - keeping policy and judgment in human hands." },
+  { n: "07", t: "Iterate", d: "Outcomes feed memory and Adam; the next cycle starts sharper than the last." },
+  { n: "08", t: "Compound", d: "Quality, speed, and capability grow with usage. The company becomes an asset." },
 ];
 
-const STEPS = [
-  "Describe a goal in plain language.",
-  "The layer drafts a coordinated plan across functions.",
-  "Specialized agents execute against your tools and data.",
-  "Closed-loop review scores, critiques, and rewrites.",
-  "You approve, edit, or hand back for another pass.",
-  "Outcomes are remembered and used to sharpen the next run.",
+const WORKSPACE_AREAS = [
+  { area: "Marketing", agents: "Strategy, Content, Growth", outputs: "Positioning, content, campaigns, dashboards" },
+  { area: "Sales", agents: "Outreach, Qualifier, Closer", outputs: "Pipeline, sequences, quotes, follow-up" },
+  { area: "Finance", agents: "Bookkeeping, Treasury, Reporting", outputs: "Books, invoices, runway, P&L" },
+  { area: "Legal", agents: "Drafting, Review, Compliance", outputs: "Contracts, redlines, policy alignment" },
+  { area: "Operations", agents: "Coordinator, Procurement, PM", outputs: "Process design, vendor mgmt, projects" },
+  { area: "Development", agents: "Architect, Builder, QA", outputs: "Features, integrations, automation" },
+  { area: "Support", agents: "Triage, Resolver, Escalation", outputs: "Replies, knowledge base, handoffs" },
+  { area: "Strategy", agents: "Researcher, Analyst, Advisor", outputs: "Market, competitor, decision memos" },
 ];
 
 export default function CompanyInABox() {
+  useSeo({
+    title: "Company in a Box - 8-step journey",
+    description:
+      "A coordinated virtual company across eight workspace areas - Marketing, Sales, Finance, Legal, Operations, Development, Support, and Strategy - running on the agentic intelligence layer.",
+    path: "/company-in-a-box",
+  });
   return (
     <div className="flex flex-col w-full">
       {/* HERO */}
@@ -66,7 +71,7 @@ export default function CompanyInABox() {
               transition={{ duration: 0.7, delay: 0.15 }}
               className="mt-8 text-lg md:text-2xl text-white/65 max-w-3xl leading-relaxed"
             >
-              Marketing, Sales, Finance, Legal, Operations, and Development - running together on one intelligence layer, with quality review built into every cycle.
+              Eight workspace areas. One coordinated team. Run by Eve, executed by Jarvis, reviewed by the Quality Engine.
             </motion.p>
             <motion.div
               initial={{ opacity: 0, y: 16 }}
@@ -89,66 +94,68 @@ export default function CompanyInABox() {
         </div>
       </section>
 
-      {/* FUNCTIONS GRID */}
-      <section className="py-14 md:py-20 relative">
+      {/* 8-STEP JOURNEY */}
+      <section id="journey" className="py-14 md:py-20 relative">
         <div className="container mx-auto px-4 md:px-6">
           <div className="max-w-3xl mb-14">
-            <SectionLabel>Six functions, one company</SectionLabel>
+            <SectionLabel>The 8-step journey</SectionLabel>
+            <h2 className="mt-6 text-4xl md:text-5xl font-serif font-semibold text-gradient leading-[1.05]">
+              From sentence to compounding company.
+            </h2>
+          </div>
+          <ol className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {JOURNEY.map((s, i) => (
+              <motion.li
+                key={s.n}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{ duration: 0.4, delay: i * 0.04 }}
+                className="rounded-2xl border border-white/10 bg-white/[0.02] p-5 hover:border-[#00F5D4]/30 transition-colors"
+              >
+                <div className="text-xs font-mono text-[#00F5D4] tracking-widest mb-3">{s.n}</div>
+                <div className="text-base font-semibold text-white mb-2">{s.t}</div>
+                <p className="text-sm text-white/55 leading-relaxed">{s.d}</p>
+              </motion.li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      {/* WORKSPACE AREAS TABLE */}
+      <section id="workspace-areas" className="py-14 md:py-20 relative">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="max-w-3xl mb-14">
+            <SectionLabel>Workspace Areas</SectionLabel>
             <h2 className="mt-6 text-4xl md:text-5xl font-serif font-semibold text-gradient leading-[1.05]">
               Every department your business needs.
             </h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {FUNCTIONS.map((f, i) => (
-              <motion.div
-                key={f.name}
-                initial={{ opacity: 0, y: 18 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-80px" }}
-                transition={{ duration: 0.45, delay: i * 0.04 }}
-                className="glass-card p-6 hover:border-[#00F5D4]/30 transition-colors"
-              >
-                <div className="w-10 h-10 rounded-lg bg-[#00F5D4]/10 border border-[#00F5D4]/20 flex items-center justify-center mb-5">
-                  <f.icon className="w-5 h-5 text-[#00F5D4]" strokeWidth={1.5} />
-                </div>
-                <h3 className="text-base font-semibold text-white mb-2">{f.name}</h3>
-                <p className="text-white/55 text-sm leading-relaxed">{f.desc}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* HOW IT WORKS */}
-      <section className="py-14 md:py-20 relative">
-        <div className="container mx-auto px-4 md:px-6">
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-12 items-start">
-            <div className="md:col-span-5">
-              <SectionLabel>How it runs</SectionLabel>
-              <h2 className="mt-6 text-4xl md:text-5xl font-serif font-semibold text-gradient leading-[1.05]">
-                One sentence. One coordinated outcome.
-              </h2>
-              <p className="mt-6 text-white/55 leading-relaxed">
-                The Company in a Box is not a chatbot or a stack of tools. It is a coordinated execution system that turns intent into work, reviews itself, and improves over time.
-              </p>
+          <div className="rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden">
+            <div className="hidden md:grid grid-cols-12 gap-6 px-6 py-4 border-b border-white/10 bg-white/[0.03]">
+              <div className="col-span-3 text-[10px] font-semibold uppercase tracking-[0.2em] text-white/45">Workspace area</div>
+              <div className="col-span-4 text-[10px] font-semibold uppercase tracking-[0.2em] text-white/45">Resident agents</div>
+              <div className="col-span-5 text-[10px] font-semibold uppercase tracking-[0.2em] text-white/45">Typical outputs</div>
             </div>
-            <ol className="md:col-span-7 space-y-3">
-              {STEPS.map((s, i) => (
-                <motion.li
-                  key={i}
-                  initial={{ opacity: 0, x: 12 }}
+            <div className="divide-y divide-white/5">
+              {WORKSPACE_AREAS.map((row, i) => (
+                <motion.div
+                  key={row.area}
+                  initial={{ opacity: 0, x: 8 }}
                   whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true, margin: "-80px" }}
-                  transition={{ duration: 0.4, delay: i * 0.05 }}
-                  className="flex items-start gap-4 rounded-2xl border border-white/10 bg-white/[0.02] p-4"
+                  viewport={{ once: true, margin: "-60px" }}
+                  transition={{ duration: 0.3, delay: i * 0.03 }}
+                  className="grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-6 px-6 py-5 hover:bg-white/[0.02] transition-colors"
                 >
-                  <div className="shrink-0 w-9 h-9 rounded-lg bg-[#00F5D4]/10 border border-[#00F5D4]/20 flex items-center justify-center font-mono text-xs text-[#00F5D4]">
-                    {String(i + 1).padStart(2, "0")}
+                  <div className="md:col-span-3 flex items-center gap-2.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#00F5D4] shadow-[0_0_8px_rgba(0,245,212,0.6)] shrink-0" />
+                    <span className="text-base font-semibold text-white">{row.area}</span>
                   </div>
-                  <p className="text-white/70 leading-relaxed pt-1.5">{s}</p>
-                </motion.li>
+                  <div className="md:col-span-4 text-sm text-white/65">{row.agents}</div>
+                  <div className="md:col-span-5 text-sm text-white/55">{row.outputs}</div>
+                </motion.div>
               ))}
-            </ol>
+            </div>
           </div>
         </div>
       </section>

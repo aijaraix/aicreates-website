@@ -1,7 +1,8 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { ArrowRight, Mail, FileText, Image as ImageIcon } from "lucide-react";
+import { ArrowRight, Mail, FileText, Image as ImageIcon, Download, User } from "lucide-react";
+import { useSeo } from "@/lib/useSeo";
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
@@ -19,7 +20,20 @@ const FACTS = [
   { k: "Token", v: "$AICA - 10,000,000,000 fixed supply" },
 ];
 
+const LOGOS = [
+  { label: "Wordmark - light on dark (SVG)", file: "/press/aicreatesai-wordmark-dark.svg" },
+  { label: "Wordmark - dark on light (SVG)", file: "/press/aicreatesai-wordmark-light.svg" },
+  { label: "Mark only (PNG, 1024px)", file: "/press/aicreatesai-mark.png" },
+  { label: "Full media kit (ZIP)", file: "/press/aicreatesai-media-kit.zip" },
+];
+
 export default function Press() {
+  useSeo({
+    title: "Press and media",
+    description:
+      "Boilerplate, fast facts, founder bio, logo downloads, and press contact for AIcreatesAI.",
+    path: "/press",
+  });
   return (
     <div className="flex flex-col w-full">
       {/* HERO */}
@@ -45,35 +59,72 @@ export default function Press() {
               transition={{ duration: 0.7, delay: 0.15 }}
               className="mt-6 text-lg md:text-xl text-white/60 max-w-2xl leading-relaxed"
             >
-              Boilerplate, fast facts, and the right contact for media inquiries.
+              Boilerplate, fast facts, founder bio, logo downloads, and the right contact for media inquiries.
             </motion.p>
           </div>
         </div>
       </section>
 
-      {/* BOILERPLATE */}
-      <section className="py-14 md:py-20 relative">
+      {/* BRAND ONE-LINER */}
+      <section className="pb-6">
         <div className="container mx-auto px-4 md:px-6 max-w-5xl">
-          <SectionLabel>Boilerplate</SectionLabel>
-          <h2 className="mt-5 text-3xl md:text-4xl font-serif font-semibold text-gradient leading-[1.1] mb-8">
-            About AICreatesAi.
-          </h2>
-          <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-7 md:p-10 space-y-5 text-white/70 leading-relaxed">
-            <p>
-              AICreatesAi is a deep-tech company building the agentic intelligence layer - a self-improving foundation for how companies, capital, and consumers will operate.
-            </p>
-            <p>
-              Its flagship product, Eve OS, is the Agentic Business Operating System - a Company in a Box that coordinates marketing, sales, finance, legal, operations, and development on one intelligence layer with quality review built into every cycle. NeoBank, the company's consumer and business capital surface, runs on the same layer.
-            </p>
-            <p>
-              The company is headquartered in Miami, Florida.
+          <div className="rounded-2xl border border-[#00F5D4]/25 bg-[#00F5D4]/[0.04] p-7 md:p-10">
+            <div className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#00F5D4] mb-3">Brand one-liner</div>
+            <p className="text-2xl md:text-3xl font-serif text-white leading-snug">
+              AIcreatesAI is building the agentic intelligence layer for the next generation of companies, capital, and consumers.
             </p>
           </div>
         </div>
       </section>
 
-      {/* FACT SHEET */}
-      <section className="py-14 md:py-20 relative">
+      {/* BOILERPLATE */}
+      <section className="py-10 md:py-14 relative">
+        <div className="container mx-auto px-4 md:px-6 max-w-5xl">
+          <SectionLabel>Boilerplate</SectionLabel>
+          <h2 className="mt-5 text-3xl md:text-4xl font-serif font-semibold text-gradient leading-[1.1] mb-8">
+            About AIcreatesAI.
+          </h2>
+          <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-7 md:p-10 space-y-5 text-white/70 leading-relaxed">
+            <p>
+              AIcreatesAI is a deep-tech company building the agentic intelligence layer - a self-improving foundation for how companies, capital, and consumers will operate.
+            </p>
+            <p>
+              Its flagship product, Eve OS, is the Agentic Business Operating System - a Company in a Box that coordinates marketing, sales, finance, legal, operations, and development on one intelligence layer with quality review built into every cycle. NeoBank, the company's consumer and business capital surface, runs on the same layer.
+            </p>
+            <p>The company is headquartered in Miami, Florida.</p>
+          </div>
+        </div>
+      </section>
+
+      {/* FOUNDER */}
+      <section className="py-10 md:py-14 relative">
+        <div className="container mx-auto px-4 md:px-6 max-w-5xl">
+          <SectionLabel>Founder</SectionLabel>
+          <h2 className="mt-5 text-3xl md:text-4xl font-serif font-semibold text-gradient leading-[1.1] mb-8">
+            Leadership.
+          </h2>
+          <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-7 md:p-10 grid grid-cols-1 md:grid-cols-[160px_1fr] gap-8 items-start">
+            <div className="w-40 h-40 rounded-2xl border border-white/10 bg-white/[0.03] flex items-center justify-center overflow-hidden">
+              {/* Founder photo placeholder - swap to <img src="/press/founder.jpg" /> when ready. */}
+              <User className="w-14 h-14 text-white/30" strokeWidth={1.25} />
+            </div>
+            <div>
+              <h3 className="text-2xl font-serif font-semibold text-white">Sholom Hammond</h3>
+              <div className="text-sm text-[#00F5D4] mt-1 mb-4">Founder & CEO, AIcreatesAI</div>
+              <p className="text-white/65 leading-relaxed mb-3">
+                Sholom Hammond is the founder of AIcreatesAI, a deep-tech company building the agentic intelligence layer that powers Eve OS and NeoBank.
+              </p>
+              <p className="text-white/55 leading-relaxed text-sm">
+                A high-resolution founder photo is available on request - email{" "}
+                <a href="mailto:sholom@aicreates.ai" className="text-white hover:text-[#00F5D4]">sholom@aicreates.ai</a>.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FAST FACTS */}
+      <section className="py-10 md:py-14 relative">
         <div className="container mx-auto px-4 md:px-6 max-w-5xl">
           <SectionLabel>Fast facts</SectionLabel>
           <h2 className="mt-5 text-3xl md:text-4xl font-serif font-semibold text-gradient leading-[1.1] mb-8">
@@ -90,8 +141,38 @@ export default function Press() {
         </div>
       </section>
 
+      {/* LOGOS / DOWNLOADS */}
+      <section className="py-10 md:py-14 relative">
+        <div className="container mx-auto px-4 md:px-6 max-w-5xl">
+          <SectionLabel>Logos and downloads</SectionLabel>
+          <h2 className="mt-5 text-3xl md:text-4xl font-serif font-semibold text-gradient leading-[1.1] mb-8">
+            Brand assets.
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {LOGOS.map((l) => (
+              <a
+                key={l.file}
+                href={l.file}
+                download
+                className="group flex items-center justify-between gap-4 rounded-2xl border border-white/10 bg-white/[0.02] p-5 hover:border-[#00F5D4]/30 hover:bg-white/[0.04] transition-colors"
+              >
+                <div className="flex items-center gap-3 min-w-0">
+                  <ImageIcon className="w-4 h-4 text-[#00F5D4] shrink-0" strokeWidth={1.75} />
+                  <span className="text-sm text-white/80 truncate">{l.label}</span>
+                </div>
+                <Download className="w-4 h-4 text-white/40 group-hover:text-[#00F5D4] shrink-0" strokeWidth={1.75} />
+              </a>
+            ))}
+          </div>
+          <p className="mt-4 text-xs text-white/40">
+            Files are hosted under <span className="font-mono">/press/</span>. If a download is missing, email{" "}
+            <a href="mailto:sholom@aicreates.ai" className="text-white/60 hover:text-[#00F5D4]">sholom@aicreates.ai</a>.
+          </p>
+        </div>
+      </section>
+
       {/* RESOURCES */}
-      <section className="py-14 md:py-20 relative">
+      <section className="py-10 md:py-14 relative">
         <div className="container mx-auto px-4 md:px-6 max-w-5xl">
           <SectionLabel>Resources</SectionLabel>
           <h2 className="mt-5 text-3xl md:text-4xl font-serif font-semibold text-gradient leading-[1.1] mb-8">
@@ -105,14 +186,14 @@ export default function Press() {
                 <p className="text-white/55 text-sm leading-relaxed">Long-form positioning, architecture, and roadmap.</p>
               </div>
             </Link>
-            <a href="mailto:sholom@aicreates.ai?subject=Media%20kit%20request" className="contents">
+            <Link href="/platform">
               <div className="glass-card p-7 cursor-pointer hover:border-[#00F5D4]/30 transition-colors h-full">
                 <ImageIcon className="w-5 h-5 text-[#00F5D4] mb-4" strokeWidth={1.5} />
-                <h3 className="text-base font-semibold text-white mb-2">Media kit</h3>
-                <p className="text-white/55 text-sm leading-relaxed">Logos, wordmark, and product imagery on request.</p>
+                <h3 className="text-base font-semibold text-white mb-2">Platform overview</h3>
+                <p className="text-white/55 text-sm leading-relaxed">Adam, Eve, Jarvis, and the named architecture in one place.</p>
               </div>
-            </a>
-            <Link href="/contact">
+            </Link>
+            <Link href="/contact?interest=Press">
               <div className="glass-card p-7 cursor-pointer hover:border-[#00F5D4]/30 transition-colors h-full">
                 <Mail className="w-5 h-5 text-[#00F5D4] mb-4" strokeWidth={1.5} />
                 <h3 className="text-base font-semibold text-white mb-2">Interviews and quotes</h3>

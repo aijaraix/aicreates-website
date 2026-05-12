@@ -2,6 +2,7 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
+import { useSeo } from "@/lib/useSeo";
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
@@ -64,6 +65,12 @@ const PHASES = [
 ];
 
 export default function Roadmap() {
+  useSeo({
+    title: "Roadmap - a disciplined, phased build",
+    description:
+      "Eight phases from foundations to compounding intelligence - real value early, long-term defensibility through data, product, and proprietary models.",
+    path: "/roadmap",
+  });
   return (
     <div className="flex flex-col w-full">
       {/* HERO */}

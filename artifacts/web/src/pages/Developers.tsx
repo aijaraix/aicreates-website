@@ -2,6 +2,7 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { ArrowRight, Code2, Plug, Layers, ShieldCheck, Workflow, Boxes } from "lucide-react";
+import { useSeo } from "@/lib/useSeo";
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
@@ -22,6 +23,12 @@ const PRIMITIVES = [
 ];
 
 export default function Developers() {
+  useSeo({
+    title: "For Developers - build on the agentic primitives",
+    description:
+      "The same agentic intelligence layer that powers Eve OS - workflows, policy, memory, the Credit Ledger, and the Skills Marketplace - made available to builders.",
+    path: "/developers",
+  });
   return (
     <div className="flex flex-col w-full">
       <section className="relative pt-28 pb-14 md:pt-36 md:pb-20 overflow-hidden">

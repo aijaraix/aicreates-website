@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, ChevronDown } from "lucide-react";
+import { useSeo } from "@/lib/useSeo";
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
@@ -131,6 +132,12 @@ function Item({ qa }: { qa: QA }) {
 }
 
 export default function Faq() {
+  useSeo({
+    title: "FAQ - questions, answered",
+    description:
+      "Common questions on AIcreatesAI, the platform, the $AICA token, and investing - all in one place.",
+    path: "/faq",
+  });
   return (
     <div className="flex flex-col w-full">
       {/* HERO */}

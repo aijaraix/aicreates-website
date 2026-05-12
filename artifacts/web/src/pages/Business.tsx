@@ -2,6 +2,7 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { ArrowRight, Briefcase, TrendingUp, ShieldCheck, Activity, CheckCircle2 } from "lucide-react";
+import { useSeo } from "@/lib/useSeo";
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
@@ -20,6 +21,12 @@ const OUTCOMES = [
 ];
 
 export default function Business() {
+  useSeo({
+    title: "For Business - operate like a much larger company",
+    description:
+      "Eve OS gives operators a coordinated, self-improving virtual company - enterprise-grade execution without enterprise complexity or cost.",
+    path: "/business",
+  });
   return (
     <div className="flex flex-col w-full">
       <section className="relative pt-28 pb-14 md:pt-36 md:pb-20 overflow-hidden">

@@ -11,6 +11,31 @@ import {
   Infinity as InfinityIcon,
 } from "lucide-react";
 import DeckCarousel from "@/components/DeckCarousel";
+import { useSeo } from "@/lib/useSeo";
+
+const AUDIENCES = [
+  {
+    tag: "For Business",
+    title: "Operate like a much larger company.",
+    desc: "A coordinated virtual company across every function - on day one.",
+    href: "/business",
+    cta: "Eve OS for operators",
+  },
+  {
+    tag: "For Developers",
+    title: "Build on the agentic primitives.",
+    desc: "The same intelligence layer that powers Eve OS, exposed to builders.",
+    href: "/developers",
+    cta: "See the developer surface",
+  },
+  {
+    tag: "For Investors",
+    title: "Back the agentic intelligence layer.",
+    desc: "Long-term defensibility through data, product, and proprietary models.",
+    href: "/invest",
+    cta: "Investor materials",
+  },
+];
 
 type Slide = {
   id: string;
@@ -187,6 +212,12 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 }
 
 export default function Home() {
+  useSeo({
+    title: "The operating layer for the agentic era",
+    description:
+      "AIcreatesAI builds the agentic intelligence layer that companies, capital, and consumers will run on. One layer. Many products. Self-improving by design.",
+    path: "/",
+  });
   return (
     <div className="flex flex-col w-full">
       {/* HERO */}
@@ -260,6 +291,47 @@ export default function Home() {
 
       {/* PRODUCT SPOTLIGHT (Eve OS / NeoBank carousel) */}
       <ProductSpotlight />
+
+      {/* AUDIENCE SELECTOR - consumer / business / investor entry */}
+      <section className="py-14 md:py-20 relative">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="max-w-3xl mb-12">
+            <SectionLabel>Three doors in</SectionLabel>
+            <motion.h2
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.6 }}
+              className="mt-5 text-3xl sm:text-4xl md:text-5xl font-serif font-semibold text-gradient leading-[1.05]"
+            >
+              Pick the path that matches you.
+            </motion.h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {AUDIENCES.map((a, i) => (
+              <motion.div
+                key={a.href}
+                initial={{ opacity: 0, y: 18 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{ duration: 0.45, delay: i * 0.05 }}
+              >
+                <Link href={a.href}>
+                  <div className="glass-card p-7 cursor-pointer hover:border-[#00F5D4]/30 transition-colors h-full flex flex-col" data-testid={`audience-${a.href.slice(1)}`}>
+                    <div className="text-[10px] uppercase tracking-[0.2em] text-[#00F5D4]/80 mb-5">{a.tag}</div>
+                    <h3 className="text-2xl font-serif font-semibold text-white mb-3 leading-tight">{a.title}</h3>
+                    <p className="text-white/55 text-sm leading-relaxed mb-6 flex-1">{a.desc}</p>
+                    <div className="flex items-center gap-2 text-sm font-medium text-white group">
+                      <span>{a.cta}</span>
+                      <ArrowRight className="w-4 h-4 text-[#00F5D4] group-hover:translate-x-0.5 transition-transform" />
+                    </div>
+                  </div>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* ABOUT US */}
       <section className="py-16 md:py-24 relative min-h-[100dvh] sm:min-h-0 flex items-center">

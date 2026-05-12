@@ -11,7 +11,11 @@ import {
   GitBranch,
   Sparkles,
   Network,
+  Brain,
+  Bot,
+  Wallet,
 } from "lucide-react";
+import { useSeo } from "@/lib/useSeo";
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
@@ -22,31 +26,60 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
   );
 }
 
-const PILLARS = [
+const ARCHITECTURE = [
+  {
+    icon: Brain,
+    name: "Adam",
+    role: "Foundational Intelligence Core",
+    desc: "The base reasoning and learning model that anchors the layer. Adam is the mind from which every specialized agent inherits capability.",
+  },
+  {
+    icon: Sparkles,
+    name: "Eve",
+    role: "Operating Surface",
+    desc: "The user-facing intelligence that translates intent into coordinated work across functions. Eve is what the operator talks to and what runs the company.",
+  },
+  {
+    icon: Bot,
+    name: "Jarvis",
+    role: "Execution & Tooling Plane",
+    desc: "The action layer - tool use, integrations, and autonomous execution against the operator's systems with policy and approvals enforced.",
+  },
   {
     icon: Layers,
-    title: "Agentic Intelligence Layer",
-    desc: "A unified runtime where intent becomes coordinated execution across every business function.",
+    name: "Unified Agent Layer",
+    role: "Coordination Fabric",
+    desc: "Shared memory, planning, and routing that lets every agent operate as one team rather than isolated chats.",
   },
+  {
+    icon: ShieldCheck,
+    name: "Quality Engine",
+    role: "Closed-Loop Review",
+    desc: "Every output is scored against rubrics, critiqued, and rewritten before it reaches the operator. Failures repair themselves and feed back into memory.",
+  },
+  {
+    icon: Wallet,
+    name: "Credit Ledger",
+    role: "Programmable Spend",
+    desc: "Scoped budgets, spend caps, and audit trails for every autonomous action. The economic accountability layer for an agentic company.",
+  },
+];
+
+const PILLARS = [
   {
     icon: Cpu,
     title: "Hybrid Compute Fabric",
     desc: "Local, edge, and cloud compute orchestrated to balance privacy, latency, and cost on every task.",
   },
   {
-    icon: ShieldCheck,
-    title: "Closed-Loop Quality Engine",
-    desc: "Every output is reviewed, scored, and improved by the system before it reaches you.",
+    icon: Database,
+    title: "Persistent Business Memory",
+    desc: "Context, decisions, and outcomes accumulate as a durable, queryable substrate over time.",
   },
   {
     icon: Workflow,
     title: "Self-Healing Workflows",
     desc: "Workflows detect their own failures, repair, retry, and learn from each cycle.",
-  },
-  {
-    icon: Database,
-    title: "Persistent Business Memory",
-    desc: "Context, decisions, and outcomes accumulate as a durable, queryable substrate over time.",
   },
   {
     icon: GitBranch,
@@ -56,14 +89,20 @@ const PILLARS = [
 ];
 
 const FLOW = [
-  { n: "01", t: "Intent", d: "You describe a goal in natural language." },
-  { n: "02", t: "Plan", d: "The layer decomposes the goal into a coordinated plan across functions." },
-  { n: "03", t: "Execute", d: "Specialized agents run the plan against your tools, data, and policies." },
-  { n: "04", t: "Review", d: "The closed-loop quality engine scores, critiques, and rewrites." },
-  { n: "05", t: "Improve", d: "Outcomes feed memory, models, and routing - the layer gets sharper." },
+  { n: "01", t: "Intent", d: "You describe a goal in natural language to Eve." },
+  { n: "02", t: "Plan", d: "The Unified Agent Layer decomposes the goal into a coordinated plan." },
+  { n: "03", t: "Execute", d: "Jarvis runs the plan against your tools, data, and policies." },
+  { n: "04", t: "Review", d: "The Quality Engine scores, critiques, and rewrites every output." },
+  { n: "05", t: "Improve", d: "Outcomes feed memory and Adam - the layer gets sharper with each cycle." },
 ];
 
 export default function Platform() {
+  useSeo({
+    title: "Platform - the Agentic Intelligence Layer",
+    description:
+      "AIcreatesAI's Platform is the agentic intelligence layer - Adam, Eve, Jarvis, the Unified Agent Layer, the Quality Engine, and the Credit Ledger working as one self-improving foundation.",
+    path: "/platform",
+  });
   return (
     <div className="flex flex-col w-full">
       {/* HERO */}
@@ -73,7 +112,7 @@ export default function Platform() {
         <div className="container mx-auto px-4 md:px-6 relative z-10">
           <div className="max-w-5xl">
             <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-              <SectionLabel>Platform</SectionLabel>
+              <SectionLabel>Platform - Figure 1</SectionLabel>
             </motion.div>
             <motion.h1
               initial={{ opacity: 0, y: 16 }}
@@ -112,16 +151,53 @@ export default function Platform() {
         </div>
       </section>
 
-      {/* PILLARS */}
-      <section className="py-14 md:py-20 relative">
+      {/* ARCHITECTURE - Adam / Eve / Jarvis / UAL / QE / Credit Ledger */}
+      <section id="architecture" className="py-14 md:py-20 relative">
         <div className="container mx-auto px-4 md:px-6">
           <div className="max-w-3xl mb-14">
-            <SectionLabel>The shape of the layer</SectionLabel>
+            <SectionLabel>Architecture - Figure 1</SectionLabel>
             <h2 className="mt-6 text-4xl md:text-5xl font-serif font-semibold text-gradient leading-[1.05]">
-              Six primitives. One coherent system.
+              Six named components. One coherent system.
             </h2>
+            <p className="mt-6 text-white/55 leading-relaxed">
+              The intelligence layer is built around named architectural components, each with a distinct role and a clear contract with the others.
+            </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {ARCHITECTURE.map((c, i) => (
+              <motion.div
+                key={c.name}
+                initial={{ opacity: 0, y: 18 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{ duration: 0.45, delay: i * 0.04 }}
+                className="glass-card p-6 hover:border-[#00F5D4]/30 transition-colors"
+              >
+                <div className="flex items-center justify-between mb-5">
+                  <div className="w-10 h-10 rounded-lg bg-[#00F5D4]/10 border border-[#00F5D4]/20 flex items-center justify-center">
+                    <c.icon className="w-5 h-5 text-[#00F5D4]" strokeWidth={1.5} />
+                  </div>
+                  <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-white/35">Component</span>
+                </div>
+                <h3 className="text-xl font-serif font-semibold text-white">{c.name}</h3>
+                <p className="text-xs uppercase tracking-[0.18em] text-[#00F5D4]/80 mt-1 mb-3">{c.role}</p>
+                <p className="text-white/60 text-sm leading-relaxed">{c.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* PILLARS */}
+      <section id="primitives" className="py-14 md:py-20 relative">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="max-w-3xl mb-14">
+            <SectionLabel>Primitives - Figure 3</SectionLabel>
+            <h2 className="mt-6 text-4xl md:text-5xl font-serif font-semibold text-gradient leading-[1.05]">
+              The foundations underneath.
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {PILLARS.map((p, i) => (
               <motion.div
                 key={p.title}
@@ -143,10 +219,10 @@ export default function Platform() {
       </section>
 
       {/* FLOW */}
-      <section className="py-14 md:py-20 relative">
+      <section id="flow" className="py-14 md:py-20 relative">
         <div className="container mx-auto px-4 md:px-6">
           <div className="max-w-3xl mb-14">
-            <SectionLabel>How the layer runs</SectionLabel>
+            <SectionLabel>Operating Loop - Figure 4</SectionLabel>
             <h2 className="mt-6 text-4xl md:text-5xl font-serif font-semibold text-gradient leading-[1.05]">
               Intent in. Coordinated action out.
             </h2>
