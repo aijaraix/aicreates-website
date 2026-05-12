@@ -20,16 +20,6 @@ export function Footer() {
           </div>
 
           <div className="md:col-span-2">
-            <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-white/40 mb-5">About</h4>
-            <ul className="space-y-3">
-              <li><Link href="/about"><span className="text-sm text-white/70 hover:text-[#00F5D4] transition-colors cursor-pointer">About</span></Link></li>
-              <li><Link href="/about#platform"><span className="text-sm text-white/70 hover:text-[#00F5D4] transition-colors cursor-pointer">Platform</span></Link></li>
-              <li><Link href="/about#agents"><span className="text-sm text-white/70 hover:text-[#00F5D4] transition-colors cursor-pointer">Agents</span></Link></li>
-              <li><Link href="/about#company-in-a-box"><span className="text-sm text-white/70 hover:text-[#00F5D4] transition-colors cursor-pointer">Company in a Box</span></Link></li>
-            </ul>
-          </div>
-
-          <div className="md:col-span-2">
             <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-white/40 mb-5">Products</h4>
             <ul className="space-y-3">
               <li><Link href="/eve-os"><span className="text-sm text-white/70 hover:text-[#00F5D4] transition-colors cursor-pointer">Eve OS</span></Link></li>
@@ -59,6 +49,7 @@ export function Footer() {
           <div className="md:col-span-2">
             <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-white/40 mb-5">Company</h4>
             <ul className="space-y-3 mb-6">
+              <li><Link href="/about"><span className="text-sm text-white/70 hover:text-[#00F5D4] transition-colors cursor-pointer">About</span></Link></li>
               <li><Link href="/contact"><span className="text-sm text-white/70 hover:text-[#00F5D4] transition-colors cursor-pointer">Contact</span></Link></li>
               <li><Link href="/invest"><span className="text-sm text-white/70 hover:text-[#00F5D4] transition-colors cursor-pointer">Invest</span></Link></li>
               <li><Link href="/privacy"><span className="text-sm text-white/70 hover:text-[#00F5D4] transition-colors cursor-pointer">Privacy</span></Link></li>
