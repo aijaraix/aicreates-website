@@ -100,16 +100,11 @@ function NewsletterSubscribe() {
   }
 
   return (
-    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-8 md:gap-12">
-      <div className="md:max-w-md">
-        <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-white/40 mb-3">
-          Stay in the loop
-        </h4>
-        <p className="text-white/60 text-sm leading-relaxed">
-          Product updates, raise milestones, and the occasional manifesto. No spam.
-        </p>
-      </div>
-      <div className="w-full md:max-w-lg md:flex-1">
+    <div className="max-w-sm">
+      <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-white/40 mb-3">
+        Stay in the loop
+      </h4>
+      <div>
         {submitted ? (
           <div
             role="status"
@@ -170,6 +165,9 @@ function NewsletterSubscribe() {
             )}
           </form>
         )}
+        <p className="text-white/40 text-xs leading-relaxed mt-3">
+          Product updates, raise milestones, and the occasional manifesto. No spam, unsubscribe any time.
+        </p>
       </div>
     </div>
   );
@@ -179,9 +177,10 @@ export function Footer() {
   return (
     <footer className="bg-[#0A0A0A] relative border-t border-white/5 pt-20 pb-10 mt-24">
       <div className="container mx-auto px-4 md:px-6">
-        <div className="grid grid-cols-2 md:grid-cols-12 gap-10 md:gap-12 mb-16">
-          {/* Brand */}
-          <div className="col-span-2 md:col-span-4">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-12 mb-12 pb-12 border-b border-white/5">
+          {/* Brand + Newsletter */}
+          <div className="md:col-span-5 lg:col-span-4 flex flex-col gap-8">
+            <div>
             <Link href="/" className="flex items-center gap-2.5 mb-5">
               <div className="w-2.5 h-2.5 rounded-full bg-[#00F5D4] shadow-[0_0_10px_rgba(0,245,212,0.6)]" />
               <span className="font-sans font-semibold tracking-tight text-white text-lg leading-none">
@@ -204,31 +203,30 @@ export function Footer() {
               @theaicreatesai
             </a>
           </div>
+          <NewsletterSubscribe />
+          </div>
 
           {/* Link columns */}
-          {COLUMNS.map((col) => (
-            <div key={col.heading} className="md:col-span-2">
-              <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-white/40 mb-5">
-                {col.heading}
-              </h4>
-              <ul className="space-y-3">
-                {col.links.map((link) => (
-                  <li key={link.href}>
-                    <Link href={link.href}>
-                      <span className="text-sm text-white/70 hover:text-[#00F5D4] transition-colors cursor-pointer">
-                        {link.name}
-                      </span>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-
-        {/* Newsletter band */}
-        <div className="mb-12 pb-12 border-b border-white/5">
-          <NewsletterSubscribe />
+          <div className="md:col-span-7 lg:col-span-8 grid grid-cols-2 sm:grid-cols-4 gap-8 md:gap-6">
+            {COLUMNS.map((col) => (
+              <div key={col.heading}>
+                <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-white/40 mb-5">
+                  {col.heading}
+                </h4>
+                <ul className="space-y-3">
+                  {col.links.map((link) => (
+                    <li key={link.href}>
+                      <Link href={link.href}>
+                        <span className="text-sm text-white/70 hover:text-[#00F5D4] transition-colors cursor-pointer">
+                          {link.name}
+                        </span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className="pt-2 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
