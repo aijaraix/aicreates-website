@@ -17,7 +17,7 @@ const COLUMNS: {
   {
     heading: "Round",
     links: [
-      { name: "Founders Round", href: "/" },
+      { name: "Strategic Seed Round", href: "/" },
       { name: "Why invest", href: "/#why" },
       { name: "Vesting", href: "/#vesting" },
       { name: "Data center", href: "/#data-center" },
@@ -87,8 +87,8 @@ export default function Footer() {
               <Wordmark />
             </a>
             <p className="text-white/50 text-sm leading-relaxed max-w-sm mb-6">
-              The AICA Founders Round investor portal. Reserve, sign, fund, and
-              track your allocation in the agentic intelligence layer.
+              The AIcreatesAI investor portal. Reserve, sign, fund, and track
+              your allocation in the agentic intelligence layer.
             </p>
             <a
               href="https://x.com/theaicreatesai"

@@ -5,6 +5,10 @@ import { api } from "@/lib/api";
 import { ArrowRight, Loader2, Sparkles } from "lucide-react";
 import { tokensForAmount } from "@/lib/vesting";
 import { ROUNDS } from "@/data/rounds";
+
+interface ActiveRoundResp {
+  round: { slug: string; pricePerTokenMillicents: number; label: string };
+}
 import RoundContext from "@/components/RoundContext";
 import VestingPreview from "@/components/VestingPreview";
 import PortalNav from "@/components/PortalNav";
@@ -44,11 +48,18 @@ export default function InvestPicker() {
   const [, setLocation] = useLocation();
   const [pending, setPending] = useState<string | null>(null);
   const [customAmount, setCustomAmount] = useState<number>(50_000);
-  const [round] = useState(ROUNDS[0]!.slug);
   const me = useQuery({
     queryKey: ["me"],
     queryFn: () => api<MeResponse>("/me"),
   });
+  const activeRound = useQuery({
+    queryKey: ["rounds", "active"],
+    queryFn: () => api<ActiveRoundResp>("/rounds/active"),
+  });
+  const round = activeRound.data?.round.slug ?? ROUNDS[0]!.slug;
+  const pricePerTokenMillicents =
+    activeRound.data?.round.pricePerTokenMillicents ?? 15;
+  const priceLabel = `$${(pricePerTokenMillicents / 1000).toFixed(3)}`;
   const gateway = useQuery({
     queryKey: ["me", "gateway"],
     queryFn: () => api<{ application: Application | null }>("/me/gateway"),
@@ -189,7 +200,7 @@ export default function InvestPicker() {
                     {fmt(customAmount * 100)}
                   </div>
                   <div className="mt-1 text-xs uppercase tracking-[0.16em] text-white/45">
-                    ~{tokensForAmount(customAmount).toLocaleString()} AICA
+                    ~{tokensForAmount(customAmount, pricePerTokenMillicents).toLocaleString()} AICA
                   </div>
                   <div className="mt-3">
                     <label className="text-[11px] uppercase tracking-[0.14em] text-white/55">
@@ -244,16 +255,20 @@ export default function InvestPicker() {
           </div>
 
           <div className="space-y-4">
-            <VestingPreview totalTokens={tokensForAmount(customAmount)} />
+            <VestingPreview totalTokens={tokensForAmount(customAmount, pricePerTokenMillicents)} />
             <div className="brand-card p-5 text-xs text-white/50 leading-relaxed">
               <div className="text-[10px] uppercase tracking-[0.18em] text-white/40 mb-2">
                 Token math
               </div>
               <ul className="space-y-1">
-                <li>1 AICA = $1.00 USD base price.</li>
+                <li>1 AICA = {priceLabel} USD (Strategic Seed Round price).</li>
                 <li>+10% allocation bonus at $5,000.</li>
                 <li>+20% allocation bonus at $25,000.</li>
                 <li>25% unlocks at TGE, 6-month cliff, then 24-month linear.</li>
+                <li>
+                  Total private sale: 1.25B AICA across 5 rounds at $0.015 -
+                  $0.070 per AICA.
+                </li>
               </ul>
             </div>
           </div>

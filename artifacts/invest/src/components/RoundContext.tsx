@@ -4,7 +4,7 @@ import { api } from "@/lib/api";
 interface Round {
   slug: string;
   label: string;
-  pricePerTokenCents: number;
+  pricePerTokenMillicents: number;
   tokensForSale: number;
   targetRaiseCents: number;
   hardCapCents: number;
@@ -88,7 +88,7 @@ export default function RoundContext() {
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
-        <Stat label="Price" value={`$${(round.pricePerTokenCents / 100).toFixed(2)} / AICA`} />
+        <Stat label="Price" value={`$${(round.pricePerTokenMillicents / 1000).toFixed(3)} / AICA`} />
         <Stat
           label="Target"
           value={fmt(round.targetRaiseCents)}

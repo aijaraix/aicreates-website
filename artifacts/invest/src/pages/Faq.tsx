@@ -25,12 +25,16 @@ const GROUPS: FaqGroup[] = [
     title: "Round mechanics",
     items: [
       {
-        q: "What is the AICA Founders Round?",
-        a: "The first allocation round of the AICA token. AICA powers consumptive access to the agentic intelligence layer (Eve OS, Hybrid Compute Fabric). Pricing is fixed per AICA with tiered allocation bonuses at $5k and $25k.",
+        q: "What is the AICA Strategic Seed Round?",
+        a: "The first of five SAFT rounds in the AIcreatesAI private sale. Strategic Seed is priced at $0.015 per AICA for 200M tokens ($3M raise). Subsequent rounds (Private Sale 1, Private Sale 2, Infrastructure, and Community + Launchpad) ladder up to $0.070 per AICA. Aggregate: 1.25B AICA = 12.5% of the 10B fixed supply, ~$50M target.",
+      },
+      {
+        q: "Which round is open right now?",
+        a: "Strategic Seed is the only round currently open. Investors can reserve allocation today at $0.015 per AICA with tiered bonuses at $5k and $25k. Subsequent rounds open later in sequence as Strategic Seed fills.",
       },
       {
         q: "When does the round close?",
-        a: "December 31, 2026, or earlier on hitting the hard cap. Closing dates can move forward only - never backward.",
+        a: "Strategic Seed closes on hitting its $3M hard cap or December 31, 2026, whichever is earlier. Closing dates can move forward only - never backward.",
       },
       {
         q: "What is the minimum / maximum?",
@@ -82,7 +86,7 @@ const GROUPS: FaqGroup[] = [
       },
       {
         q: "Which jurisdictions are eligible?",
-        a: "The Founders Round is offered to accredited investors under U.S. Reg D / Reg S exemptions. We currently do not accept commitments from sanctioned jurisdictions or persons on restricted lists. Additional country restrictions may apply at the team's discretion.",
+        a: "The private sale is offered to accredited investors under U.S. Reg D / Reg S exemptions. We currently do not accept commitments from sanctioned jurisdictions or persons on restricted lists. Additional country restrictions may apply at the team's discretion.",
         anchor: "jurisdiction",
       },
       {

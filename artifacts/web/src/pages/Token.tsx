@@ -129,14 +129,85 @@ export default function Token() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {[
               { k: "10,000,000,000", v: "Total supply" },
-              { k: "Vested", v: "All private rounds" },
-              { k: "Usage-driven", v: "Economic model" },
+              { k: "12.5%", v: "Private sale (1.25B AICA)" },
+              { k: "$50M", v: "Total private-sale raise" },
             ].map((s) => (
               <div key={s.v} className="rounded-2xl border border-white/10 bg-white/[0.02] p-7 hover:border-[#00F5D4]/30 transition-colors">
                 <div className="text-2xl md:text-3xl font-serif font-semibold text-[#00F5D4] tracking-tight">{s.k}</div>
                 <div className="mt-2 text-xs uppercase tracking-[0.18em] text-white/45">{s.v}</div>
               </div>
             ))}
+          </div>
+
+          {/* SAFT round schedule */}
+          <div className="mt-8 rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden">
+            <div className="px-6 py-5 border-b border-white/5">
+              <div className="text-xs uppercase tracking-[0.18em] text-white/40">
+                Private SAFT round schedule
+              </div>
+              <div className="mt-1 text-lg font-semibold text-white" style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}>
+                Five rounds, $0.015 → $0.070 per AICA
+              </div>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm" data-testid="table-saft-rounds">
+                <thead className="text-xs uppercase tracking-[0.14em] text-white/40">
+                  <tr>
+                    <th className="text-left px-6 py-3 font-medium">Round</th>
+                    <th className="text-left px-6 py-3 font-medium">Price</th>
+                    <th className="text-left px-6 py-3 font-medium">Tokens</th>
+                    <th className="text-left px-6 py-3 font-medium">Raise</th>
+                    <th className="text-left px-6 py-3 font-medium">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    { name: "Strategic Seed Round", price: "$0.015", tokens: "200,000,000", raise: "$3,000,000", open: true },
+                    { name: "Private Sale 1", price: "$0.025", tokens: "200,000,000", raise: "$5,000,000", open: false },
+                    { name: "Private Sale 2", price: "$0.040", tokens: "400,000,000", raise: "$16,000,000", open: false },
+                    { name: "Infrastructure Round", price: "$0.055", tokens: "350,000,000", raise: "$19,250,000", open: false },
+                    { name: "Community + Launchpad", price: "$0.070", tokens: "100,000,000", raise: "$7,000,000", open: false },
+                  ].map((r) => (
+                    <tr key={r.name} className="border-t border-white/5">
+                      <td className="px-6 py-3 font-medium text-white" style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}>{r.name}</td>
+                      <td className="px-6 py-3 text-white/80">{r.price}</td>
+                      <td className="px-6 py-3 text-white/60">{r.tokens}</td>
+                      <td className="px-6 py-3 text-white/80">{r.raise}</td>
+                      <td className="px-6 py-3">
+                        <span className={`px-2.5 py-0.5 rounded-full text-xs ${r.open ? "bg-[#00F5D4]/15 text-[#00F5D4]" : "bg-white/10 text-white/60"}`}>
+                          {r.open ? "Open" : "Upcoming"}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Key principles */}
+          <div className="mt-8 rounded-2xl border border-white/10 bg-white/[0.02] p-6 md:p-8">
+            <div className="text-xs uppercase tracking-[0.18em] text-white/40 mb-4">
+              Key token principles
+            </div>
+            <ul className="space-y-3 text-white/70 text-sm md:text-base leading-relaxed">
+              <li className="flex items-start gap-3">
+                <span className="mt-2.5 w-1.5 h-1.5 rounded-full bg-[#00F5D4] shrink-0 shadow-[0_0_6px_rgba(0,245,212,0.6)]" />
+                <span>Core platform revenue is initially driven by subscriptions to ensure operational stability; token utility is integrated where it earns its place.</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="mt-2.5 w-1.5 h-1.5 rounded-full bg-[#00F5D4] shrink-0 shadow-[0_0_6px_rgba(0,245,212,0.6)]" />
+                <span>Utility includes subscription discounts, compute network participation, and contributor rewards (GPU, data, ecosystem).</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="mt-2.5 w-1.5 h-1.5 rounded-full bg-[#00F5D4] shrink-0 shadow-[0_0_6px_rgba(0,245,212,0.6)]" />
+                <span>All tokens sold in private rounds are subject to appropriate vesting schedules.</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="mt-2.5 w-1.5 h-1.5 rounded-full bg-[#00F5D4] shrink-0 shadow-[0_0_6px_rgba(0,245,212,0.6)]" />
+                <span>A sustainable economic model designed around real usage, long-term alignment, and ecosystem health.</span>
+              </li>
+            </ul>
           </div>
         </div>
       </section>

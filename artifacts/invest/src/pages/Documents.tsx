@@ -49,7 +49,7 @@ const STATIC_DOCS = [
   {
     title: "Round terms summary",
     blurb:
-      "AICA Founders Round - tier table, pricing, target raise, deadline, and payment options.",
+      "AICA private-sale rounds - SAFT round schedule, tier table, pricing, target raise, deadline, and payment options.",
     href: "https://www.aicreates.ai/invest",
     cta: "View terms",
     external: true,

@@ -55,11 +55,22 @@ export function computeVesting(
   return { tgeDate: tgeBase.toISOString(), cliffDate: cliff.toISOString(), schedule };
 }
 
-export function tokensForAmount(usd: number): number {
+/**
+ * Token allocation for a USD amount at the active round price.
+ * Default price is the Strategic Seed Round price ($0.015 per AICA = 15
+ * millicents). Pass `pricePerTokenMillicents` to compute against a
+ * different round.
+ */
+export function tokensForAmount(
+  usd: number,
+  pricePerTokenMillicents = 15,
+): number {
+  if (pricePerTokenMillicents <= 0) return 0;
   let bonus = 0;
   if (usd >= 25_000) bonus = 0.2;
   else if (usd >= 5_000) bonus = 0.1;
-  return Math.round(usd * (1 + bonus));
+  // tokens = usd / pricePerTokenUsd, where price = millicents / 1000
+  return Math.floor(((usd * 1000) / pricePerTokenMillicents) * (1 + bonus));
 }
 
 export function buildIcs(

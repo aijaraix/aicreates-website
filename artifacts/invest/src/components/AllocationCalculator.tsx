@@ -1,5 +1,7 @@
 import { useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { tokensForAmount, computeVesting } from "@/lib/vesting";
+import { api } from "@/lib/api";
 
 function fmt(n: number) {
   return n.toLocaleString("en-US");
@@ -7,7 +9,18 @@ function fmt(n: number) {
 
 export default function AllocationCalculator() {
   const [amount, setAmount] = useState(5000);
-  const tokens = useMemo(() => tokensForAmount(amount), [amount]);
+  const round = useQuery({
+    queryKey: ["rounds", "active"],
+    queryFn: () =>
+      api<{ round: { pricePerTokenMillicents: number; label: string } }>(
+        "/rounds/active",
+      ),
+  });
+  const price = round.data?.round.pricePerTokenMillicents ?? 15;
+  const tokens = useMemo(
+    () => tokensForAmount(amount, price),
+    [amount, price],
+  );
   const vesting = useMemo(() => computeVesting(tokens), [tokens]);
   const tge = vesting.schedule[0]!;
   const monthly = vesting.schedule[1]!;
@@ -78,8 +91,10 @@ export default function AllocationCalculator() {
         </div>
       </div>
       <p className="mt-5 text-xs text-white/40">
-        Default schedule: 25% at TGE, 6-month cliff, then linear over 24
-        months. Final terms are pending counsel review.
+        Computed at the active round price (
+        {`$${(price / 1000).toFixed(3)}`} per AICA). Vesting: 25% at TGE,
+        6-month cliff, then linear over 24 months. Final terms are pending
+        counsel review.
       </p>
     </div>
   );

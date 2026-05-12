@@ -99,15 +99,16 @@ export default function Home() {
         <div className="container mx-auto px-4 md:px-6 relative z-10">
           <div className="max-w-5xl mx-auto text-center">
             <div className="mb-8 flex justify-center">
-              <SectionLabel>AICA Founders Round 2026 - Now open</SectionLabel>
+              <SectionLabel>AICA Strategic Seed Round - Now open</SectionLabel>
             </div>
             <h1 className="text-[40px] sm:text-5xl md:text-7xl lg:text-[88px] font-serif font-semibold leading-[1.02] mb-6 text-gradient">
               The Agentic Intelligence Layer.
             </h1>
             <p className="text-base sm:text-lg md:text-xl text-white/60 max-w-2xl mx-auto leading-relaxed mb-8">
-              Reserve your allocation in the AICA Founders Round. $50M raise to
-              ship the Agentic Business Operating System and the Hybrid Compute
-              Fabric powering the next wave of AI-native companies.
+              Reserve your allocation in the AICA Strategic Seed - the first
+              of five SAFT rounds in a ~$50M private sale to ship the Agentic
+              Business Operating System and the Hybrid Compute Fabric powering
+              the next wave of AI-native companies.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Link
@@ -270,13 +271,13 @@ export default function Home() {
         <div className="grid md:grid-cols-[1.1fr,1fr] gap-8 items-center">
           <div className="space-y-4 text-white/70 leading-relaxed">
             <p>
-              Eve OS replaces the dozens of disconnected tools a modern business
-              runs on with a single agentic operator. Sales, finance, ops,
-              support, hiring - one shared memory, one observable runtime, one
-              accountable outcome owner.
+              Eve OS is the Company in a Box. One agentic operator coordinates
+              marketing, sales, finance, legal, operations, and development -
+              one shared memory, one observable runtime, one accountable
+              outcome owner.
             </p>
             <ul className="space-y-2 text-sm">
-              <li>- Agentic CRM, ERP, helpdesk, and back-office in one runtime.</li>
+              <li>- Coordinated execution across every business function.</li>
               <li>- Native voice, vision, and document workflows.</li>
               <li>- Counted in outcomes shipped, not seats sold.</li>
             </ul>
@@ -285,12 +286,12 @@ export default function Home() {
             <div className="absolute inset-0 portal-aurora opacity-30" />
             <div className="relative grid grid-cols-2 gap-3 text-xs">
               {[
-                "Inbox triage",
-                "Lead enrichment",
-                "Quote → Cash",
-                "Hiring pipeline",
-                "Support ops",
-                "Bookkeeping",
+                "Marketing",
+                "Sales",
+                "Finance",
+                "Legal",
+                "Operations",
+                "Development",
               ].map((m) => (
                 <div
                   key={m}
@@ -313,8 +314,8 @@ export default function Home() {
         eyebrow="Secondary product line"
         title={
           <>
-            A consumer + business <span className="text-[#00F5D4]">NeoBank</span>{" "}
-            built on the layer.
+            <span className="text-[#00F5D4]">Capital that thinks.</span> A
+            consumer + business NeoBank built on the layer.
           </>
         }
       >
@@ -387,7 +388,7 @@ export default function Home() {
             "Long-running agents with stable memory",
             "Multi-modal voice + vision + docs",
             "Native tool-use + system control",
-            "Closed-loop evaluation + auto-repair",
+            "Closed-Loop Quality Engine + auto-repair",
             "Owned GPU + cloud bursting",
             "Compliance + audit trails by default",
             "Agent-to-agent secure messaging",
@@ -417,7 +418,7 @@ export default function Home() {
               { label: "GPU cluster + data-center build", pct: 40 },
               { label: "Eve OS R&D + engineering", pct: 28 },
               { label: "NeoBank + go-to-market", pct: 18 },
-              { label: "Closed-loop evaluation engine", pct: 9 },
+              { label: "Closed-Loop Quality Engine", pct: 9 },
               { label: "Operating + reserves", pct: 5 },
             ].map((row) => (
               <div key={row.label} className="mb-4 last:mb-0">
@@ -467,11 +468,9 @@ export default function Home() {
               <span className="text-[#00F5D4] text-2xl">AICA</span>
             </div>
             <ul className="mt-5 space-y-2 text-sm text-white/70">
-              <li>- 30% Ecosystem + agent rewards</li>
-              <li>- 22% Founders, team, and advisors (vesting)</li>
-              <li>- 20% Treasury + future raises</li>
-              <li>- 18% Public sale + secondary</li>
-              <li>- 10% Founders Round (this raise)</li>
+              <li>- 12.5% Private Sale - 1.25B AICA across 5 SAFT rounds, ~$50M raise ($0.015 → $0.070 per AICA)</li>
+              <li>- 87.5% Reserved per whitepaper across ecosystem rewards, team and advisors, treasury, and public sale</li>
+              <li>- All private-round tokens subject to appropriate vesting</li>
             </ul>
           </div>
           <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-7">
@@ -480,20 +479,20 @@ export default function Home() {
             </div>
             <ul className="space-y-3 text-sm text-white/70">
               <li>
-                <span className="text-[#00F5D4]">Compute credits</span> across
-                the Hybrid Compute Fabric.
+                <span className="text-[#00F5D4]">Subscription discounts</span>{" "}
+                across the agentic intelligence layer.
               </li>
               <li>
-                <span className="text-[#00F5D4]">Agent rewards</span> for
-                builders shipping reusable workflows.
+                <span className="text-[#00F5D4]">Compute network participation</span>{" "}
+                - GPU and infrastructure contributors earn rewards.
               </li>
               <li>
-                <span className="text-[#00F5D4]">Quality staking</span> on the
-                closed-loop evaluation engine.
+                <span className="text-[#00F5D4]">Contributor rewards</span> for
+                data, models, and ecosystem builders.
               </li>
               <li>
-                <span className="text-[#00F5D4]">NeoBank fee discounts</span> +
-                preferred routing.
+                <span className="text-[#00F5D4]">Closed-Loop Quality Engine</span>{" "}
+                participation and NeoBank fee discounts.
               </li>
             </ul>
           </div>
@@ -611,10 +610,10 @@ export default function Home() {
           <div className="max-w-3xl mx-auto">
             <div className="glass-card p-10 md:p-14 text-center">
               <div className="mb-6 flex justify-center">
-                <SectionLabel>AICA Founders Round 2026</SectionLabel>
+                <SectionLabel>AICA Strategic Seed Round</SectionLabel>
               </div>
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-semibold text-gradient leading-[1.05] tracking-tight">
-                Reserve your allocation in the Founders Round.
+                Reserve your allocation in the Strategic Seed Round.
               </h2>
               <p className="mt-5 text-white/60 max-w-xl mx-auto leading-relaxed">
                 Sign up, sign the SAFT, and fund by card, ACH, wire, or crypto.

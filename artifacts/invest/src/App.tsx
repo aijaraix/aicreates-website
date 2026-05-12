@@ -158,7 +158,7 @@ function SignInPage() {
     <AuthShell
       eyebrow="Investor portal"
       title="Welcome back."
-      subtitle="Sign in to manage your AICA Founders Round commitment, SAFTs, and vesting schedule."
+      subtitle="Sign in to manage your AICA private-sale commitment, SAFTs, and vesting schedule."
     >
       <SignIn
         routing="path"
@@ -172,7 +172,7 @@ function SignInPage() {
 function SignUpPage() {
   return (
     <AuthShell
-      eyebrow="AICA Founders Round - 2026"
+      eyebrow="AICA Strategic Seed Round - 2026"
       title="Reserve your allocation."
       subtitle="Create your investor account to access the deck, complete the SAFT, and fund a commitment."
     >

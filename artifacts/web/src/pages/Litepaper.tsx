@@ -287,6 +287,56 @@ function BlockRenderer({ block }: { block: Block }) {
   );
 }
 
+function SaftRoundTable() {
+  const rows = [
+    { name: "Strategic Seed Round", price: "$0.015", tokens: "200,000,000", raise: "$3,000,000", open: true },
+    { name: "Private Sale 1", price: "$0.025", tokens: "200,000,000", raise: "$5,000,000", open: false },
+    { name: "Private Sale 2", price: "$0.040", tokens: "400,000,000", raise: "$16,000,000", open: false },
+    { name: "Infrastructure Round", price: "$0.055", tokens: "350,000,000", raise: "$19,250,000", open: false },
+    { name: "Community + Launchpad", price: "$0.070", tokens: "100,000,000", raise: "$7,000,000", open: false },
+  ];
+  return (
+    <div className="my-8 rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden">
+      <div className="px-6 py-5 border-b border-white/5">
+        <div className="text-xs uppercase tracking-[0.18em] text-white/40">
+          Private SAFT round schedule
+        </div>
+        <div className="mt-1 text-lg font-semibold text-white" style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}>
+          1,250,000,000 AICA - 12.5% of supply - ~$50M raise
+        </div>
+      </div>
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm" data-testid="table-saft-rounds">
+          <thead className="text-xs uppercase tracking-[0.14em] text-white/40">
+            <tr>
+              <th className="text-left px-6 py-3 font-medium">Round</th>
+              <th className="text-left px-6 py-3 font-medium">Price</th>
+              <th className="text-left px-6 py-3 font-medium">Tokens</th>
+              <th className="text-left px-6 py-3 font-medium">Raise</th>
+              <th className="text-left px-6 py-3 font-medium">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((r) => (
+              <tr key={r.name} className="border-t border-white/5">
+                <td className="px-6 py-3 font-medium text-white" style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}>{r.name}</td>
+                <td className="px-6 py-3 text-white/80">{r.price}</td>
+                <td className="px-6 py-3 text-white/60">{r.tokens}</td>
+                <td className="px-6 py-3 text-white/80">{r.raise}</td>
+                <td className="px-6 py-3">
+                  <span className={`px-2.5 py-0.5 rounded-full text-xs ${r.open ? "bg-[#00F5D4]/15 text-[#00F5D4]" : "bg-white/10 text-white/60"}`}>
+                    {r.open ? "Open" : "Upcoming"}
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
 function TokenomicsCoin() {
   return (
     <div className="relative my-8 rounded-3xl border border-white/10 bg-gradient-to-b from-[#0E0E0E] to-[#0A0A0A] overflow-hidden">
@@ -397,7 +447,12 @@ export default function Litepaper() {
                     <h2 className="text-3xl md:text-4xl font-serif font-semibold text-white mb-7 leading-tight">
                       {s.title}
                     </h2>
-                    {s.id === "tokenomics" && <TokenomicsCoin />}
+                    {s.id === "tokenomics" && (
+                      <>
+                        <TokenomicsCoin />
+                        <SaftRoundTable />
+                      </>
+                    )}
                     <div className="space-y-5">
                       {s.blocks.map((b, i) => (
                         <BlockRenderer key={i} block={b} />

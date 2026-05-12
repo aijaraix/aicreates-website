@@ -1,22 +1,79 @@
+/**
+ * Client-side mirror of the 5-round SAFT table from the whitepaper.
+ * The server (artifacts/api-server/src/lib/rounds.ts) is authoritative
+ * for price + capacity. This module is used for static rendering only.
+ */
 export interface RoundDef {
   slug: string;
   name: string;
+  /** Per-token price in USD millicents (1 unit = $0.001). */
+  pricePerTokenMillicents: number;
+  /** Display string e.g. "$0.015 per AICA". */
   pricePerToken: string;
+  /** Token allocation for the round. */
+  tokens: string;
+  /** Total raise. */
   totalRaise: string;
-  cap: string;
   open: boolean;
 }
 
 export const ROUNDS: RoundDef[] = [
   {
-    slug: "founders-2026",
-    name: "Founders Round 2026",
-    pricePerToken: "$1.00 per AICA",
-    totalRaise: "$10M target",
-    cap: "$15M hard cap",
+    slug: "strategic-seed",
+    name: "Strategic Seed Round",
+    pricePerTokenMillicents: 15,
+    pricePerToken: "$0.015 per AICA",
+    tokens: "200,000,000 AICA",
+    totalRaise: "$3,000,000",
     open: true,
   },
+  {
+    slug: "private-1",
+    name: "Private Sale 1",
+    pricePerTokenMillicents: 25,
+    pricePerToken: "$0.025 per AICA",
+    tokens: "200,000,000 AICA",
+    totalRaise: "$5,000,000",
+    open: false,
+  },
+  {
+    slug: "private-2",
+    name: "Private Sale 2",
+    pricePerTokenMillicents: 40,
+    pricePerToken: "$0.040 per AICA",
+    tokens: "400,000,000 AICA",
+    totalRaise: "$16,000,000",
+    open: false,
+  },
+  {
+    slug: "infrastructure",
+    name: "Infrastructure Round",
+    pricePerTokenMillicents: 55,
+    pricePerToken: "$0.055 per AICA",
+    tokens: "350,000,000 AICA",
+    totalRaise: "$19,250,000",
+    open: false,
+  },
+  {
+    slug: "community-launchpad",
+    name: "Community + Launchpad",
+    pricePerTokenMillicents: 70,
+    pricePerToken: "$0.070 per AICA",
+    tokens: "100,000,000 AICA",
+    totalRaise: "$7,000,000",
+    open: false,
+  },
 ];
+
+export const ROUND_BY_SLUG: Map<string, RoundDef> = new Map(
+  ROUNDS.map((r) => [r.slug, r]),
+);
+
+export const ROUND_TOTALS = {
+  tokens: "1,250,000,000 AICA",
+  supplyPct: "12.5%",
+  totalRaise: "~$50,250,000",
+};
 
 export const TIER_ROWS = [
   {

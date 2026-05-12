@@ -18,7 +18,7 @@ export const TIERS: readonly TierDefinition[] = [
     slug: "founders",
     displayName: "Founders Circle",
     amountCents: 100_000,
-    tokenAllocation: 1_000,
+    tokenAllocation: 66_666,
     description:
       "Earliest backers of the Agentic Intelligence Layer. Founders Commitment - not a security; refundable until terms are finalized.",
   },
@@ -26,7 +26,7 @@ export const TIERS: readonly TierDefinition[] = [
     slug: "architect",
     displayName: "Architect Circle",
     amountCents: 500_000,
-    tokenAllocation: 5_500,
+    tokenAllocation: 366_666,
     description:
       "Backers shaping Eve OS and the Hybrid Compute Fabric. 10% allocation bonus. Founders Commitment - not a security; refundable until terms are finalized.",
   },
@@ -34,7 +34,7 @@ export const TIERS: readonly TierDefinition[] = [
     slug: "catalyst",
     displayName: "Catalyst Circle",
     amountCents: 2_500_000,
-    tokenAllocation: 30_000,
+    tokenAllocation: 2_000_000,
     description:
       "Strategic backers of the GPU cluster + flagship rollout. 20% allocation bonus. Founders Commitment - not a security; refundable until terms are finalized.",
   },

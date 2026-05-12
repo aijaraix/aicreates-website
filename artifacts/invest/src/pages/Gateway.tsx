@@ -132,8 +132,8 @@ export default function Gateway() {
         title={<>Tell us about your fit.</>}
         subtitle={
           <>
-            We allocate the Founders Round selectively. This short intake lets
-            us route you and prioritize your commitment.
+            We allocate the AICA private sale selectively. This short intake
+            lets us route you and prioritize your commitment.
             {user?.firstName ? ` Thanks, ${user.firstName}.` : ""}
           </>
         }

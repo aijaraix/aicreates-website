@@ -22,7 +22,7 @@ const TIERS: Tier[] = [
     description:
       "Earliest backers of the Agentic Intelligence Layer. Founders Commitment - not a security; refundable until terms are finalized.",
     amountUsd: 1000,
-    tokenAllocation: 1000,
+    tokenAllocation: 66_666,
     order: "1",
   },
   {
@@ -31,7 +31,7 @@ const TIERS: Tier[] = [
     description:
       "Backers shaping Eve OS and the Hybrid Compute Fabric. 10% allocation bonus. Founders Commitment - not a security; refundable until terms are finalized.",
     amountUsd: 5000,
-    tokenAllocation: 5500,
+    tokenAllocation: 366_666,
     order: "2",
   },
   {
@@ -40,7 +40,7 @@ const TIERS: Tier[] = [
     description:
       "Strategic backers of the GPU cluster + flagship rollout. 20% allocation bonus. Founders Commitment - not a security; refundable until terms are finalized.",
     amountUsd: 25000,
-    tokenAllocation: 30000,
+    tokenAllocation: 2_000_000,
     order: "3",
   },
 ];

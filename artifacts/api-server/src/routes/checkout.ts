@@ -4,6 +4,11 @@ import { getUncachableStripeClient } from "../lib/stripeClient";
 import { TIER_BY_SLUG, getAllowedBillingCountries } from "../lib/tiers";
 import { notifyTeam } from "../lib/notify";
 import {
+  ROUND_BY_SLUG,
+  getActiveRound,
+  tokensForAmountCents,
+} from "../lib/rounds";
+import {
   db,
   appUsersTable,
   commitmentsTable,
@@ -13,21 +18,12 @@ import { eq, and, desc } from "drizzle-orm";
 
 const router: IRouter = Router();
 
-const ROUND_LABEL: Record<string, string> = {
-  "founders-2026": "AICA Founders Round 2026",
-};
-
 const MIN_CUSTOM = 100_000; // $1,000
 const MAX_CUSTOM = 1_000_000_000; // $10,000,000
 
-function tokensForAmount(amountCents: number): number {
-  // Base ratio: 1 token per $1 (Founders tier). Larger amounts get a
-  // graduated bonus to mirror the seeded tiers (10% / 20%).
-  const usd = amountCents / 100;
-  let bonus = 0;
-  if (usd >= 25_000) bonus = 0.2;
-  else if (usd >= 5_000) bonus = 0.1;
-  return Math.round(usd * (1 + bonus));
+function tokensForAmount(amountCents: number, roundSlug?: string): number {
+  const round = roundSlug ? ROUND_BY_SLUG.get(roundSlug) : undefined;
+  return tokensForAmountCents(amountCents, round?.pricePerTokenMillicents);
 }
 
 interface CommitBody {
@@ -42,8 +38,8 @@ interface CommitBody {
  */
 router.post("/commitments", requireAuth, async (req, res) => {
   const { tierSlug, customAmountCents, roundSlug } = (req.body ?? {}) as CommitBody;
-  const round = roundSlug ?? "founders-2026";
-  if (!ROUND_LABEL[round]) {
+  const round = roundSlug ?? getActiveRound().slug;
+  if (!ROUND_BY_SLUG.has(round)) {
     res.status(400).json({ error: "Unknown round" });
     return;
   }
@@ -94,7 +90,7 @@ router.post("/commitments", requireAuth, async (req, res) => {
     custom = amountCents;
     resolvedTierSlug = "custom";
     displayName = "Custom commitment";
-    tokenAllocation = tokensForAmount(amountCents);
+    tokenAllocation = tokensForAmount(amountCents, round);
   } else {
     res.status(400).json({ error: "tierSlug or customAmountCents required" });
     return;
@@ -281,7 +277,7 @@ router.post("/checkout", requireAuth, async (req, res) => {
           currency: "usd",
           unit_amount: amountCents,
           product_data: {
-            name: `${ROUND_LABEL[roundSlug] ?? roundSlug} - ${displayName}`,
+            name: `${ROUND_BY_SLUG.get(roundSlug)?.label ?? roundSlug} - ${displayName}`,
             description: `Commitment ${commitmentId} (${tokenAllocation.toLocaleString()} AICA)`,
           },
         },

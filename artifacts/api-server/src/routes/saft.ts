@@ -7,6 +7,7 @@ import {
 } from "@workspace/db";
 import { eq, and } from "drizzle-orm";
 import { renderSaftPdf } from "../lib/saftPdf";
+import { getRoundLabel } from "../lib/rounds";
 
 const router: IRouter = Router();
 
@@ -217,7 +218,7 @@ router.post("/saft/:commitId", requireAuth, async (req, res) => {
   const pdfBytes = await renderSaftPdf({
     commitmentId: commitment.id,
     amountUsd: Math.round(commitment.amountCents / 100),
-    roundLabel: commitment.roundSlug ?? "founders-2026",
+    roundLabel: getRoundLabel(commitment.roundSlug),
     tokenAllocation: commitment.tokenAllocation,
     legalName,
     entityType,
@@ -348,7 +349,7 @@ router.post("/saft/:commitId/preview", requireAuth, async (req, res) => {
   const pdfBytes = await renderSaftPdf({
     commitmentId: commitment.id,
     amountUsd: Math.round(commitment.amountCents / 100),
-    roundLabel: commitment.roundSlug ?? "founders-2026",
+    roundLabel: getRoundLabel(commitment.roundSlug),
     tokenAllocation: commitment.tokenAllocation,
     legalName: safeStr(body.legalName, "(your legal name)"),
     entityType: body.entityType === "entity" ? "entity" : "individual",

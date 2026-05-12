@@ -76,6 +76,18 @@ const GROUPS: Group[] = [
         a: "Total supply is fixed at 10,000,000,000 $AICA.",
       },
       {
+        q: "How much of the supply is being sold in the private sale?",
+        a: "12.5% (1,250,000,000 $AICA) is allocated to the private sale across five SAFT rounds for a $50M target raise. Pricing ladders from $0.015 (Strategic Seed) to $0.070 (Community + Launchpad).",
+      },
+      {
+        q: "What are the five SAFT rounds?",
+        a: "Strategic Seed - $0.015 per AICA, 200M tokens, $3M (open now). Private Sale 1 - $0.025, 200M, $5M. Private Sale 2 - $0.040, 400M, $16M. Infrastructure - $0.055, 350M, $19.25M. Community + Launchpad - $0.070, 100M, $7M. Total: 1.25B AICA, ~$50M raise.",
+      },
+      {
+        q: "When is TGE?",
+        a: "Target token generation event is December 1, 2026. Updates are posted to investors and on the materials page.",
+      },
+      {
         q: "Are private-round tokens vested?",
         a: "Yes. All tokens sold in private rounds are subject to appropriate vesting schedules.",
       },

@@ -14,7 +14,7 @@ import {
   type AckKey,
   type RiskKey,
 } from "@/data/saftFields";
-import { wireInstructionsPdfUrl } from "@/data/rounds";
+import { wireInstructionsPdfUrl, ROUND_BY_SLUG } from "@/data/rounds";
 import VestingPreview from "@/components/VestingPreview";
 import {
   ArrowRight,
@@ -929,27 +929,39 @@ function TokenMath({
   tokenAllocation: number;
   roundSlug: string;
 }) {
-  const round = useQuery({
+  // Resolve the commitment's round price by slug (not the currently
+  // active round) so historical commitments stay accurate when later
+  // rounds open.
+  const commitmentRound = ROUND_BY_SLUG.get(roundSlug);
+  const activeRound = useQuery({
     queryKey: ["rounds", "active"],
+    enabled: !commitmentRound,
     queryFn: () =>
       api<{
-        round: { slug: string; pricePerTokenCents: number; label: string };
+        round: { slug: string; pricePerTokenMillicents: number; label: string };
       }>("/rounds/active"),
   });
-  const pricePerTokenCents = round.data?.round.pricePerTokenCents ?? 10;
-  const baseTokens = Math.floor(amountCents / pricePerTokenCents);
+  const pricePerTokenMillicents =
+    commitmentRound?.pricePerTokenMillicents ??
+    activeRound.data?.round.pricePerTokenMillicents ??
+    15;
+  // Base tokens: amountCents * 10 / millicents (since 1 millicent = 0.1c).
+  const baseTokens = Math.floor((amountCents * 10) / pricePerTokenMillicents);
   const bonus = Math.max(0, tokenAllocation - baseTokens);
   const bonusPct =
     baseTokens > 0 ? Math.round((bonus / baseTokens) * 1000) / 10 : 0;
-  const effectivePriceCents =
-    tokenAllocation > 0 ? amountCents / tokenAllocation : pricePerTokenCents;
+  // Effective price in USD = amountCents / 100 / tokenAllocation.
+  const effectivePriceUsd =
+    tokenAllocation > 0
+      ? amountCents / 100 / tokenAllocation
+      : pricePerTokenMillicents / 1000;
   const dollarsCommitted = (amountCents / 100).toLocaleString("en-US", {
     style: "currency",
     currency: "USD",
     maximumFractionDigits: 0,
   });
-  const pricePerTokenStr = `$${(pricePerTokenCents / 100).toFixed(2)}`;
-  const effectivePriceStr = `$${effectivePriceCents.toFixed(4)}`;
+  const pricePerTokenStr = `$${(pricePerTokenMillicents / 1000).toFixed(3)}`;
+  const effectivePriceStr = `$${effectivePriceUsd.toFixed(4)}`;
   return (
     <div
       className="rounded-xl border border-[#00F5D4]/30 bg-[#00F5D4]/[0.04] p-4"
