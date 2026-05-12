@@ -19,7 +19,7 @@ import RoundsTable from "@/components/RoundsTable";
 import AllocationCalculator from "@/components/AllocationCalculator";
 import VestingCalendar from "@/components/VestingCalendar";
 import DataCenterRequestForm from "@/components/DataCenterRequestForm";
-import { Wordmark, SectionLabel } from "@/components/brand";
+import { SectionLabel } from "@/components/brand";
 import SiteHeader from "@/components/SiteHeader";
 import { computeVesting } from "@/lib/vesting";
 
