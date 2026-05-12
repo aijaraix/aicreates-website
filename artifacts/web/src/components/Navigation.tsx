@@ -21,11 +21,17 @@ const SOLUTION_LINKS = [
   { name: "For Developers", path: "/developers", desc: "Build on the agentic primitives" },
 ];
 
-const NAV_LINKS = [
-  { name: "About", path: "/about" },
-  { name: "Roadmap", path: "/roadmap" },
-  { name: "Litepaper", path: "/litepaper" },
-  { name: "Contact", path: "/contact" },
+const RESOURCE_LINKS = [
+  { name: "Litepaper", path: "/litepaper", desc: "Positioning, architecture, and tokenomics" },
+  { name: "Roadmap", path: "/roadmap", desc: "Phased path from product-market fit to scale" },
+  { name: "FAQ", path: "/faq", desc: "Common questions, answered" },
+  { name: "Press", path: "/press", desc: "Coverage, mentions, and brand assets" },
+];
+
+const COMPANY_LINKS = [
+  { name: "About", path: "/about", desc: "Platform, agents, and Company in a Box" },
+  { name: "Contact", path: "/contact", desc: "Get in touch with the team" },
+  { name: "Invest", path: "/invest", desc: "Investor opportunity and materials" },
 ];
 
 function Wordmark({ size = "md" }: { size?: "sm" | "md" }) {
@@ -130,23 +136,8 @@ export function Navigation() {
 
           <NavDropdown label="Products" items={PRODUCT_LINKS} testId="nav-products" location={location} />
           <NavDropdown label="Solutions" items={SOLUTION_LINKS} testId="nav-solutions" location={location} />
-
-          {NAV_LINKS.map((link) => {
-            const active = location === link.path;
-            return (
-              <Link key={link.path} href={link.path}>
-                <span
-                  className={`relative px-4 py-2 text-sm font-medium transition-colors rounded-full ${
-                    active
-                      ? "text-white bg-white/[0.06]"
-                      : "text-white/60 hover:text-white hover:bg-white/[0.03]"
-                  }`}
-                >
-                  {link.name}
-                </span>
-              </Link>
-            );
-          })}
+          <NavDropdown label="Resources" items={RESOURCE_LINKS} testId="nav-resources" location={location} />
+          <NavDropdown label="Company" items={COMPANY_LINKS} testId="nav-company" location={location} />
         </nav>
 
         <div className="flex items-center gap-3">
@@ -178,6 +169,8 @@ export function Navigation() {
                   {[
                     { header: "Products", items: PRODUCT_LINKS },
                     { header: "Solutions", items: SOLUTION_LINKS },
+                    { header: "Resources", items: RESOURCE_LINKS },
+                    { header: "Company", items: COMPANY_LINKS },
                   ].map((group) => (
                     <div key={group.header}>
                       <div className="px-3 pt-4 pb-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-white/40">
@@ -196,24 +189,6 @@ export function Navigation() {
                       ))}
                     </div>
                   ))}
-
-                  <div className="px-3 pt-4 pb-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-white/40">
-                    More
-                  </div>
-                  {NAV_LINKS.map((link) => {
-                    const active = location === link.path;
-                    return (
-                      <Link key={link.path} href={link.path} onClick={() => setOpen(false)}>
-                        <span
-                          className={`block px-3 py-2.5 rounded-lg text-sm font-medium ${
-                            active ? "text-white bg-white/[0.06]" : "text-white/70"
-                          }`}
-                        >
-                          {link.name}
-                        </span>
-                      </Link>
-                    );
-                  })}
                 </nav>
               </div>
             </SheetContent>
