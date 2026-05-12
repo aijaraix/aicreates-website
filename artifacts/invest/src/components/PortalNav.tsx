@@ -1,6 +1,13 @@
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { useUser, useClerk } from "@clerk/react";
 import { LogOut } from "lucide-react";
+
+const NAV_LINKS = [
+  { href: "/dashboard", label: "Dashboard" },
+  { href: "/invest", label: "Invest" },
+  { href: "/documents", label: "Documents" },
+  { href: "/faq", label: "FAQ" },
+];
 
 export default function PortalNav({
   showAdmin,
@@ -9,8 +16,9 @@ export default function PortalNav({
 }) {
   const { user } = useUser();
   const { signOut } = useClerk();
+  const [location] = useLocation();
   return (
-    <header className="px-6 md:px-10 py-5 flex items-center justify-between border-b border-white/5 relative z-10">
+    <header className="px-6 md:px-10 py-5 flex items-center justify-between border-b border-white/5 relative z-10 gap-4 flex-wrap">
       <Link
         href="/dashboard"
         className="font-semibold tracking-tight text-lg"
@@ -21,6 +29,28 @@ export default function PortalNav({
           Portal
         </span>
       </Link>
+      <nav className="hidden md:flex items-center gap-1 text-sm">
+        {NAV_LINKS.map((l) => {
+          const active =
+            l.href === "/dashboard"
+              ? location === "/dashboard"
+              : location.startsWith(l.href);
+          return (
+            <Link
+              key={l.href}
+              href={l.href}
+              className={`px-3 py-1.5 rounded-full ${
+                active
+                  ? "text-[#00F5D4] bg-[#00F5D4]/10"
+                  : "text-white/60 hover:text-white hover:bg-white/[0.04]"
+              }`}
+              data-testid={`nav-link-${l.href.slice(1)}`}
+            >
+              {l.label}
+            </Link>
+          );
+        })}
+      </nav>
       <div className="flex items-center gap-3 text-sm">
         {showAdmin && (
           <Link

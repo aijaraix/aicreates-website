@@ -25,9 +25,20 @@ interface SaftBody {
   investmentExperience?: string;
   relationshipToCompany?: string;
   acknowledgments?: Record<string, boolean>;
+  riskAcknowledgments?: Record<string, boolean>;
+  walletChain?: string;
   signatureName?: string;
   signatureIntent?: boolean;
 }
+
+const REQUIRED_RISK_KEYS = [
+  "regulatoryRisk",
+  "marketRisk",
+  "technologyRisk",
+  "executionRisk",
+  "concentrationRisk",
+  "noRecoveryRisk",
+];
 
 const REQUIRED_ACK_KEYS = [
   "highRisk",
@@ -143,6 +154,19 @@ router.post("/saft/:commitId", requireAuth, async (req, res) => {
   if (missingAcks.length) {
     errors.push(`acknowledgments required: ${missingAcks.join(", ")}`);
   }
+  const riskAcks = body.riskAcknowledgments ?? {};
+  const missingRisk = REQUIRED_RISK_KEYS.filter((k) => riskAcks[k] !== true);
+  if (missingRisk.length) {
+    errors.push(`riskAcknowledgments required: ${missingRisk.join(", ")}`);
+  }
+  const walletAddressTrimmed = body.walletAddress?.trim() ?? "";
+  if (!walletAddressTrimmed) {
+    errors.push("walletAddress required");
+  }
+  const walletChain = body.walletChain?.trim() || null;
+  if (!walletChain) {
+    errors.push("walletChain required");
+  }
   if (
     signatureName &&
     legalName &&
@@ -226,6 +250,14 @@ router.post("/saft/:commitId", requireAuth, async (req, res) => {
       },
       {},
     ),
+    riskAcknowledgments: REQUIRED_RISK_KEYS.reduce<Record<string, boolean>>(
+      (acc, k) => {
+        acc[k] = true;
+        return acc;
+      },
+      {},
+    ),
+    walletChain,
   };
 
   await db.transaction(async (tx) => {
@@ -265,6 +297,10 @@ router.post("/saft/:commitId", requireAuth, async (req, res) => {
         paymentMethod,
         saftSignedAt: signedAt,
         saftPdfKey: submissionKey,
+        walletAddress: body.walletAddress?.trim() || commitment.walletAddress,
+        accreditationStatus: accreditationCategory,
+        kycStatus:
+          commitment.kycStatus === "none" ? "declared" : commitment.kycStatus,
         updatedAt: new Date(),
       })
       .where(eq(commitmentsTable.id, commitment.id));

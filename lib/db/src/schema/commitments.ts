@@ -43,6 +43,11 @@ export const commitmentsTable = pgTable(
     billingCountry: text("billing_country"),
     saftSignedAt: timestamp("saft_signed_at", { withTimezone: true }),
     saftPdfKey: text("saft_pdf_key"),
+    walletAddress: text("wallet_address"),
+    /** none | declared | pending | verified | rejected */
+    kycStatus: text("kyc_status").notNull().default("none"),
+    /** Self-declared accreditation category (e.g. income, net_worth, entity). */
+    accreditationStatus: text("accreditation_status"),
     fundedAt: timestamp("funded_at", { withTimezone: true }),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()

@@ -26,6 +26,9 @@ import InvestPicker from "@/pages/InvestPicker";
 import Saft from "@/pages/Saft";
 import Checkout from "@/pages/Checkout";
 import Admin from "@/pages/Admin";
+import Gateway from "@/pages/Gateway";
+import Documents from "@/pages/Documents";
+import Faq from "@/pages/Faq";
 import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient({
@@ -183,9 +186,24 @@ function ClerkProviderWithRoutes() {
               <Dashboard />
             </Protected>
           </Route>
+          <Route path="/gateway">
+            <Protected>
+              <Gateway />
+            </Protected>
+          </Route>
           <Route path="/invest">
             <Protected>
               <InvestPicker />
+            </Protected>
+          </Route>
+          <Route path="/documents">
+            <Protected>
+              <Documents />
+            </Protected>
+          </Route>
+          <Route path="/faq">
+            <Protected>
+              <Faq />
             </Protected>
           </Route>
           <Route path="/saft/:commitId">

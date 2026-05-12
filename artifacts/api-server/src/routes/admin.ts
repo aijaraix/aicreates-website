@@ -8,6 +8,7 @@ import {
   saftSubmissionsTable,
 } from "@workspace/db";
 import { desc, eq, sql } from "drizzle-orm";
+import { logAdminAction } from "../lib/audit";
 
 const router: IRouter = Router();
 
@@ -45,6 +46,9 @@ router.get("/admin/commitments", async (req, res) => {
       billingCountry: commitmentsTable.billingCountry,
       roundSlug: commitmentsTable.roundSlug,
       paymentMethod: commitmentsTable.paymentMethod,
+      kycStatus: commitmentsTable.kycStatus,
+      accreditationStatus: commitmentsTable.accreditationStatus,
+      walletAddress: commitmentsTable.walletAddress,
       saftSignedAt: commitmentsTable.saftSignedAt,
       saftSignerName: saftSubmissionsTable.signatureName,
       fundedAt: commitmentsTable.fundedAt,
@@ -201,6 +205,13 @@ async function confirmManual(
       updatedAt: new Date(),
     })
     .where(eq(commitmentsTable.id, c.id));
+  await logAdminAction({
+    actorEmail: req.appUser!.email,
+    action: `confirm_${expectedMethod}`,
+    targetType: "commitment",
+    targetId: c.id,
+    details: { amountCents: c.amountCents, email: c.userId },
+  });
   res.json({ ok: true });
 }
 
@@ -256,6 +267,16 @@ router.post("/admin/commitments/:id/refund", async (req, res) => {
         updatedAt: new Date(),
       })
       .where(eq(commitmentsTable.id, commitment.id));
+    await logAdminAction({
+      actorEmail: req.appUser!.email,
+      action: "refund",
+      targetType: "commitment",
+      targetId: commitment.id,
+      details: {
+        amountCents: commitment.amountCents,
+        paymentIntentId: commitment.stripePaymentIntentId,
+      },
+    });
     res.json({ ok: true });
   } catch (err) {
     req.log?.error({ err, commitmentId: id }, "Refund failed");

@@ -3,8 +3,13 @@ import { requireAuth } from "../lib/auth";
 import { getUncachableStripeClient } from "../lib/stripeClient";
 import { TIER_BY_SLUG, getAllowedBillingCountries } from "../lib/tiers";
 import { notifyTeam } from "../lib/notify";
-import { db, appUsersTable, commitmentsTable } from "@workspace/db";
-import { eq, and } from "drizzle-orm";
+import {
+  db,
+  appUsersTable,
+  commitmentsTable,
+  allocationApplicationsTable,
+} from "@workspace/db";
+import { eq, and, desc } from "drizzle-orm";
 
 const router: IRouter = Router();
 
@@ -40,6 +45,22 @@ router.post("/commitments", requireAuth, async (req, res) => {
   const round = roundSlug ?? "founders-2026";
   if (!ROUND_LABEL[round]) {
     res.status(400).json({ error: "Unknown round" });
+    return;
+  }
+
+  // Gateway gate: every commitment must be preceded by a submitted
+  // AI Allocation Gateway application.
+  const apps = await db
+    .select({ id: allocationApplicationsTable.id })
+    .from(allocationApplicationsTable)
+    .where(eq(allocationApplicationsTable.userId, req.appUser!.id))
+    .orderBy(desc(allocationApplicationsTable.createdAt))
+    .limit(1);
+  if (!apps[0]) {
+    res.status(403).json({
+      error: "AI Allocation Gateway application required",
+      code: "gateway_required",
+    });
     return;
   }
   let amountCents: number;
@@ -148,33 +169,14 @@ router.post("/checkout", requireAuth, async (req, res) => {
     tokenAllocation = c.tokenAllocation;
     roundSlug = c.roundSlug;
   } else if (body.tierSlug) {
-    const tier = TIER_BY_SLUG.get(body.tierSlug);
-    if (!tier) {
-      res.status(400).json({ error: "Unknown tier" });
-      return;
-    }
-    // Legacy path: create + checkout in a single shot.
-    const inserted = await db
-      .insert(commitmentsTable)
-      .values({
-        userId: user.id,
-        amountCents: tier.amountCents,
-        currency: "usd",
-        status: "pending_payment",
-        state: "pending_payment",
-        tierSlug: tier.slug,
-        displayName: tier.displayName,
-        tokenAllocation: tier.tokenAllocation,
-        roundSlug: "founders-2026",
-        paymentMethod,
-      })
-      .returning();
-    commitmentId = inserted[0]!.id;
-    amountCents = tier.amountCents;
-    displayName = tier.displayName;
-    tierSlug = tier.slug;
-    tokenAllocation = tier.tokenAllocation;
-    roundSlug = "founders-2026";
+    // Legacy single-shot tier checkout removed: bypassed gateway intake and
+    // SAFT signature. Clients must POST /commitments first, then /checkout
+    // with commitmentId after the SAFT is signed.
+    res.status(410).json({
+      error: "Legacy checkout path removed. Use POST /commitments then /checkout with commitmentId.",
+      code: "legacy_checkout_removed",
+    });
+    return;
   } else {
     res.status(400).json({ error: "commitmentId or tierSlug required" });
     return;

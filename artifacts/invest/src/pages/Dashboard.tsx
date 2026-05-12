@@ -5,6 +5,7 @@ import { api } from "@/lib/api";
 import { ArrowRight, Calendar, Download, FileText } from "lucide-react";
 import VestingCalendar from "@/components/VestingCalendar";
 import PortalNav from "@/components/PortalNav";
+import StatusTimeline from "@/components/StatusTimeline";
 import { buildIcs } from "@/lib/vesting";
 
 interface VestingPoint {
@@ -58,27 +59,6 @@ function fmtDate(v: string | null) {
     month: "short",
     day: "numeric",
   });
-}
-
-function StateBadge({ state }: { state: string }) {
-  const map: Record<string, string> = {
-    funded: "bg-[#00F5D4]/15 text-[#00F5D4]",
-    succeeded: "bg-[#00F5D4]/15 text-[#00F5D4]",
-    pending_saft: "bg-amber-400/15 text-amber-300",
-    pending_payment: "bg-amber-400/15 text-amber-300",
-    pending: "bg-amber-400/15 text-amber-300",
-    awaiting_wire: "bg-blue-400/15 text-blue-300",
-    failed: "bg-red-500/15 text-red-300",
-    refunded: "bg-white/10 text-white/60 line-through",
-  };
-  return (
-    <span
-      className={`px-2 py-0.5 rounded-full text-xs ${map[state] ?? "bg-white/10 text-white/70"}`}
-      data-testid={`badge-state-${state}`}
-    >
-      {state.replace(/_/g, " ")}
-    </span>
-  );
 }
 
 function downloadIcs(a: Allocation) {
@@ -186,7 +166,6 @@ export default function Dashboard() {
                   <span className="text-white/50 ml-2">
                     {fmt(a.amountCents)}
                   </span>
-                  <StateBadge state={a.state} />
                 </div>
                 {a.state === "pending_saft" ? (
                   <Link
@@ -293,8 +272,6 @@ export default function Dashboard() {
                       </span>
                       <span>•</span>
                       <span>{a.tokenAllocation.toLocaleString()} AICA</span>
-                      <span>•</span>
-                      <StateBadge state={a.state} />
                       {a.paymentMethod && (
                         <>
                           <span>•</span>
@@ -349,7 +326,26 @@ export default function Dashboard() {
                   </div>
                 </div>
 
-                <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
+                <div className="mt-5">
+                  <StatusTimeline
+                    state={{
+                      state: a.state,
+                      saftSignedAt: a.saftSignedAt,
+                      fundedAt: a.fundedAt,
+                      tgeDate: a.vesting?.tgeDate ?? null,
+                      cliffDate: a.vesting?.cliffDate ?? null,
+                      hasUnlocked:
+                        a.isFunded &&
+                        Boolean(
+                          a.vesting?.schedule.some(
+                            (p) => Date.parse(p.date) <= Date.now(),
+                          ),
+                        ),
+                    }}
+                  />
+                </div>
+
+                <div className="mt-5 grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
                   <Mini label="SAFT" value={a.saftSignedAt ? `Signed ${fmtDate(a.saftSignedAt)}` : "Not signed"} />
                   <Mini label="Funded" value={fmtDate(a.fundedAt)} />
                   <Mini

@@ -70,6 +70,48 @@ export const ACK_LIST = [
 
 export type AckKey = (typeof ACK_LIST)[number]["key"];
 
+export const RISK_DISCLOSURES = [
+  {
+    key: "regulatoryRisk",
+    title: "Regulatory risk",
+    body: "AICA's classification under U.S. and foreign securities, commodity, and tax laws may change. Adverse rulings may impair, restrict, or terminate distribution.",
+  },
+  {
+    key: "marketRisk",
+    title: "Market and liquidity risk",
+    body: "There is no established secondary market for AICA. Even after TGE, the token may be illiquid, volatile, or untradable in your jurisdiction.",
+  },
+  {
+    key: "technologyRisk",
+    title: "Technology risk",
+    body: "Smart contracts, custody systems, and the underlying chain may suffer bugs, exploits, or outages that result in partial or total loss of tokens.",
+  },
+  {
+    key: "executionRisk",
+    title: "Execution risk",
+    body: "AICreatesAI may fail to deliver Eve OS, the hybrid compute fabric, or any other planned product. The roadmap may slip materially or be abandoned.",
+  },
+  {
+    key: "concentrationRisk",
+    title: "Concentration and conflicts",
+    body: "Founders, team, and early backers hold a disproportionate token allocation and may have interests that diverge from later holders.",
+  },
+  {
+    key: "noRecoveryRisk",
+    title: "No recovery",
+    body: "AICreatesAI cannot recover tokens sent to incorrect addresses, lost keys, or compromised wallets. You are solely responsible for custody.",
+  },
+] as const;
+
+export type RiskKey = (typeof RISK_DISCLOSURES)[number]["key"];
+
+export const WALLET_CHAINS = [
+  { value: "ethereum", label: "Ethereum", hint: "0x..." },
+  { value: "base", label: "Base", hint: "0x..." },
+  { value: "solana", label: "Solana", hint: "Base58" },
+  { value: "other", label: "Other", hint: "Specify in note" },
+] as const;
+
 export const PAYMENT_METHODS = [
   {
     value: "card",

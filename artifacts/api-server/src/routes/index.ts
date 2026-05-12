@@ -5,9 +5,12 @@ import meRouter from "./me";
 import tiersRouter from "./tiers";
 import checkoutRouter from "./checkout";
 import adminRouter from "./admin";
+import adminExtrasRouter from "./adminExtras";
 import saftRouter from "./saft";
 import dataCenterRouter from "./dataCenter";
 import wireInstructionsRouter from "./wireInstructions";
+import roundsRouter from "./rounds";
+import gatewayRouter from "./gateway";
 
 const router: IRouter = Router();
 
@@ -17,8 +20,11 @@ router.use(meRouter);
 router.use(tiersRouter);
 router.use(checkoutRouter);
 router.use(adminRouter);
+router.use(adminExtrasRouter);
 router.use(saftRouter);
 router.use(dataCenterRouter);
 router.use(wireInstructionsRouter);
+router.use(roundsRouter);
+router.use(gatewayRouter);
 
 export default router;

@@ -7,9 +7,13 @@ import {
   ACCREDITATION_OPTIONS,
   ACK_LIST,
   PAYMENT_METHODS,
+  RISK_DISCLOSURES,
+  WALLET_CHAINS,
   type AckKey,
+  type RiskKey,
 } from "@/data/saftFields";
 import { wireInstructionsPdfUrl } from "@/data/rounds";
+import VestingPreview from "@/components/VestingPreview";
 import {
   ArrowLeft,
   ArrowRight,
@@ -49,11 +53,13 @@ interface FormState {
   dobOrFormation: string;
   taxId: string;
   walletAddress: string;
+  walletChain: string;
   paymentMethod: "card" | "ach" | "wire" | "crypto" | "";
   accreditationCategory: string;
   investmentExperience: string;
   relationshipToCompany: string;
   acknowledgments: Record<AckKey, boolean>;
+  riskAcknowledgments: Record<RiskKey, boolean>;
   signatureName: string;
   signatureIntent: boolean;
 }
@@ -62,6 +68,8 @@ const STEPS = [
   "Identity",
   "Transaction",
   "Questionnaire",
+  "Risk Disclosure",
+  "Wallet Mapping",
   "Acknowledgments",
   "Signature",
   "Done",
@@ -100,6 +108,17 @@ export default function Saft() {
       ),
     [],
   );
+  const initialRisks = useMemo(
+    () =>
+      RISK_DISCLOSURES.reduce<Record<RiskKey, boolean>>(
+        (acc, r) => {
+          acc[r.key] = false;
+          return acc;
+        },
+        {} as Record<RiskKey, boolean>,
+      ),
+    [],
+  );
 
   const [form, setForm] = useState<FormState>({
     legalName: "",
@@ -111,11 +130,13 @@ export default function Saft() {
     dobOrFormation: "",
     taxId: "",
     walletAddress: "",
+    walletChain: "ethereum",
     paymentMethod: "",
     accreditationCategory: "",
     investmentExperience: "",
     relationshipToCompany: "",
     acknowledgments: initialAcks,
+    riskAcknowledgments: initialRisks,
     signatureName: "",
     signatureIntent: false,
   });
@@ -169,6 +190,10 @@ export default function Saft() {
   }
 
   const allAcks = ACK_LIST.every((a) => form.acknowledgments[a.key]);
+  const allRisks = RISK_DISCLOSURES.every(
+    (r) => form.riskAcknowledgments[r.key],
+  );
+  const validWallet = form.walletAddress.trim().length >= 8;
   const sigMatches =
     form.signatureName.trim().toLowerCase() ===
       form.legalName.trim().toLowerCase() && form.signatureName.trim() !== "";
@@ -188,8 +213,12 @@ export default function Saft() {
       case 2:
         return Boolean(form.accreditationCategory);
       case 3:
-        return allAcks;
+        return allRisks;
       case 4:
+        return validWallet && Boolean(form.walletChain);
+      case 5:
+        return allAcks;
+      case 6:
         return sigMatches && form.signatureIntent;
       default:
         return true;
@@ -441,6 +470,107 @@ export default function Saft() {
           )}
 
           {step === 3 && (
+            <div className="space-y-3" data-testid="saft-step-risk">
+              <H title="Risk disclosure" />
+              <p className="text-sm text-white/60">
+                Acknowledge each material risk before continuing. These
+                mirror the risk factors in the SAFT and on /faq.
+              </p>
+              {RISK_DISCLOSURES.map((r) => (
+                <label
+                  key={r.key}
+                  className={`flex items-start gap-3 rounded-xl border p-3 cursor-pointer ${
+                    form.riskAcknowledgments[r.key]
+                      ? "border-[#00F5D4]/40 bg-[#00F5D4]/5"
+                      : "border-white/10 bg-black/30 hover:border-white/20"
+                  }`}
+                  data-testid={`check-risk-${r.key}`}
+                >
+                  <input
+                    type="checkbox"
+                    checked={form.riskAcknowledgments[r.key]}
+                    onChange={(e) =>
+                      setForm({
+                        ...form,
+                        riskAcknowledgments: {
+                          ...form.riskAcknowledgments,
+                          [r.key]: e.target.checked,
+                        },
+                      })
+                    }
+                    className="mt-1 accent-[#00F5D4]"
+                  />
+                  <div>
+                    <div className="text-sm font-medium">{r.title}</div>
+                    <div className="text-xs text-white/60 mt-0.5">
+                      {r.body}
+                    </div>
+                  </div>
+                </label>
+              ))}
+            </div>
+          )}
+
+          {step === 4 && (
+            <div className="space-y-5" data-testid="saft-step-wallet">
+              <H title="Wallet mapping" />
+              <p className="text-sm text-white/60">
+                Provide the wallet address that will receive your AICA
+                allocation at TGE. You can update this any time before
+                TGE by contacting the team.
+              </p>
+              <div>
+                <label className="text-[11px] uppercase tracking-[0.14em] text-white/50">
+                  Chain
+                </label>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-2">
+                  {WALLET_CHAINS.map((ch) => (
+                    <label
+                      key={ch.value}
+                      className={`rounded-xl border p-3 cursor-pointer text-center ${
+                        form.walletChain === ch.value
+                          ? "border-[#00F5D4]/50 bg-[#00F5D4]/5"
+                          : "border-white/10 bg-black/30 hover:border-white/20"
+                      }`}
+                      data-testid={`radio-chain-${ch.value}`}
+                    >
+                      <input
+                        type="radio"
+                        className="hidden"
+                        checked={form.walletChain === ch.value}
+                        onChange={() =>
+                          setForm({ ...form, walletChain: ch.value })
+                        }
+                      />
+                      <div className="text-sm font-medium">{ch.label}</div>
+                      <div className="text-[10px] text-white/40 mt-0.5">
+                        {ch.hint}
+                      </div>
+                    </label>
+                  ))}
+                </div>
+              </div>
+              <Field
+                label="Wallet address"
+                value={form.walletAddress}
+                onChange={(v) => setForm({ ...form, walletAddress: v })}
+                placeholder="0x... or chain-specific address"
+                testId="input-wallet-address"
+              />
+              <p className="text-[11px] text-white/40">
+                Triple-check this address. Tokens sent to the wrong
+                address cannot be recovered.
+              </p>
+              <div>
+                <div className="text-[11px] uppercase tracking-[0.14em] text-white/50 mb-2">
+                  Vesting preview for this commitment
+                </div>
+                <VestingPreview totalTokens={c.tokenAllocation} compact />
+              </div>
+            </div>
+          )}
+
+          {step === 5 && (
             <div className="space-y-3" data-testid="saft-step-acknowledgments">
               <H title="Acknowledgments (Exhibits A, C, D)" />
               {ACK_LIST.map((a) => (
@@ -473,7 +603,7 @@ export default function Saft() {
             </div>
           )}
 
-          {step === 4 && (
+          {step === 6 && (
             <div className="space-y-4" data-testid="saft-step-signature">
               <H title="Signature" />
               <p className="text-sm text-white/60">
@@ -527,7 +657,7 @@ export default function Saft() {
             </div>
           )}
 
-          {step === 5 && (
+          {step === 7 && (
             <div className="text-center py-8" data-testid="saft-step-done">
               <div className="w-14 h-14 rounded-full bg-[#00F5D4]/15 flex items-center justify-center mx-auto">
                 <Check className="w-7 h-7 text-[#00F5D4]" />
@@ -613,7 +743,7 @@ export default function Saft() {
               >
                 Back
               </button>
-              {step < 4 ? (
+              {step < STEPS.length - 2 ? (
                 <button
                   type="button"
                   disabled={!canNext}

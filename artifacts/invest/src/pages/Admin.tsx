@@ -2,11 +2,13 @@ import { Link, Redirect } from "wouter";
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
+import PortalNav from "@/components/PortalNav";
+import RoundContext from "@/components/RoundContext";
 import {
-  ArrowLeft,
   CheckCircle2,
   Download,
   ExternalLink,
+  Loader2,
   RefreshCw,
 } from "lucide-react";
 
@@ -44,6 +46,9 @@ interface AdminCommitment {
   stripePaymentIntentId: string | null;
   stripeCustomerId: string | null;
   stripeCheckoutSessionId: string | null;
+  kycStatus?: string | null;
+  accreditationStatus?: string | null;
+  walletAddress?: string | null;
 }
 
 interface MeResponse {
@@ -60,6 +65,40 @@ interface Stats {
   total_tokens_allocated?: string | number;
 }
 
+interface Application {
+  id: string;
+  userId: string;
+  email: string | null;
+  fullName: string | null;
+  status: string;
+  accreditation: string | null;
+  country: string | null;
+  intendedAmountCents: number | null;
+  persona: string | null;
+  thesisFit: string | null;
+  referralSource: string | null;
+  createdAt: string;
+  reviewedAt: string | null;
+  reviewedBy: string | null;
+}
+
+interface AuditEntry {
+  id: string;
+  actorEmail: string;
+  action: string;
+  targetType: string | null;
+  targetId: string | null;
+  details: Record<string, unknown>;
+  createdAt: string;
+}
+
+interface Note {
+  id: string;
+  authorEmail: string;
+  body: string;
+  createdAt: string;
+}
+
 const STATUS_FILTERS = [
   { label: "All", value: "" },
   { label: "Pending SAFT", value: "pending_saft" },
@@ -69,6 +108,9 @@ const STATUS_FILTERS = [
   { label: "Funded", value: "succeeded" },
   { label: "Refunded", value: "refunded" },
 ];
+
+const KYC_OPTIONS = ["none", "declared", "pending", "verified", "rejected"];
+const APP_STATUSES = ["submitted", "approved", "needs_review", "rejected"];
 
 function fmt(cents: number) {
   return new Intl.NumberFormat("en-US", {
@@ -89,17 +131,26 @@ function fmtDate(v: string | null) {
   });
 }
 
+function fmtDateTime(v: string | null) {
+  if (!v) return "—";
+  const ms = Date.parse(v);
+  if (Number.isNaN(ms)) return "—";
+  return new Date(ms).toLocaleString();
+}
+
 export default function Admin() {
   const [statusFilter, setStatusFilter] = useState("");
+  const [notesUserId, setNotesUserId] = useState<string | null>(null);
   const qc = useQueryClient();
   const me = useQuery({
     queryKey: ["me"],
     queryFn: () => api<MeResponse>("/me"),
   });
+  const isAdmin = me.data?.user.role === "admin";
   const users = useQuery({
     queryKey: ["admin", "users"],
     queryFn: () => api<{ users: AppUser[] }>("/admin/users"),
-    enabled: me.data?.user.role === "admin",
+    enabled: isAdmin,
   });
   const commitments = useQuery({
     queryKey: ["admin", "commitments", statusFilter],
@@ -109,41 +160,64 @@ export default function Admin() {
           ? `/admin/commitments?status=${statusFilter}`
           : "/admin/commitments",
       ),
-    enabled: me.data?.user.role === "admin",
+    enabled: isAdmin,
   });
   const stats = useQuery({
     queryKey: ["admin", "stats"],
     queryFn: () => api<{ stats: Stats }>("/admin/stats"),
-    enabled: me.data?.user.role === "admin",
+    enabled: isAdmin,
+  });
+  const apps = useQuery({
+    queryKey: ["admin", "applications"],
+    queryFn: () => api<{ applications: Application[] }>("/admin/applications"),
+    enabled: isAdmin,
+  });
+  const audit = useQuery({
+    queryKey: ["admin", "audit-log"],
+    queryFn: () => api<{ entries: AuditEntry[] }>("/admin/audit-log"),
+    enabled: isAdmin,
   });
 
   const refund = useMutation({
     mutationFn: (id: string) =>
-      api<{ ok: boolean }>(`/admin/commitments/${id}/refund`, {
-        method: "POST",
-        body: {},
-      }),
+      api<{ ok: boolean }>(`/admin/commitments/${id}/refund`, { body: {} }),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["admin"] }),
     onError: (err) => alert(`Refund failed: ${(err as Error).message}`),
   });
-
   const confirmWire = useMutation({
     mutationFn: (id: string) =>
-      api<{ ok: boolean }>(`/admin/commitments/${id}/confirm-wire`, {
-        method: "POST",
-        body: {},
-      }),
+      api<{ ok: boolean }>(`/admin/commitments/${id}/confirm-wire`, { body: {} }),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["admin"] }),
     onError: (err) => alert(`Confirm wire failed: ${(err as Error).message}`),
   });
   const confirmCrypto = useMutation({
     mutationFn: (id: string) =>
-      api<{ ok: boolean }>(`/admin/commitments/${id}/confirm-crypto`, {
-        method: "POST",
-        body: {},
-      }),
+      api<{ ok: boolean }>(`/admin/commitments/${id}/confirm-crypto`, { body: {} }),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["admin"] }),
     onError: (err) => alert(`Confirm crypto failed: ${(err as Error).message}`),
+  });
+  const updateKyc = useMutation({
+    mutationFn: ({
+      id,
+      kycStatus,
+    }: {
+      id: string;
+      kycStatus: string;
+    }) =>
+      api<{ commitment: AdminCommitment }>(
+        `/admin/commitments/${id}/kyc`,
+        { method: "PATCH", body: { kycStatus } },
+      ),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["admin"] }),
+    onError: (err) => alert(`KYC update failed: ${(err as Error).message}`),
+  });
+  const reviewApp = useMutation({
+    mutationFn: ({ id, status }: { id: string; status: string }) =>
+      api<{ application: Application }>(`/admin/applications/${id}/review`, {
+        body: { status },
+      }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["admin"] }),
+    onError: (err) => alert(`Review failed: ${(err as Error).message}`),
   });
 
   if (me.isLoading) {
@@ -170,30 +244,25 @@ export default function Admin() {
 
   return (
     <div className="min-h-[100dvh] bg-[#0A0A0A] text-white">
-      <header className="px-6 md:px-10 py-5 flex items-center justify-between border-b border-white/5">
-        <Link
-          href="/dashboard"
-          className="inline-flex items-center gap-2 text-sm text-white/60 hover:text-white"
-        >
-          <ArrowLeft className="w-4 h-4" /> Back to dashboard
-        </Link>
-        <span className="text-xs uppercase tracking-[0.2em] text-[#00F5D4]">
-          Admin
-        </span>
-      </header>
+      <PortalNav showAdmin={isAdmin} />
 
-      <main className="mx-auto max-w-7xl px-6 py-10 md:py-16">
+      <main className="mx-auto max-w-7xl px-6 py-10 md:py-16 space-y-10">
         <h1
-          className="text-3xl sm:text-4xl font-semibold tracking-tight mb-8"
+          className="text-3xl sm:text-4xl font-semibold tracking-tight"
           style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}
         >
           Admin overview
         </h1>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+        <RoundContext />
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <Card label="Total raised" value={fmt(totalCents)} accent />
           <Card label="Tokens allocated" value={totalTokens.toLocaleString()} />
-          <Card label="Investors" value={String(users.data?.users.length ?? 0)} />
+          <Card
+            label="Investors"
+            value={String(users.data?.users.length ?? 0)}
+          />
           <Card
             label="Funded / Pending / Wire / Crypto / Refunded"
             value={`${s.succeeded_count ?? 0} / ${s.pending_count ?? 0} / ${s.awaiting_wire_count ?? 0} / ${s.awaiting_crypto_count ?? 0} / ${s.refunded_count ?? 0}`}
@@ -201,7 +270,108 @@ export default function Admin() {
           />
         </div>
 
-        <section className="rounded-2xl border border-white/10 bg-white/[0.02] mb-10 overflow-hidden">
+        {/* Applications */}
+        <section
+          className="rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden"
+          data-testid="section-applications"
+        >
+          <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between">
+            <h2 className="font-medium">
+              Allocation Gateway applications
+              <span className="ml-2 text-xs text-white/40">
+                ({apps.data?.applications.length ?? 0})
+              </span>
+            </h2>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="text-xs uppercase tracking-[0.14em] text-white/40">
+                <tr>
+                  <th className="text-left px-4 py-3 font-medium">Date</th>
+                  <th className="text-left px-4 py-3 font-medium">Investor</th>
+                  <th className="text-left px-4 py-3 font-medium">Geo</th>
+                  <th className="text-left px-4 py-3 font-medium">Persona</th>
+                  <th className="text-left px-4 py-3 font-medium">Accred</th>
+                  <th className="text-left px-4 py-3 font-medium">Intended</th>
+                  <th className="text-left px-4 py-3 font-medium">Thesis</th>
+                  <th className="text-right px-4 py-3 font-medium">Review</th>
+                </tr>
+              </thead>
+              <tbody>
+                {(apps.data?.applications ?? []).map((a) => (
+                  <tr
+                    key={a.id}
+                    className="border-t border-white/5"
+                    data-testid={`row-application-${a.id}`}
+                  >
+                    <td className="px-4 py-3 text-white/70">
+                      {fmtDate(a.createdAt)}
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="font-medium">{a.fullName ?? "—"}</div>
+                      <div className="text-xs text-white/50">{a.email}</div>
+                    </td>
+                    <td className="px-4 py-3 text-xs uppercase tracking-wider text-white/60">
+                      {a.country ?? "—"}
+                    </td>
+                    <td className="px-4 py-3 text-xs uppercase tracking-wider text-white/60">
+                      {a.persona ?? "—"}
+                    </td>
+                    <td className="px-4 py-3 text-xs text-white/60">
+                      {a.accreditation ?? "—"}
+                    </td>
+                    <td className="px-4 py-3 font-medium">
+                      {a.intendedAmountCents
+                        ? fmt(a.intendedAmountCents)
+                        : "—"}
+                    </td>
+                    <td className="px-4 py-3 text-xs text-white/60 max-w-[280px]">
+                      <div className="line-clamp-2">{a.thesisFit ?? "—"}</div>
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      <select
+                        value={a.status}
+                        onChange={(e) =>
+                          reviewApp.mutate({
+                            id: a.id,
+                            status: e.target.value,
+                          })
+                        }
+                        disabled={reviewApp.isPending}
+                        className="bg-black/40 border border-white/10 rounded-full px-2 py-1 text-xs"
+                        data-testid={`select-app-status-${a.id}`}
+                      >
+                        {APP_STATUSES.map((st) => (
+                          <option key={st} value={st}>
+                            {st.replace(/_/g, " ")}
+                          </option>
+                        ))}
+                      </select>
+                      {a.reviewedBy && (
+                        <div className="text-[10px] text-white/40 mt-1">
+                          by {a.reviewedBy}
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+                {(apps.data?.applications ?? []).length === 0 && (
+                  <tr>
+                    <td
+                      colSpan={8}
+                      className="px-4 py-6 text-center text-white/40"
+                    >
+                      No applications yet.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        {/* Commitments */}
+        <section className="rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden">
           <div className="px-6 py-4 border-b border-white/5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <h2 className="font-medium">Commitments</h2>
             <div className="flex items-center gap-2 flex-wrap">
@@ -241,42 +411,58 @@ export default function Admin() {
               <table className="w-full text-sm">
                 <thead className="text-xs uppercase tracking-[0.14em] text-white/40">
                   <tr>
-                    <th className="text-left px-4 py-3 font-medium">Date</th>
-                    <th className="text-left px-4 py-3 font-medium">Investor</th>
-                    <th className="text-left px-4 py-3 font-medium">Tier</th>
-                    <th className="text-left px-4 py-3 font-medium">Amount</th>
-                    <th className="text-left px-4 py-3 font-medium">State</th>
-                    <th className="text-left px-4 py-3 font-medium">Method</th>
-                    <th className="text-left px-4 py-3 font-medium">SAFT</th>
-                    <th className="text-left px-4 py-3 font-medium">Funded</th>
-                    <th className="text-right px-4 py-3 font-medium">Actions</th>
+                    <th className="text-left px-3 py-3 font-medium">Date</th>
+                    <th className="text-left px-3 py-3 font-medium">Investor</th>
+                    <th className="text-left px-3 py-3 font-medium">Tier</th>
+                    <th className="text-left px-3 py-3 font-medium">Amount</th>
+                    <th className="text-left px-3 py-3 font-medium">State</th>
+                    <th className="text-left px-3 py-3 font-medium">KYC</th>
+                    <th className="text-left px-3 py-3 font-medium">Accred</th>
+                    <th className="text-left px-3 py-3 font-medium">Wallet</th>
+                    <th className="text-left px-3 py-3 font-medium">SAFT</th>
+                    <th className="text-right px-3 py-3 font-medium">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {commitments.data.commitments.map((c) => (
                     <tr key={c.id} className="border-t border-white/5">
-                      <td className="px-4 py-3 text-white/70">
+                      <td className="px-3 py-3 text-white/70 text-xs">
                         {fmtDate(c.createdAt)}
                       </td>
-                      <td className="px-4 py-3">
+                      <td className="px-3 py-3">
                         <div className="font-medium">{c.fullName ?? "—"}</div>
                         <div className="text-xs text-white/50">{c.email}</div>
+                        {c.userId && (
+                          <button
+                            onClick={() =>
+                              setNotesUserId(
+                                notesUserId === c.userId ? null : c.userId,
+                              )
+                            }
+                            className="text-[10px] text-[#00F5D4]/70 hover:text-[#00F5D4] mt-1"
+                            data-testid={`button-toggle-notes-${c.id}`}
+                          >
+                            {notesUserId === c.userId
+                              ? "Hide notes"
+                              : "Notes →"}
+                          </button>
+                        )}
                       </td>
-                      <td className="px-4 py-3">
-                        <div>{c.displayName}</div>
+                      <td className="px-3 py-3">
+                        <div className="text-xs">{c.displayName}</div>
                         <div className="text-[10px] text-white/40 uppercase tracking-wider">
                           {c.roundSlug}
                         </div>
                       </td>
-                      <td className="px-4 py-3 font-medium">
+                      <td className="px-3 py-3 font-medium">
                         {fmt(c.amountCents)}
                         <div className="text-[10px] text-white/40">
                           {c.tokenAllocation.toLocaleString()} AICA
                         </div>
                       </td>
-                      <td className="px-4 py-3">
+                      <td className="px-3 py-3">
                         <span
-                          className={`px-2 py-0.5 rounded-full text-xs ${
+                          className={`px-2 py-0.5 rounded-full text-[10px] ${
                             c.state === "funded" || c.status === "succeeded"
                               ? "bg-[#00F5D4]/15 text-[#00F5D4]"
                               : c.state === "awaiting_wire" ||
@@ -292,27 +478,50 @@ export default function Admin() {
                           {c.state.replace(/_/g, " ")}
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-xs uppercase tracking-wider text-white/60">
-                        {c.paymentMethod ?? "—"}
+                      <td className="px-3 py-3">
+                        <select
+                          value={c.kycStatus ?? "none"}
+                          onChange={(e) =>
+                            updateKyc.mutate({
+                              id: c.id,
+                              kycStatus: e.target.value,
+                            })
+                          }
+                          disabled={updateKyc.isPending}
+                          className="bg-black/40 border border-white/10 rounded-full px-2 py-1 text-[10px]"
+                          data-testid={`select-kyc-${c.id}`}
+                        >
+                          {KYC_OPTIONS.map((o) => (
+                            <option key={o} value={o}>
+                              {o}
+                            </option>
+                          ))}
+                        </select>
                       </td>
-                      <td className="px-4 py-3">
+                      <td className="px-3 py-3 text-[10px] text-white/60">
+                        {c.accreditationStatus ?? "—"}
+                      </td>
+                      <td
+                        className="px-3 py-3 text-[10px] text-white/60 max-w-[120px] truncate font-mono"
+                        title={c.walletAddress ?? undefined}
+                      >
+                        {c.walletAddress ?? "—"}
+                      </td>
+                      <td className="px-3 py-3">
                         {c.saftSignedAt ? (
                           <a
                             href={`/api/saft/${c.id}/pdf`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-[#00F5D4] text-xs hover:underline"
+                            className="text-[#00F5D4] text-[11px] hover:underline"
                           >
                             {c.saftSignerName ?? "View"}
                           </a>
                         ) : (
-                          <span className="text-white/30 text-xs">—</span>
+                          <span className="text-white/30 text-[11px]">—</span>
                         )}
                       </td>
-                      <td className="px-4 py-3 text-white/60 text-xs">
-                        {fmtDate(c.fundedAt)}
-                      </td>
-                      <td className="px-4 py-3 text-right">
+                      <td className="px-3 py-3 text-right whitespace-nowrap">
                         {c.state === "awaiting_wire" && (
                           <button
                             onClick={() => {
@@ -325,10 +534,10 @@ export default function Admin() {
                               }
                             }}
                             disabled={confirmWire.isPending}
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-full border border-[#00F5D4]/40 text-[#00F5D4] hover:bg-[#00F5D4]/10 disabled:opacity-50"
+                            className="inline-flex items-center gap-1 px-2 py-1 text-[10px] rounded-full border border-[#00F5D4]/40 text-[#00F5D4] hover:bg-[#00F5D4]/10 disabled:opacity-50"
                             data-testid={`button-confirm-wire-${c.id}`}
                           >
-                            <CheckCircle2 className="w-3 h-3" /> Mark received
+                            <CheckCircle2 className="w-3 h-3" /> Wire
                           </button>
                         )}
                         {c.state === "awaiting_crypto" && (
@@ -343,10 +552,10 @@ export default function Admin() {
                               }
                             }}
                             disabled={confirmCrypto.isPending}
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-full border border-[#00F5D4]/40 text-[#00F5D4] hover:bg-[#00F5D4]/10 disabled:opacity-50"
+                            className="inline-flex items-center gap-1 px-2 py-1 text-[10px] rounded-full border border-[#00F5D4]/40 text-[#00F5D4] hover:bg-[#00F5D4]/10 disabled:opacity-50"
                             data-testid={`button-confirm-crypto-${c.id}`}
                           >
-                            <CheckCircle2 className="w-3 h-3" /> Mark received
+                            <CheckCircle2 className="w-3 h-3" /> Crypto
                           </button>
                         )}
                         {(c.state === "funded" || c.status === "succeeded") &&
@@ -362,7 +571,7 @@ export default function Admin() {
                                 }
                               }}
                               disabled={refund.isPending}
-                              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-full border border-red-400/40 text-red-300 hover:bg-red-500/10 disabled:opacity-50 ml-2"
+                              className="inline-flex items-center gap-1 px-2 py-1 text-[10px] rounded-full border border-red-400/40 text-red-300 hover:bg-red-500/10 disabled:opacity-50 ml-1"
                               data-testid={`button-refund-${c.id}`}
                             >
                               <RefreshCw className="w-3 h-3" /> Refund
@@ -373,10 +582,10 @@ export default function Admin() {
                             href={`https://dashboard.stripe.com/payments/${c.stripePaymentIntentId}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="ml-2 inline-flex items-center text-white/40 hover:text-white"
+                            className="ml-1 inline-flex items-center text-white/40 hover:text-white"
                             title="Stripe payment"
                           >
-                            <ExternalLink className="w-3.5 h-3.5" />
+                            <ExternalLink className="w-3 h-3" />
                           </a>
                         )}
                       </td>
@@ -388,6 +597,70 @@ export default function Admin() {
           )}
         </section>
 
+        {notesUserId && (
+          <NotesPanel
+            userId={notesUserId}
+            onClose={() => setNotesUserId(null)}
+          />
+        )}
+
+        {/* Audit log */}
+        <section
+          className="rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden"
+          data-testid="section-audit-log"
+        >
+          <div className="px-6 py-4 border-b border-white/5">
+            <h2 className="font-medium">Audit log</h2>
+          </div>
+          <div className="overflow-x-auto max-h-[420px] overflow-y-auto">
+            <table className="w-full text-sm">
+              <thead className="text-xs uppercase tracking-[0.14em] text-white/40 sticky top-0 bg-[#0A0A0A]">
+                <tr>
+                  <th className="text-left px-4 py-3 font-medium">When</th>
+                  <th className="text-left px-4 py-3 font-medium">Actor</th>
+                  <th className="text-left px-4 py-3 font-medium">Action</th>
+                  <th className="text-left px-4 py-3 font-medium">Target</th>
+                  <th className="text-left px-4 py-3 font-medium">Details</th>
+                </tr>
+              </thead>
+              <tbody>
+                {(audit.data?.entries ?? []).map((e) => (
+                  <tr key={e.id} className="border-t border-white/5">
+                    <td className="px-4 py-2 text-xs text-white/60 whitespace-nowrap">
+                      {fmtDateTime(e.createdAt)}
+                    </td>
+                    <td className="px-4 py-2 text-xs">{e.actorEmail}</td>
+                    <td className="px-4 py-2 text-xs">
+                      <span className="px-2 py-0.5 rounded-full bg-[#00F5D4]/10 text-[#00F5D4]">
+                        {e.action}
+                      </span>
+                    </td>
+                    <td className="px-4 py-2 text-[11px] font-mono text-white/60">
+                      {e.targetType}/{e.targetId?.slice(0, 8) ?? "—"}
+                    </td>
+                    <td className="px-4 py-2 text-[11px] text-white/50 font-mono">
+                      {Object.keys(e.details ?? {}).length
+                        ? JSON.stringify(e.details).slice(0, 120)
+                        : "—"}
+                    </td>
+                  </tr>
+                ))}
+                {(audit.data?.entries ?? []).length === 0 && (
+                  <tr>
+                    <td
+                      colSpan={5}
+                      className="px-4 py-6 text-center text-white/40"
+                    >
+                      No audit entries yet.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        {/* Investors */}
         <section className="rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden">
           <div className="px-6 py-4 border-b border-white/5">
             <h2 className="font-medium">Investors</h2>
@@ -421,6 +694,95 @@ export default function Admin() {
         </section>
       </main>
     </div>
+  );
+}
+
+function NotesPanel({
+  userId,
+  onClose,
+}: {
+  userId: string;
+  onClose: () => void;
+}) {
+  const qc = useQueryClient();
+  const [body, setBody] = useState("");
+  const notes = useQuery({
+    queryKey: ["admin", "notes", userId],
+    queryFn: () => api<{ notes: Note[] }>(`/admin/notes/${userId}`),
+  });
+  const create = useMutation({
+    mutationFn: () =>
+      api<{ note: Note }>(`/admin/notes`, {
+        body: { targetUserId: userId, body },
+      }),
+    onSuccess: () => {
+      setBody("");
+      qc.invalidateQueries({ queryKey: ["admin", "notes", userId] });
+      qc.invalidateQueries({ queryKey: ["admin", "audit-log"] });
+    },
+    onError: (err) => alert(`Note failed: ${(err as Error).message}`),
+  });
+  return (
+    <section
+      className="rounded-2xl border border-[#00F5D4]/30 bg-[#00F5D4]/5 p-6"
+      data-testid={`notes-panel-${userId}`}
+    >
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="font-medium">
+          Notes for{" "}
+          <span className="font-mono text-xs text-white/60">
+            {userId.slice(0, 12)}...
+          </span>
+        </h3>
+        <button
+          onClick={onClose}
+          className="text-xs text-white/60 hover:text-white"
+        >
+          Close
+        </button>
+      </div>
+      <div className="space-y-3 mb-4">
+        <textarea
+          value={body}
+          onChange={(e) => setBody(e.target.value)}
+          rows={3}
+          maxLength={4000}
+          placeholder="Add a note (visible to all admins)..."
+          className="w-full rounded-xl border border-white/10 bg-black/30 p-3 text-sm outline-none focus:border-[#00F5D4]/40"
+          data-testid="textarea-new-note"
+        />
+        <button
+          onClick={() => create.mutate()}
+          disabled={!body.trim() || create.isPending}
+          className="inline-flex items-center px-4 h-9 rounded-full bg-[#00F5D4] text-black text-sm font-medium hover:bg-[#00F5D4]/90 disabled:opacity-40"
+          data-testid="button-add-note"
+        >
+          {create.isPending ? (
+            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+          ) : (
+            "Add note"
+          )}
+        </button>
+      </div>
+      <div className="space-y-2">
+        {(notes.data?.notes ?? []).map((n) => (
+          <div
+            key={n.id}
+            className="rounded-xl border border-white/10 bg-black/30 p-3"
+            data-testid={`note-${n.id}`}
+          >
+            <div className="text-xs text-white/40 flex justify-between">
+              <span>{n.authorEmail}</span>
+              <span>{fmtDateTime(n.createdAt)}</span>
+            </div>
+            <div className="mt-1 text-sm whitespace-pre-wrap">{n.body}</div>
+          </div>
+        ))}
+        {(notes.data?.notes ?? []).length === 0 && (
+          <div className="text-xs text-white/40">No notes yet.</div>
+        )}
+      </div>
+    </section>
   );
 }
 
