@@ -11,9 +11,9 @@ export default function WhitepaperBook({ className = "", testId }: Props) {
   const idCover = `wpCover-${uid}`;
   const idSpine = `wpSpine-${uid}`;
   const idPages = `wpPages-${uid}`;
-  const idShadow = `wpShadow-${uid}`;
   const idGloss = `wpGloss-${uid}`;
   const idTitleGloss = `wpTitleGloss-${uid}`;
+  const idDrop = `wpDrop-${uid}`;
 
   return (
     <div
@@ -44,11 +44,6 @@ export default function WhitepaperBook({ className = "", testId }: Props) {
             <stop offset="70%" stopColor="#8A8A8A" />
             <stop offset="100%" stopColor="#3F3F3F" />
           </linearGradient>
-          <radialGradient id={idShadow} cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#000000" stopOpacity="0.6" />
-            <stop offset="60%" stopColor="#000000" stopOpacity="0.2" />
-            <stop offset="100%" stopColor="#000000" stopOpacity="0" />
-          </radialGradient>
           <linearGradient id={idGloss} x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.16" />
             <stop offset="40%" stopColor="#FFFFFF" stopOpacity="0.04" />
@@ -59,20 +54,18 @@ export default function WhitepaperBook({ className = "", testId }: Props) {
             <stop offset="50%" stopColor="#00F5D4" />
             <stop offset="100%" stopColor="#0BAA90" />
           </linearGradient>
+          <filter id={idDrop} x="-15%" y="-10%" width="130%" height="130%">
+            <feDropShadow
+              dx="0"
+              dy="10"
+              stdDeviation="10"
+              floodColor="#000000"
+              floodOpacity="0.55"
+            />
+          </filter>
         </defs>
 
-        {/* Cast shadow under the book */}
-        <ellipse
-          cx="170"
-          cy="368"
-          rx="135"
-          ry="10"
-          fill={`url(#${idShadow})`}
-        />
-
-        {/* Tilted book group - subtle perspective via skewY */}
-        <g transform="translate(28 18) skewY(-2)">
-          {/* Page edges (right side stack) */}
+        <g transform="translate(28 18) skewY(-2)" filter={`url(#${idDrop})`}>
           <rect
             x="246"
             y="6"
@@ -80,7 +73,6 @@ export default function WhitepaperBook({ className = "", testId }: Props) {
             height="332"
             fill={`url(#${idPages})`}
           />
-          {/* Thin page lines */}
           {Array.from({ length: 18 }).map((_, i) => (
             <line
               key={i}
@@ -94,7 +86,6 @@ export default function WhitepaperBook({ className = "", testId }: Props) {
             />
           ))}
 
-          {/* Bottom page edge (under cover) */}
           <rect
             x="6"
             y="334"
@@ -115,7 +106,6 @@ export default function WhitepaperBook({ className = "", testId }: Props) {
             />
           ))}
 
-          {/* Spine (left side) */}
           <rect
             x="0"
             y="0"
@@ -123,7 +113,6 @@ export default function WhitepaperBook({ className = "", testId }: Props) {
             height="332"
             fill={`url(#${idSpine})`}
           />
-          {/* Spine teal accent */}
           <rect x="0" y="0" width="3" height="332" fill={C} opacity="0.85" />
           <rect
             x="3"
@@ -134,7 +123,6 @@ export default function WhitepaperBook({ className = "", testId }: Props) {
             opacity="0.18"
           />
 
-          {/* Front cover */}
           <rect
             x="14"
             y="0"
@@ -145,9 +133,7 @@ export default function WhitepaperBook({ className = "", testId }: Props) {
             strokeWidth="0.6"
           />
 
-          {/* Cover top teal accent line */}
           <rect x="14" y="0" width="232" height="3" fill={C} opacity="0.9" />
-          {/* Cover bottom hairline */}
           <rect
             x="14"
             y="328"
@@ -157,7 +143,6 @@ export default function WhitepaperBook({ className = "", testId }: Props) {
             opacity="0.35"
           />
 
-          {/* Decorative top label */}
           <text
             x="34"
             y="36"
@@ -168,7 +153,6 @@ export default function WhitepaperBook({ className = "", testId }: Props) {
           >
             AICREATESAI / 2026
           </text>
-          {/* Tiny token glyph in corner */}
           <g transform="translate(214 22)">
             <circle
               cx="0"
@@ -192,7 +176,6 @@ export default function WhitepaperBook({ className = "", testId }: Props) {
             </text>
           </g>
 
-          {/* Title block */}
           <text
             x="34"
             y="148"
@@ -216,7 +199,6 @@ export default function WhitepaperBook({ className = "", testId }: Props) {
             AI
           </text>
 
-          {/* Divider */}
           <line
             x1="34"
             y1="200"
@@ -227,7 +209,6 @@ export default function WhitepaperBook({ className = "", testId }: Props) {
             strokeWidth="0.8"
           />
 
-          {/* Subtitle */}
           <text
             x="34"
             y="222"
@@ -249,7 +230,6 @@ export default function WhitepaperBook({ className = "", testId }: Props) {
             Whitepaper - Edition 01
           </text>
 
-          {/* Footer mark on cover */}
           <text
             x="34"
             y="312"
@@ -273,7 +253,6 @@ export default function WhitepaperBook({ className = "", testId }: Props) {
             $AICA
           </text>
 
-          {/* Subtle cover gloss */}
           <rect
             x="14"
             y="0"

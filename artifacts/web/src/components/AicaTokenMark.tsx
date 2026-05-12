@@ -15,6 +15,7 @@ export default function AicaTokenMark({ className = "", testId }: Props) {
   const idGrid = `aicaGrid-${uid}`;
   const idMask = `aicaCoreMask-${uid}`;
   const idGlyphGloss = `aicaGlyphGloss-${uid}`;
+  const idDrop = `aicaDrop-${uid}`;
   return (
     <div
       className={`relative aspect-square w-full ${className}`}
@@ -28,32 +29,27 @@ export default function AicaTokenMark({ className = "", testId }: Props) {
         role="img"
       >
         <defs>
-          {/* Outer rim bevel - light at top, dark at bottom for 3D pop */}
           <linearGradient id={idRimBevel} x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="#3A3A3A" />
             <stop offset="35%" stopColor="#1F1F1F" />
             <stop offset="65%" stopColor="#0E0E0E" />
             <stop offset="100%" stopColor="#050505" />
           </linearGradient>
-          {/* Inner rim wall - reversed to simulate the inside of the bevel */}
           <linearGradient id={idRimInner} x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="#070707" />
             <stop offset="50%" stopColor="#141414" />
             <stop offset="100%" stopColor="#262626" />
           </linearGradient>
-          {/* Recessed coin face */}
           <radialGradient id={idFace} cx="50%" cy="42%" r="60%">
             <stop offset="0%" stopColor="#1A1F1F" />
             <stop offset="55%" stopColor="#0C0C0C" />
             <stop offset="100%" stopColor="#050505" />
           </radialGradient>
-          {/* Top gloss highlight */}
           <radialGradient id={idGloss} cx="50%" cy="0%" r="70%">
             <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.18" />
             <stop offset="55%" stopColor="#FFFFFF" stopOpacity="0.04" />
             <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0" />
           </radialGradient>
-          {/* Subtle inner grid */}
           <pattern
             id={idGrid}
             x="0"
@@ -73,17 +69,31 @@ export default function AicaTokenMark({ className = "", testId }: Props) {
           <mask id={idMask}>
             <circle cx="100" cy="100" r="70" fill="white" />
           </mask>
-          {/* Glyph gloss for teal letters */}
           <linearGradient id={idGlyphGloss} x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="#9CFFE9" />
             <stop offset="50%" stopColor="#00F5D4" />
             <stop offset="100%" stopColor="#0BAA90" />
           </linearGradient>
+          <filter
+            id={idDrop}
+            x="-20%"
+            y="-10%"
+            width="140%"
+            height="140%"
+          >
+            <feDropShadow
+              dx="0"
+              dy="6"
+              stdDeviation="6"
+              floodColor="#000000"
+              floodOpacity="0.55"
+            />
+          </filter>
         </defs>
 
-        {/* Outer rim disc (the coin's outside) */}
-        <circle cx="100" cy="100" r="94" fill={`url(#${idRimBevel})`} />
-        {/* Top edge highlight stroke */}
+        <g filter={`url(#${idDrop})`}>
+          <circle cx="100" cy="100" r="94" fill={`url(#${idRimBevel})`} />
+        </g>
         <circle
           cx="100"
           cy="100"
@@ -93,7 +103,6 @@ export default function AicaTokenMark({ className = "", testId }: Props) {
           strokeOpacity="0.55"
           strokeWidth="0.6"
         />
-        {/* Bottom edge dark line for depth */}
         <path
           d="M 12 105 A 88 88 0 0 0 188 105"
           fill="none"
@@ -101,7 +110,6 @@ export default function AicaTokenMark({ className = "", testId }: Props) {
           strokeOpacity="0.7"
           strokeWidth="1.2"
         />
-        {/* Top arc highlight */}
         <path
           d="M 22 96 A 78 78 0 0 1 178 96"
           fill="none"
@@ -110,9 +118,7 @@ export default function AicaTokenMark({ className = "", testId }: Props) {
           strokeWidth="1.4"
         />
 
-        {/* Inner rim wall - the lip going down into the recessed face */}
         <circle cx="100" cy="100" r="78" fill={`url(#${idRimInner})`} />
-        {/* Inner rim teal accent ring */}
         <circle
           cx="100"
           cy="100"
@@ -132,9 +138,7 @@ export default function AicaTokenMark({ className = "", testId }: Props) {
           strokeWidth="0.5"
         />
 
-        {/* Recessed coin face */}
         <circle cx="100" cy="100" r="70" fill={`url(#${idFace})`} />
-        {/* Faint grid inside face */}
         <g mask={`url(#${idMask})`}>
           <rect
             x="30"
@@ -144,7 +148,6 @@ export default function AicaTokenMark({ className = "", testId }: Props) {
             fill={`url(#${idGrid})`}
           />
         </g>
-        {/* Inner shadow at the rim of the face for depth */}
         <circle
           cx="100"
           cy="100"
@@ -154,7 +157,6 @@ export default function AicaTokenMark({ className = "", testId }: Props) {
           strokeOpacity="0.85"
           strokeWidth="1.4"
         />
-        {/* Top inner highlight on face for raised glyph illusion */}
         <ellipse
           cx="100"
           cy="78"
@@ -164,7 +166,6 @@ export default function AicaTokenMark({ className = "", testId }: Props) {
           fillOpacity="0.05"
         />
 
-        {/* Tick marks at cardinal points */}
         {[0, 90, 180, 270].map((deg) => (
           <g
             key={deg}
@@ -176,7 +177,6 @@ export default function AicaTokenMark({ className = "", testId }: Props) {
             <line x1="100" y1="32" x2="100" y2="40" />
           </g>
         ))}
-        {/* Small ticks every 30deg */}
         {[30, 60, 120, 150, 210, 240, 300, 330].map((deg) => (
           <g
             key={deg}
@@ -189,7 +189,6 @@ export default function AicaTokenMark({ className = "", testId }: Props) {
           </g>
         ))}
 
-        {/* Wordmark - raised teal $AICA */}
         <text
           x="100"
           y="108"
@@ -228,7 +227,6 @@ export default function AicaTokenMark({ className = "", testId }: Props) {
           NATIVE ASSET
         </text>
 
-        {/* Top gloss overlay last so it sits over the face */}
         <circle
           cx="100"
           cy="100"
