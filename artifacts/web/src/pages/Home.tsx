@@ -10,7 +10,7 @@ import {
   Brain,
   Infinity as InfinityIcon,
 } from "lucide-react";
-import DeckCarousel from "@/components/DeckCarousel";
+import WhitepaperBook from "@/components/WhitepaperBook";
 import { useSeo } from "@/lib/useSeo";
 
 const AUDIENCES = [
@@ -455,29 +455,52 @@ export default function Home() {
         </div>
       </section>
 
-      {/* VISUAL DECK */}
+      {/* VISUAL WHITEPAPER */}
       <section className="py-14 md:py-20 relative">
-        <div className="container mx-auto px-4 md:px-6 max-w-6xl">
-          <div className="mb-8 text-center max-w-3xl mx-auto">
-            <SectionLabel>Visual Whitepaper</SectionLabel>
-            <motion.h2
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 0.6 }}
-              className="mt-5 text-3xl sm:text-4xl md:text-5xl font-serif font-semibold text-gradient leading-[1.05]"
-            >
-              See the layer in motion.
-            </motion.h2>
-            <p className="mt-4 text-base sm:text-lg text-white/55 leading-relaxed">
-              A visual walkthrough of the agentic intelligence layer, the products, and the economic engine.
-            </p>
+        <div className="container mx-auto px-4 md:px-6 w-full">
+          <div className="relative max-w-6xl mx-auto rounded-3xl border border-white/10 bg-gradient-to-b from-[#0E0E0E] to-[#0A0A0A] p-8 sm:p-10 md:p-14 overflow-hidden">
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(0,245,212,0.10),transparent_60%)] pointer-events-none" />
+            <div className="absolute inset-x-0 top-0 h-px divider-line" />
+            <div className="relative grid grid-cols-1 md:grid-cols-5 gap-10 md:gap-12 items-center">
+              <div className="md:col-span-3 order-1">
+                <SectionLabel>Visual Whitepaper</SectionLabel>
+                <motion.h2
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-80px" }}
+                  transition={{ duration: 0.6 }}
+                  className="mt-5 text-3xl sm:text-4xl md:text-5xl font-serif font-semibold text-gradient leading-[1.05]"
+                >
+                  See the layer in motion.
+                </motion.h2>
+                <p className="mt-5 text-base sm:text-lg text-white/65 leading-relaxed max-w-xl">
+                  The full thesis, architecture, and economic engine of the agentic intelligence layer - laid out in one document.
+                </p>
+                <div className="mt-7 flex flex-wrap gap-3">
+                  <Link href="/litepaper">
+                    <Button size="lg" className="rounded-full h-12 px-8 bg-[#00F5D4] text-black hover:bg-[#00F5D4]/90 font-medium">
+                      Read the whitepaper <ArrowRight className="ml-2 w-4 h-4" />
+                    </Button>
+                  </Link>
+                  <Link href="/litepaper#tokenomics">
+                    <Button
+                      size="lg"
+                      variant="outline"
+                      className="rounded-full h-12 px-7 border-white/15 bg-transparent text-white hover:bg-white/5"
+                    >
+                      Tokenomics
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+              <div className="md:col-span-2 order-2 flex justify-center">
+                <WhitepaperBook
+                  className="w-56 sm:w-64 md:w-full max-w-[300px]"
+                  testId="img-whitepaper-book"
+                />
+              </div>
+            </div>
           </div>
-          <DeckCarousel
-            title="AICA Visual Whitepaper"
-            subline="28 slides - swipe, arrow keys, or fullscreen."
-            testIdPrefix="deck-home"
-          />
         </div>
       </section>
 
