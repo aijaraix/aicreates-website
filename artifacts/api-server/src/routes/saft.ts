@@ -38,6 +38,9 @@ const REQUIRED_RISK_KEYS = [
   "executionRisk",
   "concentrationRisk",
   "noRecoveryRisk",
+  "noGuaranteedReturns",
+  "noListingPromise",
+  "jurisdictionRestrictions",
 ];
 
 const REQUIRED_ACK_KEYS = [

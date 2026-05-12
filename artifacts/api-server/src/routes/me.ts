@@ -73,6 +73,7 @@ router.get("/me/allocations", requireAuth, async (req, res) => {
           ? (payload["walletChain"] as string)
           : null,
       fundedAt: c.fundedAt ?? c.completedAt,
+      createdAt: c.createdAt,
       isFunded,
       vesting: isFunded ? vesting : null,
     };

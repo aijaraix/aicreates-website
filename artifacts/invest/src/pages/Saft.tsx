@@ -371,6 +371,11 @@ export default function Saft() {
           {step === 1 && (
             <div className="space-y-5" data-testid="saft-step-transaction">
               <H title="Transaction" />
+              <TokenMath
+                amountCents={c.amountCents}
+                tokenAllocation={c.tokenAllocation}
+                roundSlug={c.roundSlug}
+              />
               <div className="grid grid-cols-3 gap-3 text-sm">
                 <ReadOnly label="Amount" value={fmt(c.amountCents)} />
                 <ReadOnly
@@ -871,6 +876,88 @@ function SaftPdfPreview({
           Generating preview…
         </div>
       )}
+    </div>
+  );
+}
+
+function TokenMath({
+  amountCents,
+  tokenAllocation,
+  roundSlug,
+}: {
+  amountCents: number;
+  tokenAllocation: number;
+  roundSlug: string;
+}) {
+  const round = useQuery({
+    queryKey: ["rounds", "active"],
+    queryFn: () =>
+      api<{
+        round: { slug: string; pricePerTokenCents: number; label: string };
+      }>("/rounds/active"),
+  });
+  const pricePerTokenCents = round.data?.round.pricePerTokenCents ?? 10;
+  const baseTokens = Math.floor(amountCents / pricePerTokenCents);
+  const bonus = Math.max(0, tokenAllocation - baseTokens);
+  const bonusPct =
+    baseTokens > 0 ? Math.round((bonus / baseTokens) * 1000) / 10 : 0;
+  const effectivePriceCents =
+    tokenAllocation > 0 ? amountCents / tokenAllocation : pricePerTokenCents;
+  const dollarsCommitted = (amountCents / 100).toLocaleString("en-US", {
+    style: "currency",
+    currency: "USD",
+    maximumFractionDigits: 0,
+  });
+  const pricePerTokenStr = `$${(pricePerTokenCents / 100).toFixed(2)}`;
+  const effectivePriceStr = `$${effectivePriceCents.toFixed(4)}`;
+  return (
+    <div
+      className="rounded-xl border border-[#00F5D4]/30 bg-[#00F5D4]/[0.04] p-4"
+      data-testid="saft-token-math"
+    >
+      <div className="text-[11px] uppercase tracking-[0.14em] text-[#00F5D4] mb-2">
+        Token math
+      </div>
+      <div
+        className="text-sm text-white/80 leading-relaxed"
+        style={{ fontFamily: "JetBrains Mono, ui-monospace, monospace" }}
+      >
+        If you commit{" "}
+        <span className="text-white font-semibold">{dollarsCommitted}</span> at{" "}
+        <span className="text-white font-semibold">{pricePerTokenStr}</span> per
+        AICA, you receive{" "}
+        <span className="text-white font-semibold">
+          ~{tokenAllocation.toLocaleString()} AICA
+        </span>{" "}
+        in the {roundSlug} round.
+      </div>
+      <div className="mt-3 grid grid-cols-3 gap-2 text-[11px]">
+        <div className="rounded-lg border border-white/10 bg-black/30 p-2">
+          <div className="text-white/40 uppercase tracking-[0.12em] text-[10px]">
+            Base tokens
+          </div>
+          <div className="mt-0.5 text-white">
+            {baseTokens.toLocaleString()} AICA
+          </div>
+        </div>
+        <div className="rounded-lg border border-white/10 bg-black/30 p-2">
+          <div className="text-white/40 uppercase tracking-[0.12em] text-[10px]">
+            Tier bonus
+          </div>
+          <div className="mt-0.5 text-[#00F5D4]">
+            +{bonus.toLocaleString()} AICA
+            {bonus > 0 && (
+              <span className="text-white/50"> ({bonusPct}%)</span>
+            )}
+          </div>
+        </div>
+        <div className="rounded-lg border border-white/10 bg-black/30 p-2">
+          <div className="text-white/40 uppercase tracking-[0.12em] text-[10px]">
+            Effective price
+          </div>
+          <div className="mt-0.5 text-white">{effectivePriceStr} / AICA</div>
+        </div>
+      </div>
     </div>
   );
 }

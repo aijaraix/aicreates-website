@@ -16,6 +16,7 @@ interface VestingPoint {
 }
 
 interface Allocation {
+  createdAt?: string | null;
   id: string;
   roundSlug: string;
   tierSlug: string;
@@ -334,8 +335,17 @@ export default function Dashboard() {
                   <StatusTimeline
                     state={{
                       state: a.state,
+                      createdAt: a.createdAt ?? null,
                       saftSignedAt: a.saftSignedAt,
+                      paymentInitiatedAt:
+                        a.state === "pending_payment" ||
+                        a.state === "awaiting_wire" ||
+                        a.state === "awaiting_crypto" ||
+                        a.fundedAt
+                          ? a.saftSignedAt
+                          : null,
                       fundedAt: a.fundedAt,
+                      lockedAt: a.fundedAt,
                       tgeDate: a.vesting?.tgeDate ?? null,
                       cliffDate: a.vesting?.cliffDate ?? null,
                       hasUnlocked:

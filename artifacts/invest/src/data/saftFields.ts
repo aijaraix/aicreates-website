@@ -101,6 +101,21 @@ export const RISK_DISCLOSURES = [
     title: "No recovery",
     body: "AICreatesAI cannot recover tokens sent to incorrect addresses, lost keys, or compromised wallets. You are solely responsible for custody.",
   },
+  {
+    key: "noGuaranteedReturns",
+    title: "No guaranteed returns",
+    body: "There is no guarantee of profit, yield, or any positive return on this commitment. You may lose the entire amount committed. No projection, model, or forward-looking statement is a promise of performance.",
+  },
+  {
+    key: "noListingPromise",
+    title: "No listing promise",
+    body: "AICreatesAI makes no representation that AICA will be listed on any centralized or decentralized exchange, market maker, or liquidity venue. Listing decisions are at the sole discretion of third parties and are not committed by the company.",
+  },
+  {
+    key: "jurisdictionRestrictions",
+    title: "Jurisdiction restrictions",
+    body: "I confirm I am not a resident of, or located in, a U.S. OFAC-sanctioned jurisdiction or other restricted territory, and that participation does not violate the laws of my home jurisdiction. Eligibility may further be limited to accredited investors under Reg D / Reg S exemptions.",
+  },
 ] as const;
 
 export type RiskKey = (typeof RISK_DISCLOSURES)[number]["key"];
