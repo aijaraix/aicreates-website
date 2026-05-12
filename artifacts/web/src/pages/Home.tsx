@@ -470,19 +470,16 @@ export default function Home() {
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,245,212,0.10),transparent_70%)] pointer-events-none" />
             <div className="absolute inset-x-0 top-0 h-px divider-line" />
             <div className="relative">
-              <SectionLabel>Visual Whitepaper</SectionLabel>
+              <Building2 className="w-7 h-7 text-[#00F5D4] mx-auto mb-5" strokeWidth={1.5} />
               <motion.h2
                 initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-80px" }}
                 transition={{ duration: 0.6 }}
-                className="mt-5 text-3xl sm:text-4xl md:text-5xl font-serif font-semibold text-gradient leading-[1.05]"
+                className="text-3xl sm:text-4xl md:text-6xl font-serif font-semibold text-gradient leading-[1.05]"
               >
-                See the layer in motion.
+                The agentic era is not waiting.
               </motion.h2>
-              <p className="mt-5 text-base sm:text-lg text-white/65 leading-relaxed max-w-2xl mx-auto">
-                The full thesis, architecture, and economic engine of the agentic intelligence layer - laid out in one document.
-              </p>
               <div className="mt-8 flex flex-wrap gap-3 justify-center">
                 <Button
                   size="lg"
@@ -507,30 +504,6 @@ export default function Home() {
                   </Button>
                 </a>
               </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="py-16 md:py-24 relative min-h-[100dvh] sm:min-h-0 flex items-center">
-        <div className="container mx-auto px-4 md:px-6 w-full">
-          <div className="relative max-w-5xl mx-auto rounded-3xl border border-white/10 bg-gradient-to-b from-[#0E0E0E] to-[#0A0A0A] p-10 sm:p-12 md:p-20 overflow-hidden text-center">
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,245,212,0.10),transparent_70%)] pointer-events-none" />
-            <div className="absolute inset-x-0 top-0 h-px divider-line" />
-            <div className="relative">
-              <Building2 className="w-7 h-7 text-[#00F5D4] mx-auto mb-5" strokeWidth={1.5} />
-              <h2 className="text-3xl sm:text-4xl md:text-6xl font-serif font-semibold text-gradient leading-[1.05] mb-5">
-                The agentic era is not waiting.
-              </h2>
-              <p className="text-base sm:text-lg text-white/55 max-w-xl mx-auto mb-8">
-                If your industry has not been rebuilt agentically yet, we should be the conversation you have first.
-              </p>
-              <Link href="/contact">
-                <Button size="lg" className="rounded-full h-12 px-8 bg-[#00F5D4] text-black hover:bg-[#00F5D4]/90 font-medium">
-                  Engage with us <ArrowRight className="ml-2 w-4 h-4" />
-                </Button>
-              </Link>
             </div>
           </div>
         </div>
