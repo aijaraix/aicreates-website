@@ -14,7 +14,6 @@ import {
   ShieldCheck,
   Calendar,
 } from "lucide-react";
-import HeroAurora from "@/components/HeroAurora";
 import RoundsTable from "@/components/RoundsTable";
 import AllocationCalculator from "@/components/AllocationCalculator";
 import VestingCalendar from "@/components/VestingCalendar";
@@ -84,37 +83,17 @@ export default function Home() {
       <SiteHeader
         homeHref="https://www.aicreates.ai"
         homeExternal
-        navLinks={[
-          { href: "https://www.aicreates.ai/eve-os", label: "Products", external: true, testId: "nav-products" },
-          { href: "https://www.aicreates.ai/business", label: "Solutions", external: true, testId: "nav-solutions" },
-          { href: "https://www.aicreates.ai/litepaper", label: "Resources", external: true, testId: "nav-resources" },
-          { href: "https://www.aicreates.ai/about", label: "Company", external: true, testId: "nav-company" },
-        ]}
         ctas={[
-          {
-            href: "https://www.aicreates.ai/litepaper",
-            label: "Litepaper",
-            variant: "outline",
-            external: true,
-            testId: "link-portal-litepaper",
-          },
           {
             href: "/sign-in",
             label: "Sign in",
-            variant: "outline",
-            testId: "link-portal-signin",
-          },
-          {
-            href: "/sign-up",
-            label: "Reserve allocation",
             variant: "primary",
-            testId: "link-portal-signup",
+            testId: "link-portal-signin",
           },
         ]}
       />
 
       <section className="relative isolate min-h-[100dvh] flex items-center px-6 md:px-10 pt-10 pb-24">
-        <HeroAurora />
         <div className="relative mx-auto max-w-5xl text-center">
           <div className="mb-8 flex justify-center">
             <SectionLabel>AICA Founders Round 2026 - Now open</SectionLabel>
