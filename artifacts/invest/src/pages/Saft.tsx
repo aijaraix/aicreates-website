@@ -392,7 +392,7 @@ export default function Saft() {
                   }
                   onFocus={() => setTaxIdMasked(false)}
                   onBlur={() => setTaxIdMasked(true)}
-                  className="w-full mt-1 h-10 rounded-xl border border-white/10 bg-black/30 px-3 outline-none focus:border-[#00F5D4]/40 font-mono"
+                  className="brand-input mt-1 font-mono"
                   data-testid="input-saft-taxid"
                 />
                 <p className="mt-1 text-[11px] text-white/40">
@@ -761,7 +761,7 @@ export default function Saft() {
                 <button
                   type="button"
                   onClick={() => setLocation(`/checkout/${c.id}`)}
-                  className="inline-flex items-center justify-center h-11 px-6 rounded-full bg-[#00F5D4] text-black font-medium hover:bg-[#00F5D4]/90"
+                  className="brand-cta"
                   data-testid="link-go-checkout"
                 >
                   Continue to payment <ArrowRight className="ml-2 w-4 h-4" />
@@ -770,7 +770,7 @@ export default function Saft() {
                   href={`/api/saft/${c.id}/pdf`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center h-11 px-6 rounded-full border border-white/15 hover:bg-white/[0.06]"
+                  className="brand-cta-outline"
                   data-testid="link-download-saft"
                 >
                   Download draft SAFT
@@ -805,7 +805,7 @@ export default function Saft() {
                   type="button"
                   disabled={!canNext}
                   onClick={() => setStep(step + 1)}
-                  className="px-5 h-11 rounded-full bg-[#00F5D4] text-black font-medium hover:bg-[#00F5D4]/90 disabled:opacity-50"
+                  className="brand-cta"
                   data-testid="button-saft-next"
                 >
                   Continue
@@ -815,7 +815,7 @@ export default function Saft() {
                   type="button"
                   disabled={!canNext || submit.isPending}
                   onClick={() => submit.mutate()}
-                  className="px-5 h-11 rounded-full bg-[#00F5D4] text-black font-medium hover:bg-[#00F5D4]/90 disabled:opacity-50 inline-flex items-center"
+                  className="brand-cta"
                   data-testid="button-saft-submit"
                 >
                   {submit.isPending ? (
@@ -1042,7 +1042,7 @@ function Field({
         value={value}
         placeholder={placeholder}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full mt-1 h-10 rounded-xl border border-white/10 bg-black/30 px-3 outline-none focus:border-[#00F5D4]/40"
+        className="brand-input mt-1"
         data-testid={testId}
       />
     </div>
@@ -1071,9 +1071,9 @@ function Pills({
             key={o.value}
             type="button"
             onClick={() => onChange(o.value)}
-            className={`px-4 h-8 rounded-full ${
+            className={`px-4 h-8 rounded-full transition font-medium ${
               value === o.value
-                ? "bg-[#00F5D4] text-black"
+                ? "bg-[#00F5D4] text-black shadow-[0_0_16px_-4px_rgba(0,245,212,0.6)]"
                 : "text-white/60 hover:text-white"
             }`}
           >

@@ -7,6 +7,7 @@ import VestingCalendar from "@/components/VestingCalendar";
 import PortalNav from "@/components/PortalNav";
 import PageHeader from "@/components/PageHeader";
 import StatusTimeline from "@/components/StatusTimeline";
+import { StatTile } from "@/components/brand";
 import { buildIcs } from "@/lib/vesting";
 
 interface VestingPoint {
@@ -154,7 +155,7 @@ export default function Dashboard() {
         actions={
           <Link
             href="/invest"
-            className="inline-flex items-center justify-center h-11 px-5 rounded-full bg-[#00F5D4] text-black font-medium hover:bg-[#00F5D4]/90 transition"
+            className="brand-cta"
             data-testid="link-make-commitment-header"
           >
             New commitment <ArrowRight className="ml-2 w-4 h-4" />
@@ -190,7 +191,7 @@ export default function Dashboard() {
                 ) : a.state === "pending_payment" ? (
                   <Link
                     href={`/checkout/${a.id}`}
-                    className="text-sm inline-flex items-center px-4 h-9 rounded-full bg-[#00F5D4] text-black font-medium"
+                    className="text-sm inline-flex items-center px-4 h-9 rounded-full bg-[#00F5D4] text-black font-medium shadow-[0_0_20px_-6px_rgba(0,245,212,0.6)]"
                   >
                     Complete payment <ArrowRight className="ml-2 w-4 h-4" />
                   </Link>
@@ -208,40 +209,35 @@ export default function Dashboard() {
         )}
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
-          <Stat label="Total committed" value={fmt(totalCents)} accent />
-          <Stat label="Token allocation" value={totalTokens.toLocaleString()} />
-          <Stat
+          <StatTile label="Total committed" value={fmt(totalCents)} accent />
+          <StatTile
+            label="Token allocation"
+            value={totalTokens.toLocaleString()}
+          />
+          <StatTile
             label="Funded commitments"
             value={String(funded.length)}
           />
-          <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 flex flex-col">
-            <div className="text-xs uppercase tracking-[0.18em] text-white/40">
-              Next unlock
-            </div>
-            <div
-              className="mt-2 text-lg font-semibold"
-              style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}
-            >
-              {nextUnlock
-                ? `${nextUnlock.tokens.toLocaleString()} AICA`
-                : "—"}
-            </div>
-            <div className="text-xs text-white/50">
-              {nextUnlock ? new Date(nextUnlock.date).toLocaleDateString() : ""}
-            </div>
-          </div>
+          <StatTile
+            label="Next unlock"
+            value={
+              nextUnlock ? `${nextUnlock.tokens.toLocaleString()} AICA` : "—"
+            }
+            hint={
+              nextUnlock
+                ? new Date(nextUnlock.date).toLocaleDateString()
+                : undefined
+            }
+          />
         </div>
 
         <div className="flex items-center justify-between mb-4">
-          <h2
-            className="text-xl font-semibold"
-            style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}
-          >
+          <h2 className="font-display text-xl font-semibold tracking-tight">
             Commitments
           </h2>
           <Link
             href="/invest"
-            className="inline-flex items-center justify-center h-10 px-4 rounded-full bg-[#00F5D4] text-black font-medium"
+            className="brand-cta"
             data-testid="link-make-commitment"
           >
             New commitment <ArrowRight className="ml-2 w-4 h-4" />
@@ -273,10 +269,7 @@ export default function Dashboard() {
                     <div className="text-xs uppercase tracking-[0.18em] text-white/40">
                       {a.roundSlug}
                     </div>
-                    <div
-                      className="text-xl font-semibold mt-1"
-                      style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}
-                    >
+                    <div className="font-display text-xl font-semibold tracking-tight mt-1">
                       {a.displayName}
                     </div>
                     <div className="mt-1 text-sm text-white/60 flex flex-wrap items-center gap-2">
@@ -439,30 +432,6 @@ export default function Dashboard() {
           </div>
         )}
       </main>
-    </div>
-  );
-}
-
-function Stat({
-  label,
-  value,
-  accent,
-}: {
-  label: string;
-  value: string;
-  accent?: boolean;
-}) {
-  return (
-    <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6">
-      <div className="text-xs uppercase tracking-[0.18em] text-white/40">
-        {label}
-      </div>
-      <div
-        className={`mt-3 text-3xl font-semibold ${accent ? "text-[#00F5D4]" : ""}`}
-        style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}
-      >
-        {value}
-      </div>
     </div>
   );
 }

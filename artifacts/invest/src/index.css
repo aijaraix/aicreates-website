@@ -129,3 +129,240 @@ body {
     animation: none !important;
   }
 }
+
+/* ============================================================
+   Brand primitives - shared visual language across the portal.
+   These mirror the home page (`/invest/`) so every screen feels
+   like the same product.
+   ============================================================ */
+
+.brand-card {
+  position: relative;
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.012) 100%),
+    #0e0e11;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 1px 0 rgba(0, 0, 0, 0.4);
+}
+
+.brand-card-teal {
+  border-color: rgba(0, 245, 212, 0.28);
+  background:
+    radial-gradient(120% 70% at 50% -20%, rgba(0, 245, 212, 0.10), transparent 60%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.012) 100%),
+    #0e0e11;
+  box-shadow:
+    inset 0 1px 0 rgba(0, 245, 212, 0.10),
+    0 0 40px -20px rgba(0, 245, 212, 0.45);
+}
+
+.brand-hairline-teal {
+  position: relative;
+}
+.brand-hairline-teal::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 14%;
+  right: 14%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(0, 245, 212, 0.55),
+    transparent
+  );
+  pointer-events: none;
+}
+
+.brand-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.75rem;
+  padding: 0 1.25rem;
+  border-radius: 9999px;
+  background: linear-gradient(180deg, #00f5d4 0%, #00d9ba 100%);
+  color: #000;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.4) inset,
+    0 0 30px rgba(0, 245, 212, 0.35),
+    0 6px 24px -8px rgba(0, 245, 212, 0.55);
+  transition: filter 120ms ease, box-shadow 120ms ease;
+}
+.brand-cta:hover {
+  filter: brightness(1.05);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.5) inset,
+    0 0 40px rgba(0, 245, 212, 0.45),
+    0 8px 28px -6px rgba(0, 245, 212, 0.7);
+}
+.brand-cta:disabled {
+  opacity: 0.45;
+  filter: grayscale(0.2);
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+.brand-cta-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.75rem;
+  padding: 0 1.25rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.02);
+  color: #f5f5f5;
+  transition: border-color 120ms ease, background 120ms ease;
+}
+.brand-cta-outline:hover {
+  border-color: rgba(0, 245, 212, 0.5);
+  background: rgba(0, 245, 212, 0.06);
+}
+
+.brand-input {
+  width: 100%;
+  height: 2.75rem;
+  padding: 0 0.875rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.35);
+  color: #f5f5f5;
+  outline: none;
+  transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+.brand-input:focus {
+  border-color: rgba(0, 245, 212, 0.55);
+  box-shadow: 0 0 0 3px rgba(0, 245, 212, 0.12);
+}
+
+.brand-table-row {
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  position: relative;
+  transition: background 120ms ease;
+}
+.brand-table-row:hover {
+  background: rgba(0, 245, 212, 0.03);
+}
+.brand-table-row:hover::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: #00f5d4;
+  box-shadow: 0 0 12px rgba(0, 245, 212, 0.6);
+}
+
+/* ============================================================
+   Clerk card brand alignment.
+   We override Clerk inside the @layer clerk so our utility classes
+   (brand-cta etc) win without !important elsewhere.
+   ============================================================ */
+
+.cl-cardBox {
+  position: relative;
+  background:
+    radial-gradient(120% 60% at 50% -10%, rgba(0, 245, 212, 0.10), transparent 60%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.025) 0%, rgba(255, 255, 255, 0.01) 100%),
+    #0e0e11 !important;
+  border: 1px solid rgba(0, 245, 212, 0.22) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(0, 245, 212, 0.12),
+    0 0 60px -20px rgba(0, 245, 212, 0.45),
+    0 30px 80px -30px rgba(0, 0, 0, 0.8) !important;
+  border-radius: 1rem !important;
+  overflow: hidden;
+}
+.cl-cardBox::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 18%;
+  right: 18%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0, 245, 212, 0.7), transparent);
+  pointer-events: none;
+}
+
+.cl-formButtonPrimary {
+  background: linear-gradient(180deg, #00f5d4 0%, #00d9ba 100%) !important;
+  color: #000 !important;
+  border: none !important;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.4) inset,
+    0 0 30px rgba(0, 245, 212, 0.35),
+    0 6px 24px -8px rgba(0, 245, 212, 0.55) !important;
+  transition: filter 120ms ease, box-shadow 120ms ease !important;
+}
+.cl-formButtonPrimary:hover {
+  filter: brightness(1.05);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.5) inset,
+    0 0 40px rgba(0, 245, 212, 0.45),
+    0 8px 28px -6px rgba(0, 245, 212, 0.7) !important;
+}
+
+.cl-socialButtonsBlockButton {
+  background: rgba(255, 255, 255, 0.02) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #f5f5f5 !important;
+  border-radius: 0.75rem !important;
+  transition: border-color 120ms ease, background 120ms ease !important;
+}
+.cl-socialButtonsBlockButton:hover {
+  border-color: rgba(0, 245, 212, 0.5) !important;
+  background: rgba(0, 245, 212, 0.06) !important;
+}
+
+.cl-formFieldInput {
+  background: rgba(0, 0, 0, 0.35) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #f5f5f5 !important;
+  border-radius: 0.75rem !important;
+  transition: border-color 120ms ease, box-shadow 120ms ease !important;
+}
+.cl-formFieldInput:focus {
+  border-color: rgba(0, 245, 212, 0.55) !important;
+  box-shadow: 0 0 0 3px rgba(0, 245, 212, 0.12) !important;
+  outline: none !important;
+}
+
+.cl-dividerLine {
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+.cl-dividerText {
+  color: rgba(245, 245, 245, 0.45) !important;
+  font-size: 0.7rem !important;
+  letter-spacing: 0.18em !important;
+  text-transform: uppercase !important;
+}
+
+.cl-footer,
+.cl-internal-1ki5d3a,
+.cl-developmentBanner,
+.cl-internal-developmentBanner {
+  background: rgba(255, 255, 255, 0.02) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+.cl-footerActionLink,
+.cl-formFieldHintText {
+  color: #00f5d4 !important;
+}
+.cl-footerActionLink:hover {
+  color: rgba(0, 245, 212, 0.8) !important;
+}
+
+/* Hide Clerk's default header - the AuthShell wrapper provides
+   the brand-aligned eyebrow + gradient title above the card. */
+.cl-header {
+  display: none !important;
+}

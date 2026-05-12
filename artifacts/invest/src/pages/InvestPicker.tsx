@@ -125,7 +125,7 @@ export default function InvestPicker() {
             </div>
             <Link
               href="/gateway"
-              className="inline-flex items-center px-4 h-10 rounded-full bg-[#00F5D4] text-black font-medium hover:bg-[#00F5D4]/90"
+              className="brand-cta"
               data-testid="link-go-gateway"
             >
               Start gateway <ArrowRight className="ml-2 w-4 h-4" />
@@ -142,19 +142,16 @@ export default function InvestPicker() {
                 {tiers.map((t) => (
                   <div
                     key={t.slug}
-                    className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 flex flex-col hover:border-[#00F5D4]/30 transition"
+                    className="brand-card brand-hairline-teal p-6 flex flex-col hover:border-[#00F5D4]/40 transition"
                     data-testid={`card-tier-${t.slug}`}
                   >
-                    <h3
-                      className="text-lg font-semibold"
-                      style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}
-                    >
+                    <h3 className="font-display text-lg font-semibold tracking-tight">
                       {t.displayName}
                     </h3>
-                    <div className="mt-2 text-2xl font-semibold text-[#00F5D4]">
+                    <div className="mt-2 font-display text-3xl font-semibold tracking-tight text-gradient-teal">
                       {fmt(t.amountCents)}
                     </div>
-                    <div className="mt-1 text-xs uppercase tracking-[0.16em] text-white/40">
+                    <div className="mt-1 text-xs uppercase tracking-[0.16em] text-white/45">
                       {t.tokenAllocation.toLocaleString()} AICA
                     </div>
                     {t.description && (
@@ -167,7 +164,7 @@ export default function InvestPicker() {
                       onClick={() =>
                         create.mutate({ tierSlug: t.slug, key: t.slug })
                       }
-                      className="mt-5 inline-flex items-center justify-center h-11 px-5 rounded-full bg-[#00F5D4] text-black font-medium hover:bg-[#00F5D4]/90 transition disabled:opacity-50"
+                      className="brand-cta mt-5"
                       data-testid={`button-commit-${t.slug}`}
                     >
                       {pending === t.slug ? (
@@ -182,23 +179,20 @@ export default function InvestPicker() {
                   </div>
                 ))}
                 <div
-                  className="rounded-2xl border border-[#00F5D4]/30 bg-gradient-to-br from-[#00F5D4]/5 to-transparent p-6 flex flex-col"
+                  className="brand-card-teal brand-hairline-teal p-6 flex flex-col"
                   data-testid="card-tier-custom"
                 >
-                  <h3
-                    className="text-lg font-semibold"
-                    style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}
-                  >
+                  <h3 className="font-display text-lg font-semibold tracking-tight">
                     Custom amount
                   </h3>
-                  <div className="mt-2 text-2xl font-semibold text-[#00F5D4]">
+                  <div className="mt-2 font-display text-3xl font-semibold tracking-tight text-gradient-teal">
                     {fmt(customAmount * 100)}
                   </div>
-                  <div className="mt-1 text-xs uppercase tracking-[0.16em] text-white/40">
+                  <div className="mt-1 text-xs uppercase tracking-[0.16em] text-white/45">
                     ~{tokensForAmount(customAmount).toLocaleString()} AICA
                   </div>
                   <div className="mt-3">
-                    <label className="text-[11px] uppercase tracking-[0.14em] text-white/50">
+                    <label className="text-[11px] uppercase tracking-[0.14em] text-white/55">
                       Amount (USD)
                     </label>
                     <input
@@ -212,7 +206,7 @@ export default function InvestPicker() {
                           Math.max(0, Math.floor(Number(e.target.value) || 0)),
                         )
                       }
-                      className="w-full mt-1 h-11 rounded-xl border border-white/10 bg-black/30 px-3 outline-none focus:border-[#00F5D4]/40"
+                      className="brand-input mt-1"
                       data-testid="input-custom-amount"
                     />
                     <p className="mt-2 text-[11px] text-white/40">
@@ -232,7 +226,7 @@ export default function InvestPicker() {
                         key: "custom",
                       })
                     }
-                    className="mt-5 inline-flex items-center justify-center h-11 px-5 rounded-full bg-[#00F5D4] text-black font-medium hover:bg-[#00F5D4]/90 transition disabled:opacity-50"
+                    className="brand-cta mt-5"
                     data-testid="button-commit-custom"
                   >
                     {pending === "custom" ? (

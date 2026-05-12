@@ -90,7 +90,7 @@ export default function DataCenterRequestForm() {
       <button
         type="submit"
         disabled={status === "submitting"}
-        className="w-full inline-flex items-center justify-center h-11 rounded-full bg-[#00F5D4] text-black font-medium hover:bg-[#00F5D4]/90 transition disabled:opacity-50"
+        className="brand-cta w-full"
         data-testid="button-dc-submit"
       >
         {status === "submitting" ? (

@@ -423,9 +423,9 @@ export default function Admin() {
                   <button
                     key={f.value}
                     onClick={() => setStatusFilter(f.value)}
-                    className={`px-3 py-1 rounded-full ${
+                    className={`px-3 py-1 rounded-full transition ${
                       statusFilter === f.value
-                        ? "bg-[#00F5D4] text-black"
+                        ? "bg-[#00F5D4] text-black shadow-[0_0_16px_-4px_rgba(0,245,212,0.6)]"
                         : "text-white/60 hover:text-white"
                     }`}
                     data-testid={`button-filter-${f.value || "all"}`}
@@ -791,13 +791,13 @@ function NotesPanel({
           rows={3}
           maxLength={4000}
           placeholder="Add a note (visible to all admins)..."
-          className="w-full rounded-xl border border-white/10 bg-black/30 p-3 text-sm outline-none focus:border-[#00F5D4]/40"
+          className="w-full rounded-xl border border-white/10 bg-black/30 p-3 text-sm outline-none focus:border-[#00F5D4]/55 focus:shadow-[0_0_0_3px_rgba(0,245,212,0.12)] transition"
           data-testid="textarea-new-note"
         />
         <button
           onClick={() => create.mutate()}
           disabled={!body.trim() || create.isPending}
-          className="inline-flex items-center px-4 h-9 rounded-full bg-[#00F5D4] text-black text-sm font-medium hover:bg-[#00F5D4]/90 disabled:opacity-40"
+          className="brand-cta !h-9 text-sm"
           data-testid="button-add-note"
         >
           {create.isPending ? (
@@ -841,13 +841,14 @@ function Card({
   small?: boolean;
 }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6">
-      <div className="text-xs uppercase tracking-[0.18em] text-white/40">
+    <div className="brand-card brand-hairline-teal p-5 md:p-6">
+      <div className="text-[11px] uppercase tracking-[0.16em] text-white/50 font-medium">
         {label}
       </div>
       <div
-        className={`mt-3 ${small ? "text-xl" : "text-3xl"} font-semibold ${accent ? "text-[#00F5D4]" : ""}`}
-        style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}
+        className={`mt-2 font-display tracking-tight font-semibold ${
+          small ? "text-lg md:text-xl" : "text-2xl md:text-3xl"
+        } ${accent ? "text-gradient-teal" : "text-white"}`}
       >
         {value}
       </div>

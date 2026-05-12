@@ -76,25 +76,16 @@ const clerkAppearance = {
   },
   elements: {
     rootBox: "w-full flex justify-center",
-    cardBox:
-      "bg-[#0F0F12] border border-white/10 rounded-2xl w-[440px] max-w-full overflow-hidden",
-    card: "!shadow-none !border-0 !bg-transparent !rounded-none",
-    footer: "!shadow-none !border-0 !bg-transparent !rounded-none",
-    headerTitle: "text-white",
-    headerSubtitle: "text-white/60",
-    socialButtonsBlockButtonText: "text-white",
-    formFieldLabel: "text-white/80",
-    footerActionLink: "text-[#00F5D4] hover:text-[#00F5D4]/80",
-    footerActionText: "text-white/60",
-    dividerText: "text-white/50",
-    formButtonPrimary:
-      "bg-[#00F5D4] text-black hover:bg-[#00F5D4]/90 font-medium",
-    formFieldInput: "bg-[#16161A] border-white/10 text-white",
-    socialButtonsBlockButton:
-      "border-white/10 bg-white/[0.02] hover:bg-white/[0.06]",
-    dividerLine: "bg-white/10",
-    logoBox: "flex items-center justify-center",
-    logoImage: "h-8",
+    cardBox: "w-[440px] max-w-full",
+    card: "!shadow-none !border-0 !bg-transparent !rounded-none px-7 pt-8 pb-7",
+    footer: "!shadow-none !border-0 !rounded-none",
+    socialButtonsBlockButtonText: "text-white font-medium",
+    formFieldLabel:
+      "text-white/70 text-[11px] uppercase tracking-[0.14em] font-medium",
+    footerActionText: "text-white/55 text-sm",
+    formButtonPrimary: "h-11 font-medium tracking-tight",
+    logoBox: "flex items-center justify-center mb-2",
+    logoImage: "h-7",
   },
 };
 

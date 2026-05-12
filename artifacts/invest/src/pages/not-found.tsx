@@ -17,7 +17,7 @@ export default function NotFound() {
       </p>
       <Link
         href="/"
-        className="px-5 h-11 inline-flex items-center rounded-full bg-[#00F5D4] text-black font-medium hover:bg-[#00F5D4]/90"
+        className="brand-cta"
       >
         Back to home
       </Link>

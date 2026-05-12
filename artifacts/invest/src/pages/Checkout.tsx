@@ -139,10 +139,7 @@ export default function Checkout() {
       <div className="min-h-[100dvh] bg-[#0A0A0A] text-white flex items-center justify-center">
         <div className="text-center">
           <div className="text-white/60 mb-4">SAFT signing required first.</div>
-          <Link
-            href={`/saft/${commitId}`}
-            className="px-5 h-11 inline-flex items-center rounded-full bg-[#00F5D4] text-black font-medium"
-          >
+          <Link href={`/saft/${commitId}`} className="brand-cta">
             Go to SAFT
           </Link>
         </div>
@@ -197,10 +194,7 @@ export default function Checkout() {
                 ? "Use your Commitment ID as the wire reference. Your dashboard will move to \"Funded\" once we confirm receipt."
                 : "Our team will reply to your account email with the escrow address. Your dashboard will move to \"Funded\" once on-chain confirmations are finalized."}
             </p>
-            <Link
-              href="/dashboard"
-              className="mt-6 inline-flex items-center px-5 h-11 rounded-full border border-white/15 hover:bg-white/[0.06]"
-            >
+            <Link href="/dashboard" className="brand-cta-outline mt-6">
               Back to dashboard
             </Link>
           </div>
@@ -374,7 +368,7 @@ export default function Checkout() {
               type="button"
               onClick={() => checkout.mutate()}
               disabled={checkout.isPending}
-              className="mt-6 w-full inline-flex items-center justify-center h-12 rounded-full bg-[#00F5D4] text-black font-medium hover:bg-[#00F5D4]/90 disabled:opacity-50"
+              className="brand-cta w-full mt-6 !h-12"
               data-testid="button-checkout-pay"
             >
               {checkout.isPending ? (

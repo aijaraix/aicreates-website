@@ -159,7 +159,7 @@ export default function Gateway() {
             </p>
             <button
               onClick={() => setLocation("/invest")}
-              className="mt-4 inline-flex items-center px-4 h-10 rounded-full bg-[#00F5D4] text-black font-medium hover:bg-[#00F5D4]/90"
+              className="brand-cta mt-4"
               data-testid="button-continue-to-invest"
             >
               Continue to /invest <ArrowRight className="ml-2 w-4 h-4" />
@@ -197,7 +197,7 @@ export default function Gateway() {
             <select
               value={country}
               onChange={(e) => setCountry(e.target.value)}
-              className="h-11 rounded-xl border border-white/10 bg-black/30 px-3 outline-none focus:border-[#00F5D4]/40"
+              className="brand-input"
               data-testid="select-country"
             >
               {COUNTRIES.map((c) => (
@@ -246,7 +246,7 @@ export default function Gateway() {
               onChange={(e) =>
                 setIntendedAmount(Math.max(0, Number(e.target.value) || 0))
               }
-              className="w-full h-11 rounded-xl border border-white/10 bg-black/30 px-3 outline-none focus:border-[#00F5D4]/40"
+              className="brand-input"
               data-testid="input-intended-amount"
             />
             <p className="mt-2 text-xs text-white/40">
@@ -273,7 +273,7 @@ export default function Gateway() {
             <input
               value={referralSource}
               onChange={(e) => setReferralSource(e.target.value)}
-              className="w-full h-11 rounded-xl border border-white/10 bg-black/30 px-3 outline-none focus:border-[#00F5D4]/40"
+              className="brand-input"
               data-testid="input-referral"
             />
           </Section>
@@ -283,7 +283,7 @@ export default function Gateway() {
               value={experience}
               onChange={(e) => setExperience(e.target.value)}
               placeholder="e.g. early-stage tokens, AI infra operator, neobank ops"
-              className="w-full h-11 rounded-xl border border-white/10 bg-black/30 px-3 outline-none focus:border-[#00F5D4]/40"
+              className="brand-input"
               data-testid="input-experience"
             />
           </Section>
@@ -337,7 +337,7 @@ export default function Gateway() {
             type="button"
             disabled={!canSubmit || submit.isPending}
             onClick={() => submit.mutate()}
-            className="w-full inline-flex items-center justify-center h-12 px-6 rounded-full bg-[#00F5D4] text-black font-medium hover:bg-[#00F5D4]/90 disabled:opacity-40"
+            className="brand-cta w-full !h-12"
             data-testid="button-submit-gateway"
           >
             {submit.isPending ? (
