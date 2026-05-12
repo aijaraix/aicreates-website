@@ -1,6 +1,13 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { motion, useReducedMotion } from "framer-motion";
 import {
   ArrowRight,
@@ -46,6 +53,7 @@ export default function Invest() {
       document.head.removeChild(meta);
     };
   }, []);
+  const [deckOpen, setDeckOpen] = useState(false);
   const reduce = useReducedMotion();
   const fadeUp = (delay = 0) =>
     reduce
@@ -102,18 +110,18 @@ export default function Invest() {
                 </Button>
               </a>
               <a
-                href="/litepaper.pdf"
-                target="_blank"
+                href={`${import.meta.env.BASE_URL}litepaper.pdf`}
+                download="AiCreatesAi Whitepaper.pdf"
                 rel="noopener noreferrer"
               >
                 <Button
                   size="lg"
                   variant="outline"
                   className="rounded-full h-12 px-7 border-white/15 bg-white/[0.02] text-white hover:bg-white/[0.06]"
-                  data-testid="button-hero-download-deck"
+                  data-testid="button-hero-download-whitepaper"
                 >
                   <Download className="mr-2 w-4 h-4" />
-                  Download Pitch Deck
+                  Download Whitepaper
                 </Button>
               </a>
             </motion.div>
@@ -187,7 +195,7 @@ export default function Invest() {
         </div>
       </section>
 
-      {/* PITCH DECK & LITEPAPER */}
+      {/* WHITEPAPER & LITEPAPER */}
       <section className="py-14 md:py-24 relative">
         <div className="container mx-auto px-4 md:px-6">
           <div className="max-w-3xl mb-12 mx-auto text-center">
@@ -196,7 +204,7 @@ export default function Invest() {
               Learn more about our vision.
             </h2>
             <p className="mt-5 text-base sm:text-lg text-white/55 leading-relaxed">
-              Read the full thesis or download the pitch deck for offline review.
+              Read the full thesis or download the whitepaper for offline review.
             </p>
           </div>
 
@@ -210,17 +218,17 @@ export default function Invest() {
                 href: "https://invest.aicreates.ai/" as string | undefined,
                 external: true,
                 cta: "Open the portal",
-                testId: "button-view-deck",
+                testId: "button-view-portal",
               },
               {
                 icon: Download,
-                title: "Download Pitch Deck",
-                desc: "PDF version of the investor deck for offline review.",
+                title: "Download Whitepaper",
+                desc: "PDF version of the AiCreatesAi whitepaper for offline review.",
                 disabled: false,
-                href: "/litepaper.pdf" as string | undefined,
+                href: `${import.meta.env.BASE_URL}litepaper.pdf` as string | undefined,
                 external: true,
                 cta: "Download PDF",
-                testId: "button-download-deck",
+                testId: "button-download-whitepaper",
               },
               {
                 icon: BookOpen,
@@ -383,25 +391,66 @@ export default function Invest() {
         </div>
       </section>
 
-      {/* VISUAL DECK */}
+      {/* VISUAL WHITEPAPER */}
       <section className="py-14 md:py-20 relative">
-        <div className="container mx-auto px-4 md:px-6 max-w-6xl">
-          <div className="mb-8 text-center max-w-3xl mx-auto">
-            <SectionLabel>Visual Deck</SectionLabel>
-            <h2 className="mt-5 text-3xl sm:text-4xl md:text-5xl font-serif font-semibold text-gradient leading-[1.05]">
-              The agentic thesis at a glance.
-            </h2>
-            <p className="mt-4 text-base sm:text-lg text-white/55 leading-relaxed">
-              Step through the visual whitepaper. Use arrows, swipe, or open it fullscreen.
-            </p>
+        <div className="container mx-auto px-4 md:px-6 w-full">
+          <div className="relative max-w-5xl mx-auto rounded-3xl border border-white/10 bg-gradient-to-b from-[#0E0E0E] to-[#0A0A0A] p-10 sm:p-12 md:p-20 overflow-hidden text-center">
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,245,212,0.10),transparent_70%)] pointer-events-none" />
+            <div className="absolute inset-x-0 top-0 h-px divider-line" />
+            <div className="relative">
+              <motion.h2
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{ duration: 0.6 }}
+                className="text-3xl sm:text-4xl md:text-6xl font-serif font-semibold text-gradient leading-[1.05]"
+              >
+                The agentic era is not waiting.
+              </motion.h2>
+              <p className="mt-5 text-base sm:text-lg text-white/65 leading-relaxed max-w-2xl mx-auto">
+                The full thesis, architecture, and economic engine of the agentic intelligence layer - laid out in one document.
+              </p>
+              <div className="mt-8 flex flex-wrap gap-3 justify-center">
+                <Button
+                  size="lg"
+                  onClick={() => setDeckOpen(true)}
+                  className="rounded-full h-12 px-8 bg-[#00F5D4] text-black hover:bg-[#00F5D4]/90 font-medium"
+                  data-testid="button-view-whitepaper"
+                >
+                  View Whitepaper <ArrowRight className="ml-2 w-4 h-4" />
+                </Button>
+                <a
+                  href={`${import.meta.env.BASE_URL}litepaper.pdf`}
+                  download="AiCreatesAi Whitepaper.pdf"
+                  rel="noopener noreferrer"
+                  data-testid="button-download-litepaper"
+                >
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="rounded-full h-12 px-7 border-white/15 bg-transparent text-white hover:bg-white/5"
+                  >
+                    Download
+                  </Button>
+                </a>
+              </div>
+            </div>
           </div>
-          <DeckCarousel
-            title="AICA Visual Whitepaper"
-            subline="28 slides - swipe, arrow keys, or fullscreen."
-            testIdPrefix="deck-invest"
-          />
         </div>
       </section>
+
+      <Dialog open={deckOpen} onOpenChange={setDeckOpen}>
+        <DialogContent className="max-w-5xl w-[95vw] p-0 gap-0 border-0 bg-transparent shadow-none sm:rounded-none [&>button]:bg-black/60 [&>button]:text-white [&>button]:rounded-full [&>button]:p-1.5 [&>button]:opacity-100 [&>button]:right-2 [&>button]:top-2 [&>button]:z-10">
+          <DialogHeader className="sr-only">
+            <DialogTitle>AICA Whitepaper</DialogTitle>
+            <DialogDescription>Step through the AIcreatesAI whitepaper.</DialogDescription>
+          </DialogHeader>
+          <DeckCarousel
+            showHeader={false}
+            testIdPrefix="deck-invest-modal"
+          />
+        </DialogContent>
+      </Dialog>
 
       {/* DISCLAIMER */}
       <section className="pb-14 md:pb-20">

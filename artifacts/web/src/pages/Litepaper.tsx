@@ -348,16 +348,20 @@ export default function Litepaper() {
               transition={{ duration: 0.7, delay: 0.25 }}
               className="mt-10 flex flex-col sm:flex-row gap-3"
             >
-              <Button
-                size="lg"
-                disabled
-                className="rounded-full h-12 px-7 bg-[#00F5D4] text-black hover:bg-[#00F5D4]/90 font-medium disabled:opacity-100 disabled:cursor-default"
-                data-testid="button-view-pitch-deck"
+              <a
+                href={`${import.meta.env.BASE_URL}litepaper.pdf`}
+                download="AiCreatesAi Whitepaper.pdf"
+                rel="noopener noreferrer"
               >
-                <Download className="mr-2 w-4 h-4" />
-                View Pitch Deck
-                <span className="ml-3 text-[10px] font-mono uppercase tracking-[0.18em] text-black/55">Coming soon</span>
-              </Button>
+                <Button
+                  size="lg"
+                  className="rounded-full h-12 px-7 bg-[#00F5D4] text-black hover:bg-[#00F5D4]/90 font-medium"
+                  data-testid="button-download-whitepaper"
+                >
+                  <Download className="mr-2 w-4 h-4" />
+                  Download Whitepaper
+                </Button>
+              </a>
               <Link href="/contact">
                 <Button size="lg" variant="outline" className="rounded-full h-12 px-7 border-white/15 bg-white/[0.02] text-white hover:bg-white/[0.06]" data-testid="button-get-in-touch-hero">
                   Get in touch

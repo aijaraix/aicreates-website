@@ -98,7 +98,7 @@ const GROUPS: Group[] = [
       },
       {
         q: "What are the materials?",
-        a: "The litepaper is the public long-form. The pitch deck and additional investor materials are available upon request.",
+        a: "The litepaper is the public long-form. The whitepaper and additional investor materials are available for download or upon request.",
       },
     ],
   },
