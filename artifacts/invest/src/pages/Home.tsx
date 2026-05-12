@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 import {
   ArrowRight,
   Download,
-  Server,
   Rocket,
   Cpu,
   Sparkles,
@@ -17,7 +16,6 @@ import {
 import RoundsTable from "@/components/RoundsTable";
 import AllocationCalculator from "@/components/AllocationCalculator";
 import VestingCalendar from "@/components/VestingCalendar";
-import DataCenterRequestForm from "@/components/DataCenterRequestForm";
 import { SectionLabel } from "@/components/brand";
 import SiteHeader from "@/components/SiteHeader";
 import Footer from "@/components/Footer";
@@ -130,8 +128,9 @@ export default function Home() {
               </a>
             </div>
             <p className="mt-6 text-xs text-white/40 max-w-xl mx-auto">
-              Founders Commitment workflow. Not an offer to sell securities. All
-              commitments are refundable until definitive documents are signed.
+              AICA Strategic Seed Round - SAFT-based commitments. Not an offer
+              to sell securities. All commitments are refundable until
+              definitive documents are signed.
             </p>
           </div>
         </div>
@@ -558,79 +557,35 @@ export default function Home() {
         </div>
       </Section>
 
-      {/* ----------------------------- MATERIALS ----------------------------- */}
-      <Section
-        id="materials"
-        eyebrow="Get the materials"
-        title="Read deeper. Or get hands-on."
-      >
-        <div className="grid md:grid-cols-2 gap-5">
-          <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-7 flex flex-col">
-            <Download className="w-7 h-7 text-[#00F5D4]" />
-            <div
-              className="mt-5 text-xl font-semibold"
-              style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}
-            >
-              Download the Litepaper
-            </div>
-            <p className="mt-3 text-white/60 text-sm flex-1">
-              The full visual whitepaper covering thesis, architecture, market,
-              tokenomics, and roadmap.
-            </p>
-            <a
-              href="/invest/litepaper.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-6 inline-flex items-center justify-center h-11 px-5 rounded-full bg-[#00F5D4] text-black font-medium hover:bg-[#00F5D4]/90 transition"
-              data-testid="link-materials-litepaper"
-            >
-              Download PDF <ArrowRight className="ml-2 w-4 h-4" />
-            </a>
-          </div>
-          <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-7 flex flex-col">
-            <Server className="w-7 h-7 text-[#00F5D4]" />
-            <div
-              className="mt-5 text-xl font-semibold"
-              style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}
-            >
-              Request data-center access
-            </div>
-            <div className="mt-4">
-              <DataCenterRequestForm />
-            </div>
-          </div>
-        </div>
-      </Section>
-
       {/* ----------------------------- FINAL CTA ----------------------------- */}
-      <section className="relative py-20 md:py-28 overflow-hidden">
-        <div className="absolute inset-0 bg-grid bg-grid-fade pointer-events-none" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_50%,rgba(0,245,212,0.08),transparent_70%)] pointer-events-none" />
-        <div className="container mx-auto px-4 md:px-6 relative z-10">
-          <div className="max-w-3xl mx-auto">
-            <div className="glass-card p-10 md:p-14 text-center">
+      <section className="py-14 md:py-20 relative">
+        <div className="container mx-auto px-4 md:px-6 w-full">
+          <div className="relative max-w-5xl mx-auto rounded-3xl border border-white/10 bg-gradient-to-b from-[#0E0E0E] to-[#0A0A0A] p-10 sm:p-12 md:p-20 overflow-hidden text-center">
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,245,212,0.10),transparent_70%)] pointer-events-none" />
+            <div className="absolute inset-x-0 top-0 h-px divider-line" />
+            <div className="relative">
               <div className="mb-6 flex justify-center">
                 <SectionLabel>AICA Strategic Seed Round</SectionLabel>
               </div>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-semibold text-gradient leading-[1.05] tracking-tight">
+              <h2 className="text-3xl sm:text-4xl md:text-6xl font-serif font-semibold text-gradient leading-[1.05] tracking-tight">
                 Reserve your allocation in the Strategic Seed Round.
               </h2>
-              <p className="mt-5 text-white/60 max-w-xl mx-auto leading-relaxed">
+              <p className="mt-5 text-base sm:text-lg text-white/65 leading-relaxed max-w-2xl mx-auto">
                 Sign up, sign the SAFT, and fund by card, ACH, wire, or crypto.
                 Your vesting calendar activates the moment your commitment
                 funds.
               </p>
-              <div className="mt-10 flex flex-col sm:flex-row gap-3 justify-center">
+              <div className="mt-8 flex flex-wrap gap-3 justify-center">
                 <Link
                   href="/sign-up"
-                  className="inline-flex items-center justify-center h-12 px-7 rounded-full bg-[#00F5D4] text-black font-medium hover:bg-[#00F5D4]/90 transition shadow-[0_0_40px_rgba(0,245,212,0.3)]"
+                  className="inline-flex items-center justify-center h-12 px-8 rounded-full bg-[#00F5D4] text-black font-medium hover:bg-[#00F5D4]/90 transition"
                   data-testid="link-final-reserve"
                 >
                   Reserve allocation <ArrowRight className="ml-2 w-4 h-4" />
                 </Link>
                 <Link
                   href="/sign-in"
-                  className="inline-flex items-center justify-center h-12 px-7 rounded-full border border-white/15 bg-white/[0.02] text-white hover:bg-white/[0.06] transition"
+                  className="inline-flex items-center justify-center h-12 px-7 rounded-full border border-white/15 bg-transparent text-white hover:bg-white/5 transition"
                 >
                   Sign in
                 </Link>

@@ -117,6 +117,41 @@ export default function InvestPicker() {
       <main className="mx-auto max-w-6xl px-6 py-10 md:py-12 space-y-10">
         <RoundContext />
 
+        <div
+          className="rounded-2xl border border-[#00F5D4]/40 bg-gradient-to-br from-[#00F5D4]/[0.12] via-[#00F5D4]/[0.04] to-transparent p-5 md:p-6 flex flex-wrap items-center justify-between gap-4"
+          data-testid="banner-bonus-promo"
+        >
+          <div className="flex items-start gap-3">
+            <Sparkles className="w-6 h-6 text-[#00F5D4] mt-0.5 shrink-0" />
+            <div>
+              <div className="text-[10px] uppercase tracking-[0.18em] text-[#00F5D4]">
+                Strategic Seed bonus
+              </div>
+              <div
+                className="mt-1 text-base md:text-lg font-semibold text-white"
+                style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}
+              >
+                +10% allocation at $5,000 - +20% allocation at $25,000
+              </div>
+              <div className="mt-1 text-xs text-white/55">
+                Bonuses apply automatically when you commit at or above the
+                threshold. Above $25,000 we negotiate terms directly.
+              </div>
+            </div>
+          </div>
+          <div className="text-right">
+            <div className="text-[10px] uppercase tracking-[0.18em] text-white/40">
+              Round price
+            </div>
+            <div
+              className="text-2xl font-semibold text-white"
+              style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}
+            >
+              {priceLabel} <span className="text-sm text-white/50">/ AICA</span>
+            </div>
+          </div>
+        </div>
+
         {needsGateway && (
           <div
             className="rounded-2xl border border-[#00F5D4]/30 bg-[#00F5D4]/5 p-5 flex flex-wrap items-center justify-between gap-4"
