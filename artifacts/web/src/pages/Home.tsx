@@ -124,11 +124,11 @@ function ProductSpotlight() {
         >
           <div
             aria-hidden
-            className="absolute inset-y-0 right-0 w-[78%] md:w-[68%] pointer-events-none opacity-[0.55] [mask-image:linear-gradient(to_left,black_30%,transparent_92%)]"
+            className="absolute inset-y-0 right-0 w-[78%] md:w-[68%] pointer-events-none opacity-[0.85] [mask-image:linear-gradient(to_left,black_30%,transparent_92%)]"
             style={{
               backgroundImage: `url(${spotlightBgUrl})`,
-              backgroundSize: "175% auto",
-              backgroundPosition: "right center",
+              backgroundSize: "210% auto",
+              backgroundPosition: "right 85%",
               backgroundRepeat: "no-repeat",
             }}
           />
