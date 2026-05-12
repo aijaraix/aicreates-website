@@ -78,7 +78,7 @@ Two production surfaces, two deploy paths:
 
 The GitHub Actions workflow installs pnpm, builds the marketing site with `BASE_PATH=/`, and deploys `artifacts/web/dist/public` to Pages. `public/CNAME` provides the custom domain.
 
-The Replit deployment publishes the api-server (process) and the invest static SPA from the same autoscale instance. The `web` artifact is intentionally excluded from Replit publishing — see "Investor portal → Production deploy" below for why.
+The Replit deployment publishes the api-server (process), the invest static SPA, and a static fallback build of the marketing site, all from the same autoscale instance. The marketing site's canonical home is GitHub Pages at https://www.aicreates.ai — DNS only points there. The static copy on `*.replit.app/` exists solely so Replit Publishing has a runnable target for every artifact (otherwise the publish dialog shows "Could not find run command" and the Publish button is blocked). It is unreachable via any custom domain.
 
 See `README.md` for the full step-by-step setup.
 
@@ -156,10 +156,11 @@ Set `PUBLIC_PORTAL_ORIGIN` (e.g. `https://invest.aicreates.ai`) so dashboard lin
 
 Use Replit Deployments (autoscale) for `invest.aicreates.ai`. A single autoscale deployment publishes:
 
-- `api-server` (Node/Express process) — serves `/api/*`, Clerk proxy at `/api/__clerk`, Stripe webhook, legacy `portal.aicreates.ai` 301 redirect.
-- `invest` (static SPA) — served at `/invest/*` with SPA rewrites to `index.html`.
+- `api-server` (Node/Express process) - serves `/api/*`, Clerk proxy at `/api/__clerk`, Stripe webhook, legacy `portal.aicreates.ai` 301 redirect.
+- `invest` (static SPA) - served at `/invest/*` with SPA rewrites to `index.html`.
+- `web` (static SPA) - served at `/*` as a fallback. Canonical marketing site is on GitHub Pages at https://www.aicreates.ai; no DNS resolves to the `*.replit.app/` copy.
 
-The `web` artifact is **deliberately excluded** from Replit Deployments (no `[services.production]` block in `artifacts/web/.replit-artifact/artifact.toml`) because the marketing site lives on GitHub Pages. If publish ever fails with *"Could not find run command"*, the most common cause is that someone re-added a production block to the `web` artifact toml — remove it. See the inline comment in that file.
+Every artifact must have a `[services.production]` block in its `.replit-artifact/artifact.toml`, even the `web` artifact. If you remove the production block from `web`, the Replit Publish dialog shows *"Could not find run command"* and blocks publish. See the inline comment in `artifacts/web/.replit-artifact/artifact.toml`.
 
 DNS at GoDaddy:
 - `invest.aicreates.ai` `CNAME` → the deployment's `*.replit.app` hostname (visible in the Publishing dialog).
