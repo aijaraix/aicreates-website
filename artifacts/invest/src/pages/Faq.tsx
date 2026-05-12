@@ -26,11 +26,11 @@ const GROUPS: FaqGroup[] = [
     items: [
       {
         q: "What is the AICA Strategic Seed Round?",
-        a: "The first of five SAFT rounds in the AIcreatesAI private sale. Strategic Seed is priced at $0.015 per AICA for 200M tokens ($3M raise). Subsequent rounds (Private Sale 1, Private Sale 2, Infrastructure, and Community + Launchpad) ladder up to $0.070 per AICA. Aggregate: 1,250,000,000 AICA = 12.5% of the 10,000,000,000 fixed supply, ~$50M target raise.",
+        a: "The first of five SAFT rounds in the AIcreatesAI private sale. Strategic Seed is priced at $0.010 per AICA for 500M tokens ($5M raise, $100M FDV). Subsequent rounds (Private Round 1, Private Round 2, Infrastructure / Strategic, and Community / Launchpad) ladder up to $0.036 per AICA. Aggregate: 2,500,000,000 AICA = 25% of the 10,000,000,000 fixed supply, $50M target raise, ~$200M FDV.",
       },
       {
         q: "What are the five SAFT rounds?",
-        a: "Strategic Seed - $0.015 per AICA, 200M tokens, $3M (open now). Private Sale 1 - $0.025, 200M, $5M. Private Sale 2 - $0.040, 400M, $16M. Infrastructure - $0.055, 350M, $19.25M. Community + Launchpad - $0.070, 100M, $7M.",
+        a: "Strategic Seed - $0.010 per AICA, 500M tokens, $5M, $100M FDV (open now). Private Round 1 - $0.015, 800M, $12M, $150M FDV. Private Round 2 - $0.020, 900M, $18M, $200M FDV. Infrastructure / Strategic - $0.028, 357,142,857, $10M, $280M FDV. Community / Launchpad - $0.036, 138,888,889, $5M, $360M FDV.",
       },
       {
         q: "What does the GPU cluster do?",
@@ -38,11 +38,11 @@ const GROUPS: FaqGroup[] = [
       },
       {
         q: "Which round is open right now?",
-        a: "Strategic Seed is the only round currently open. Investors can reserve allocation today at $0.015 per AICA with tiered bonuses at $5k and $25k. Subsequent rounds open later in sequence as Strategic Seed fills.",
+        a: "Strategic Seed is the only round currently open. Investors can reserve allocation today at $0.010 per AICA with tiered bonuses at $5k and $25k. Subsequent rounds open later in sequence as Strategic Seed fills.",
       },
       {
         q: "When does the round close?",
-        a: "Strategic Seed closes on hitting its $3M hard cap or December 31, 2026, whichever is earlier. Closing dates can move forward only - never backward.",
+        a: "Strategic Seed closes on hitting its $5M hard cap or December 31, 2026, whichever is earlier. Closing dates can move forward only - never backward.",
       },
       {
         q: "What is the minimum / maximum?",

@@ -8,59 +8,73 @@ export interface RoundDef {
   name: string;
   /** Per-token price in USD millicents (1 unit = $0.001). */
   pricePerTokenMillicents: number;
-  /** Display string e.g. "$0.015 per AICA". */
+  /** Display string e.g. "$0.010 per AICA". */
   pricePerToken: string;
   /** Token allocation for the round. */
   tokens: string;
   /** Total raise. */
   totalRaise: string;
+  /** Percent of total fixed supply. */
+  supplyPct: string;
+  /** Fully diluted valuation at this round's price. */
+  fdv: string;
   open: boolean;
 }
 
 export const ROUNDS: RoundDef[] = [
   {
     slug: "strategic-seed",
-    name: "Strategic Seed Round",
-    pricePerTokenMillicents: 15,
-    pricePerToken: "$0.015 per AICA",
-    tokens: "200,000,000 AICA",
-    totalRaise: "$3,000,000",
+    name: "Strategic Seed",
+    pricePerTokenMillicents: 10,
+    pricePerToken: "$0.010 per AICA",
+    tokens: "500,000,000 AICA",
+    totalRaise: "$5,000,000",
+    supplyPct: "5.00%",
+    fdv: "$100M",
     open: true,
   },
   {
     slug: "private-1",
-    name: "Private Sale 1",
-    pricePerTokenMillicents: 25,
-    pricePerToken: "$0.025 per AICA",
-    tokens: "200,000,000 AICA",
-    totalRaise: "$5,000,000",
+    name: "Private Round 1",
+    pricePerTokenMillicents: 15,
+    pricePerToken: "$0.015 per AICA",
+    tokens: "800,000,000 AICA",
+    totalRaise: "$12,000,000",
+    supplyPct: "8.00%",
+    fdv: "$150M",
     open: false,
   },
   {
     slug: "private-2",
-    name: "Private Sale 2",
-    pricePerTokenMillicents: 40,
-    pricePerToken: "$0.040 per AICA",
-    tokens: "400,000,000 AICA",
-    totalRaise: "$16,000,000",
+    name: "Private Round 2",
+    pricePerTokenMillicents: 20,
+    pricePerToken: "$0.020 per AICA",
+    tokens: "900,000,000 AICA",
+    totalRaise: "$18,000,000",
+    supplyPct: "9.00%",
+    fdv: "$200M",
     open: false,
   },
   {
     slug: "infrastructure",
-    name: "Infrastructure Round",
-    pricePerTokenMillicents: 55,
-    pricePerToken: "$0.055 per AICA",
-    tokens: "350,000,000 AICA",
-    totalRaise: "$19,250,000",
+    name: "Infrastructure / Strategic",
+    pricePerTokenMillicents: 28,
+    pricePerToken: "$0.028 per AICA",
+    tokens: "357,142,857 AICA",
+    totalRaise: "$10,000,000",
+    supplyPct: "3.57%",
+    fdv: "$280M",
     open: false,
   },
   {
     slug: "community-launchpad",
-    name: "Community + Launchpad",
-    pricePerTokenMillicents: 70,
-    pricePerToken: "$0.070 per AICA",
-    tokens: "100,000,000 AICA",
-    totalRaise: "$7,000,000",
+    name: "Community / Launchpad",
+    pricePerTokenMillicents: 36,
+    pricePerToken: "$0.036 per AICA",
+    tokens: "138,888,889 AICA",
+    totalRaise: "$5,000,000",
+    supplyPct: "1.39%",
+    fdv: "$360M",
     open: false,
   },
 ];
@@ -70,9 +84,10 @@ export const ROUND_BY_SLUG: Map<string, RoundDef> = new Map(
 );
 
 export const ROUND_TOTALS = {
-  tokens: "1,250,000,000 AICA",
-  supplyPct: "12.5%",
-  totalRaise: "~$50,250,000",
+  tokens: "2,500,000,000 AICA",
+  supplyPct: "25%",
+  totalRaise: "$50,000,000",
+  fdv: "~$200M",
 };
 
 export const TIER_ROWS = [

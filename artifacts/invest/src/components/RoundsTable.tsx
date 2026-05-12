@@ -13,7 +13,7 @@ export default function RoundsTable() {
             style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}
           >
             {ROUND_TOTALS.tokens} ({ROUND_TOTALS.supplyPct} of supply) -{" "}
-            {ROUND_TOTALS.totalRaise} raise
+            {ROUND_TOTALS.totalRaise} raise - targeting {ROUND_TOTALS.fdv} FDV
           </div>
         </div>
         <div
@@ -29,9 +29,11 @@ export default function RoundsTable() {
           <thead className="text-xs uppercase tracking-[0.14em] text-white/40">
             <tr>
               <th className="text-left px-6 py-3 font-medium">Round</th>
+              <th className="text-left px-6 py-3 font-medium">Target Raise</th>
               <th className="text-left px-6 py-3 font-medium">Price</th>
-              <th className="text-left px-6 py-3 font-medium">Tokens</th>
-              <th className="text-left px-6 py-3 font-medium">Raise</th>
+              <th className="text-left px-6 py-3 font-medium">Tokens Sold</th>
+              <th className="text-left px-6 py-3 font-medium">% Supply</th>
+              <th className="text-left px-6 py-3 font-medium">FDV</th>
               <th className="text-left px-6 py-3 font-medium">Status</th>
             </tr>
           </thead>
@@ -48,9 +50,11 @@ export default function RoundsTable() {
                 >
                   {r.name}
                 </td>
+                <td className="px-6 py-3 text-white/80">{r.totalRaise}</td>
                 <td className="px-6 py-3 text-white/80">{r.pricePerToken}</td>
                 <td className="px-6 py-3 text-white/60">{r.tokens}</td>
-                <td className="px-6 py-3 text-white/80">{r.totalRaise}</td>
+                <td className="px-6 py-3 text-white/60">{r.supplyPct}</td>
+                <td className="px-6 py-3 text-white/80">{r.fdv}</td>
                 <td className="px-6 py-3">
                   <span
                     className={`px-2.5 py-0.5 rounded-full text-xs ${

@@ -15,7 +15,7 @@ interface Commitment {
  * path as the AllocationCart UI.
  *
  * Defaults to a single allocation against `strategic-seed` (the only
- * currently open round) at $0.015/AICA.
+ * currently open round) at $0.010/AICA.
  */
 export async function createCommitment(
   page: Page,
@@ -24,13 +24,13 @@ export async function createCommitment(
 ): Promise<Commitment> {
   const usdCents = amountUsd * 100;
   // Server: amountCents = tokens * pricePerTokenMillicents / 10
-  // (strategic-seed is 15 = $0.015/token = 1.5c/token).
+  // (strategic-seed is 10 = $0.010/token = 1c/token).
   // Therefore tokens = amountCents * 10 / pricePerTokenMillicents.
   // Ceil to mirror the InvestPicker UI math: a user entering exactly
   // MIN_USD must land at >= MIN_USD after token quantization, otherwise
   // the server rejects with min_usd. Server tolerates ±1c on the back-
   // computed amount.
-  const pricePerTokenMillicents = 15;
+  const pricePerTokenMillicents = 10;
   const tokens = Math.ceil((usdCents * 10) / pricePerTokenMillicents);
   const expectedCents = Math.round(
     (tokens * pricePerTokenMillicents) / 10,

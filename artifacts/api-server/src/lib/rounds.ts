@@ -4,9 +4,9 @@
  * artifacts/invest/src/data/rounds.ts but the server is the source of
  * truth for token math, raise totals, and capacity gating.
  *
- * Aggregate: 1,250,000,000 AICA across 5 rounds = 12.5% of the
- * 10,000,000,000 fixed supply, raising approximately $50,250,000
- * (headline rounded to "$50M" in marketing copy).
+ * Aggregate: 2,500,000,000 AICA across 5 rounds = 25% of the
+ * 10,000,000,000 fixed supply, raising $50,000,000 (~$200M FDV at
+ * blended round pricing).
  */
 export interface RoundDef {
   slug: string;
@@ -27,51 +27,51 @@ export interface RoundDef {
 export const ROUNDS: readonly RoundDef[] = [
   {
     slug: "strategic-seed",
-    label: "Strategic Seed Round",
-    pricePerTokenMillicents: 15, // $0.015 per AICA
-    tokensForSale: 200_000_000,
-    targetRaiseCents: 300_000_000, // $3M
-    hardCapCents: 300_000_000, // $3M
+    label: "Strategic Seed",
+    pricePerTokenMillicents: 10, // $0.010 per AICA
+    tokensForSale: 500_000_000,
+    targetRaiseCents: 500_000_000, // $5M
+    hardCapCents: 500_000_000,
     deadline: "2026-12-31T23:59:59Z",
     open: true,
   },
   {
     slug: "private-1",
-    label: "Private Sale 1",
-    pricePerTokenMillicents: 25, // $0.025 per AICA
-    tokensForSale: 200_000_000,
-    targetRaiseCents: 500_000_000, // $5M
-    hardCapCents: 500_000_000,
+    label: "Private Round 1",
+    pricePerTokenMillicents: 15, // $0.015 per AICA
+    tokensForSale: 800_000_000,
+    targetRaiseCents: 1_200_000_000, // $12M
+    hardCapCents: 1_200_000_000,
     deadline: "2027-03-31T23:59:59Z",
     open: false,
   },
   {
     slug: "private-2",
-    label: "Private Sale 2",
-    pricePerTokenMillicents: 40, // $0.040 per AICA
-    tokensForSale: 400_000_000,
-    targetRaiseCents: 1_600_000_000, // $16M
-    hardCapCents: 1_600_000_000,
+    label: "Private Round 2",
+    pricePerTokenMillicents: 20, // $0.020 per AICA
+    tokensForSale: 900_000_000,
+    targetRaiseCents: 1_800_000_000, // $18M
+    hardCapCents: 1_800_000_000,
     deadline: "2027-06-30T23:59:59Z",
     open: false,
   },
   {
     slug: "infrastructure",
-    label: "Infrastructure Round",
-    pricePerTokenMillicents: 55, // $0.055 per AICA
-    tokensForSale: 350_000_000,
-    targetRaiseCents: 1_925_000_000, // $19.25M
-    hardCapCents: 1_925_000_000,
+    label: "Infrastructure / Strategic",
+    pricePerTokenMillicents: 28, // $0.028 per AICA
+    tokensForSale: 357_142_857,
+    targetRaiseCents: 1_000_000_000, // $10M
+    hardCapCents: 1_000_000_000,
     deadline: "2027-09-30T23:59:59Z",
     open: false,
   },
   {
     slug: "community-launchpad",
-    label: "Community + Launchpad",
-    pricePerTokenMillicents: 70, // $0.070 per AICA
-    tokensForSale: 100_000_000,
-    targetRaiseCents: 700_000_000, // $7M
-    hardCapCents: 700_000_000,
+    label: "Community / Launchpad",
+    pricePerTokenMillicents: 36, // $0.036 per AICA
+    tokensForSale: 138_888_889,
+    targetRaiseCents: 500_000_000, // $5M
+    hardCapCents: 500_000_000,
     deadline: "2027-12-31T23:59:59Z",
     open: false,
   },

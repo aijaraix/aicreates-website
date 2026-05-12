@@ -289,11 +289,11 @@ function BlockRenderer({ block }: { block: Block }) {
 
 function SaftRoundTable() {
   const rows = [
-    { name: "Strategic Seed Round", price: "$0.015", tokens: "200,000,000", raise: "$3,000,000", open: true },
-    { name: "Private Sale 1", price: "$0.025", tokens: "200,000,000", raise: "$5,000,000", open: false },
-    { name: "Private Sale 2", price: "$0.040", tokens: "400,000,000", raise: "$16,000,000", open: false },
-    { name: "Infrastructure Round", price: "$0.055", tokens: "350,000,000", raise: "$19,250,000", open: false },
-    { name: "Community + Launchpad", price: "$0.070", tokens: "100,000,000", raise: "$7,000,000", open: false },
+    { name: "Strategic Seed", price: "$0.010", tokens: "500,000,000", raise: "$5,000,000", fdv: "$100M", supplyPct: "5.00%", open: true },
+    { name: "Private Round 1", price: "$0.015", tokens: "800,000,000", raise: "$12,000,000", fdv: "$150M", supplyPct: "8.00%", open: false },
+    { name: "Private Round 2", price: "$0.020", tokens: "900,000,000", raise: "$18,000,000", fdv: "$200M", supplyPct: "9.00%", open: false },
+    { name: "Infrastructure / Strategic", price: "$0.028", tokens: "357,142,857", raise: "$10,000,000", fdv: "$280M", supplyPct: "3.57%", open: false },
+    { name: "Community / Launchpad", price: "$0.036", tokens: "138,888,889", raise: "$5,000,000", fdv: "$360M", supplyPct: "1.39%", open: false },
   ];
   return (
     <div className="my-8 rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden">
@@ -302,7 +302,7 @@ function SaftRoundTable() {
           Private SAFT round schedule
         </div>
         <div className="mt-1 text-lg font-semibold text-white" style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}>
-          1,250,000,000 AICA - 12.5% of supply - ~$50M raise
+          2,500,000,000 AICA - 25% of supply - $50M raise - ~$200M FDV
         </div>
       </div>
       <div className="overflow-x-auto">
@@ -310,9 +310,11 @@ function SaftRoundTable() {
           <thead className="text-xs uppercase tracking-[0.14em] text-white/40">
             <tr>
               <th className="text-left px-6 py-3 font-medium">Round</th>
+              <th className="text-left px-6 py-3 font-medium">Target Raise</th>
               <th className="text-left px-6 py-3 font-medium">Price</th>
-              <th className="text-left px-6 py-3 font-medium">Tokens</th>
-              <th className="text-left px-6 py-3 font-medium">Raise</th>
+              <th className="text-left px-6 py-3 font-medium">Tokens Sold</th>
+              <th className="text-left px-6 py-3 font-medium">% Supply</th>
+              <th className="text-left px-6 py-3 font-medium">FDV</th>
               <th className="text-left px-6 py-3 font-medium">Status</th>
             </tr>
           </thead>
@@ -320,9 +322,11 @@ function SaftRoundTable() {
             {rows.map((r) => (
               <tr key={r.name} className="border-t border-white/5">
                 <td className="px-6 py-3 font-medium text-white" style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}>{r.name}</td>
+                <td className="px-6 py-3 text-white/80">{r.raise}</td>
                 <td className="px-6 py-3 text-white/80">{r.price}</td>
                 <td className="px-6 py-3 text-white/60">{r.tokens}</td>
-                <td className="px-6 py-3 text-white/80">{r.raise}</td>
+                <td className="px-6 py-3 text-white/60">{r.supplyPct}</td>
+                <td className="px-6 py-3 text-white/80">{r.fdv}</td>
                 <td className="px-6 py-3">
                   <span className={`px-2.5 py-0.5 rounded-full text-xs ${r.open ? "bg-[#00F5D4]/15 text-[#00F5D4]" : "bg-white/10 text-white/60"}`}>
                     {r.open ? "Open" : "Upcoming"}
@@ -469,7 +473,7 @@ export default function Litepaper() {
                       Disclaimer
                     </div>
                     <p className="text-white/50 text-sm leading-relaxed">
-                      This page is for informational purposes only and does not constitute an offer to sell or a solicitation to buy any securities or tokens. The AICA private sale is structured as five sequential SAFT rounds priced from $0.015 to $0.070 per AICA, totaling 1,250,000,000 AICA (12.5% of the 10,000,000,000 fixed supply) for an approximately $50M raise. SAFT terms are draft pending counsel review. AICA tokens, when issued, will be utility tokens for consumptive use within the AIcreatesAI ecosystem and are subject to vesting and jurisdictional restrictions. Early-stage technology and cryptocurrency commitments involve significant risk and you may lose all funds.
+                      This page is for informational purposes only and does not constitute an offer to sell or a solicitation to buy any securities or tokens. The AICA private sale is structured as five sequential SAFT rounds priced from $0.010 to $0.036 per AICA, totaling 2,500,000,000 AICA (25% of the 10,000,000,000 fixed supply) for a $50M raise targeting ~$200M FDV. SAFT terms are draft pending counsel review. AICA tokens, when issued, will be utility tokens for consumptive use within the AIcreatesAI ecosystem and are subject to vesting and jurisdictional restrictions. Early-stage technology and cryptocurrency commitments involve significant risk and you may lose all funds.
                     </p>
                   </div>
                 </div>

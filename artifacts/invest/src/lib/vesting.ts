@@ -57,13 +57,13 @@ export function computeVesting(
 
 /**
  * Token allocation for a USD amount at the active round price.
- * Default price is the Strategic Seed Round price ($0.015 per AICA = 15
+ * Default price is the Strategic Seed price ($0.010 per AICA = 10
  * millicents). Pass `pricePerTokenMillicents` to compute against a
  * different round.
  */
 export function tokensForAmount(
   usd: number,
-  pricePerTokenMillicents = 15,
+  pricePerTokenMillicents = 10,
 ): number {
   if (pricePerTokenMillicents <= 0) return 0;
   let bonus = 0;

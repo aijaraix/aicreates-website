@@ -77,7 +77,7 @@ test.describe("SAFT PDF preview", () => {
     // page with no allocations baked in.
     const text = extractRenderedText(body);
     expect(text).toContain("Allocation");
-    expect(text).toContain("Strategic Seed Round");
+    expect(text).toContain("Strategic Seed");
     expect(text).toContain("Acknowledged");
   });
 });

@@ -11,8 +11,8 @@ test.describe("AllocationCart capacity overflow", () => {
     const usd = page.getByTestId("input-usd-strategic-seed");
     await expect(usd).toBeVisible({ timeout: 30_000 });
 
-    // strategic-seed has 200M tokens for sale. Asking for $9M (= 600M
-    // tokens at $0.015) clearly exceeds it, so the cart's client-side
+    // strategic-seed has 500M tokens for sale. Asking for $9M (= 900M
+    // tokens at $0.010) clearly exceeds it, so the cart's client-side
     // capacity check should flag it BEFORE we ever hit the server.
     await usd.fill("9000000");
 

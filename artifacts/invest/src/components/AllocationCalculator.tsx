@@ -16,7 +16,7 @@ export default function AllocationCalculator() {
         "/rounds/active",
       ),
   });
-  const price = round.data?.round.pricePerTokenMillicents ?? 15;
+  const price = round.data?.round.pricePerTokenMillicents ?? 10;
   const tokens = useMemo(
     () => tokensForAmount(amount, price),
     [amount, price],

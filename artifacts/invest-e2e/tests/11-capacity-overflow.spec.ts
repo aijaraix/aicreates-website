@@ -16,15 +16,15 @@ test.describe("capacity enforcement", () => {
     page,
   }) => {
     await signIn(page, "investor");
-    // strategic-seed has 200,000,000 AICA capacity at $0.015/token.
+    // strategic-seed has 500,000,000 AICA capacity at $0.010/token.
     // Pick a token count that:
-    //   - clearly exceeds the 200M capacity (force a 409), and
+    //   - clearly exceeds the 500M capacity (force a 409), and
     //   - keeps the resulting USD total inside [MIN_CUSTOM=$1k,
     //     MAX_CUSTOM=$10M] so the server cannot short-circuit on the
     //     amount validators that run BEFORE validateCapacity.
-    // 600M tokens => 600M * 15 / 10 = 900,000,000c = $9M.
-    const tokens = 600_000_000;
-    const usdCents = Math.round((tokens * 15) / 10); // $9,000,000.00
+    // 900M tokens => 900M * 10 / 10 = 900,000,000c = $9M.
+    const tokens = 900_000_000;
+    const usdCents = Math.round((tokens * 10) / 10); // $9,000,000.00
     const res = await page.request.post("/api/commitments", {
       data: {
         allocations: [{ roundSlug: "strategic-seed", tokens, usdCents }],
@@ -46,8 +46,8 @@ test.describe("capacity enforcement", () => {
     page,
   }) => {
     await signIn(page, "investor");
-    const tokens = Math.floor((1_000 * 100 * 1000) / 15);
-    const usdCents = Math.round((tokens * 15) / 10);
+    const tokens = Math.floor((1_000 * 100 * 1000) / 10);
+    const usdCents = Math.round((tokens * 10) / 10);
     const res = await page.request.post("/api/commitments", {
       data: {
         allocations: [
