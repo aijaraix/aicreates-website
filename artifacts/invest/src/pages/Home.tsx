@@ -12,6 +12,10 @@ import {
   TrendingUp,
   ShieldCheck,
   Calendar,
+  Brain,
+  Bot,
+  Database,
+  Boxes,
 } from "lucide-react";
 import RoundsTable from "@/components/RoundsTable";
 import AllocationCalculator from "@/components/AllocationCalculator";
@@ -251,6 +255,90 @@ export default function Home() {
                 {c.title}
               </div>
               <p className="mt-3 text-white/60 text-sm leading-relaxed">{c.body}</p>
+            </div>
+          ))}
+        </div>
+      </Section>
+
+      {/* ----------------------------- PLATFORM COMPONENTS ----------------------------- */}
+      <Section
+        id="platform"
+        eyebrow="Platform components"
+        title={
+          <>
+            Named architecture.{" "}
+            <span className="text-[#00F5D4]">One coordinated layer.</span>
+          </>
+        }
+      >
+        <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-4">
+          {[
+            {
+              icon: Brain,
+              name: "Adam",
+              role: "Foundational intelligence core",
+              desc: "Base reasoning and learning model that anchors the layer.",
+            },
+            {
+              icon: Sparkles,
+              name: "Eve",
+              role: "Operating surface",
+              desc: "Translates operator intent into coordinated work across functions.",
+            },
+            {
+              icon: Bot,
+              name: "Jarvis",
+              role: "Execution and tooling plane",
+              desc: "Tool use, integrations, and autonomous execution under policy.",
+            },
+            {
+              icon: Cpu,
+              name: "Hybrid Compute Fabric",
+              role: "Owned GPU + multi-cloud",
+              desc: "Routes every workload to the right silicon at the right cost.",
+            },
+            {
+              icon: ShieldCheck,
+              name: "Closed-Loop Quality Engine",
+              role: "Continuous evaluation",
+              desc: "Scores, critiques, and rewrites every output before it ships.",
+            },
+            {
+              icon: Rocket,
+              name: "Self-Healing Workflows",
+              role: "Resilient long-running agents",
+              desc: "Detect drift, repair, retry, and complete the assigned outcome.",
+            },
+            {
+              icon: Database,
+              name: "Persistent Business Memory",
+              role: "Durable substrate",
+              desc: "Context, decisions, and outcomes accumulate as a queryable store.",
+            },
+            {
+              icon: Boxes,
+              name: "Skills Marketplace",
+              role: "Distribution surface",
+              desc: "Publish skills, plug into the credit ledger, and earn revenue share.",
+            },
+          ].map((c) => (
+            <div
+              key={c.name}
+              className="rounded-2xl border border-white/10 bg-white/[0.02] p-5 hover:border-[#00F5D4]/30 transition"
+            >
+              <c.icon className="w-6 h-6 text-[#00F5D4]" />
+              <div
+                className="mt-4 text-base font-semibold"
+                style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}
+              >
+                {c.name}
+              </div>
+              <div className="mt-1 text-[10px] uppercase tracking-[0.18em] text-white/40">
+                {c.role}
+              </div>
+              <p className="mt-3 text-white/60 text-xs leading-relaxed">
+                {c.desc}
+              </p>
             </div>
           ))}
         </div>
