@@ -9,7 +9,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import DeckCarousel from "@/components/DeckCarousel";
-import spotlightBgUrl from "@assets/Screenshot_2026-05-12_130708_1778555238412.png";
+import spotlightBgUrl from "@/assets/spotlight-bg.png";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import {
   ArrowRight,
