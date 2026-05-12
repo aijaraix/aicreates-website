@@ -84,7 +84,18 @@ body {
   backdrop-filter: blur(8px);
 }
 
-/* Marketing-site-aligned utilities */
+/* Marketing-site-aligned utilities.
+   .text-gradient mirrors artifacts/web/src/index.css: bright white that
+   fades toward the bottom. This is the title gradient used on every page
+   of the main site, so we use it as the portal's title gradient too. */
+.text-gradient {
+  background: linear-gradient(180deg, #ffffff 0%, #ffffff 55%, rgba(255, 255, 255, 0.4) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+/* Kept for any inner accent text that still needs the white-to-teal sweep. */
 .text-gradient-teal {
   background: linear-gradient(110deg, #f5f5f5 0%, #f5f5f5 40%, #00f5d4 100%);
   -webkit-background-clip: text;

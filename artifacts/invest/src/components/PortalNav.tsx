@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useLocation } from "wouter";
 import { useUser, useClerk } from "@clerk/react";
 import { LogOut, Menu, X } from "lucide-react";
+import { Wordmark } from "@/components/brand";
 
 const NAV_LINKS = [
   { href: "/dashboard", label: "Dashboard" },
@@ -48,19 +49,10 @@ export default function PortalNav({
       <div className="mx-auto max-w-7xl px-6 md:px-10 h-16 flex items-center justify-between gap-4">
         <Link
           href="/dashboard"
-          className="flex items-center gap-2.5 group"
+          className="flex items-center group"
           data-testid="link-portal-home"
         >
-          <span className="relative flex h-7 w-7 items-center justify-center rounded-md border border-[#00F5D4]/40 bg-[#00F5D4]/10">
-            <span className="absolute inset-0 rounded-md bg-[#00F5D4]/20 blur-md opacity-50 group-hover:opacity-80 transition" />
-            <span className="relative h-1.5 w-1.5 rounded-full bg-[#00F5D4] shadow-[0_0_10px_rgba(0,245,212,0.9)]" />
-          </span>
-          <span className="font-display font-semibold tracking-tight text-base sm:text-lg">
-            AI<span className="text-[#00F5D4]">creates</span>AI
-          </span>
-          <span className="hidden sm:inline-flex ml-2 px-2 py-0.5 rounded-full border border-white/10 bg-white/[0.03] text-[10px] font-medium uppercase tracking-[0.2em] text-white/50">
-            Portal
-          </span>
+          <Wordmark />
         </Link>
 
         <nav className="hidden md:flex items-center gap-1 text-sm">

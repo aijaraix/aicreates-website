@@ -19,6 +19,7 @@ import RoundsTable from "@/components/RoundsTable";
 import AllocationCalculator from "@/components/AllocationCalculator";
 import VestingCalendar from "@/components/VestingCalendar";
 import DataCenterRequestForm from "@/components/DataCenterRequestForm";
+import { Wordmark, SectionLabel } from "@/components/brand";
 import { computeVesting } from "@/lib/vesting";
 
 const sectionMotion = {
@@ -80,25 +81,20 @@ export default function Home() {
     <div className="min-h-[100dvh] bg-[#0A0A0A] text-white overflow-x-hidden">
       {/* ----------------------------- HERO ----------------------------- */}
       <header className="px-6 md:px-10 py-5 flex items-center justify-between border-b border-white/5 relative z-20">
-        <a href="https://www.aicreates.ai" className="flex items-center gap-2">
-          <span
-            className="font-semibold text-lg tracking-tight"
-            style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}
-          >
-            AI<span className="text-[#00F5D4]">creates</span>AI
-          </span>
+        <a href="https://www.aicreates.ai" className="flex items-center">
+          <Wordmark />
         </a>
-        <nav className="flex items-center gap-3 text-sm">
+        <nav className="flex items-center gap-2 text-sm">
           <Link
             href="/sign-in"
-            className="px-4 py-2 rounded-full border border-white/10 hover:bg-white/[0.04] transition"
+            className="inline-flex items-center justify-center rounded-full h-9 px-5 border border-white/15 bg-white/[0.02] text-white hover:bg-white/[0.06] hover:text-[#00F5D4] text-sm font-medium transition"
             data-testid="link-portal-signin"
           >
             Sign in
           </Link>
           <Link
             href="/sign-up"
-            className="px-4 py-2 rounded-full bg-[#00F5D4] text-black font-medium hover:bg-[#00F5D4]/90 transition"
+            className="inline-flex items-center justify-center rounded-full h-9 px-5 bg-[#00F5D4] text-black hover:bg-[#00F5D4]/90 text-sm font-medium transition"
             data-testid="link-portal-signup"
           >
             Reserve allocation
@@ -109,31 +105,21 @@ export default function Home() {
       <section className="relative isolate min-h-[100dvh] flex items-center px-6 md:px-10 pt-10 pb-24">
         <HeroAurora />
         <div className="relative mx-auto max-w-5xl text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#00F5D4]/30 bg-[#00F5D4]/10 mb-8">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#00F5D4] shadow-[0_0_8px_rgba(0,245,212,0.7)]" />
-            <span className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#00F5D4]">
-              AICA Founders Round 2026 - Now open
-            </span>
+          <div className="mb-8 flex justify-center">
+            <SectionLabel>AICA Founders Round 2026 - Now open</SectionLabel>
           </div>
-          <h1
-            className="text-4xl sm:text-6xl md:text-7xl font-semibold leading-[1.02] tracking-tight"
-            style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}
-          >
-            The{" "}
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#00F5D4] via-[#7c3aed] to-[#3b82f6]">
-              Agentic Intelligence Layer
-            </span>
-            .
+          <h1 className="font-display text-[40px] sm:text-5xl md:text-7xl lg:text-[88px] font-semibold leading-[1.02] tracking-tight text-gradient">
+            The Agentic Intelligence Layer.
           </h1>
-          <p className="mt-6 text-lg md:text-xl text-white/70 max-w-2xl mx-auto">
+          <p className="mt-6 text-base sm:text-lg md:text-xl text-white/60 max-w-2xl mx-auto leading-relaxed">
             Reserve your allocation in the AICA Founders Round. $50M raise to
             ship the Agentic Business Operating System and the Hybrid Compute
             Fabric powering the next wave of AI-native companies.
           </p>
-          <div className="mt-10 flex flex-col sm:flex-row gap-3 justify-center">
+          <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
             <Link
               href="/sign-up"
-              className="inline-flex items-center justify-center h-12 px-7 rounded-full bg-[#00F5D4] text-black font-medium hover:bg-[#00F5D4]/90 transition shadow-[0_0_40px_rgba(0,245,212,0.3)]"
+              className="inline-flex items-center justify-center h-12 px-7 rounded-full bg-[#00F5D4] text-black font-medium hover:bg-[#00F5D4]/90 transition"
               data-testid="link-hero-reserve"
             >
               Reserve allocation
@@ -143,7 +129,7 @@ export default function Home() {
               href="/invest/litepaper.pdf"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center h-12 px-7 rounded-full border border-white/15 hover:bg-white/[0.06] transition"
+              className="inline-flex items-center justify-center h-12 px-7 rounded-full border border-white/15 bg-white/[0.02] text-white hover:bg-white/[0.06] transition"
               data-testid="link-hero-litepaper"
             >
               <Download className="mr-2 w-4 h-4" /> Download Litepaper

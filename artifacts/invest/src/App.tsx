@@ -30,6 +30,8 @@ import Gateway from "@/pages/Gateway";
 import Documents from "@/pages/Documents";
 import Faq from "@/pages/Faq";
 import NotFound from "@/pages/not-found";
+import { Wordmark } from "@/components/brand";
+import { Link } from "wouter";
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { staleTime: 30_000, refetchOnWindowFocus: false } },
@@ -94,12 +96,18 @@ function AuthShell({
   title,
   subtitle,
   children,
+  altCta,
 }: {
   eyebrow: string;
   title: React.ReactNode;
   subtitle: React.ReactNode;
   children: React.ReactNode;
+  altCta: { href: string; label: string; variant: "primary" | "outline" };
 }) {
+  const altCtaClass =
+    altCta.variant === "primary"
+      ? "inline-flex items-center justify-center rounded-full h-9 px-5 bg-[#00F5D4] text-black hover:bg-[#00F5D4]/90 text-sm font-medium transition"
+      : "inline-flex items-center justify-center rounded-full h-9 px-5 border border-white/15 bg-white/[0.02] text-white hover:bg-white/[0.06] hover:text-[#00F5D4] text-sm font-medium transition";
   return (
     <div className="relative isolate min-h-[100dvh] bg-[#0A0A0A] text-white overflow-hidden">
       <div
@@ -110,28 +118,25 @@ function AuthShell({
         aria-hidden
         className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 h-[600px] w-[900px] portal-aurora rounded-full -z-10"
       />
-      <header className="px-6 md:px-10 py-5">
-        <a
-          href="https://www.aicreates.ai"
-          className="inline-flex items-center gap-2.5 group"
-        >
-          <span className="relative flex h-7 w-7 items-center justify-center rounded-md border border-[#00F5D4]/40 bg-[#00F5D4]/10">
-            <span className="relative h-1.5 w-1.5 rounded-full bg-[#00F5D4] shadow-[0_0_10px_rgba(0,245,212,0.9)]" />
-          </span>
-          <span className="font-display font-semibold tracking-tight text-lg">
-            AI<span className="text-[#00F5D4]">creates</span>AI
-          </span>
+      <header className="px-6 md:px-10 py-5 flex items-center justify-between">
+        <a href="https://www.aicreates.ai" className="inline-flex items-center">
+          <Wordmark />
         </a>
+        <nav className="flex items-center gap-2 text-sm">
+          <Link href={altCta.href} className={altCtaClass}>
+            {altCta.label}
+          </Link>
+        </nav>
       </header>
       <main className="px-4 pt-4 pb-16 md:pt-10 flex flex-col items-center">
         <div className="max-w-md w-full text-center mb-8">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#00F5D4]/30 bg-[#00F5D4]/5 mb-5">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/[0.02] mb-5">
             <span className="w-1.5 h-1.5 rounded-full bg-[#00F5D4] shadow-[0_0_8px_rgba(0,245,212,0.7)]" />
-            <span className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#00F5D4]">
+            <span className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/70">
               {eyebrow}
             </span>
           </div>
-          <h1 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight text-gradient-teal">
+          <h1 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight text-gradient">
             {title}
           </h1>
           <p className="mt-3 text-white/60 text-sm">{subtitle}</p>
@@ -148,6 +153,7 @@ function SignInPage() {
       eyebrow="Investor portal"
       title="Welcome back."
       subtitle="Sign in to manage your AICA Founders Round commitment, SAFTs, and vesting schedule."
+      altCta={{ href: "/sign-up", label: "Reserve allocation", variant: "primary" }}
     >
       <SignIn
         routing="path"
@@ -164,6 +170,7 @@ function SignUpPage() {
       eyebrow="AICA Founders Round - 2026"
       title="Reserve your allocation."
       subtitle="Create your investor account to access the deck, complete the SAFT, and fund a commitment."
+      altCta={{ href: "/sign-in", label: "Sign in", variant: "outline" }}
     >
       <SignUp
         routing="path"

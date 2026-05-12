@@ -121,6 +121,64 @@ export function BrandBadge({
   );
 }
 
+/* ---------------- Wordmark (matches main site exactly) ----------------
+   Main site Navigation.tsx renders:
+     small teal dot + "AI"(teal) + "creates"(light) + "AI"(teal),
+     font-sans (Inter) font-semibold tracking-tight text-white text-lg.
+   Use this everywhere in the portal (PortalNav, AuthShell, Home header)
+   so the wordmark is byte-identical to the marketing site. */
+export function Wordmark({
+  size = "md",
+  withDot = true,
+}: {
+  size?: "sm" | "md";
+  withDot?: boolean;
+}) {
+  const cls = size === "sm" ? "text-base" : "text-lg";
+  return (
+    <span className="inline-flex items-center gap-2.5">
+      {withDot && (
+        <span className="relative w-2.5 h-2.5 rounded-full bg-[#00F5D4] shadow-[0_0_12px_rgba(0,245,212,0.7)]" />
+      )}
+      <span
+        className={cx(
+          "font-sans font-semibold tracking-tight text-white leading-none",
+          cls,
+        )}
+      >
+        <span className="text-[#00F5D4]">AI</span>
+        <span className="font-light">creates</span>
+        <span className="text-[#00F5D4]">AI</span>
+      </span>
+    </span>
+  );
+}
+
+/* ---------------- SectionLabel (matches main site SectionLabel) ----------------
+   Neutral pill with a tiny teal dot - white/10 border, white/[0.02] bg,
+   uppercase white/70 text. Use it for hero eyebrows on every portal page. */
+export function SectionLabel({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div
+      className={cx(
+        "inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/[0.02]",
+        className,
+      )}
+    >
+      <span className="w-1.5 h-1.5 rounded-full bg-[#00F5D4] shadow-[0_0_8px_rgba(0,245,212,0.7)]" />
+      <span className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/70">
+        {children}
+      </span>
+    </div>
+  );
+}
+
 /* ---------------- BrandTable ---------------- */
 export function BrandTable({
   className,

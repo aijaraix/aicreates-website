@@ -1,6 +1,7 @@
 import { Link } from "wouter";
 import { ArrowLeft } from "lucide-react";
 import type { ReactNode } from "react";
+import { SectionLabel } from "@/components/brand";
 
 interface PageHeaderProps {
   eyebrow?: string;
@@ -55,11 +56,8 @@ export default function PageHeader({
         >
           <div className={isCenter ? "max-w-2xl" : "max-w-3xl"}>
             {eyebrow && (
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#00F5D4]/30 bg-[#00F5D4]/5 mb-5">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#00F5D4] shadow-[0_0_8px_rgba(0,245,212,0.7)]" />
-                <span className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#00F5D4]">
-                  {eyebrow}
-                </span>
+              <div className="mb-5">
+                <SectionLabel>{eyebrow}</SectionLabel>
               </div>
             )}
             <h1
@@ -67,7 +65,7 @@ export default function PageHeader({
                 isCompact
                   ? "text-3xl sm:text-4xl"
                   : "text-4xl sm:text-5xl md:text-[3.5rem] leading-[1.05]"
-              } text-gradient-teal`}
+              } text-gradient`}
             >
               {title}
             </h1>
