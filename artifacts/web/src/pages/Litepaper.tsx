@@ -2,29 +2,14 @@ import { motion } from "framer-motion";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Download } from "lucide-react";
-import aicaCoin from "@/assets/aica-coin.png";
-
-function AicaGlyph({ className = "" }: { className?: string }) {
-  return (
-    <img
-      src={aicaCoin}
-      alt=""
-      aria-hidden="true"
-      className={`inline-block align-[-0.18em] w-[1.1em] h-[1.1em] mx-1 select-none drop-shadow-[0_0_8px_rgba(0,245,212,0.35)] ${className}`}
-      draggable={false}
-    />
-  );
-}
+import AicaTokenMark from "@/components/AicaTokenMark";
 
 function withGlyphs(text: string): React.ReactNode {
   const parts = text.split(/(\$AICA)/g);
   if (parts.length === 1) return text;
   return parts.map((p, i) =>
     p === "$AICA" ? (
-      <span key={i} className="inline-flex items-baseline">
-        <AicaGlyph />
-        <span className="font-medium text-[#00F5D4]">$AICA</span>
-      </span>
+      <span key={i} className="font-medium text-[#00F5D4]">$AICA</span>
     ) : (
       <span key={i}>{p}</span>
     ),
@@ -309,12 +294,7 @@ function TokenomicsCoin() {
       <div className="absolute inset-0 bg-grid opacity-30 pointer-events-none [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,black,transparent_75%)]" />
       <div className="relative grid grid-cols-1 md:grid-cols-5 gap-6 p-7 md:p-10 items-center">
         <div className="md:col-span-2 flex justify-center">
-          <img
-            src={aicaCoin}
-            alt="$AICA token"
-            className="w-56 sm:w-64 md:w-full max-w-[320px] aspect-square object-contain drop-shadow-[0_0_40px_rgba(0,245,212,0.35)]"
-            draggable={false}
-          />
+          <AicaTokenMark className="w-56 sm:w-64 md:w-full max-w-[320px]" />
         </div>
         <div className="md:col-span-3">
           <div className="text-xs font-mono text-[#00F5D4] tracking-widest uppercase mb-2">

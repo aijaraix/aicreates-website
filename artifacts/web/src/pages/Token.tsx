@@ -2,9 +2,9 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { ArrowRight, Coins, Cpu, Users, ShieldCheck } from "lucide-react";
-import aicaCoin from "@/assets/aica-coin.png";
 import { useSeo } from "@/lib/useSeo";
 import Figure, { TokenUtilityFigure, TokenFlowFigure, AicaImage, AicaShieldImage } from "@/components/Figure";
+import AicaTokenMark from "@/components/AicaTokenMark";
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
@@ -59,12 +59,7 @@ export default function Token() {
               </motion.p>
             </div>
             <div className="md:col-span-5 flex justify-center">
-              <img
-                src={aicaCoin}
-                alt="$AICA token"
-                className="w-64 md:w-full max-w-[360px] aspect-square object-contain drop-shadow-[0_0_60px_rgba(0,245,212,0.4)]"
-                draggable={false}
-              />
+              <AicaTokenMark className="w-64 md:w-full max-w-[360px]" testId="img-aica-coin" />
             </div>
           </div>
         </div>

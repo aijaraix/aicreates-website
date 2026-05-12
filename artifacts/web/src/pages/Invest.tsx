@@ -13,30 +13,14 @@ import {
   Users,
 } from "lucide-react";
 import DeckCarousel from "@/components/DeckCarousel";
-import aicaCoinShield from "@/assets/aica-coin-shield.png";
-import aicaCoin from "@/assets/aica-coin.png";
-
-function AicaGlyph({ className = "" }: { className?: string }) {
-  return (
-    <img
-      src={aicaCoin}
-      alt=""
-      aria-hidden="true"
-      className={`inline-block align-[-0.18em] w-[1.05em] h-[1.05em] mx-1 select-none drop-shadow-[0_0_8px_rgba(0,245,212,0.35)] ${className}`}
-      draggable={false}
-    />
-  );
-}
+import AicaTokenMark from "@/components/AicaTokenMark";
 
 function withGlyphs(text: string): React.ReactNode {
   const parts = text.split(/(\$AICA)/g);
   if (parts.length === 1) return text;
   return parts.map((p, i) =>
     p === "$AICA" ? (
-      <span key={i} className="inline-flex items-baseline">
-        <AicaGlyph />
-        <span className="font-medium text-[#00F5D4]">$AICA</span>
-      </span>
+      <span key={i} className="font-medium text-[#00F5D4]">$AICA</span>
     ) : (
       <span key={i}>{p}</span>
     ),
@@ -307,12 +291,9 @@ export default function Invest() {
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(0,245,212,0.10),transparent_60%)] pointer-events-none" />
             <div className="relative grid grid-cols-1 md:grid-cols-5 gap-8 md:gap-12 items-center">
               <div className="md:col-span-2 flex justify-center">
-                <img
-                  src={aicaCoinShield}
-                  alt="$AICA token"
-                  className="w-48 sm:w-56 md:w-full max-w-[280px] aspect-square object-contain drop-shadow-[0_0_40px_rgba(0,245,212,0.4)]"
-                  draggable={false}
-                  data-testid="img-aica-coin"
+                <AicaTokenMark
+                  className="w-48 sm:w-56 md:w-full max-w-[280px]"
+                  testId="img-aica-coin"
                 />
               </div>
               <div className="md:col-span-3">

@@ -2,8 +2,7 @@ import { ReactNode } from "react";
 import architectureImg from "@/assets/about-architecture.png";
 import technologyImg from "@/assets/technology.png";
 import servicesImg from "@/assets/services.png";
-import aicaCoin from "@/assets/aica-coin.png";
-import aicaCoinShield from "@/assets/aica-coin-shield.png";
+import AicaTokenMark from "@/components/AicaTokenMark";
 
 type FigureProps = {
   number: string;
@@ -49,15 +48,28 @@ export function ServicesImage() {
 }
 export function AicaImage() {
   return (
-    <div className="w-full h-full flex items-center justify-center bg-[#0A0A0A]">
-      <img src={aicaCoin} alt="$AICA - native asset" className="max-h-full object-contain" loading="lazy" draggable={false} />
+    <div className="w-full h-full flex items-center justify-center py-6">
+      <AicaTokenMark className="max-h-full max-w-[60%]" />
     </div>
   );
 }
 export function AicaShieldImage() {
+  const C = "#00F5D4";
   return (
-    <div className="w-full h-full flex items-center justify-center bg-[#0A0A0A]">
-      <img src={aicaCoinShield} alt="$AICA shielded by the Credit Ledger" className="max-h-full object-contain" loading="lazy" draggable={false} />
+    <div className="w-full h-full flex items-center justify-center py-6 relative">
+      <div className="relative w-[60%] max-w-[60%] aspect-square">
+        <AicaTokenMark className="absolute inset-0" />
+        <svg viewBox="0 0 200 200" className="absolute inset-0 w-full h-full pointer-events-none">
+          <path
+            d="M100 12 L172 38 L172 110 Q172 158 100 188 Q28 158 28 110 L28 38 Z"
+            fill="none"
+            stroke={C}
+            strokeOpacity="0.55"
+            strokeWidth="1.2"
+            strokeDasharray="3 4"
+          />
+        </svg>
+      </div>
     </div>
   );
 }
