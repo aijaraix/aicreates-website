@@ -40,11 +40,11 @@ export const ACK_LIST = [
   },
   {
     key: "noOwnership",
-    text: "I understand SAFT tokens do not represent equity or ownership in AICreatesAI.",
+    text: "I understand SAFT tokens do not represent equity or ownership in AIcreatesAI.",
   },
   {
     key: "consumptiveUse",
-    text: "I am acquiring AICA for consumptive use within the AICreatesAI ecosystem.",
+    text: "I am acquiring AICA for consumptive use within the AIcreatesAI ecosystem.",
   },
   {
     key: "illiquidity",
@@ -89,7 +89,7 @@ export const RISK_DISCLOSURES = [
   {
     key: "executionRisk",
     title: "Execution risk",
-    body: "AICreatesAI may fail to deliver Eve OS, the hybrid compute fabric, or any other planned product. The roadmap may slip materially or be abandoned.",
+    body: "AIcreatesAI may fail to deliver Eve OS, the hybrid compute fabric, or any other planned product. The roadmap may slip materially or be abandoned.",
   },
   {
     key: "concentrationRisk",
@@ -99,7 +99,7 @@ export const RISK_DISCLOSURES = [
   {
     key: "noRecoveryRisk",
     title: "No recovery",
-    body: "AICreatesAI cannot recover tokens sent to incorrect addresses, lost keys, or compromised wallets. You are solely responsible for custody.",
+    body: "AIcreatesAI cannot recover tokens sent to incorrect addresses, lost keys, or compromised wallets. You are solely responsible for custody.",
   },
   {
     key: "noGuaranteedReturns",
@@ -109,7 +109,7 @@ export const RISK_DISCLOSURES = [
   {
     key: "noListingPromise",
     title: "No listing promise",
-    body: "AICreatesAI makes no representation that AICA will be listed on any centralized or decentralized exchange, market maker, or liquidity venue. Listing decisions are at the sole discretion of third parties and are not committed by the company.",
+    body: "AIcreatesAI makes no representation that AICA will be listed on any centralized or decentralized exchange, market maker, or liquidity venue. Listing decisions are at the sole discretion of third parties and are not committed by the company.",
   },
   {
     key: "jurisdictionRestrictions",

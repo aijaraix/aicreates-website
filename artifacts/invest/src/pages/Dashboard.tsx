@@ -245,15 +245,13 @@ export default function Dashboard() {
         </div>
 
         {isLoading ? (
-          <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-8 text-white/50">
-            Loading…
-          </div>
+          <div className="brand-card p-8 text-white/50">Loading…</div>
         ) : error ? (
           <div className="rounded-2xl border border-red-500/30 bg-red-500/5 p-8 text-red-300">
             Failed to load.
           </div>
         ) : allocations.length === 0 ? (
-          <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-8 text-white/50">
+          <div className="brand-card p-8 text-white/50">
             No commitments yet. Reserve your first allocation to get started.
           </div>
         ) : (
@@ -261,7 +259,7 @@ export default function Dashboard() {
             {allocations.map((a) => (
               <div
                 key={a.id}
-                className="rounded-2xl border border-white/10 bg-white/[0.02] p-6"
+                className="brand-card p-6"
                 data-testid={`row-commitment-${a.id}`}
               >
                 <div className="flex flex-wrap items-start justify-between gap-3">

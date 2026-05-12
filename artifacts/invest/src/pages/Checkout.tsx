@@ -180,7 +180,7 @@ export default function Checkout() {
       <main className="mx-auto max-w-3xl px-6 py-10 md:py-12">
         {manualConfirmed ? (
           <div
-            className="rounded-2xl border border-[#00F5D4]/30 bg-[#00F5D4]/5 p-6"
+            className="brand-card brand-hairline-teal p-6"
             data-testid={`${manualConfirmed}-confirmation`}
           >
             <CheckCircle2 className="w-8 h-8 text-[#00F5D4]" />
@@ -206,10 +206,10 @@ export default function Checkout() {
               return (
                 <label
                   key={m.value}
-                  className={`flex items-start gap-4 rounded-2xl border p-5 cursor-pointer transition ${
+                  className={`brand-card flex items-start gap-4 p-5 cursor-pointer transition ${
                     isSelected
-                      ? "border-[#00F5D4]/50 bg-[#00F5D4]/5"
-                      : "border-white/10 bg-white/[0.02] hover:border-white/20"
+                      ? "!border-[#00F5D4]/50 !bg-[#00F5D4]/5"
+                      : "hover:!border-white/20"
                   }`}
                   data-testid={`radio-method-${m.value}`}
                 >
@@ -237,7 +237,7 @@ export default function Checkout() {
 
             {method === "crypto" && (
               <div
-                className="rounded-2xl border border-white/10 bg-black/40 p-5 mt-4"
+                className="brand-card p-5 mt-4"
                 data-testid="crypto-instructions"
               >
                 <div className="text-xs uppercase tracking-[0.18em] text-white/40 mb-3">
@@ -291,7 +291,7 @@ export default function Checkout() {
                       Official wire instructions
                     </div>
                     <div className="font-display text-lg text-white">
-                      AICreatesAI - Funding instructions
+                      AIcreatesAI - Funding instructions
                     </div>
                     <div className="text-xs text-white/50 mt-1">
                       Held until SAFT confirmation. Use the reference value below on your wire.

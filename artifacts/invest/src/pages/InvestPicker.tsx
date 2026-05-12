@@ -245,7 +245,7 @@ export default function InvestPicker() {
 
           <div className="space-y-4">
             <VestingPreview totalTokens={tokensForAmount(customAmount)} />
-            <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-5 text-xs text-white/50 leading-relaxed">
+            <div className="brand-card p-5 text-xs text-white/50 leading-relaxed">
               <div className="text-[10px] uppercase tracking-[0.18em] text-white/40 mb-2">
                 Token math
               </div>

@@ -664,7 +664,7 @@ export default function Home() {
             offer to sell securities or solicitation of an offer to buy
             securities. SAFT terms are draft pending counsel review. AICA
             tokens, when issued, will be utility tokens for consumptive use
-            within the AICreatesAI ecosystem and are subject to vesting and
+            within the AIcreatesAI ecosystem and are subject to vesting and
             jurisdictional restrictions.
           </p>
           <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-white/5">

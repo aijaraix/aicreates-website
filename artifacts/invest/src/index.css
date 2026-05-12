@@ -346,9 +346,7 @@ body {
 }
 
 .cl-footer,
-.cl-internal-1ki5d3a,
-.cl-developmentBanner,
-.cl-internal-developmentBanner {
+.cl-developmentBanner {
   background: rgba(255, 255, 255, 0.02) !important;
   border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
 }
@@ -364,7 +362,7 @@ body {
 /* Replace Clerk's default header (which renders the unbranded Clerk
    dashboard app name) with a small brand-aligned eyebrow inside the card.
    AuthShell still owns the gradient title and eyebrow above the card; this
-   adds a discreet AICreatesAI wordmark so the card has its own identity. */
+   adds a discreet AIcreatesAI wordmark so the card has its own identity. */
 .cl-header > * {
   display: none !important;
 }
@@ -376,7 +374,7 @@ body {
   text-align: center;
 }
 .cl-header::after {
-  content: "AICreatesAI - Secure investor access";
+  content: "AIcreatesAI - Secure investor access";
   display: block;
   font-family: "Space Grotesk", system-ui, sans-serif;
   font-size: 11px;

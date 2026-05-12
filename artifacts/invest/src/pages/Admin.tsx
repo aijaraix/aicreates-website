@@ -315,7 +315,7 @@ export default function Admin() {
 
         {/* Applications */}
         <section
-          className="rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden"
+          className="brand-card overflow-hidden"
           data-testid="section-applications"
         >
           <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between">
@@ -414,7 +414,7 @@ export default function Admin() {
         </section>
 
         {/* Commitments */}
-        <section className="rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden">
+        <section className="brand-card overflow-hidden">
           <div className="px-6 py-4 border-b border-white/5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <h2 className="font-medium">Commitments</h2>
             <div className="flex items-center gap-2 flex-wrap">
@@ -649,7 +649,7 @@ export default function Admin() {
 
         {/* Audit log */}
         <section
-          className="rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden"
+          className="brand-card overflow-hidden"
           data-testid="section-audit-log"
         >
           <div className="px-6 py-4 border-b border-white/5">
@@ -704,7 +704,7 @@ export default function Admin() {
         </section>
 
         {/* Investors */}
-        <section className="rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden">
+        <section className="brand-card overflow-hidden">
           <div className="px-6 py-4 border-b border-white/5">
             <h2 className="font-medium">Investors</h2>
           </div>

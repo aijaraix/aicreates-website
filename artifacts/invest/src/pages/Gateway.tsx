@@ -167,7 +167,7 @@ export default function Gateway() {
           </div>
         )}
 
-        <div className="space-y-6 rounded-2xl border border-white/10 bg-white/[0.02] p-6 md:p-8">
+        <div className="brand-card space-y-6 p-6 md:p-8">
           <Section title="Who are you backing as?">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
               {PERSONAS.map((p) => (
@@ -312,7 +312,7 @@ export default function Gateway() {
               />
               <span className="text-sm text-white/80">
                 I understand AICA tokens are acquired for consumptive use
-                in the AICreatesAI ecosystem and do not represent equity
+                in the AIcreatesAI ecosystem and do not represent equity
                 in the company.
               </span>
             </label>

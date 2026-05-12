@@ -46,7 +46,7 @@ export const TIER_ROWS = [
 ];
 
 export const WIRE_INSTRUCTIONS = {
-  beneficiary: "AICreatesAI Inc.",
+  beneficiary: "AIcreatesAI Inc.",
   beneficiaryAddress: "8310 Byron Ave, Miami Beach, Florida 33141",
   bankName: "Bank of America, N.A.",
   bankBranch: "7474 Collins Ave, Miami Beach, FL",

@@ -41,7 +41,7 @@ const STATIC_DOCS = [
   {
     title: "Sample SAFT",
     blurb:
-      "Reference copy of the AICreatesAI SAFT. Your signed copy will be generated when you complete the SAFT flow on a commitment.",
+      "Reference copy of the AIcreatesAI SAFT. Your signed copy will be generated when you complete the SAFT flow on a commitment.",
     href: "/faq#saft",
     cta: "Read SAFT overview",
     internal: true,

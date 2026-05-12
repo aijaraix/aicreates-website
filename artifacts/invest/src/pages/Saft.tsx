@@ -315,7 +315,7 @@ export default function Saft() {
           })}
         </ol>
 
-        <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 md:p-8">
+        <div className="brand-card p-6 md:p-8">
           {step === 0 && (
             <div className="space-y-4" data-testid="saft-step-identity">
               <H title="Investor identity" />
@@ -506,7 +506,7 @@ export default function Saft() {
                 placeholder="e.g. early-stage tokens, public equities, real estate"
               />
               <Field
-                label="Relationship to AICreatesAI (optional)"
+                label="Relationship to AIcreatesAI (optional)"
                 value={form.relationshipToCompany}
                 onChange={(v) => setForm({ ...form, relationshipToCompany: v })}
                 placeholder="e.g. introduced by, advisor, customer"
@@ -702,7 +702,7 @@ export default function Saft() {
                 />
                 <span className="text-sm text-white/80">
                   I intend this typed signature to be my legal signature on
-                  the draft SAFT for AICreatesAI.
+                  the draft SAFT for AIcreatesAI.
                 </span>
               </label>
               <div className="rounded-xl border border-amber-400/30 bg-amber-400/5 p-3 text-xs text-amber-200/80">

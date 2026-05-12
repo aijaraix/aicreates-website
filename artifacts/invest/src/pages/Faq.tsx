@@ -77,7 +77,7 @@ const GROUPS: FaqGroup[] = [
       },
       {
         q: "What about tax treatment?",
-        a: "You are solely responsible for the tax treatment of your commitment and any tokens received at TGE or unlock. AICreatesAI does not issue tax advice. Consult your own tax advisor; you may receive a tax form depending on your jurisdiction.",
+        a: "You are solely responsible for the tax treatment of your commitment and any tokens received at TGE or unlock. AIcreatesAI does not issue tax advice. Consult your own tax advisor; you may receive a tax form depending on your jurisdiction.",
         anchor: "tax",
       },
       {
