@@ -20,6 +20,7 @@ import VestingCalendar from "@/components/VestingCalendar";
 import DataCenterRequestForm from "@/components/DataCenterRequestForm";
 import { SectionLabel } from "@/components/brand";
 import SiteHeader from "@/components/SiteHeader";
+import Footer from "@/components/Footer";
 import { computeVesting } from "@/lib/vesting";
 
 const sectionMotion = {
@@ -79,6 +80,7 @@ export default function Home() {
       <SiteHeader
         homeHref="https://www.aicreates.ai"
         homeExternal
+        sticky
         ctas={[
           {
             href: "/sign-in",
@@ -602,57 +604,44 @@ export default function Home() {
       </Section>
 
       {/* ----------------------------- FINAL CTA ----------------------------- */}
-      <section className="relative px-6 md:px-10 py-24 md:py-32 isolate overflow-hidden">
-        <div className="absolute inset-0 portal-aurora opacity-40" />
-        <div className="relative mx-auto max-w-3xl text-center">
-          <h2
-            className="text-4xl md:text-5xl font-semibold tracking-tight"
-            style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}
-          >
-            Reserve your allocation in the{" "}
-            <span className="text-[#00F5D4]">Founders Round</span>.
-          </h2>
-          <p className="mt-5 text-white/70">
-            Sign up, sign the SAFT, and fund by card, ACH, wire, or crypto.
-            Your vesting calendar activates the moment your commitment funds.
-          </p>
-          <div className="mt-10 flex flex-col sm:flex-row gap-3 justify-center">
-            <Link
-              href="/sign-up"
-              className="inline-flex items-center justify-center h-12 px-7 rounded-full bg-[#00F5D4] text-black font-medium hover:bg-[#00F5D4]/90 transition shadow-[0_0_40px_rgba(0,245,212,0.3)]"
-              data-testid="link-final-reserve"
-            >
-              Reserve allocation <ArrowRight className="ml-2 w-4 h-4" />
-            </Link>
-            <Link
-              href="/sign-in"
-              className="inline-flex items-center justify-center h-12 px-7 rounded-full border border-white/15 hover:bg-white/[0.06] transition"
-            >
-              Sign in
-            </Link>
+      <section className="relative py-20 md:py-28 overflow-hidden">
+        <div className="absolute inset-0 bg-grid bg-grid-fade pointer-events-none" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_50%,rgba(0,245,212,0.08),transparent_70%)] pointer-events-none" />
+        <div className="container mx-auto px-4 md:px-6 relative z-10">
+          <div className="max-w-3xl mx-auto">
+            <div className="glass-card p-10 md:p-14 text-center">
+              <div className="mb-6 flex justify-center">
+                <SectionLabel>AICA Founders Round 2026</SectionLabel>
+              </div>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-semibold text-gradient leading-[1.05] tracking-tight">
+                Reserve your allocation in the Founders Round.
+              </h2>
+              <p className="mt-5 text-white/60 max-w-xl mx-auto leading-relaxed">
+                Sign up, sign the SAFT, and fund by card, ACH, wire, or crypto.
+                Your vesting calendar activates the moment your commitment
+                funds.
+              </p>
+              <div className="mt-10 flex flex-col sm:flex-row gap-3 justify-center">
+                <Link
+                  href="/sign-up"
+                  className="inline-flex items-center justify-center h-12 px-7 rounded-full bg-[#00F5D4] text-black font-medium hover:bg-[#00F5D4]/90 transition shadow-[0_0_40px_rgba(0,245,212,0.3)]"
+                  data-testid="link-final-reserve"
+                >
+                  Reserve allocation <ArrowRight className="ml-2 w-4 h-4" />
+                </Link>
+                <Link
+                  href="/sign-in"
+                  className="inline-flex items-center justify-center h-12 px-7 rounded-full border border-white/15 bg-white/[0.02] text-white hover:bg-white/[0.06] transition"
+                >
+                  Sign in
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ----------------------------- DISCLAIMER + FOOTER ----------------------------- */}
-      <footer className="px-6 md:px-10 py-10 border-t border-white/5 text-xs text-white/40">
-        <div className="mx-auto max-w-6xl space-y-4">
-          <p>
-            This page describes a Founders Commitment workflow and is not an
-            offer to sell securities or solicitation of an offer to buy
-            securities. SAFT terms are draft pending counsel review. AICA
-            tokens, when issued, will be utility tokens for consumptive use
-            within the AIcreatesAI ecosystem and are subject to vesting and
-            jurisdictional restrictions.
-          </p>
-          <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-white/5">
-            <span>&copy; {new Date().getFullYear()} AICreatesAi</span>
-            <a href="https://www.aicreates.ai" className="hover:text-white/70">
-              aicreates.ai
-            </a>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

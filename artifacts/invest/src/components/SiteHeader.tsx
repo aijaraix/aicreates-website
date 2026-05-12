@@ -46,7 +46,7 @@ export default function SiteHeader({
   }, [sticky]);
 
   const wrapperCls = sticky
-    ? `sticky top-0 z-40 transition-all ${
+    ? `fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
         scrolled
           ? "bg-[#0A0A0A]/80 backdrop-blur-xl border-b border-white/5 py-3"
           : "bg-transparent py-5 border-b border-transparent"
