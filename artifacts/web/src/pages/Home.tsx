@@ -9,7 +9,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import DeckCarousel from "@/components/DeckCarousel";
-import spotlightBgUrl from "@assets/Screenshot_2026-05-12_125815_1778554832550.png";
+import spotlightBgUrl from "@assets/Screenshot_2026-05-12_130708_1778555238412.png";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import {
   ArrowRight,
@@ -124,11 +124,11 @@ function ProductSpotlight() {
         >
           <div
             aria-hidden
-            className="absolute inset-y-0 right-0 w-[78%] md:w-[68%] pointer-events-none opacity-[0.85] [mask-image:linear-gradient(to_left,black_30%,transparent_92%)]"
+            className="absolute inset-y-0 right-0 w-[78%] md:w-[68%] pointer-events-none opacity-[0.9] [mask-image:linear-gradient(to_left,black_30%,transparent_92%)]"
             style={{
               backgroundImage: `url(${spotlightBgUrl})`,
-              backgroundSize: "210% auto",
-              backgroundPosition: "right 85%",
+              backgroundSize: "auto 110%",
+              backgroundPosition: "right center",
               backgroundRepeat: "no-repeat",
             }}
           />
