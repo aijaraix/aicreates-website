@@ -49,11 +49,8 @@ test.describe("dashboard funded state", () => {
 
     // The .ics export button only renders for funded commitments with a
     // vesting schedule, so its presence implies the schedule was computed.
+    // (The per-round breakdown `lines-${id}` only renders for multi-round
+    // commitments; single-round draws the legacy summary instead.)
     await expect(page.getByTestId(`button-ics-${c.id}`)).toBeVisible();
-
-    // The per-round breakdown should render at least one line. The
-    // multi-round dashboard groups allocations by roundSlug under
-    // `lines-${id}`; legacy single-round commitments also surface here.
-    await expect(page.getByTestId(`lines-${c.id}`)).toBeVisible();
   });
 });

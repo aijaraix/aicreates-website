@@ -26,5 +26,15 @@ test.describe("SAFT PDF preview", () => {
     const body = await res.body();
     expect(body.length).toBeGreaterThan(500);
     expect(body.slice(0, 4).toString("latin1")).toBe("%PDF");
+
+    // pdf-lib writes uncompressed text streams by default, so we can do
+    // a raw substring scan to prove the per-round allocation table was
+    // rendered (round label, fixed table headers, vesting boilerplate).
+    // This protects against silent regressions where the PDF endpoint
+    // returns a valid-but-empty cover page with no allocations baked in.
+    const text = body.toString("latin1");
+    expect(text).toContain("Allocation");
+    expect(text).toContain("Strategic Seed Round");
+    expect(text).toContain("Acknowledged");
   });
 });
