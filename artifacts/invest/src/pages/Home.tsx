@@ -46,30 +46,26 @@ function Section({
     <motion.section
       id={id}
       {...sectionMotion}
-      className={`relative px-6 md:px-10 py-20 md:py-28 ${className}`}
+      className={`relative py-14 md:py-24 ${className}`}
     >
-      <div className="mx-auto max-w-6xl">
-        {(eyebrow || title) && (
-          <div className="mb-12">
-            {eyebrow && (
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/[0.02] mb-5">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#00F5D4] shadow-[0_0_8px_rgba(0,245,212,0.7)]" />
-                <span className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/70">
-                  {eyebrow}
-                </span>
-              </div>
-            )}
-            {title && (
-              <h2
-                className="text-3xl md:text-5xl font-semibold tracking-tight max-w-3xl"
-                style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}
-              >
-                {title}
-              </h2>
-            )}
-          </div>
-        )}
-        {children}
+      <div className="container mx-auto px-4 md:px-6">
+        <div className="max-w-5xl mx-auto">
+          {(eyebrow || title) && (
+            <div className="mb-12 max-w-3xl">
+              {eyebrow && (
+                <div className="mb-5">
+                  <SectionLabel>{eyebrow}</SectionLabel>
+                </div>
+              )}
+              {title && (
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-semibold text-gradient leading-[1.05] tracking-tight">
+                  {title}
+                </h2>
+              )}
+            </div>
+          )}
+          {children}
+        </div>
       </div>
     </motion.section>
   );
@@ -93,42 +89,48 @@ export default function Home() {
         ]}
       />
 
-      <section className="relative isolate min-h-[100dvh] flex items-center px-6 md:px-10 pt-10 pb-24">
-        <div className="relative mx-auto max-w-5xl text-center">
-          <div className="mb-8 flex justify-center">
-            <SectionLabel>AICA Founders Round 2026 - Now open</SectionLabel>
+      <section className="relative min-h-[100dvh] flex items-center pt-24 pb-16 md:pt-28 md:pb-20 overflow-hidden">
+        <div className="absolute inset-0 bg-grid bg-grid-fade pointer-events-none" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_0%,rgba(0,245,212,0.10),transparent_70%)] pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/3 w-[900px] h-[900px] rounded-full bg-[radial-gradient(circle,rgba(0,245,212,0.06),transparent_60%)] blur-3xl pointer-events-none" />
+
+        <div className="container mx-auto px-4 md:px-6 relative z-10">
+          <div className="max-w-5xl mx-auto text-center">
+            <div className="mb-8 flex justify-center">
+              <SectionLabel>AICA Founders Round 2026 - Now open</SectionLabel>
+            </div>
+            <h1 className="text-[40px] sm:text-5xl md:text-7xl lg:text-[88px] font-serif font-semibold leading-[1.02] mb-6 text-gradient">
+              The Agentic Intelligence Layer.
+            </h1>
+            <p className="text-base sm:text-lg md:text-xl text-white/60 max-w-2xl mx-auto leading-relaxed mb-8">
+              Reserve your allocation in the AICA Founders Round. $50M raise to
+              ship the Agentic Business Operating System and the Hybrid Compute
+              Fabric powering the next wave of AI-native companies.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <Link
+                href="/sign-up"
+                className="inline-flex items-center justify-center h-12 px-7 rounded-full bg-[#00F5D4] text-black font-medium hover:bg-[#00F5D4]/90 transition"
+                data-testid="link-hero-reserve"
+              >
+                Reserve allocation
+                <ArrowRight className="ml-2 w-4 h-4" />
+              </Link>
+              <a
+                href="/invest/litepaper.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center h-12 px-7 rounded-full border border-white/15 bg-white/[0.02] text-white hover:bg-white/[0.06] transition"
+                data-testid="link-hero-litepaper"
+              >
+                <Download className="mr-2 w-4 h-4" /> Download Litepaper
+              </a>
+            </div>
+            <p className="mt-6 text-xs text-white/40 max-w-xl mx-auto">
+              Founders Commitment workflow. Not an offer to sell securities. All
+              commitments are refundable until definitive documents are signed.
+            </p>
           </div>
-          <h1 className="font-display text-[40px] sm:text-5xl md:text-7xl lg:text-[88px] font-semibold leading-[1.02] tracking-tight text-white">
-            The Agentic Intelligence Layer.
-          </h1>
-          <p className="mt-6 text-base sm:text-lg md:text-xl text-white/60 max-w-2xl mx-auto leading-relaxed">
-            Reserve your allocation in the AICA Founders Round. $50M raise to
-            ship the Agentic Business Operating System and the Hybrid Compute
-            Fabric powering the next wave of AI-native companies.
-          </p>
-          <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
-            <Link
-              href="/sign-up"
-              className="inline-flex items-center justify-center h-12 px-7 rounded-full bg-[#00F5D4] text-black font-medium hover:bg-[#00F5D4]/90 transition"
-              data-testid="link-hero-reserve"
-            >
-              Reserve allocation
-              <ArrowRight className="ml-2 w-4 h-4" />
-            </Link>
-            <a
-              href="/invest/litepaper.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center h-12 px-7 rounded-full border border-white/15 bg-white/[0.02] text-white hover:bg-white/[0.06] transition"
-              data-testid="link-hero-litepaper"
-            >
-              <Download className="mr-2 w-4 h-4" /> Download Litepaper
-            </a>
-          </div>
-          <p className="mt-6 text-xs text-white/40 max-w-xl mx-auto">
-            Founders Commitment workflow. Not an offer to sell securities. All
-            commitments are refundable until definitive documents are signed.
-          </p>
         </div>
       </section>
 
