@@ -116,31 +116,44 @@ export function Navigation() {
       }`}
     >
       <div className="container mx-auto px-4 md:px-6 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="relative w-2.5 h-2.5 rounded-full bg-[#00F5D4] shadow-[0_0_12px_rgba(0,245,212,0.7)]" />
-          <Wordmark />
-        </Link>
-
-        <nav className="hidden md:flex items-center gap-1">
-          <Link href="/">
-            <span
-              className={`relative px-4 py-2 text-sm font-medium transition-colors rounded-full ${
-                location === "/"
-                  ? "text-white bg-white/[0.06]"
-                  : "text-white/60 hover:text-white hover:bg-white/[0.03]"
-              }`}
-            >
-              Home
-            </span>
+        <div className="flex items-center gap-2 lg:gap-6">
+          <Link href="/" className="flex items-center gap-2.5 group" data-testid="link-home-logo">
+            <div className="relative w-2.5 h-2.5 rounded-full bg-[#00F5D4] shadow-[0_0_12px_rgba(0,245,212,0.7)]" />
+            <Wordmark />
           </Link>
 
-          <NavDropdown label="Products" items={PRODUCT_LINKS} testId="nav-products" location={location} />
-          <NavDropdown label="Solutions" items={SOLUTION_LINKS} testId="nav-solutions" location={location} />
-          <NavDropdown label="Resources" items={RESOURCE_LINKS} testId="nav-resources" location={location} />
-          <NavDropdown label="Company" items={COMPANY_LINKS} testId="nav-company" location={location} />
-        </nav>
+          <nav className="hidden md:flex items-center gap-1">
+            <NavDropdown label="Products" items={PRODUCT_LINKS} testId="nav-products" location={location} />
+            <NavDropdown label="Solutions" items={SOLUTION_LINKS} testId="nav-solutions" location={location} />
+            <NavDropdown label="Resources" items={RESOURCE_LINKS} testId="nav-resources" location={location} />
+            <NavDropdown label="Company" items={COMPANY_LINKS} testId="nav-company" location={location} />
+          </nav>
+        </div>
 
         <div className="flex items-center gap-3">
+          <div className="hidden md:flex items-center gap-2">
+            <Link href="/litepaper">
+              <Button
+                variant="outline"
+                className="rounded-full h-9 px-5 border-white/15 bg-white/[0.02] text-white hover:bg-white/[0.06] hover:text-[#00F5D4] text-sm font-medium"
+                data-testid="button-nav-litepaper"
+              >
+                Litepaper
+              </Button>
+            </Link>
+            <a
+              href="https://invest.aicreates.ai/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Button
+                className="rounded-full h-9 px-5 bg-[#00F5D4] text-black hover:bg-[#00F5D4]/90 text-sm font-medium"
+                data-testid="button-nav-portal"
+              >
+                Portal
+              </Button>
+            </a>
+          </div>
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="md:hidden text-white hover:bg-white/10">
@@ -156,16 +169,6 @@ export function Navigation() {
                 </div>
 
                 <nav className="flex flex-col gap-1">
-                  <Link href="/" onClick={() => setOpen(false)}>
-                    <span
-                      className={`block px-3 py-3 rounded-lg text-base font-medium ${
-                        location === "/" ? "text-white bg-white/[0.06]" : "text-white/70"
-                      }`}
-                    >
-                      Home
-                    </span>
-                  </Link>
-
                   {[
                     { header: "Products", items: PRODUCT_LINKS },
                     { header: "Solutions", items: SOLUTION_LINKS },
@@ -190,6 +193,31 @@ export function Navigation() {
                     </div>
                   ))}
                 </nav>
+
+                <div className="mt-8 pt-6 border-t border-white/5 flex flex-col gap-2">
+                  <Link href="/litepaper" onClick={() => setOpen(false)}>
+                    <Button
+                      variant="outline"
+                      className="w-full rounded-full h-11 border-white/15 bg-white/[0.02] text-white hover:bg-white/[0.06] hover:text-[#00F5D4]"
+                      data-testid="button-mobile-nav-litepaper"
+                    >
+                      Litepaper
+                    </Button>
+                  </Link>
+                  <a
+                    href="https://invest.aicreates.ai/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => setOpen(false)}
+                  >
+                    <Button
+                      className="w-full rounded-full h-11 bg-[#00F5D4] text-black hover:bg-[#00F5D4]/90 font-medium"
+                      data-testid="button-mobile-nav-portal"
+                    >
+                      Portal
+                    </Button>
+                  </a>
+                </div>
               </div>
             </SheetContent>
           </Sheet>
