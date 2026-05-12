@@ -86,6 +86,13 @@ export default function Home() {
         homeExternal
         ctas={[
           {
+            href: "https://www.aicreates.ai/litepaper",
+            label: "Litepaper",
+            variant: "outline",
+            external: true,
+            testId: "link-portal-litepaper",
+          },
+          {
             href: "/sign-in",
             label: "Sign in",
             variant: "outline",
@@ -106,7 +113,7 @@ export default function Home() {
           <div className="mb-8 flex justify-center">
             <SectionLabel>AICA Founders Round 2026 - Now open</SectionLabel>
           </div>
-          <h1 className="font-display text-[40px] sm:text-5xl md:text-7xl lg:text-[88px] font-semibold leading-[1.02] tracking-tight text-gradient">
+          <h1 className="font-display text-[40px] sm:text-5xl md:text-7xl lg:text-[88px] font-semibold leading-[1.02] tracking-tight text-white">
             The Agentic Intelligence Layer.
           </h1>
           <p className="mt-6 text-base sm:text-lg md:text-xl text-white/60 max-w-2xl mx-auto leading-relaxed">

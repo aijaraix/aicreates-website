@@ -42,6 +42,15 @@ export default function PortalNav({ showAdmin }: { showAdmin?: boolean }) {
         navLinks={navLinks}
         rightSlot={
           <>
+            <a
+              href="https://www.aicreates.ai/litepaper"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden md:inline-flex items-center justify-center rounded-full h-9 px-5 border border-white/15 bg-white/[0.02] text-white hover:bg-white/[0.06] hover:text-[#00F5D4] text-sm font-medium transition"
+              data-testid="link-portal-litepaper"
+            >
+              Litepaper
+            </a>
             {showAdmin && (
               <Link
                 href="/admin"

@@ -117,14 +117,23 @@ function AuthShell({
       <SiteHeader
         homeHref="https://www.aicreates.ai"
         homeExternal
-        ctas={[altCta]}
+        ctas={[
+          {
+            href: "https://www.aicreates.ai/litepaper",
+            label: "Litepaper",
+            variant: "outline",
+            external: true,
+            testId: "link-portal-litepaper",
+          },
+          altCta,
+        ]}
       />
       <main className="px-4 pt-4 pb-16 md:pt-10 flex flex-col items-center">
         <div className="max-w-md w-full text-center mb-8">
           <div className="mb-5 flex justify-center">
             <SectionLabel>{eyebrow}</SectionLabel>
           </div>
-          <h1 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight text-gradient">
+          <h1 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight text-white">
             {title}
           </h1>
           <p className="mt-3 text-white/60 text-sm">{subtitle}</p>

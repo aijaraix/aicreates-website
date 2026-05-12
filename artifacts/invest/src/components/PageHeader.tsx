@@ -65,7 +65,7 @@ export default function PageHeader({
                 isCompact
                   ? "text-3xl sm:text-4xl"
                   : "text-4xl sm:text-5xl md:text-[3.5rem] leading-[1.05]"
-              } text-gradient`}
+              } text-white`}
             >
               {title}
             </h1>
