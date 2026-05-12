@@ -16,26 +16,30 @@ test.describe("capacity enforcement", () => {
     page,
   }) => {
     await signIn(page, "investor");
-    // strategic-seed has 200,000,000 AICA capacity. Request 10 billion
-    // tokens to guarantee an overflow regardless of any seed activity.
-    const tokens = 10_000_000_000;
-    const usdCents = Math.round((tokens * 15) / 10); // $150,000,000
+    // strategic-seed has 200,000,000 AICA capacity at $0.015/token.
+    // Pick a token count that:
+    //   - clearly exceeds the 200M capacity (force a 409), and
+    //   - keeps the resulting USD total inside [MIN_CUSTOM=$1k,
+    //     MAX_CUSTOM=$10M] so the server cannot short-circuit on the
+    //     amount validators that run BEFORE validateCapacity.
+    // 600M tokens => 600M * 15 / 10 = 900,000,000c = $9M.
+    const tokens = 600_000_000;
+    const usdCents = Math.round((tokens * 15) / 10); // $9,000,000.00
     const res = await page.request.post("/api/commitments", {
       data: {
-        allocations: [
-          { roundSlug: "strategic-seed", tokens, usdCents },
-        ],
+        allocations: [{ roundSlug: "strategic-seed", tokens, usdCents }],
       },
       headers: { "Content-Type": "application/json" },
     });
-    // Could 400 first on the $10M cap; either way the gate must reject.
-    expect([400, 409]).toContain(res.status());
-    if (res.status() === 409) {
-      const body = (await res.json()) as OverflowBody;
-      expect(body.code).toBe("capacity_exceeded");
-      expect(body.violations.length).toBeGreaterThan(0);
-      expect(body.violations[0]!.roundSlug).toBe("strategic-seed");
-    }
+    // Deterministic: must be exactly 409 with capacity_exceeded.
+    expect(res.status()).toBe(409);
+    const body = (await res.json()) as OverflowBody;
+    expect(body.code).toBe("capacity_exceeded");
+    expect(body.violations.length).toBeGreaterThan(0);
+    const v = body.violations[0]!;
+    expect(v.roundSlug).toBe("strategic-seed");
+    expect(v.requested).toBe(tokens);
+    expect(v.available).toBeLessThan(tokens);
   });
 
   test("a feasible allocation against the same round still succeeds", async ({

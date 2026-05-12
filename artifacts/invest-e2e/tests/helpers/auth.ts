@@ -68,12 +68,16 @@ export async function signIn(
   return email;
 }
 
+interface ClerkWindow {
+  Clerk?: { user?: { id?: string } };
+}
+
 async function isSignedIn(page: Page): Promise<boolean> {
   return await page
-    .evaluate(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      () => Boolean((window as any).Clerk?.user?.id),
-    )
+    .evaluate(() => {
+      const w = window as unknown as ClerkWindow;
+      return Boolean(w.Clerk?.user?.id);
+    })
     .catch(() => false);
 }
 
