@@ -533,7 +533,7 @@ export default function Home() {
       </section>
 
       <Dialog open={deckOpen} onOpenChange={setDeckOpen}>
-        <DialogContent className="max-w-5xl bg-[#0A0A0A] border-white/10 text-white p-3 sm:p-4">
+        <DialogContent className="max-w-5xl w-[95vw] p-0 gap-0 border-0 bg-transparent shadow-none sm:rounded-none [&>button]:bg-black/60 [&>button]:text-white [&>button]:rounded-full [&>button]:p-1.5 [&>button]:opacity-100 [&>button]:right-2 [&>button]:top-2 [&>button]:z-10">
           <DialogHeader className="sr-only">
             <DialogTitle>AICA Visual Whitepaper</DialogTitle>
             <DialogDescription>Step through the AIcreatesAI pitch deck.</DialogDescription>
