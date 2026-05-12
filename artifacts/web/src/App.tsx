@@ -86,7 +86,7 @@ function App() {
       <TooltipProvider>
         <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
           <ScrollToTop />
-          <div className="relative min-h-[100dvh] flex flex-col bg-background text-foreground overflow-x-hidden">
+          <div className="relative min-h-[100dvh] flex flex-col bg-background text-foreground overflow-x-clip">
             <Navigation />
             <main className="flex-1 flex flex-col">
               <Router />
