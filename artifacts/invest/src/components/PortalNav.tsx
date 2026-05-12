@@ -7,6 +7,7 @@ import SiteHeader, { type HeaderNavLink } from "@/components/SiteHeader";
 const NAV_LINKS = [
   { href: "/dashboard", label: "Dashboard" },
   { href: "/invest", label: "Invest" },
+  { href: "/profile", label: "Profile" },
   { href: "/documents", label: "Documents" },
   { href: "/faq", label: "FAQ" },
 ];

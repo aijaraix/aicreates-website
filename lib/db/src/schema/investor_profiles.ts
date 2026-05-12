@@ -38,6 +38,8 @@ export const investorProfilesTable = pgTable("investor_profiles", {
   legalEntityName: text("legal_entity_name"),
   entityType: text("entity_type"),
   jurisdictionOfFormation: text("jurisdiction_of_formation"),
+  countryOfFormation: text("country_of_formation"),
+  dateOfFormation: text("date_of_formation"),
   einLast4: text("ein_last4"),
   signatoryName: text("signatory_name"),
   signatoryTitle: text("signatory_title"),

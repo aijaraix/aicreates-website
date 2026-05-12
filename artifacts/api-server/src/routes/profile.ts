@@ -21,7 +21,10 @@ const individualSchema = baseSchema.extend({
   kind: z.literal("individual"),
   legalFirstName: z.string().trim().min(1).max(120),
   legalLastName: z.string().trim().min(1).max(120),
-  dateOfBirth: z.string().trim().max(20).optional().nullable(),
+  dateOfBirth: z
+    .string()
+    .trim()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "Date of birth is required (YYYY-MM-DD)"),
   taxIdLast4: z
     .string()
     .trim()
@@ -36,6 +39,11 @@ const businessSchema = baseSchema.extend({
   legalEntityName: z.string().trim().min(2).max(200),
   entityType: z.string().trim().min(1).max(80),
   jurisdictionOfFormation: z.string().trim().min(1).max(120),
+  countryOfFormation: z.string().trim().length(2),
+  dateOfFormation: z
+    .string()
+    .trim()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "Date of formation is required (YYYY-MM-DD)"),
   einLast4: z
     .string()
     .trim()
@@ -93,6 +101,9 @@ router.put("/me/profile", requireAuth, async (req, res) => {
     entityType: v.kind === "business" ? v.entityType : null,
     jurisdictionOfFormation:
       v.kind === "business" ? v.jurisdictionOfFormation : null,
+    countryOfFormation:
+      v.kind === "business" ? v.countryOfFormation.toUpperCase() : null,
+    dateOfFormation: v.kind === "business" ? v.dateOfFormation : null,
     einLast4: v.kind === "business" ? (v.einLast4 ?? null) : null,
     signatoryName: v.kind === "business" ? v.signatoryName : null,
     signatoryTitle: v.kind === "business" ? v.signatoryTitle : null,

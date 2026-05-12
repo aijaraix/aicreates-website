@@ -19,6 +19,8 @@ export interface InvestorProfile {
   legalEntityName: string | null;
   entityType: string | null;
   jurisdictionOfFormation: string | null;
+  countryOfFormation: string | null;
+  dateOfFormation: string | null;
   einLast4: string | null;
   signatoryName: string | null;
   signatoryTitle: string | null;

@@ -25,6 +25,8 @@ interface FormState {
   legalEntityName: string;
   entityType: string;
   jurisdictionOfFormation: string;
+  countryOfFormation: string;
+  dateOfFormation: string;
   einLast4: string;
   signatoryName: string;
   signatoryTitle: string;
@@ -47,6 +49,8 @@ const EMPTY: FormState = {
   legalEntityName: "",
   entityType: "LLC",
   jurisdictionOfFormation: "",
+  countryOfFormation: "US",
+  dateOfFormation: "",
   einLast4: "",
   signatoryName: "",
   signatoryTitle: "",
@@ -79,6 +83,8 @@ function fromProfile(p: InvestorProfile | null, fallbackEmail: string, fallbackN
     legalEntityName: p.legalEntityName ?? "",
     entityType: p.entityType ?? "LLC",
     jurisdictionOfFormation: p.jurisdictionOfFormation ?? "",
+    countryOfFormation: p.countryOfFormation ?? "US",
+    dateOfFormation: p.dateOfFormation ?? "",
     einLast4: p.einLast4 ?? "",
     signatoryName: p.signatoryName ?? "",
     signatoryTitle: p.signatoryTitle ?? "",
@@ -122,13 +128,17 @@ export default function Profile() {
           ? {
               legalFirstName: form.legalFirstName.trim(),
               legalLastName: form.legalLastName.trim(),
-              dateOfBirth: form.dateOfBirth.trim() || null,
+              dateOfBirth: form.dateOfBirth.trim(),
               taxIdLast4: form.taxIdLast4.replace(/\D/g, "").slice(-4) || null,
             }
           : {
               legalEntityName: form.legalEntityName.trim(),
               entityType: form.entityType.trim(),
               jurisdictionOfFormation: form.jurisdictionOfFormation.trim(),
+              countryOfFormation: (form.countryOfFormation.trim() || "US")
+                .slice(0, 2)
+                .toUpperCase(),
+              dateOfFormation: form.dateOfFormation.trim(),
               einLast4: form.einLast4.replace(/\D/g, "").slice(-4) || null,
               signatoryName: form.signatoryName.trim(),
               signatoryTitle: form.signatoryTitle.trim(),
@@ -156,11 +166,15 @@ export default function Profile() {
     form.postalCode.length > 0 &&
     form.country.length === 2 &&
     (form.kind === "individual"
-      ? form.legalFirstName.length > 0 && form.legalLastName.length > 0
+      ? form.legalFirstName.length > 0 &&
+        form.legalLastName.length > 0 &&
+        /^\d{4}-\d{2}-\d{2}$/.test(form.dateOfBirth)
       : form.legalEntityName.length > 1 &&
         form.signatoryName.length > 1 &&
         form.signatoryTitle.length > 0 &&
-        form.jurisdictionOfFormation.length > 0);
+        form.jurisdictionOfFormation.length > 0 &&
+        form.countryOfFormation.length === 2 &&
+        /^\d{4}-\d{2}-\d{2}$/.test(form.dateOfFormation));
 
   if (profile.isLoading) {
     return (
@@ -241,13 +255,34 @@ export default function Profile() {
                   testId="input-profile-entitytype"
                 />
                 <Field
-                  label="Jurisdiction of formation"
+                  label="State / Jurisdiction of formation"
                   value={form.jurisdictionOfFormation}
                   onChange={(v) =>
                     setForm({ ...form, jurisdictionOfFormation: v })
                   }
-                  placeholder="Delaware, USA"
+                  placeholder="Delaware"
                   testId="input-profile-jurisdiction"
+                />
+              </Row>
+              <Row>
+                <Field
+                  label="Country of formation (ISO 2-letter)"
+                  value={form.countryOfFormation}
+                  onChange={(v) =>
+                    setForm({
+                      ...form,
+                      countryOfFormation: v.toUpperCase().slice(0, 2),
+                    })
+                  }
+                  placeholder="US"
+                  testId="input-profile-country-formation"
+                />
+                <Field
+                  label="Date of formation"
+                  type="date"
+                  value={form.dateOfFormation}
+                  onChange={(v) => setForm({ ...form, dateOfFormation: v })}
+                  testId="input-profile-date-formation"
                 />
               </Row>
               <Row>
@@ -330,7 +365,7 @@ export default function Profile() {
           {form.kind === "individual" ? (
             <Row>
               <Field
-                label="Date of birth (optional)"
+                label="Date of birth"
                 type="date"
                 value={form.dateOfBirth}
                 onChange={(v) => setForm({ ...form, dateOfBirth: v })}

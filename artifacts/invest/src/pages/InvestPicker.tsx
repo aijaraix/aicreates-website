@@ -2,8 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useLocation } from "wouter";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { api } from "@/lib/api";
-import { ArrowRight, Loader2, Sparkles, Trash2, Wand2 } from "lucide-react";
-import { ROUNDS } from "@/data/rounds";
+import { ArrowRight, Loader2, Sparkles, Wand2, AlertTriangle } from "lucide-react";
 import PortalNav from "@/components/PortalNav";
 import PageHeader from "@/components/PageHeader";
 import VestingPreview from "@/components/VestingPreview";
@@ -70,7 +69,7 @@ interface CartLine {
 
 export default function InvestPicker() {
   const [, setLocation] = useLocation();
-  const [cart, setCart] = useState<CartLine[]>([]);
+  const [byRoundLine, setByRoundLine] = useState<Record<string, CartLine>>({});
   const [violations, setViolations] = useState<CapacityViolation[]>([]);
   const [confirmRevised, setConfirmRevised] = useState(false);
 
@@ -95,18 +94,25 @@ export default function InvestPicker() {
     return m;
   }, [rounds]);
 
-  // Seed empty cart with the first OPEN round selected (UX nicety).
+  // Initialize one fixed row per round (zeroed) once availability loads.
   useEffect(() => {
-    if (cart.length > 0 || rounds.length === 0) return;
-    const first = rounds.find((r) => r.open) ?? rounds[0]!;
-    setCart([
-      {
-        roundSlug: first.slug,
-        tokens: 0,
-        usdCents: 0,
-      },
-    ]);
-  }, [rounds, cart.length]);
+    if (rounds.length === 0) return;
+    setByRoundLine((prev) => {
+      const next = { ...prev };
+      let changed = false;
+      for (const r of rounds) {
+        if (!next[r.slug]) {
+          next[r.slug] = { roundSlug: r.slug, tokens: 0, usdCents: 0 };
+          changed = true;
+        }
+      }
+      return changed ? next : prev;
+    });
+  }, [rounds]);
+
+  const cart: CartLine[] = rounds
+    .map((r) => byRoundLine[r.slug])
+    .filter((l): l is CartLine => Boolean(l));
 
   const totalCents = cart.reduce((s, l) => s + l.usdCents, 0);
   const totalTokens = cart.reduce((s, l) => s + l.tokens, 0);
@@ -114,43 +120,32 @@ export default function InvestPicker() {
   const bonusRate = bonusForUsd(totalUsd);
   const bonusTokens = Math.floor(totalTokens * bonusRate);
 
-  function updateLine(idx: number, patch: Partial<CartLine>) {
-    setCart((c) => c.map((l, i) => (i === idx ? { ...l, ...patch } : l)));
+  function patchLine(slug: string, patch: Partial<CartLine>) {
+    setByRoundLine((m) => ({
+      ...m,
+      [slug]: { ...(m[slug] ?? { roundSlug: slug, tokens: 0, usdCents: 0 }), ...patch },
+    }));
     setViolations([]);
     setConfirmRevised(false);
   }
 
-  function setUsdForLine(idx: number, usdDollars: number, round: RoundAvailability) {
+  function setUsdForLine(slug: string, usdDollars: number, round: RoundAvailability) {
     const usdCents = Math.max(0, Math.floor(usdDollars * 100));
-    let tokens = tokensFromUsdCents(usdCents, round.pricePerTokenMillicents);
-    if (tokens > round.available) {
-      tokens = round.available;
-    }
+    const tokens = tokensFromUsdCents(usdCents, round.pricePerTokenMillicents);
     const finalCents = usdCentsFromTokens(tokens, round.pricePerTokenMillicents);
-    updateLine(idx, { tokens, usdCents: finalCents });
+    patchLine(slug, { tokens, usdCents: finalCents });
   }
 
-  function setTokensForLine(idx: number, tokens: number, round: RoundAvailability) {
-    const clamped = Math.max(0, Math.min(tokens, round.available));
-    updateLine(idx, {
-      tokens: clamped,
-      usdCents: usdCentsFromTokens(clamped, round.pricePerTokenMillicents),
+  function setTokensForLine(slug: string, tokens: number, round: RoundAvailability) {
+    const t = Math.max(0, Math.floor(tokens));
+    patchLine(slug, {
+      tokens: t,
+      usdCents: usdCentsFromTokens(t, round.pricePerTokenMillicents),
     });
   }
 
-  function useMaxForLine(idx: number, round: RoundAvailability) {
-    setTokensForLine(idx, round.available, round);
-  }
-
-  function addLine() {
-    const used = new Set(cart.map((l) => l.roundSlug));
-    const next = rounds.find((r) => !used.has(r.slug)) ?? rounds[0];
-    if (!next) return;
-    setCart((c) => [...c, { roundSlug: next.slug, tokens: 0, usdCents: 0 }]);
-  }
-
-  function removeLine(idx: number) {
-    setCart((c) => c.filter((_, i) => i !== idx));
+  function useMaxForLine(slug: string, round: RoundAvailability) {
+    setTokensForLine(slug, round.available, round);
   }
 
   const create = useMutation({
@@ -169,7 +164,6 @@ export default function InvestPicker() {
     },
     onError: async (err) => {
       const msg = (err as Error).message;
-      // attempt to parse 409 capacity errors
       const match = msg.match(/\{.*\}/s);
       if (match) {
         try {
@@ -178,34 +172,29 @@ export default function InvestPicker() {
             violations?: CapacityViolation[];
           };
           if (parsed.code === "capacity_exceeded" && parsed.violations) {
-            // Auto-revise to the available cap on each violating row.
-            setCart((c) =>
-              c.map((l) => {
-                const v = parsed.violations!.find(
-                  (x) => x.roundSlug === l.roundSlug,
-                );
-                if (!v) return l;
-                const round = byRound.get(l.roundSlug);
-                if (!round) return l;
-                return {
-                  ...l,
+            setByRoundLine((m) => {
+              const next = { ...m };
+              for (const v of parsed.violations!) {
+                const round = byRound.get(v.roundSlug);
+                if (!round) continue;
+                next[v.roundSlug] = {
+                  roundSlug: v.roundSlug,
                   tokens: v.available,
                   usdCents: usdCentsFromTokens(
                     v.available,
                     round.pricePerTokenMillicents,
                   ),
                 };
-              }),
-            );
+              }
+              return next;
+            });
             setViolations(parsed.violations);
             setConfirmRevised(true);
             availability.refetch();
             return;
           }
           if (parsed.code === "profile_required") {
-            setLocation(
-              `/profile?next=${encodeURIComponent("/invest")}`,
-            );
+            setLocation(`/profile?next=${encodeURIComponent("/invest")}`);
             return;
           }
         } catch {
@@ -216,10 +205,18 @@ export default function InvestPicker() {
     },
   });
 
+  const overflowSlugs = cart
+    .filter((l) => {
+      const r = byRound.get(l.roundSlug);
+      return r ? l.tokens > r.available : false;
+    })
+    .map((l) => l.roundSlug);
+
   const totalsValid = totalCents >= MIN_USD * 100 && totalCents <= MAX_USD * 100;
   const canSubmit =
     totalsValid &&
     cart.some((l) => l.tokens > 0) &&
+    overflowSlugs.length === 0 &&
     !create.isPending &&
     (violations.length === 0 || confirmRevised);
 
@@ -252,19 +249,15 @@ export default function InvestPicker() {
         </div>
 
         <section className="brand-card p-0 overflow-hidden">
-          <header className="flex items-center justify-between px-5 py-3 border-b border-white/5 bg-white/[0.02]">
+          <header className="px-5 py-3 border-b border-white/5 bg-white/[0.02]">
             <div className="text-xs uppercase tracking-[0.18em] text-white/50">
               Allocation cart
             </div>
-            <button
-              type="button"
-              onClick={addLine}
-              disabled={cart.length >= rounds.length}
-              className="text-xs text-[#00F5D4] hover:underline disabled:opacity-40"
-              data-testid="button-add-round"
-            >
-              + Add round
-            </button>
+            <div className="text-[11px] text-white/45 mt-0.5">
+              One row per round. Enter tokens or USD on each row you want to
+              participate in. Rows turn red if you exceed the live remaining
+              capacity.
+            </div>
           </header>
 
           {availability.isLoading ? (
@@ -274,54 +267,54 @@ export default function InvestPicker() {
             </div>
           ) : (
             <div className="divide-y divide-white/5">
-              {cart.map((line, idx) => {
-                const round =
-                  byRound.get(line.roundSlug) ?? rounds[0];
-                if (!round) return null;
+              {rounds.map((round) => {
+                const line =
+                  byRoundLine[round.slug] ?? {
+                    roundSlug: round.slug,
+                    tokens: 0,
+                    usdCents: 0,
+                  };
                 const violation = violations.find(
                   (v) => v.roundSlug === round.slug,
                 );
                 const overflow = line.tokens > round.available;
+                const soldOut = round.available <= 0;
                 return (
                   <div
-                    key={`${round.slug}-${idx}`}
-                    className="grid grid-cols-1 md:grid-cols-[2fr,1.2fr,1.2fr,auto] gap-3 p-5"
-                    data-testid={`cart-row-${idx}`}
+                    key={round.slug}
+                    className={`grid grid-cols-1 md:grid-cols-[1.6fr,1.2fr,1.2fr] gap-3 p-5 ${
+                      overflow ? "bg-red-500/[0.04]" : ""
+                    }`}
+                    data-testid={`cart-row-${round.slug}`}
                   >
                     <div>
-                      <label className="text-[10px] uppercase tracking-[0.16em] text-white/40">
-                        Round
-                      </label>
-                      <select
-                        className="brand-input mt-1"
-                        value={round.slug}
-                        onChange={(e) => {
-                          const next = byRound.get(e.target.value);
-                          if (!next) return;
-                          updateLine(idx, {
-                            roundSlug: next.slug,
-                            tokens: 0,
-                            usdCents: 0,
-                          });
-                        }}
-                        data-testid={`select-round-${idx}`}
-                      >
-                        {rounds.map((r) => {
-                          const used = cart.some(
-                            (l, i) => i !== idx && l.roundSlug === r.slug,
-                          );
-                          return (
-                            <option key={r.slug} value={r.slug} disabled={used}>
-                              {r.label} · {priceLabel(r.pricePerTokenMillicents)}
-                              {!r.open ? " (preview)" : ""}
-                            </option>
-                          );
-                        })}
-                      </select>
-                      <div className="mt-1.5 text-[11px] text-white/45">
-                        {round.available.toLocaleString()} AICA available of{" "}
-                        {round.capacity.toLocaleString()}
+                      <div className="flex items-baseline gap-2">
+                        <div className="text-sm font-semibold text-white">
+                          {round.label}
+                        </div>
+                        <div className="text-[11px] text-white/55">
+                          {priceLabel(round.pricePerTokenMillicents)} / AICA
+                        </div>
+                        {!round.open && (
+                          <span className="text-[10px] text-white/40 uppercase tracking-wider">
+                            preview
+                          </span>
+                        )}
                       </div>
+                      <div className="mt-1 text-[11px] text-white/45">
+                        <span
+                          className={overflow ? "text-red-300" : ""}
+                          data-testid={`available-${round.slug}`}
+                        >
+                          {round.available.toLocaleString()} AICA available
+                        </span>{" "}
+                        of {round.capacity.toLocaleString()}
+                      </div>
+                      {soldOut && (
+                        <div className="mt-1 text-[11px] text-amber-300">
+                          Sold out
+                        </div>
+                      )}
                     </div>
                     <div>
                       <label className="text-[10px] uppercase tracking-[0.16em] text-white/40">
@@ -332,10 +325,11 @@ export default function InvestPicker() {
                         min={0}
                         max={MAX_USD}
                         step={500}
-                        value={Math.round(line.usdCents / 100)}
+                        disabled={soldOut}
+                        value={Math.round(line.usdCents / 100) || ""}
                         onChange={(e) =>
                           setUsdForLine(
-                            idx,
+                            round.slug,
                             Number(e.target.value) || 0,
                             round,
                           )
@@ -343,7 +337,7 @@ export default function InvestPicker() {
                         className={`brand-input mt-1 ${
                           overflow ? "!border-red-400/60" : ""
                         }`}
-                        data-testid={`input-usd-${idx}`}
+                        data-testid={`input-usd-${round.slug}`}
                       />
                     </div>
                     <div>
@@ -354,10 +348,11 @@ export default function InvestPicker() {
                         type="number"
                         min={0}
                         step={1}
-                        value={line.tokens}
+                        disabled={soldOut}
+                        value={line.tokens || ""}
                         onChange={(e) =>
                           setTokensForLine(
-                            idx,
+                            round.slug,
                             Math.max(0, Math.floor(Number(e.target.value) || 0)),
                             round,
                           )
@@ -365,23 +360,29 @@ export default function InvestPicker() {
                         className={`brand-input mt-1 ${
                           overflow ? "!border-red-400/60" : ""
                         }`}
-                        data-testid={`input-tokens-${idx}`}
+                        data-testid={`input-tokens-${round.slug}`}
                       />
-                      <div className="mt-1.5 flex items-center gap-2 text-[11px]">
+                      <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px]">
                         <button
                           type="button"
-                          onClick={() => useMaxForLine(idx, round)}
-                          className="text-[#00F5D4] hover:underline inline-flex items-center gap-1"
-                          data-testid={`button-use-max-${idx}`}
+                          onClick={() => useMaxForLine(round.slug, round)}
+                          disabled={soldOut}
+                          className="text-[#00F5D4] hover:underline inline-flex items-center gap-1 disabled:opacity-40"
+                          data-testid={`button-use-max-${round.slug}`}
                         >
-                          <Wand2 className="w-3 h-3" /> use max
+                          <Wand2 className="w-3 h-3" /> use max (
+                          {round.available.toLocaleString()})
                         </button>
                         {overflow && (
-                          <span className="text-red-300">
-                            exceeds available
+                          <span
+                            className="text-red-300 inline-flex items-center gap-1"
+                            data-testid={`overflow-${round.slug}`}
+                          >
+                            <AlertTriangle className="w-3 h-3" />
+                            only {round.available.toLocaleString()} available
                           </span>
                         )}
-                        {violation && (
+                        {violation && !overflow && (
                           <span
                             className="text-amber-300"
                             data-testid={`violation-${round.slug}`}
@@ -390,19 +391,6 @@ export default function InvestPicker() {
                           </span>
                         )}
                       </div>
-                    </div>
-                    <div className="flex items-end">
-                      {cart.length > 1 && (
-                        <button
-                          type="button"
-                          onClick={() => removeLine(idx)}
-                          className="h-10 px-3 rounded-xl border border-white/10 text-white/55 hover:text-red-300 hover:border-red-400/40"
-                          data-testid={`button-remove-${idx}`}
-                          title="Remove row"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      )}
                     </div>
                   </div>
                 );
@@ -468,6 +456,14 @@ export default function InvestPicker() {
                 <div className="text-xs text-amber-300">
                   Total must be between {fmtUsd(MIN_USD * 100)} and{" "}
                   {fmtUsd(MAX_USD * 100)}.
+                </div>
+              )}
+              {overflowSlugs.length > 0 && (
+                <div
+                  className="text-xs text-red-300"
+                  data-testid="cart-overflow-banner"
+                >
+                  One or more rows exceed available capacity.
                 </div>
               )}
               {confirmRevised && violations.length > 0 && (

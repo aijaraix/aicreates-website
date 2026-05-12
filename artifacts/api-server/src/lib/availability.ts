@@ -1,5 +1,5 @@
-import { db, commitmentAllocationsTable, commitmentsTable } from "@workspace/db";
-import { sql, eq, inArray } from "drizzle-orm";
+import { db } from "@workspace/db";
+import { sql } from "drizzle-orm";
 import { ROUNDS, ROUND_BY_SLUG, type RoundDef } from "./rounds";
 
 /**
@@ -16,6 +16,17 @@ export const RESERVING_STATES = [
   "pending",
   "succeeded",
 ];
+
+/**
+ * Pre-payment "soft" states that can be reaped after a TTL when the
+ * investor abandons the cart. Anything beyond these (awaiting_wire/
+ * awaiting_crypto/funded) is considered active and never expires
+ * automatically.
+ */
+export const EXPIRABLE_STATES = ["pending_saft", "pending_payment", "pending"];
+
+/** Days before an unfunded pending commitment frees its tokens. */
+export const PENDING_COMMITMENT_TTL_DAYS = 7;
 
 /**
  * Anything with `.execute()` and the drizzle query builder shape -
@@ -81,25 +92,37 @@ export async function lockRoundsForUpdate(
 async function reservedByRound(
   executor: Executor = db,
 ): Promise<Map<string, number>> {
-  const fromAllocations = await executor
-    .select({
-      roundSlug: commitmentAllocationsTable.roundSlug,
-      tokens: sql<number>`COALESCE(SUM(${commitmentAllocationsTable.tokens}), 0)`,
-    })
-    .from(commitmentAllocationsTable)
-    .innerJoin(
-      commitmentsTable,
-      eq(commitmentsTable.id, commitmentAllocationsTable.commitmentId),
+  // Lazy sweep: a pending_saft / pending_payment row older than the TTL
+  // no longer reserves capacity (acts as an inline reaper). Active
+  // states (awaiting_*, funded) always reserve regardless of age.
+  const ttlDays = PENDING_COMMITMENT_TTL_DAYS;
+  const expirableSql = sql`ARRAY[${sql.join(
+    EXPIRABLE_STATES.map((s) => sql`${s}`),
+    sql`, `,
+  )}]::text[]`;
+  const reservingFilter = sql`(
+    c.state = ANY(${RESERVING_STATES})
+    AND (
+      NOT (c.state = ANY(${expirableSql}))
+      OR c.created_at > now() - (${ttlDays}::int * INTERVAL '1 day')
     )
-    .where(inArray(commitmentsTable.state, RESERVING_STATES))
-    .groupBy(commitmentAllocationsTable.roundSlug);
+  )`;
+
+  const fromAllocations = await executor.execute(sql`
+    SELECT ca.round_slug AS round_slug,
+           COALESCE(SUM(ca.tokens), 0)::int AS tokens
+      FROM commitment_allocations ca
+      JOIN commitments c ON c.id = ca.commitment_id
+     WHERE ${reservingFilter}
+     GROUP BY ca.round_slug
+  `);
 
   // Legacy: commitments with NO commitment_allocations rows.
   const fromLegacy = await executor.execute(sql`
     SELECT c.round_slug AS round_slug,
            COALESCE(SUM(c.token_allocation), 0)::int AS tokens
       FROM commitments c
-     WHERE c.state = ANY(${RESERVING_STATES})
+     WHERE ${reservingFilter}
        AND NOT EXISTS (
          SELECT 1 FROM commitment_allocations ca WHERE ca.commitment_id = c.id
        )
@@ -107,8 +130,10 @@ async function reservedByRound(
   `);
 
   const map = new Map<string, number>();
-  for (const r of fromAllocations) {
-    map.set(r.roundSlug, Number(r.tokens) || 0);
+  for (const row of fromAllocations.rows as Array<Record<string, unknown>>) {
+    const slug = String(row["round_slug"] ?? "");
+    const tokens = Number(row["tokens"] ?? 0);
+    map.set(slug, tokens);
   }
   for (const row of fromLegacy.rows as Array<Record<string, unknown>>) {
     const slug = String(row["round_slug"] ?? "");
