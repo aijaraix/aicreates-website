@@ -88,6 +88,10 @@ See `README.md` for the full step-by-step setup.
 
 `formsubmit.co` requires a one-time activation by clicking the verification email it sends to `sholom@aicreates.ai` on the very first submission.
 
+## Newsletter signup (Footer)
+
+The `Footer` (visible on every marketing page) includes a newsletter subscribe block (`NewsletterSubscribe` in `artifacts/web/src/components/Footer.tsx`). Posts via AJAX to the same `https://formsubmit.co/ajax/sholom@aicreates.ai` endpoint with `_subject: "Newsletter Subscription - aicreates.ai"`, `_template: "table"`, `_captcha: "false"`, the visitor email, the source page path, and a timestamp. Includes a hidden `_honey` honeypot field, client-side email regex validation, inline + toast success/error states. Shares the same one-time formsubmit.co activation as the contact form.
+
 ## Investor portal (`artifacts/invest`)
 
 A full investor experience at `artifacts/invest`, intended to deploy to **https://invest.aicreates.ai** (Replit Deployments, autoscale). It is not part of the GitHub Pages marketing build.
