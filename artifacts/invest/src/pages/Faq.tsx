@@ -26,7 +26,15 @@ const GROUPS: FaqGroup[] = [
     items: [
       {
         q: "What is the AICA Strategic Seed Round?",
-        a: "The first of five SAFT rounds in the AIcreatesAI private sale. Strategic Seed is priced at $0.015 per AICA for 200M tokens ($3M raise). Subsequent rounds (Private Sale 1, Private Sale 2, Infrastructure, and Community + Launchpad) ladder up to $0.070 per AICA. Aggregate: 1.25B AICA = 12.5% of the 10B fixed supply, ~$50M target.",
+        a: "The first of five SAFT rounds in the AIcreatesAI private sale. Strategic Seed is priced at $0.015 per AICA for 200M tokens ($3M raise). Subsequent rounds (Private Sale 1, Private Sale 2, Infrastructure, and Community + Launchpad) ladder up to $0.070 per AICA. Aggregate: 1,250,000,000 AICA = 12.5% of the 10,000,000,000 fixed supply, ~$50M target raise.",
+      },
+      {
+        q: "What are the five SAFT rounds?",
+        a: "Strategic Seed - $0.015 per AICA, 200M tokens, $3M (open now). Private Sale 1 - $0.025, 200M, $5M. Private Sale 2 - $0.040, 400M, $16M. Infrastructure - $0.055, 350M, $19.25M. Community + Launchpad - $0.070, 100M, $7M.",
+      },
+      {
+        q: "What does the GPU cluster do?",
+        a: "Anchored by a $3.5M initial high-end GPU cluster, the Hybrid Compute Fabric brings inference economics in-house. The cluster trains and serves the proprietary models that power Eve OS and the agentic intelligence layer.",
       },
       {
         q: "Which round is open right now?",

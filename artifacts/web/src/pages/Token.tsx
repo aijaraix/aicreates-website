@@ -218,7 +218,7 @@ export default function Token() {
           <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 md:p-8">
             <div className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/40 mb-3">Disclaimer</div>
             <p className="text-white/50 text-sm leading-relaxed">
-              This page is for informational purposes only and does not constitute an offer to sell or a solicitation to buy any securities or tokens. Token utility, parameters, and timing are subject to change based on development progress, market conditions, and regulatory factors.
+              This page is for informational purposes only and does not constitute an offer to sell or a solicitation to buy any securities or tokens. The AICA private sale is structured as five sequential SAFT rounds priced from $0.015 to $0.070 per AICA, totaling 1,250,000,000 AICA (12.5% of the 10,000,000,000 fixed supply) for an approximately $50M raise. SAFT terms are draft pending counsel review. AICA tokens, when issued, will be utility tokens for consumptive use within the AIcreatesAI ecosystem and are subject to vesting and jurisdictional restrictions. Early-stage technology and cryptocurrency commitments involve significant risk and you may lose all funds.
             </p>
           </div>
         </div>

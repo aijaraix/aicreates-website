@@ -81,7 +81,15 @@ const GROUPS: Group[] = [
       },
       {
         q: "What are the five SAFT rounds?",
-        a: "Strategic Seed - $0.015 per AICA, 200M tokens, $3M (open now). Private Sale 1 - $0.025, 200M, $5M. Private Sale 2 - $0.040, 400M, $16M. Infrastructure - $0.055, 350M, $19.25M. Community + Launchpad - $0.070, 100M, $7M. Total: 1.25B AICA, ~$50M raise.",
+        a: "Strategic Seed - $0.015 per AICA, 200M tokens, $3M (open now). Private Sale 1 - $0.025, 200M, $5M. Private Sale 2 - $0.040, 400M, $16M. Infrastructure - $0.055, 350M, $19.25M. Community + Launchpad - $0.070, 100M, $7M. Aggregate: 1,250,000,000 AICA = 12.5% of the 10,000,000,000 fixed supply, ~$50M target raise.",
+      },
+      {
+        q: "Which round is open right now?",
+        a: "Strategic Seed is the only round currently open. Investors can reserve allocation today at $0.015 per AICA with tiered bonuses at $5k (+10%) and $25k (+20%). Subsequent rounds open later in sequence as Strategic Seed fills.",
+      },
+      {
+        q: "What does the GPU cluster do?",
+        a: "Anchored by a $3.5M initial high-end GPU cluster, the Hybrid Compute Fabric brings inference economics in-house. The cluster trains and serves the proprietary models that power Eve OS and the agentic intelligence layer.",
       },
       {
         q: "When is TGE?",

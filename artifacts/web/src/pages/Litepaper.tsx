@@ -469,7 +469,7 @@ export default function Litepaper() {
                       Disclaimer
                     </div>
                     <p className="text-white/50 text-sm leading-relaxed">
-                      This litepaper is for informational purposes only and does not constitute an offer to sell securities or tokens. Early-stage technology and cryptocurrency investments involve significant risk. Forward-looking statements are subject to change based on development progress, market conditions, and other factors.
+                      This page is for informational purposes only and does not constitute an offer to sell or a solicitation to buy any securities or tokens. The AICA private sale is structured as five sequential SAFT rounds priced from $0.015 to $0.070 per AICA, totaling 1,250,000,000 AICA (12.5% of the 10,000,000,000 fixed supply) for an approximately $50M raise. SAFT terms are draft pending counsel review. AICA tokens, when issued, will be utility tokens for consumptive use within the AIcreatesAI ecosystem and are subject to vesting and jurisdictional restrictions. Early-stage technology and cryptocurrency commitments involve significant risk and you may lose all funds.
                     </p>
                   </div>
                 </div>
