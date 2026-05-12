@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { ArrowRight, Coins, Cpu, Users, ShieldCheck } from "lucide-react";
 import { useSeo } from "@/lib/useSeo";
-import Figure, { TokenUtilityFigure, TokenFlowFigure, AicaImage, AicaShieldImage } from "@/components/Figure";
 import AicaTokenMark from "@/components/AicaTokenMark";
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
@@ -16,10 +15,26 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 }
 
 const UTILITIES = [
-  { icon: Coins, t: "Subscription discounts", d: "Pay for platform subscriptions in $AICA at preferred rates." },
-  { icon: Cpu, t: "Compute network participation", d: "Stake and contribute compute to the hybrid fabric and earn rewards." },
-  { icon: Users, t: "Contributor rewards", d: "Data, GPU, and ecosystem contributors are rewarded in $AICA." },
-  { icon: ShieldCheck, t: "Long-term alignment", d: "Vesting and policy ensure incentives compound over real usage." },
+  {
+    icon: Coins,
+    t: "Subscription discounts",
+    d: "Pay for platform subscriptions in $AICA at preferred rates once token utility is integrated.",
+  },
+  {
+    icon: Cpu,
+    t: "Compute network participation",
+    d: "Stake and contribute compute - GPU and infrastructure - to the hybrid fabric and earn rewards.",
+  },
+  {
+    icon: Users,
+    t: "Contributor rewards",
+    d: "Data, GPU, and ecosystem contributors are rewarded in $AICA for the value they create.",
+  },
+  {
+    icon: ShieldCheck,
+    t: "Long-term alignment",
+    d: "All tokens sold in private rounds are vested. Incentives compound around real usage, not speculation.",
+  },
 ];
 
 export default function Token() {
@@ -68,19 +83,20 @@ export default function Token() {
       {/* UTILITIES */}
       <section className="py-14 md:py-20 relative">
         <div className="container mx-auto px-4 md:px-6">
-          <div className="max-w-3xl mb-10">
-            <SectionLabel>Utility map - Figure 6</SectionLabel>
-            <h2 className="mt-6 text-4xl md:text-5xl font-serif font-semibold text-gradient leading-[1.05]">
-              What $AICA actually does.
-            </h2>
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-12 items-start mb-12">
+            <div className="md:col-span-5">
+              <SectionLabel>Utility</SectionLabel>
+              <h2 className="mt-6 text-4xl md:text-5xl font-serif font-semibold text-gradient leading-[1.05]">
+                What $AICA actually does.
+              </h2>
+            </div>
+            <div className="md:col-span-7 space-y-6 text-white/65 text-lg leading-relaxed">
+              <p>
+                Core platform revenue is initially driven by subscriptions to ensure operational stability. The token is integrated where it earns its place - subscription discounts, compute network participation, and rewards distributed to data, GPU, and ecosystem contributors.
+              </p>
+            </div>
           </div>
-          <Figure number="Figure 6" caption="$AICA - the native asset of the agentic intelligence layer (whitepaper visual).">
-            <AicaImage />
-          </Figure>
-          <Figure number="Figure 6a" caption="Schematic - the $AICA utility map across subscription discounts, compute network, rewards, governance, credits, and marketplace settlement.">
-            <TokenUtilityFigure />
-          </Figure>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {UTILITIES.map((u, i) => (
               <motion.div
                 key={u.t}
@@ -101,31 +117,10 @@ export default function Token() {
         </div>
       </section>
 
-      {/* CREDIT / TOKEN MOVEMENT - Figure 7 */}
-      <section className="py-14 md:py-20 relative">
-        <div className="container mx-auto px-4 md:px-6">
-          <div className="max-w-3xl mb-10">
-            <SectionLabel>Credit & token movement - Figure 7</SectionLabel>
-            <h2 className="mt-6 text-4xl md:text-5xl font-serif font-semibold text-gradient leading-[1.05]">
-              How credits and $AICA move.
-            </h2>
-            <p className="mt-6 text-white/55 leading-relaxed">
-              Operators top up credits. The Credit Ledger scopes and caps spend. Agents act against those credits. Value created flows back as $AICA rewards - and compounds into the next cycle.
-            </p>
-          </div>
-          <Figure number="Figure 7" caption="$AICA shielded by the Credit Ledger (whitepaper visual) - programmable, policy-bound spend.">
-            <AicaShieldImage />
-          </Figure>
-          <Figure number="Figure 7a" caption="Schematic - operators buy credits, the Credit Ledger gates agentic spend, and $AICA rewards flow back to value creators.">
-            <TokenFlowFigure />
-          </Figure>
-        </div>
-      </section>
-
       {/* PARAMETERS */}
       <section className="py-14 md:py-20 relative">
         <div className="container mx-auto px-4 md:px-6">
-          <div className="max-w-3xl mb-14">
+          <div className="max-w-3xl mb-10">
             <SectionLabel>Parameters</SectionLabel>
             <h2 className="mt-6 text-4xl md:text-5xl font-serif font-semibold text-gradient leading-[1.05]">
               Fixed supply. Aligned incentives.
@@ -142,31 +137,6 @@ export default function Token() {
                 <div className="mt-2 text-xs uppercase tracking-[0.18em] text-white/45">{s.v}</div>
               </div>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* PRINCIPLES */}
-      <section className="py-14 md:py-20 relative">
-        <div className="container mx-auto px-4 md:px-6">
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-12 items-start">
-            <div className="md:col-span-5">
-              <SectionLabel>Principles</SectionLabel>
-              <h2 className="mt-6 text-4xl md:text-5xl font-serif font-semibold text-gradient leading-[1.05]">
-                Built around real usage.
-              </h2>
-            </div>
-            <div className="md:col-span-7 space-y-6 text-white/65 text-lg leading-relaxed">
-              <p>
-                Core platform revenue is initially driven by subscriptions to ensure operational stability. Token utility is integrated where it earns its place.
-              </p>
-              <p>
-                The token underwrites participation in the compute network, contributor rewards, and ecosystem health - not speculative loops.
-              </p>
-              <p>
-                All tokens sold in private rounds are subject to appropriate vesting. The economic model is designed for long-term alignment.
-              </p>
-            </div>
           </div>
         </div>
       </section>
