@@ -1,164 +1,145 @@
 # AIcreatesAI
 
-Premium static React website for **AIcreatesAI** — an agentic AI technology company building intelligent business infrastructure and next-generation digital products.
+This monorepo holds **everything that powers the AIcreatesAI brand** — the public marketing site, the investor portal, the shared API server, the design system, and the database schema.
 
-The site is built with React + Vite + TailwindCSS and is designed to be hosted on **GitHub Pages** at the custom domain **https://www.aicreates.ai**. Replit is used only as the development environment.
+It is developed inside Replit, version-controlled on GitHub, and serves two production surfaces:
+
+| Surface | URL | Hosted on | What it is |
+| --- | --- | --- | --- |
+| Marketing site | https://www.aicreates.ai | **GitHub Pages** | Static React site for the brand, products, litepaper, tokenomics, contact form |
+| Investor portal | https://invest.aicreates.ai | **Replit Deployments (Autoscale)** | Investor sign-up, SAFT signing, Stripe checkout, vesting dashboard, admin tools |
+
+> **Heads-up:** The legacy `https://portal.aicreates.ai` subdomain is permanently retired. The api-server includes a host-based 301 redirect that sends any request whose `Host` is `portal.aicreates.ai` to `https://invest.aicreates.ai`. Leave the `portal` `CNAME` pointed at the same Replit deployment so the redirect runs.
 
 ---
 
-## Local Development (Replit)
+## Repository layout
 
-The project runs as a workflow inside Replit. Simply open the project — the `web` workflow serves the site at the preview path `/`.
+```
+artifacts/
+  web/         → marketing site (React + Vite, static)        → GitHub Pages
+  invest/      → investor portal frontend (React + Vite)      → Replit Deployments (static, served at /invest)
+  api-server/  → Express API + Clerk + Stripe                 → Replit Deployments (autoscale process)
+lib/           → shared libs (db schema, vesting, api-spec, …)
+scripts/       → one-off scripts (seed-tiers, post-merge, …)
+.github/workflows/deploy.yml → GitHub Pages CI
+.replit-artifact/artifact.toml in each artifact → per-artifact production config
+```
 
-To run locally outside Replit:
+The pnpm workspace is the source of truth. Don't edit `.replit` directly — each artifact's `artifact.toml` controls its own build/run/serve in production.
+
+---
+
+## Local development (Replit)
+
+The Replit `Project` workflow starts three dev servers in parallel:
+
+| Workflow | Command | Port |
+| --- | --- | --- |
+| `artifacts/web: web` | `pnpm --filter @workspace/web run dev` | 22333 (proxied at `/`) |
+| `api-server` | `pnpm --filter @workspace/api-server run dev` | 8080 (proxied at `/api`) |
+| `artifacts/invest: web` | `PORT=25265 BASE_PATH=/invest/ pnpm --filter @workspace/invest run dev` | 25265 (proxied at `/invest/`) |
+
+Use `localhost:80/<path>` (not the raw service ports) so you go through the same path-based proxy your browser does.
+
+To run individual checks from the shell:
 
 ```bash
 pnpm install
-pnpm --filter @workspace/web run dev
+pnpm --filter @workspace/web run typecheck
+pnpm --filter @workspace/invest run typecheck
+pnpm --filter @workspace/api-server run typecheck
+pnpm --filter @workspace/web run build      # static bundle for GitHub Pages
 ```
 
-The dev server reads `PORT` (defaults to `5173`) and `BASE_PATH` (defaults to `/`).
+Do **not** run `pnpm dev` at the workspace root — Replit workflows wire up `PORT` and `BASE_PATH` per artifact.
 
-To build a production bundle locally:
+---
+
+## Deployment 1: marketing site → GitHub Pages
+
+`https://www.aicreates.ai` is fully owned by the GitHub repo `aijaraix/aicreates-website`.
+
+**How it deploys:**
+
+1. You (or the agent) push to `main`.
+2. `.github/workflows/deploy.yml` runs on every push to `main`. It installs deps, runs `pnpm --filter @workspace/web run build` with `BASE_PATH=/`, and uploads `artifacts/web/dist/public` as a GitHub Pages artifact.
+3. The `deploy` job publishes that artifact to GitHub Pages.
+4. `artifacts/web/public/CNAME` (which contains `www.aicreates.ai`) is copied into the build output, so GitHub Pages serves it on the custom domain over HTTPS.
+
+**One-time GitHub setup (already done):**
+
+- Repository → **Settings → Pages → Build and deployment → Source = GitHub Actions**.
+- DNS at GoDaddy: `www.aicreates.ai` → `CNAME` → `aijaraix.github.io.`
+- Apex `aicreates.ai`: 4 `A` records pointing to GitHub Pages IPs (`185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`).
+
+**To publish a new version of the marketing site:**
 
 ```bash
-pnpm --filter @workspace/web run build
+git push github main
 ```
 
-The output is written to `artifacts/web/dist/public` — that folder is what gets deployed to GitHub Pages.
+(Where `github` is the remote pointing at `https://github.com/aijaraix/aicreates-website.git`.) Watch the `Deploy AIcreatesAI to GitHub Pages` workflow under **Actions**; once it goes green, the new content is live.
 
 ---
 
-## Deploying to GitHub Pages
+## Deployment 2: investor portal → Replit Deployments
 
-The site is deployed automatically by a GitHub Actions workflow that builds the Vite project and publishes it to GitHub Pages on every push to `main`.
+`https://invest.aicreates.ai` is served by a single Replit Autoscale deployment that publishes both:
 
-Follow the steps below once to wire everything up.
+- `api-server` (Node/Express process at the root) — handles `/api/*`, the Clerk proxy at `/api/__clerk`, the Stripe webhook, the legacy `portal.aicreates.ai` 301 redirect, etc.
+- `invest` (static SPA) — served at `/invest/*` with SPA rewrites to `index.html`.
 
-### 1. Add the deploy workflow (one-time, manual)
+The `web` artifact is **deliberately excluded** from Replit Deployments (no `[services.production]` block in its `artifact.toml`) because the marketing site lives on GitHub Pages. Trying to publish all three artifacts to one autoscale deployment is what produces the *"Could not find run command"* warning in the Publish dialog — keeping web out of the production set keeps that warning gone.
 
-For security reasons, automated agents cannot write files under `.github/workflows/`. You need to add the workflow file once via the GitHub web UI:
+**One-time Replit setup:**
 
-1. On GitHub, open this repository.
-2. Click the **Actions** tab → **New workflow** → **set up a workflow yourself**.
-3. Set the file name to `deploy.yml` (the path becomes `.github/workflows/deploy.yml`).
-4. Open `MANUAL-WORKFLOW-SETUP.md` in this repo, copy the YAML inside the code block, and paste it as the file contents.
-5. Click **Commit changes…** → commit directly to `main`.
+1. **Connect the Stripe integration** via the Replit Integrations tab. The api-server skips Stripe init gracefully if it's not connected, so the rest of the app keeps working — but checkout will be unavailable.
+2. **Connect the GitHub integration** if you haven't already. The agent uses it to push to `aijaraix/aicreates-website`.
+3. **Set the production environment variables** in Replit Deployments → Secrets:
 
-That single commit will trigger the first build immediately. From then on, every push to `main` re-deploys the site.
+   | Variable | Value | Notes |
+   | --- | --- | --- |
+   | `SESSION_SECRET` | (random, already set) | Used for cookie signing |
+   | `ADMIN_EMAILS` | `sholom@aicreates.ai,chris@aicreates.ai` | Comma-separated. First match becomes admin. Already set in `[userenv.shared]`. |
+   | `VITE_CLERK_PROXY_URL` | `/api/__clerk` | **Production only.** Already set in `[userenv.production]`. Setting it in dev blanks the portal because the dev Clerk proxy is a no-op. |
+   | `DATABASE_URL` | (Replit-managed Postgres) | Auto-provisioned when "Create production database" is checked. |
+   | Stripe vars | (managed by integration) | Don't set by hand. |
+4. **DNS at GoDaddy:**
+   - `invest.aicreates.ai` → `CNAME` → your `*.replit.app` deployment hostname (visible in the Publishing dialog).
+   - `portal.aicreates.ai` → `CNAME` → same `*.replit.app` (so the host-based 301 redirect runs).
+5. **Add both custom domains** in Clerk's allowed origins (otherwise sign-in breaks on the live domain).
 
-### 2. Enable GitHub Pages
+**To publish a new version of the portal:**
 
-1. On GitHub, open your repository → **Settings → Pages**.
-2. Under **Build and deployment → Source**, select **GitHub Actions**.
-3. Push to `main` (or open the **Actions** tab and run the **Deploy AIcreatesAI to GitHub Pages** workflow manually). The workflow installs dependencies, builds the site, and publishes the contents of `artifacts/web/dist/public` to GitHub Pages.
+1. Open the Publishing tab in Replit.
+2. Pick the deployment domain (or your custom `*.replit.app`).
+3. Set access to **Public**.
+4. Tick **Create production database** + **Set up production database with current development data** (only on the very first publish, or when you intentionally want to refresh prod data from dev).
+5. Click **Publish**. Replit will:
+   - Run `pnpm install --frozen-lockfile`.
+   - Run each artifact's production `build`.
+   - Start the api-server process (`node --enable-source-maps artifacts/api-server/dist/index.mjs`).
+   - Health-check `/api/healthz`.
+   - Route `/invest/*` to the static SPA bundle.
 
-### 3. Set the custom domain
-
-The repository already includes `artifacts/web/public/CNAME` containing `www.aicreates.ai`. The build copies this file into the deploy artifact, so GitHub Pages will pick it up automatically.
-
-To verify on GitHub:
-
-1. Open **Settings → Pages**.
-2. Under **Custom domain**, confirm it shows `www.aicreates.ai`. If not, type it in and click **Save**.
-3. Wait for the DNS check to pass (this can take a few minutes after DNS is configured — see step 5).
-
-### 4. Enforce HTTPS
-
-1. Still in **Settings → Pages**, scroll to **Enforce HTTPS** and tick the checkbox.
-2. If the option is greyed out, GitHub is still provisioning the TLS certificate for your domain. Come back in 10–60 minutes once DNS propagates.
-
-### 5. Configure DNS in GoDaddy
-
-Open GoDaddy → **My Products → Domains → aicreates.ai → DNS** and create the records below. Delete any conflicting `A`, `AAAA`, or `CNAME` records on the same names first.
-
-#### Apex domain (`aicreates.ai`) — four A records pointing to GitHub Pages
-
-| Type | Name | Value           | TTL     |
-| ---- | ---- | --------------- | ------- |
-| A    | @    | 185.199.108.153 | 600     |
-| A    | @    | 185.199.109.153 | 600     |
-| A    | @    | 185.199.110.153 | 600     |
-| A    | @    | 185.199.111.153 | 600     |
-
-(Optionally also add the AAAA equivalents: `2606:50c0:8000::153`, `2606:50c0:8001::153`, `2606:50c0:8002::153`, `2606:50c0:8003::153`.)
-
-#### `www` subdomain — CNAME to your GitHub Pages domain
-
-| Type  | Name | Value                          | TTL |
-| ----- | ---- | ------------------------------ | --- |
-| CNAME | www  | `<your-username>.github.io`    | 600 |
-
-> Replace `<your-username>` with your actual GitHub username (or organization name). For example: `aicreatesai.github.io`. Do **not** include the repository name and do **not** add `https://` — just the bare host.
-
-GitHub will serve `aicreates.ai` and automatically redirect it to the canonical `www.aicreates.ai` once both records resolve and HTTPS is enforced.
-
-### 6. Verify the live site
-
-Once DNS has propagated:
-
-- https://www.aicreates.ai — primary site
-- https://aicreates.ai — redirects to `www`
-- Browser tab title reads **AIcreatesAI | Agentic AI Business Systems**
-- Sharing the URL on Twitter/X, LinkedIn, Slack, iMessage, etc. shows the social preview image at `public/social-preview.png`
+If publish ever fails with *"Could not find run command"*, the most common cause is that someone re-added a `[services.production]` block to `artifacts/web/.replit-artifact/artifact.toml`. Remove that block — see the inline comment in that file.
 
 ---
 
-## Project Structure
+## Production database
 
-```
-artifacts/web/
-├── public/                  # Static files copied verbatim into the build
-│   ├── CNAME                # Custom domain for GitHub Pages
-│   ├── favicon.ico          # Browser tab favicon
-│   ├── favicon-16x16.png
-│   ├── favicon-32x32.png
-│   ├── apple-touch-icon.png
-│   ├── android-chrome-192x192.png
-│   ├── android-chrome-512x512.png
-│   ├── site.webmanifest     # PWA manifest
-│   ├── robots.txt
-│   ├── sitemap.xml
-│   └── social-preview.png   # Used for Open Graph and Twitter cards
-├── src/
-│   ├── assets/              # Brand imagery used throughout the site
-│   ├── pages/               # Home, About, Technology, Products, Fin, Services, Contact
-│   ├── components/          # Navigation, footer, UI primitives, etc.
-│   ├── App.tsx              # React Router setup
-│   └── main.tsx
-├── index.html               # SEO meta tags, Open Graph, Twitter cards, favicon links
-└── vite.config.ts
+Replit Deployments creates and manages a separate production Postgres for you. The dev database (visible in the Database tab in the workspace) is **not** the production database. To copy schema/data from dev → prod, tick the "Set up your production database with current development data" box in the Publishing dialog before clicking Publish, or run:
+
+```bash
+pnpm --filter @workspace/db run push   # pushes Drizzle schema (idempotent)
 ```
 
-## Connecting the contact form to a backend
+---
 
-The contact form on the `Contact` page is a static layout. Wiring it to a real backend takes one of these drop-in services:
+## Where to find more detail
 
-- **Formspree** — replace the `<form>` element's `action` with your `https://formspree.io/f/<form-id>` endpoint.
-- **Tally** — embed a Tally form, or POST to a Tally endpoint.
-- **Supabase** — create a `contacts` table and POST submissions to its REST API or Edge Function.
-- **Email service** — send to a serverless function (Vercel, Netlify, Cloudflare Workers) that forwards via Resend, Postmark, or SendGrid.
-
-Look for the `// TODO: connect form backend` comment in `src/pages/Contact.tsx`.
-
-## Security
-
-This is a static public website. Do **not** add API keys, secrets, customer data, or backend credentials to the repository — anything committed here ends up publicly served by GitHub Pages.
-
-## Investor portal (separate deployment)
-
-In addition to this static site, the repo contains an authenticated investor portal at `artifacts/invest/` that deploys to **https://invest.aicreates.ai** via Replit Deployments. Highlights:
-
-- Auth: Clerk (white-labeled).
-- Payments: Stripe one-time Checkout for "Founders Commitment" tiers.
-- Stripe data is mirrored to Postgres via `stripe-replit-sync`.
-- Pages: `/sign-in`, `/sign-up`, `/dashboard`, `/invest`, `/admin`.
-
-One-time setup (in Replit):
-
-1. Connect Stripe via the Integrations tab.
-2. Set `ADMIN_EMAILS=you@example.com` on the api-server env.
-3. `pnpm --filter @workspace/db run push` to sync the `app_users` schema.
-4. `pnpm --filter @workspace/scripts run seed-tiers` to create Founders / Architect / Catalyst products and prices.
-
-See `replit.md` → "Investor portal" for full details. The marketing site's `/invest` page links to `https://invest.aicreates.ai/` from the hero "Reserve Your Allocation" button.
+- `replit.md` — high-level project overview, brand tokens, page list, portal flow, Eve widget toggle, e2e tests.
+- `artifacts/invest-e2e/README.md` — Playwright suite that drives the portal.
+- `lib/api-spec/openapi.yaml` — single source of truth for API contracts.
+- `.local/tasks/*.md` — historical project task plans.

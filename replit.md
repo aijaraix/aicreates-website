@@ -69,7 +69,18 @@ In Replit, the `artifacts/web: web` workflow runs the dev server automatically.
 
 ## Deployment
 
-See `README.md` for the full GitHub Pages + GoDaddy DNS setup. The GitHub Actions workflow installs pnpm, builds the site with `BASE_PATH=/`, and deploys `artifacts/web/dist/public` to Pages. The `public/CNAME` file provides the custom domain.
+Two production surfaces, two deploy paths:
+
+| Surface | URL | Host | Trigger |
+| --- | --- | --- | --- |
+| Marketing site | https://www.aicreates.ai | GitHub Pages | `git push github main` (Actions workflow runs `.github/workflows/deploy.yml`) |
+| Investor portal | https://invest.aicreates.ai | Replit Deployments (autoscale) | Click **Publish** in the Replit Publishing tab |
+
+The GitHub Actions workflow installs pnpm, builds the marketing site with `BASE_PATH=/`, and deploys `artifacts/web/dist/public` to Pages. `public/CNAME` provides the custom domain.
+
+The Replit deployment publishes the api-server (process) and the invest static SPA from the same autoscale instance. The `web` artifact is intentionally excluded from Replit publishing — see "Investor portal → Production deploy" below for why.
+
+See `README.md` for the full step-by-step setup.
 
 ## Contact form
 
@@ -112,9 +123,26 @@ The api-server gracefully skips Stripe init if the integration is not connected,
 
 ### Production deploy
 
-Use Replit Deployments (autoscale) for `invest.aicreates.ai`. The api-server serves both `/api/*` and `/invest/*` (static). Point a `CNAME` for `invest.aicreates.ai` at the Replit deployment and add the domain in Clerk's allowed origins.
+Use Replit Deployments (autoscale) for `invest.aicreates.ai`. A single autoscale deployment publishes:
 
-The legacy `portal.aicreates.ai` subdomain is permanently retired. The api-server includes a host-based 301 redirect at the top of `app.ts` that sends any request whose `Host` header is `portal.aicreates.ai` to `https://invest.aicreates.ai${originalUrl}`. To activate it, leave the existing `portal.aicreates.ai` `CNAME` pointed at the same Replit deployment (or add one) so the redirect runs before Clerk and CORS.
+- `api-server` (Node/Express process) — serves `/api/*`, Clerk proxy at `/api/__clerk`, Stripe webhook, legacy `portal.aicreates.ai` 301 redirect.
+- `invest` (static SPA) — served at `/invest/*` with SPA rewrites to `index.html`.
+
+The `web` artifact is **deliberately excluded** from Replit Deployments (no `[services.production]` block in `artifacts/web/.replit-artifact/artifact.toml`) because the marketing site lives on GitHub Pages. If publish ever fails with *"Could not find run command"*, the most common cause is that someone re-added a production block to the `web` artifact toml — remove it. See the inline comment in that file.
+
+DNS at GoDaddy:
+- `invest.aicreates.ai` `CNAME` → the deployment's `*.replit.app` hostname (visible in the Publishing dialog).
+- `portal.aicreates.ai` `CNAME` → same `*.replit.app` so the host-based 301 redirect runs before Clerk and CORS.
+- Add both custom domains in Clerk's allowed origins.
+
+Production env vars (set in Replit Deployments → Secrets):
+- `SESSION_SECRET` (random, already set)
+- `ADMIN_EMAILS` — comma-separated; first match becomes admin (already in `[userenv.shared]`)
+- `VITE_CLERK_PROXY_URL=/api/__clerk` — production only (already in `[userenv.production]`)
+- `DATABASE_URL` — auto-provisioned when "Create production database" is checked at publish time
+- Stripe — managed by the Replit Stripe integration, don't set by hand
+
+See `README.md` for the full setup walkthrough.
 
 ## Eve chat widget (hidden)
 
