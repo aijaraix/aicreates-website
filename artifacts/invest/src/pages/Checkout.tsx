@@ -2,8 +2,9 @@ import { useState } from "react";
 import { Link, useParams } from "wouter";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { api } from "@/lib/api";
+import PortalNav from "@/components/PortalNav";
+import PageHeader from "@/components/PageHeader";
 import {
-  ArrowLeft,
   ArrowRight,
   Banknote,
   CreditCard,
@@ -95,6 +96,11 @@ export default function Checkout() {
     queryKey: ["saft", commitId],
     queryFn: () => api<SaftResponse>(`/saft/${commitId}`),
   });
+  const me = useQuery({
+    queryKey: ["me"],
+    queryFn: () => api<{ user: { role: string } }>("/me"),
+  });
+  const isAdmin = me.data?.user.role === "admin";
 
   const checkout = useMutation({
     mutationFn: () =>
@@ -156,46 +162,23 @@ export default function Checkout() {
 
   return (
     <div className="min-h-[100dvh] bg-[#0A0A0A] text-white">
-      <div className="relative isolate">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-x-0 -top-10 h-[260px] glow-radial-teal -z-10"
-        />
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-x-0 -top-20 h-[320px] bg-grid-fade -z-10"
-        />
-        <div className="mx-auto max-w-3xl px-6 md:px-10 pt-10 md:pt-14 pb-8 md:pb-10">
-          <div className="flex items-center justify-between mb-6">
-            <Link
-              href="/dashboard"
-              className="inline-flex items-center gap-2 text-sm text-white/60 hover:text-white transition"
-              data-testid="link-page-back"
-            >
-              <ArrowLeft className="w-4 h-4" /> Back to dashboard
-            </Link>
-            <span className="text-[11px] uppercase tracking-[0.2em] text-white/40">
-              Step 2 of 2 - Payment
-            </span>
-          </div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#00F5D4]/30 bg-[#00F5D4]/5 mb-5">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#00F5D4] shadow-[0_0_8px_rgba(0,245,212,0.7)]" />
-            <span className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#00F5D4]">
-              Commitment {c.id.slice(0, 8)}
-            </span>
-          </div>
-          <h1 className="font-display text-4xl sm:text-5xl font-semibold tracking-tight text-gradient-teal">
-            Fund your commitment.
-          </h1>
-          <div className="mt-4 text-white/65">
+      <PortalNav showAdmin={isAdmin} />
+
+      <PageHeader
+        eyebrow={`Commitment ${c.id.slice(0, 8)} - Step 2 of 2`}
+        title={<>Fund your commitment.</>}
+        subtitle={
+          <>
             {c.displayName} <span className="text-white/30">·</span>{" "}
-            <span className="text-[#00F5D4] font-medium">{fmt(c.amountCents)}</span>{" "}
+            <span className="text-[#00F5D4] font-medium">
+              {fmt(c.amountCents)}
+            </span>{" "}
             <span className="text-white/30">·</span>{" "}
             {c.tokenAllocation.toLocaleString()} AICA
-          </div>
-        </div>
-        <div className="border-b border-white/5" />
-      </div>
+          </>
+        }
+        back={{ href: "/dashboard", label: "Back to dashboard" }}
+      />
 
       <main className="mx-auto max-w-3xl px-6 py-10 md:py-12">
         {manualConfirmed ? (
