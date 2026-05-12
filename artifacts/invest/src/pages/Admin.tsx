@@ -344,7 +344,7 @@ export default function Admin() {
                 {(apps.data?.applications ?? []).map((a) => (
                   <tr
                     key={a.id}
-                    className="border-t border-white/5"
+                    className="brand-table-row border-t border-white/5"
                     data-testid={`row-application-${a.id}`}
                   >
                     <td className="px-4 py-3 text-white/70">
@@ -468,7 +468,7 @@ export default function Admin() {
                 </thead>
                 <tbody>
                   {commitments.data.commitments.map((c) => (
-                    <tr key={c.id} className="border-t border-white/5">
+                    <tr key={c.id} className="brand-table-row border-t border-white/5">
                       <td className="px-3 py-3 text-white/70 text-xs">
                         {fmtDate(c.createdAt)}
                       </td>
@@ -668,7 +668,7 @@ export default function Admin() {
               </thead>
               <tbody>
                 {(audit.data?.entries ?? []).map((e) => (
-                  <tr key={e.id} className="border-t border-white/5">
+                  <tr key={e.id} className="brand-table-row border-t border-white/5">
                     <td className="px-4 py-2 text-xs text-white/60 whitespace-nowrap">
                       {fmtDateTime(e.createdAt)}
                     </td>
@@ -720,7 +720,7 @@ export default function Admin() {
               </thead>
               <tbody>
                 {(users.data?.users ?? []).map((u) => (
-                  <tr key={u.id} className="border-t border-white/5">
+                  <tr key={u.id} className="brand-table-row border-t border-white/5">
                     <td className="px-6 py-3">{u.email}</td>
                     <td className="px-6 py-3">{u.fullName ?? "-"}</td>
                     <td className="px-6 py-3 text-xs uppercase tracking-[0.14em] text-white/60">
