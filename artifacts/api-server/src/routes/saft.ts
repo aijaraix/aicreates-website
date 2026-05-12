@@ -160,14 +160,15 @@ router.post("/saft/:commitId", requireAuth, async (req, res) => {
     errors.push(`riskAcknowledgments required: ${missingRisk.join(", ")}`);
   }
   // Wallet mapping is optional at SAFT signing — investors may defer wallet
-  // setup until before TGE. If a wallet is provided, both fields must be set.
+  // setup until before TGE. If an address is provided, a chain must accompany
+  // it; a chain alone (default selection) without an address is treated as
+  // "skip / map later".
   const walletAddressTrimmed = body.walletAddress?.trim() ?? "";
-  const walletChain = body.walletChain?.trim() || null;
+  const walletChain = walletAddressTrimmed
+    ? (body.walletChain?.trim() || null)
+    : null;
   if (walletAddressTrimmed && !walletChain) {
     errors.push("walletChain required when walletAddress is provided");
-  }
-  if (walletChain && !walletAddressTrimmed) {
-    errors.push("walletAddress required when walletChain is selected");
   }
   if (
     signatureName &&

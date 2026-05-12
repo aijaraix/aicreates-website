@@ -74,6 +74,21 @@ const GROUPS: FaqGroup[] = [
         q: "Can I cancel or refund my commitment?",
         a: "Until your funds are received, you can cancel by contacting the team. Once funds clear, refunds are at the company's discretion and may be processed via the original payment method.",
       },
+      {
+        q: "What about tax treatment?",
+        a: "You are solely responsible for the tax treatment of your commitment and any tokens received at TGE or unlock. AICreatesAI does not issue tax advice. Consult your own tax advisor; you may receive a tax form depending on your jurisdiction.",
+        anchor: "tax",
+      },
+      {
+        q: "Which jurisdictions are eligible?",
+        a: "The Founders Round is offered to accredited investors under U.S. Reg D / Reg S exemptions. We currently do not accept commitments from sanctioned jurisdictions or persons on restricted lists. Additional country restrictions may apply at the team's discretion.",
+        anchor: "jurisdiction",
+      },
+      {
+        q: "How do I claim my tokens at TGE?",
+        a: "After TGE, vested tokens are distributed to the wallet address mapped on your SAFT (or one you provide later). You will receive a claim notification by email when each unlock becomes available; tokens may be auto-distributed or claimable from a portal page depending on the launch chain.",
+        anchor: "claim",
+      },
     ],
   },
   {

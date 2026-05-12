@@ -516,10 +516,21 @@ export default function Saft() {
               <H title="Wallet mapping" />
               <p className="text-sm text-white/60">
                 Provide the wallet address that will receive your AICA
-                allocation at TGE. This step is optional — you can map
-                or update your wallet any time before TGE by contacting
-                the team or returning to this flow.
+                allocation at TGE, or click <span className="text-white/80">Skip for now</span> to
+                map your wallet later. You can update this any time
+                before TGE.
               </p>
+              <button
+                type="button"
+                onClick={() => {
+                  setForm({ ...form, walletAddress: "", walletChain: "" });
+                  setStep(step + 1);
+                }}
+                className="text-xs text-[#00F5D4] hover:underline"
+                data-testid="button-skip-wallet"
+              >
+                Skip for now →
+              </button>
               <div>
                 <label className="text-[11px] uppercase tracking-[0.14em] text-white/50">
                   Chain
