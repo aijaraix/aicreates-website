@@ -3,6 +3,7 @@ import { requireAuth } from "../lib/auth";
 import { getUncachableStripeClient } from "../lib/stripeClient";
 import { TIER_BY_SLUG, getAllowedBillingCountries } from "../lib/tiers";
 import { notifyTeam } from "../lib/notify";
+import { emailWireInstructions } from "../lib/email";
 import {
   ROUND_BY_SLUG,
   getActiveRound,
@@ -400,6 +401,27 @@ router.post("/checkout", requireAuth, async (req, res) => {
         userId: user.id,
         email: user.email,
         amountCents,
+      },
+    });
+    // Investor-facing wire instructions email. Bank details are sourced
+    // from env so we never commit them; they fall back to placeholder
+    // strings (which the email body labels as such) if not configured.
+    void emailWireInstructions({
+      to: user.email,
+      investorName: user.fullName ?? user.email,
+      commitmentId: commitmentId!,
+      amountCents,
+      tokens: tokenAllocation,
+      bank: {
+        bankName: process.env["WIRE_BANK_NAME"] ?? "(see portal /checkout for live details)",
+        accountName:
+          process.env["WIRE_ACCOUNT_NAME"] ?? "AICreatesAI Inc.",
+        accountNumber:
+          process.env["WIRE_ACCOUNT_NUMBER"] ?? "(see portal)",
+        routingNumber:
+          process.env["WIRE_ROUTING_NUMBER"] ?? "(see portal)",
+        swift: process.env["WIRE_SWIFT"] ?? undefined,
+        reference: `AICA-${commitmentId!.slice(0, 8).toUpperCase()}`,
       },
     });
     res.json({ wire: true, commitmentId });

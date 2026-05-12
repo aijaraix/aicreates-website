@@ -1,8 +1,33 @@
 import Stripe from "stripe";
-import { db, commitmentsTable } from "@workspace/db";
+import { db, commitmentsTable, appUsersTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
 import { getStripeSync, getUncachableStripeClient } from "./stripeClient";
 import { logger } from "./logger";
+import {
+  emailPaymentReceived,
+  emailRefundIssued,
+  emailDisputeAdmin,
+} from "./email";
+import { adminEmails } from "./auth";
+
+function dashboardOrigin(): string {
+  return (
+    process.env["PUBLIC_PORTAL_ORIGIN"] ??
+    "https://invest.aicreates.ai"
+  );
+}
+
+async function lookupUserEmail(
+  userId: string | null,
+): Promise<{ email: string; fullName: string | null } | null> {
+  if (!userId) return null;
+  const rows = await db
+    .select({ email: appUsersTable.email, fullName: appUsersTable.fullName })
+    .from(appUsersTable)
+    .where(eq(appUsersTable.id, userId))
+    .limit(1);
+  return rows[0] ?? null;
+}
 
 export class WebhookHandlers {
   /**
@@ -167,6 +192,26 @@ export class WebhookHandlers {
       .onConflictDoNothing();
   }
 
+  /**
+   * Look up the local commitment status by Stripe payment intent id.
+   * Returns null if no row exists yet (first time we see this PI).
+   * Used to gate webhook-triggered emails on actual state transitions
+   * so Stripe redeliveries don't generate duplicate emails.
+   */
+  private static async priorStatusByPi(piId: string): Promise<string | null> {
+    try {
+      const rows = await db
+        .select({ status: commitmentsTable.status })
+        .from(commitmentsTable)
+        .where(eq(commitmentsTable.stripePaymentIntentId, piId))
+        .limit(1);
+      return rows[0]?.status ?? null;
+    } catch (err) {
+      logger.warn({ err, piId }, "priorStatusByPi lookup failed");
+      return null;
+    }
+  }
+
   private static async handleAppLogic(event: Stripe.Event): Promise<void> {
     switch (event.type) {
       case "checkout.session.completed": {
@@ -198,19 +243,51 @@ export class WebhookHandlers {
         const charge =
           (pi as unknown as { charges?: { data?: Stripe.Charge[] } }).charges
             ?.data?.[0] ?? null;
+        const amountCents = pi.amount_received ?? pi.amount ?? null;
+        // Snapshot prior state so we only send the receipt on the
+        // 0->1 transition. Stripe redelivers events; without this gate
+        // each retry would send another email.
+        const priorStatus = await this.priorStatusByPi(pi.id);
         await this.upsertCommitment({
           paymentIntentId: pi.id,
           customerId:
             typeof pi.customer === "string"
               ? pi.customer
               : pi.customer?.id ?? null,
-          amountCents: pi.amount_received ?? pi.amount ?? null,
+          amountCents,
           currency: pi.currency ?? null,
           status: "succeeded",
           receiptUrl: charge?.receipt_url ?? null,
           completedAt: new Date(),
           metadata: pi.metadata ?? null,
         });
+        if (priorStatus !== "succeeded") {
+          try {
+            const localRow = (
+              await db
+                .select()
+                .from(commitmentsTable)
+                .where(eq(commitmentsTable.stripePaymentIntentId, pi.id))
+                .limit(1)
+            )[0];
+            if (localRow && amountCents) {
+              const userInfo = await lookupUserEmail(localRow.userId);
+              if (userInfo) {
+                void emailPaymentReceived({
+                  to: userInfo.email,
+                  investorName: userInfo.fullName ?? userInfo.email,
+                  commitmentId: localRow.id,
+                  amountCents,
+                  tokens: localRow.tokenAllocation,
+                  receiptUrl: charge?.receipt_url ?? null,
+                  dashboardUrl: `${dashboardOrigin()}/invest/dashboard?paid=${localRow.id}`,
+                });
+              }
+            }
+          } catch (err) {
+            logger.warn({ err }, "payment receipt email failed to enqueue");
+          }
+        }
         break;
       }
       case "payment_intent.payment_failed": {
@@ -229,6 +306,7 @@ export class WebhookHandlers {
             ? charge.payment_intent
             : charge.payment_intent?.id ?? null;
         if (!piId) break;
+        const priorStatus = await this.priorStatusByPi(piId);
         await this.upsertCommitment({
           paymentIntentId: piId,
           status: "refunded",
@@ -236,6 +314,105 @@ export class WebhookHandlers {
           receiptUrl: charge.receipt_url ?? null,
           metadata: charge.metadata ?? null,
         });
+        if (priorStatus === "refunded") break;
+        try {
+          const localRow = (
+            await db
+              .select()
+              .from(commitmentsTable)
+              .where(eq(commitmentsTable.stripePaymentIntentId, piId))
+              .limit(1)
+          )[0];
+          if (localRow) {
+            const userInfo = await lookupUserEmail(localRow.userId);
+            if (userInfo) {
+              void emailRefundIssued({
+                to: userInfo.email,
+                investorName: userInfo.fullName ?? userInfo.email,
+                commitmentId: localRow.id,
+                amountCents:
+                  charge.amount_refunded ?? charge.amount ?? localRow.amountCents,
+                reason: (charge.refunds?.data?.[0]?.reason ?? null) as
+                  | string
+                  | null,
+              });
+            }
+          }
+        } catch (err) {
+          logger.warn({ err }, "refund email failed to enqueue");
+        }
+        break;
+      }
+      case "charge.dispute.created": {
+        const dispute = event.data.object as Stripe.Dispute;
+        const piId =
+          typeof dispute.payment_intent === "string"
+            ? dispute.payment_intent
+            : dispute.payment_intent?.id ?? null;
+
+        // Snapshot prior state for idempotency. Stripe can redeliver
+        // dispute.created on retries; we only want to alert admins once.
+        const priorStatus = piId ? await this.priorStatusByPi(piId) : null;
+
+        // Lookup is best-effort: if it throws, we still want to fire the
+        // admin alert so urgent disputes never go unnoticed.
+        let localRow: { id: string; userId: string | null } | null = null;
+        try {
+          if (piId) {
+            const rows = await db
+              .select({
+                id: commitmentsTable.id,
+                userId: commitmentsTable.userId,
+              })
+              .from(commitmentsTable)
+              .where(eq(commitmentsTable.stripePaymentIntentId, piId))
+              .limit(1);
+            localRow = rows[0] ?? null;
+          }
+        } catch (err) {
+          logger.warn({ err }, "dispute: commitment lookup failed");
+        }
+
+        // Mark our copy so admins see the state immediately. Failures
+        // here must NOT prevent the admin alert from going out.
+        if (localRow) {
+          try {
+            await db
+              .update(commitmentsTable)
+              .set({ status: "disputed", state: "disputed", updatedAt: new Date() })
+              .where(eq(commitmentsTable.id, localRow.id));
+          } catch (err) {
+            logger.error(
+              { err, commitmentId: localRow.id },
+              "dispute: failed to mark commitment disputed",
+            );
+          }
+        }
+
+        if (priorStatus === "disputed") break;
+
+        try {
+          const investorEmail =
+            (localRow ? (await lookupUserEmail(localRow.userId))?.email : null) ??
+            "(unknown)";
+          const admins = adminEmails();
+          if (admins.length > 0) {
+            void emailDisputeAdmin({
+              to: admins,
+              commitmentId: localRow?.id ?? "(no local row)",
+              investorEmail,
+              amountCents: dispute.amount ?? 0,
+              disputeId: dispute.id,
+              reason: dispute.reason ?? "unknown",
+              dueByIso: dispute.evidence_details?.due_by
+                ? new Date(dispute.evidence_details.due_by * 1000).toISOString()
+                : null,
+              dashboardUrl: `${dashboardOrigin()}/invest/admin`,
+            });
+          }
+        } catch (err) {
+          logger.warn({ err }, "dispute admin email failed to enqueue");
+        }
         break;
       }
       default:

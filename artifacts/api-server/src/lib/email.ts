@@ -18,19 +18,76 @@ const BRAND_ACCENT = "#00F5D4";
 
 let cachedClient: Resend | null = null;
 let cachedKey: string | null = null;
+let cachedKeyAt = 0;
+const KEY_TTL_MS = 5 * 60 * 1000;
 
-function getClient(): Resend | null {
-  const key = process.env["RESEND_API_KEY"];
+/**
+ * Resolve a Resend API key. Two sources, in priority order:
+ *
+ * 1. RESEND_API_KEY env var — operator-supplied (overrides everything,
+ *    used in production deploys where the connector isn't bound).
+ * 2. Replit Resend connector — the user clicks "Connect" in the
+ *    Integrations tab and we read credentials from the connectors-v2
+ *    proxy at $REPLIT_CONNECTORS_HOSTNAME.
+ *
+ * Either source returning a key is sufficient. If neither resolves we
+ * return null and every send is logged + skipped.
+ */
+async function resolveResendKey(): Promise<string | null> {
+  if (process.env["RESEND_API_KEY"]) return process.env["RESEND_API_KEY"]!;
+
+  if (cachedKey && Date.now() - cachedKeyAt < KEY_TTL_MS) return cachedKey;
+
+  const hostname = process.env["REPLIT_CONNECTORS_HOSTNAME"];
+  const xReplitToken = process.env["REPL_IDENTITY"]
+    ? "repl " + process.env["REPL_IDENTITY"]
+    : process.env["WEB_REPL_RENEWAL"]
+      ? "depl " + process.env["WEB_REPL_RENEWAL"]
+      : null;
+  if (!hostname || !xReplitToken) return null;
+
+  const isProduction = process.env["REPLIT_DEPLOYMENT"] === "1";
+  const url = new URL(`https://${hostname}/api/v2/connection`);
+  url.searchParams.set("include_secrets", "true");
+  url.searchParams.set("connector_names", "resend");
+  url.searchParams.set("environment", isProduction ? "production" : "development");
+
+  try {
+    const resp = await fetch(url.toString(), {
+      headers: { Accept: "application/json", "X-Replit-Token": xReplitToken },
+      signal: AbortSignal.timeout(5_000),
+    });
+    if (!resp.ok) return null;
+    const data = (await resp.json()) as {
+      items?: Array<{
+        settings?: { api_key?: string; secret?: string; secret_key?: string };
+      }>;
+    };
+    const s = data.items?.[0]?.settings;
+    const key = s?.api_key ?? s?.secret ?? s?.secret_key ?? null;
+    if (key) {
+      cachedKey = key;
+      cachedKeyAt = Date.now();
+    }
+    return key;
+  } catch {
+    return null;
+  }
+}
+
+async function getClient(): Promise<Resend | null> {
+  const key = await resolveResendKey();
   if (!key) return null;
   if (!cachedClient || cachedKey !== key) {
     cachedClient = new Resend(key);
     cachedKey = key;
+    cachedKeyAt = Date.now();
   }
   return cachedClient;
 }
 
-export function isEmailConfigured(): boolean {
-  return Boolean(process.env["RESEND_API_KEY"]);
+export async function isEmailConfigured(): Promise<boolean> {
+  return Boolean(await resolveResendKey());
 }
 
 export interface SendEmailArgs {
@@ -48,7 +105,7 @@ export interface SendEmailArgs {
  * action like signing a SAFT.
  */
 export async function sendEmail(args: SendEmailArgs): Promise<void> {
-  const client = getClient();
+  const client = await getClient();
   if (!client) {
     logger.info(
       { to: args.to, subject: args.subject },

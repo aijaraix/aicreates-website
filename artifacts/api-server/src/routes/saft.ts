@@ -10,6 +10,7 @@ import {
 import { eq, and, asc } from "drizzle-orm";
 import { renderSaftPdf, type SaftAllocationLine, type SaftProfileForPdf } from "../lib/saftPdf";
 import { ROUND_BY_SLUG, getRoundLabel } from "../lib/rounds";
+import { emailSaftSigned } from "../lib/email";
 
 const router: IRouter = Router();
 
@@ -381,6 +382,27 @@ router.post("/saft/:commitId", requireAuth, async (req, res) => {
         updatedAt: new Date(),
       })
       .where(eq(commitmentsTable.id, commitment.id));
+  });
+
+  // Investor-facing confirmation email. Fire-and-forget; never blocks
+  // the response. The email lib silently no-ops if Resend is not wired.
+  const totalTokens = allocations.reduce((s, a) => s + a.tokens, 0);
+  const totalCents = allocations.reduce((s, a) => s + a.usdCents, 0);
+  const origin =
+    (req.headers["origin"] as string | undefined) ??
+    `${req.protocol}://${req.get("host")}`;
+  void emailSaftSigned({
+    to: profile.email,
+    investorName:
+      profile.kind === "business"
+        ? profile.legalEntityName ?? profile.signatoryName ?? profile.email
+        : `${profile.legalFirstName ?? ""} ${profile.legalLastName ?? ""}`.trim() ||
+          profile.email,
+    commitmentId: commitment.id,
+    totalCents,
+    totalTokens,
+    paymentMethod,
+    portalUrl: `${origin}/invest/checkout/${commitment.id}`,
   });
 
   res.json({ ok: true, commitmentId: commitment.id });

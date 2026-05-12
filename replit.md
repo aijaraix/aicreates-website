@@ -115,11 +115,38 @@ A full investor experience at `artifacts/invest`, intended to deploy to **https:
 ### One-time setup
 
 1. **Connect Stripe** via the Replit Integrations tab (no API keys to copy by hand).
-2. **Set admin emails:** add `ADMIN_EMAILS=you@example.com,other@example.com` (comma-separated) to the api-server env. Matching users are auto-promoted to `admin` on next request.
-3. **Seed tiers:** `pnpm --filter @workspace/scripts run seed-tiers` — idempotent; creates Founders ($1k), Architect ($5k), Catalyst ($25k) products + USD one-time prices in Stripe.
-4. **Push DB schema:** `pnpm --filter @workspace/db run push` (already includes `app_users`).
+2. **Connect Resend** via the Replit Integrations tab for transactional emails (SAFT signed, payment received, wire instructions, refund, dispute alert). The portal gracefully no-ops on every send when Resend is not connected, so this is non-blocking but emails won't actually deliver until it is.
+3. **Set admin emails:** add `ADMIN_EMAILS=you@example.com,other@example.com` (comma-separated) to the api-server env. Matching users are auto-promoted to `admin` on next request. Dispute alert emails are sent to every admin in this list.
+4. **Seed tiers:** `pnpm --filter @workspace/scripts run seed-tiers` — idempotent; creates Founders ($1k), Architect ($5k), Catalyst ($25k) products + USD one-time prices in Stripe.
+5. **Push DB schema:** `pnpm --filter @workspace/db run push` (already includes `app_users`).
 
 The api-server gracefully skips Stripe init if the integration is not connected, so the rest of the app keeps working.
+
+### Transactional email (Resend)
+
+`artifacts/api-server/src/lib/email.ts` is the single integration point. It resolves a Resend API key from two sources, in order:
+
+1. `RESEND_API_KEY` env secret — operator-supplied, used for production deploys where the connector isn't bound.
+2. The Replit **Resend connector** — read live from `connectors.replit.com` using the same `X-Replit-Token` pattern as the Stripe connector.
+
+If neither resolves, every send is logged and skipped — no errors propagate to API responses.
+
+Templates and where they fire:
+- `emailSaftSigned` → `POST /api/saft/:commitId` after the SAFT row is committed.
+- `emailWireInstructions` → `POST /api/checkout` wire branch. Bank fields default to placeholders; supply the live values via env: `WIRE_BANK_NAME`, `WIRE_ACCOUNT_NAME`, `WIRE_ACCOUNT_NUMBER`, `WIRE_ROUTING_NUMBER`, `WIRE_SWIFT` (optional).
+- `emailPaymentReceived` → `payment_intent.succeeded` webhook handler.
+- `emailRefundIssued` → `charge.refunded` webhook handler.
+- `emailDisputeAdmin` → `charge.dispute.created` webhook handler. Sent to every address in `ADMIN_EMAILS`.
+
+Set `PUBLIC_PORTAL_ORIGIN` (e.g. `https://invest.aicreates.ai`) so dashboard links in webhook-fired emails point at the live host instead of the dev preview origin.
+
+### Going live with Stripe
+
+`artifacts/api-server/src/lib/stripeClient.ts` already supports two key sources: it prefers operator-supplied `STRIPE_SECRET_KEY` + `STRIPE_WEBHOOK_SECRET` env secrets when running in a Replit deployment, and otherwise falls back to the dev Stripe connector. To switch to live mode in production:
+
+1. In Stripe Dashboard, generate a live secret key. Add it as `STRIPE_SECRET_KEY` in Replit Deployments → Secrets.
+2. Register the production webhook endpoint at `https://invest.aicreates.ai/api/stripe/webhook` for events: `checkout.session.completed`, `payment_intent.succeeded`, `payment_intent.payment_failed`, `charge.refunded`, `charge.dispute.created`. Add the webhook signing secret as `STRIPE_WEBHOOK_SECRET`.
+3. In Stripe Dashboard → Settings → Payment methods, enable ACH Direct Debit, Apple Pay, and Google Pay. Apple Pay / Google Pay require no extra integration work because the portal uses Stripe Checkout (hosted page), not Stripe Elements — wallet buttons appear automatically when "card" is enabled and the customer's device supports them. ACH is selected explicitly via `paymentMethod: "ach"` in `POST /api/checkout`.
 
 ### Production deploy
 
