@@ -161,7 +161,7 @@ export function Navigation() {
                 <span className="sr-only">Toggle menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="bg-[#0A0A0A] border-l border-white/5 w-[320px] p-6 overflow-y-auto">
+            <SheetContent side="right" className="bg-[#0A0A0A] border-l border-white/5 w-screen max-w-none sm:max-w-none p-6 overflow-y-auto">
               <div className="flex flex-col h-full">
                 <div className="flex items-center gap-2.5 mb-10">
                   <div className="w-2.5 h-2.5 rounded-full bg-[#00F5D4]" />
