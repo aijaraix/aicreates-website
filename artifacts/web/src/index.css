@@ -128,6 +128,13 @@
 
   html {
     background-color: #0A0A0A;
+    scrollbar-gutter: stable;
+  }
+
+  /* Neutralize Radix scroll-lock body padding shift when dropdowns/dialogs open */
+  body[data-scroll-locked] {
+    margin-right: 0 !important;
+    padding-right: 0 !important;
   }
 
   h1, h2, h3, h4, h5, h6 {

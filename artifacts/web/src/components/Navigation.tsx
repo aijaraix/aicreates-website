@@ -142,7 +142,7 @@ export function Navigation() {
               </Button>
             </Link>
             <a
-              href="https://invest.aicreates.ai/"
+              href={import.meta.env.PROD ? "https://invest.aicreates.ai/" : "/invest/"}
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -205,7 +205,7 @@ export function Navigation() {
                     </Button>
                   </Link>
                   <a
-                    href="https://invest.aicreates.ai/"
+                    href={import.meta.env.PROD ? "https://invest.aicreates.ai/" : "/invest/"}
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={() => setOpen(false)}
