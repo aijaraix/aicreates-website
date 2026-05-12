@@ -107,7 +107,6 @@ function ProductSpotlight() {
   return (
     <section className="py-14 md:py-24 relative min-h-[100dvh] sm:min-h-0 flex items-center">
       <div className="container mx-auto px-4 md:px-6 w-full">
-       <div className="max-w-5xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -189,7 +188,6 @@ function ProductSpotlight() {
             />
           ))}
         </div>
-       </div>
       </div>
     </section>
   );
