@@ -6,6 +6,7 @@ export type HeaderNavLink = {
   href: string;
   label: string;
   active?: boolean;
+  external?: boolean;
   testId?: string;
 };
 
@@ -78,20 +79,35 @@ export default function SiteHeader({
 
           {navLinks.length > 0 && (
             <nav className="hidden md:flex items-center gap-1 text-sm">
-              {navLinks.map((l) => (
-                <Link
-                  key={l.href}
-                  href={l.href}
-                  className={`px-3.5 py-1.5 rounded-full transition ${
-                    l.active
-                      ? "text-white bg-white/[0.06]"
-                      : "text-white/65 hover:text-white hover:bg-white/[0.04]"
-                  }`}
-                  data-testid={l.testId}
-                >
-                  {l.label}
-                </Link>
-              ))}
+              {navLinks.map((l) => {
+                const cls = `px-3.5 py-1.5 rounded-full transition ${
+                  l.active
+                    ? "text-white bg-white/[0.06]"
+                    : "text-white/65 hover:text-white hover:bg-white/[0.04]"
+                }`;
+                if (l.external) {
+                  return (
+                    <a
+                      key={l.href + l.label}
+                      href={l.href}
+                      className={cls}
+                      data-testid={l.testId}
+                    >
+                      {l.label}
+                    </a>
+                  );
+                }
+                return (
+                  <Link
+                    key={l.href + l.label}
+                    href={l.href}
+                    className={cls}
+                    data-testid={l.testId}
+                  >
+                    {l.label}
+                  </Link>
+                );
+              })}
             </nav>
           )}
         </div>

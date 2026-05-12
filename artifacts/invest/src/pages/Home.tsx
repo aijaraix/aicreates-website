@@ -84,6 +84,12 @@ export default function Home() {
       <SiteHeader
         homeHref="https://www.aicreates.ai"
         homeExternal
+        navLinks={[
+          { href: "https://www.aicreates.ai/eve-os", label: "Products", external: true, testId: "nav-products" },
+          { href: "https://www.aicreates.ai/business", label: "Solutions", external: true, testId: "nav-solutions" },
+          { href: "https://www.aicreates.ai/litepaper", label: "Resources", external: true, testId: "nav-resources" },
+          { href: "https://www.aicreates.ai/about", label: "Company", external: true, testId: "nav-company" },
+        ]}
         ctas={[
           {
             href: "https://www.aicreates.ai/litepaper",

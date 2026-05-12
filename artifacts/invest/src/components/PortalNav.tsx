@@ -51,6 +51,13 @@ export default function PortalNav({ showAdmin }: { showAdmin?: boolean }) {
             >
               Litepaper
             </a>
+            <Link
+              href="/invest"
+              className="hidden md:inline-flex items-center justify-center rounded-full h-9 px-5 bg-[#00F5D4] text-black hover:bg-[#00F5D4]/90 text-sm font-medium transition"
+              data-testid="link-portal-reserve"
+            >
+              Reserve allocation
+            </Link>
             {showAdmin && (
               <Link
                 href="/admin"
