@@ -100,73 +100,77 @@ function NewsletterSubscribe() {
   }
 
   return (
-    <div className="max-w-md">
-      <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-white/40 mb-3">
-        Stay in the loop
-      </h4>
-      <p className="text-white/60 text-sm leading-relaxed mb-4">
-        Product updates, raise milestones, and the occasional manifesto. No spam.
-      </p>
-      {submitted ? (
-        <div
-          role="status"
-          aria-live="polite"
-          className="rounded-md border border-[#00F5D4]/30 bg-[#00F5D4]/5 px-4 py-3 text-sm text-[#00F5D4]"
-        >
-          You're subscribed. Watch your inbox for the next dispatch.
-        </div>
-      ) : (
-        <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-2">
-          {/* Honeypot - hidden from real users, bots fill it in */}
-          <input
-            type="text"
-            name="_honey"
-            tabIndex={-1}
-            autoComplete="off"
-            value={honey}
-            onChange={(e) => setHoney(e.target.value)}
-            aria-hidden="true"
-            className="absolute left-[-9999px] h-0 w-0 opacity-0"
-          />
-          <div className="flex flex-col sm:flex-row gap-2">
-            <label htmlFor="newsletter-email" className="sr-only">
-              Email address
-            </label>
-            <input
-              id="newsletter-email"
-              type="email"
-              required
-              autoComplete="email"
-              placeholder="you@company.com"
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-                if (error) setError(null);
-              }}
-              disabled={submitting}
-              data-testid="input-newsletter-email"
-              className="flex-1 rounded-md border border-white/10 bg-white/[0.03] px-3 py-2.5 text-sm text-white placeholder-white/30 outline-none transition-colors focus:border-[#00F5D4]/60 focus:bg-white/[0.05] disabled:opacity-50"
-            />
-            <button
-              type="submit"
-              disabled={submitting}
-              data-testid="button-newsletter-subscribe"
-              className="inline-flex items-center justify-center rounded-md bg-[#00F5D4] px-4 py-2.5 text-sm font-semibold text-[#0A0A0A] transition-colors hover:bg-[#00F5D4]/90 disabled:opacity-60 disabled:cursor-not-allowed"
-            >
-              {submitting ? "Subscribing..." : "Subscribe"}
-            </button>
+    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-8 md:gap-12">
+      <div className="md:max-w-md">
+        <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-white/40 mb-3">
+          Stay in the loop
+        </h4>
+        <p className="text-white/60 text-sm leading-relaxed">
+          Product updates, raise milestones, and the occasional manifesto. No spam.
+        </p>
+      </div>
+      <div className="w-full md:max-w-lg md:flex-1">
+        {submitted ? (
+          <div
+            role="status"
+            aria-live="polite"
+            className="rounded-md border border-[#00F5D4]/30 bg-[#00F5D4]/5 px-4 py-3 text-sm text-[#00F5D4]"
+          >
+            You're subscribed. Watch your inbox for the next dispatch.
           </div>
-          {error && (
-            <p
-              role="alert"
-              className="text-xs text-red-400/90"
-              data-testid="text-newsletter-error"
-            >
-              {error}
-            </p>
-          )}
-        </form>
-      )}
+        ) : (
+          <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-2">
+            {/* Honeypot - hidden from real users, bots fill it in */}
+            <input
+              type="text"
+              name="_honey"
+              tabIndex={-1}
+              autoComplete="off"
+              value={honey}
+              onChange={(e) => setHoney(e.target.value)}
+              aria-hidden="true"
+              className="absolute left-[-9999px] h-0 w-0 opacity-0"
+            />
+            <div className="flex flex-col sm:flex-row gap-2">
+              <label htmlFor="newsletter-email" className="sr-only">
+                Email address
+              </label>
+              <input
+                id="newsletter-email"
+                type="email"
+                required
+                autoComplete="email"
+                placeholder="you@company.com"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (error) setError(null);
+                }}
+                disabled={submitting}
+                data-testid="input-newsletter-email"
+                className="flex-1 rounded-md border border-white/10 bg-white/[0.03] px-3 py-2.5 text-sm text-white placeholder-white/30 outline-none transition-colors focus:border-[#00F5D4]/60 focus:bg-white/[0.05] disabled:opacity-50"
+              />
+              <button
+                type="submit"
+                disabled={submitting}
+                data-testid="button-newsletter-subscribe"
+                className="inline-flex items-center justify-center rounded-md bg-[#00F5D4] px-4 py-2.5 text-sm font-semibold text-[#0A0A0A] transition-colors hover:bg-[#00F5D4]/90 disabled:opacity-60 disabled:cursor-not-allowed"
+              >
+                {submitting ? "Subscribing..." : "Subscribe"}
+              </button>
+            </div>
+            {error && (
+              <p
+                role="alert"
+                className="text-xs text-red-400/90"
+                data-testid="text-newsletter-error"
+              >
+                {error}
+              </p>
+            )}
+          </form>
+        )}
+      </div>
     </div>
   );
 }
