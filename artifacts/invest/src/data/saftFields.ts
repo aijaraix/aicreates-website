@@ -134,18 +134,13 @@ export const PAYMENT_METHODS = [
     blurb: "Fastest. Recommended under $5,000.",
   },
   {
-    value: "ach",
-    label: "ACH bank transfer",
-    blurb: "Recommended for $5,000+. Settles in 3-5 business days.",
-  },
-  {
     value: "wire",
     label: "Wire transfer",
     blurb: "Recommended for $25,000+. Bank instructions on confirmation.",
   },
   {
     value: "crypto",
-    label: "Crypto (USDC)",
-    blurb: "Manually escrowed. Address provided by email after signing.",
+    label: "Crypto (BTC / ETH / SOL / USDC / USDT)",
+    blurb: "Send to our escrow address. Marked funded on-chain by an admin.",
   },
 ] as const;

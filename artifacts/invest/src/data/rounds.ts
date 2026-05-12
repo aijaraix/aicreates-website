@@ -136,11 +136,67 @@ export function publicAsset(path: string): string {
   return `${base.replace(/\/$/, "")}/${path.replace(/^\//, "")}`;
 }
 
+/**
+ * Real on-chain escrow addresses (Coinbase-hosted). Each entry is a
+ * single-asset / single-network destination. Sending the wrong asset
+ * or to the wrong network will result in lost funds, which is why
+ * each address is paired with one and only one (asset, network) pair
+ * in the UI.
+ */
+export interface CryptoEscrow {
+  asset: "BTC" | "ETH" | "SOL" | "USDC" | "USDT";
+  network: string;
+  address: string;
+  warning: string;
+}
+
+export const CRYPTO_ESCROWS: CryptoEscrow[] = [
+  {
+    asset: "USDC",
+    network: "Base",
+    address: "0x16c3C8457054C79b23894a6B0E6a42819b9dDeDC",
+    warning:
+      "Only send USDC on the Base network. Sending USDC on any other chain or sending non-USDC tokens will be lost.",
+  },
+  {
+    asset: "USDC",
+    network: "Ethereum",
+    address: "0x16c3C8457054C79b23894a6B0E6a42819b9dDeDC",
+    warning:
+      "Only send USDC on the Ethereum network. Do not send USDC on any other network.",
+  },
+  {
+    asset: "USDT",
+    network: "Ethereum",
+    address: "0x02650Ea5C2262b3bcFAA408De91705Dc0F448bc2",
+    warning:
+      "Only send USDT (Tether ERC-20) on the Ethereum network. Do not send USDT on Tron or any other chain.",
+  },
+  {
+    asset: "ETH",
+    network: "Ethereum",
+    address: "0xE16838A8317576cf4596c2C8B58169685F7E4508",
+    warning:
+      "Only send native ETH on the Ethereum network. Do not send ERC-20s, NFTs, or WETH to this address.",
+  },
+  {
+    asset: "BTC",
+    network: "Bitcoin",
+    address: "3PJPDBB5jUWGxeE6cDWWTzdEYv97ngEj97",
+    warning:
+      "Only send BTC on the Bitcoin network. Do not send Bitcoin Cash (BCH) or BTC on any other network. Allow ~30 min for processing.",
+  },
+  {
+    asset: "SOL",
+    network: "Solana",
+    address: "HBLgyfbpVV5emfwBG9og2p2eL7VYruUzEYNbXBwQz3JR",
+    warning:
+      "Only send native SOL on the Solana network. Minimum 0.001 SOL. Do not send SPL tokens or NFTs to this address.",
+  },
+];
+
 export const CRYPTO_INSTRUCTIONS = {
-  asset: "USDC (ERC-20 / Polygon / Base)",
-  network: "We will confirm the preferred network in our reply.",
-  escrowAddress:
-    "(Provided by the team after SAFT signing - reply to your confirmation email)",
   contact: "sholom@aicreates.ai",
   reference: "Use your Commitment ID in the memo / transaction note.",
+  escrows: CRYPTO_ESCROWS,
 };

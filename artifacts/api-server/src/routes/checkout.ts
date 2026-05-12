@@ -441,7 +441,7 @@ router.post("/checkout", requireAuth, async (req, res) => {
       .where(eq(commitmentsTable.id, commitmentId!));
     await notifyTeam({
       subject: `[AICA] Crypto commitment awaiting funds: $${(amountCents / 100).toLocaleString()} from ${user.email}`,
-      message: `${user.fullName ?? user.email} committed via crypto.\n\nCommitment: ${commitmentId}\nAmount: $${(amountCents / 100).toLocaleString()}\nDisplay: ${displayName}\nRound: ${roundSlug}\nTokens: ${tokenAllocation.toLocaleString()} AICA\n\nReply with the escrow address. Mark received in /invest/admin once on-chain confirmations are finalized.`,
+      message: `${user.fullName ?? user.email} committed via crypto.\n\nCommitment: ${commitmentId}\nAmount: $${(amountCents / 100).toLocaleString()}\nDisplay: ${displayName}\nRound: ${roundSlug}\nTokens: ${tokenAllocation.toLocaleString()} AICA\n\nInvestor was shown all six escrow addresses (BTC / ETH / SOL / USDC-Base / USDC-Ethereum / USDT-Ethereum) on the checkout page. Watch the corresponding wallets for an inbound transaction matching this amount, then mark received in /invest/admin once on-chain confirmations are finalized.`,
       payload: {
         kind: "crypto",
         commitmentId,

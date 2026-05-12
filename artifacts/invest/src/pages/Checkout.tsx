@@ -6,7 +6,6 @@ import PortalNav from "@/components/PortalNav";
 import PageHeader from "@/components/PageHeader";
 import {
   ArrowRight,
-  Banknote,
   CreditCard,
   Bitcoin,
   Building2,
@@ -53,13 +52,6 @@ const METHODS: Array<{
     recommendedAtCents: 0,
   },
   {
-    value: "ach",
-    label: "ACH bank transfer",
-    blurb: "Recommended for $5,000+. 3-5 business days.",
-    Icon: Banknote,
-    recommendedAtCents: 500_000,
-  },
-  {
     value: "wire",
     label: "Wire transfer",
     blurb: "Recommended for $25,000+. Bank instructions on confirmation.",
@@ -68,8 +60,8 @@ const METHODS: Array<{
   },
   {
     value: "crypto",
-    label: "Crypto (USDC)",
-    blurb: "Manually escrowed. Address sent by email after confirmation.",
+    label: "Crypto (BTC / ETH / SOL / USDC / USDT)",
+    blurb: "Send to our escrow address. Marked funded on-chain by an admin.",
     Icon: Bitcoin,
     recommendedAtCents: 0,
   },
@@ -192,7 +184,7 @@ export default function Checkout() {
             <p className="mt-2 text-white/60 text-sm">
               {manualConfirmed === "wire"
                 ? "Use your Commitment ID as the wire reference. Your dashboard will move to \"Funded\" once we confirm receipt."
-                : "Our team will reply to your account email with the escrow address. Your dashboard will move to \"Funded\" once on-chain confirmations are finalized."}
+                : "Send to the escrow address you copied (matching asset and network). Your dashboard will move to \"Funded\" once on-chain confirmations are finalized."}
             </p>
             <Link href="/dashboard" className="brand-cta-outline mt-6">
               Back to dashboard
@@ -241,41 +233,65 @@ export default function Checkout() {
                 data-testid="crypto-instructions"
               >
                 <div className="text-xs uppercase tracking-[0.18em] text-white/40 mb-3">
-                  Crypto instructions (USDC, manually escrowed)
+                  Crypto escrow addresses
                 </div>
-                <dl className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-                  {Object.entries({
-                    Asset: CRYPTO_INSTRUCTIONS.asset,
-                    Network: CRYPTO_INSTRUCTIONS.network,
-                    "Escrow address": CRYPTO_INSTRUCTIONS.escrowAddress,
-                    Contact: CRYPTO_INSTRUCTIONS.contact,
-                  }).map(([k, v]) => (
-                    <div key={k}>
-                      <dt className="text-[11px] uppercase tracking-[0.14em] text-white/40">
-                        {k}
-                      </dt>
-                      <dd className="text-white/80">{v}</dd>
+                <p className="text-xs text-white/60 mb-4">
+                  Pick the asset and network you want to send. Each address is
+                  for one specific (asset, network) pair only - sending the
+                  wrong asset or to the wrong network will be lost.
+                </p>
+                <div className="space-y-3">
+                  {CRYPTO_INSTRUCTIONS.escrows.map((esc) => (
+                    <div
+                      key={`${esc.asset}-${esc.network}`}
+                      className="rounded-lg border border-white/10 bg-black/30 p-3"
+                      data-testid={`escrow-${esc.asset}-${esc.network}`}
+                    >
+                      <div className="flex items-center justify-between gap-3 mb-2">
+                        <div>
+                          <span className="font-medium text-white">
+                            {esc.asset}
+                          </span>
+                          <span className="text-white/50 ml-2 text-xs">
+                            on {esc.network}
+                          </span>
+                        </div>
+                        <button
+                          onClick={() => onCopy(esc.address)}
+                          className="px-2 py-1 text-[11px] rounded border border-white/10 hover:bg-white/[0.04] inline-flex items-center gap-1"
+                          data-testid={`copy-${esc.asset}-${esc.network}`}
+                        >
+                          <Copy className="w-3 h-3" />
+                          Copy
+                        </button>
+                      </div>
+                      <div className="font-mono text-[#00F5D4] text-xs break-all">
+                        {esc.address}
+                      </div>
+                      <div className="text-[11px] text-white/40 mt-2">
+                        {esc.warning}
+                      </div>
                     </div>
                   ))}
-                  <div className="sm:col-span-2">
-                    <dt className="text-[11px] uppercase tracking-[0.14em] text-white/40">
-                      Memo / reference (use this exact value)
-                    </dt>
-                    <dd className="mt-1 inline-flex items-center gap-2 rounded-lg border border-white/10 bg-black/30 px-3 py-2 font-mono text-[#00F5D4]">
-                      {c.id}
-                      <button
-                        onClick={() => onCopy(c.id)}
-                        className="ml-2 px-2 py-0.5 text-xs rounded border border-white/10 hover:bg-white/[0.04]"
-                      >
-                        {copied ? "Copied" : <Copy className="w-3 h-3" />}
-                      </button>
-                    </dd>
-                  </div>
-                </dl>
+                </div>
+                <div className="mt-4 pt-4 border-t border-white/5">
+                  <dt className="text-[11px] uppercase tracking-[0.14em] text-white/40">
+                    Memo / reference (use this exact value)
+                  </dt>
+                  <dd className="mt-1 inline-flex items-center gap-2 rounded-lg border border-white/10 bg-black/30 px-3 py-2 font-mono text-[#00F5D4]">
+                    {c.id}
+                    <button
+                      onClick={() => onCopy(c.id)}
+                      className="ml-2 px-2 py-0.5 text-xs rounded border border-white/10 hover:bg-white/[0.04]"
+                    >
+                      {copied ? "Copied" : <Copy className="w-3 h-3" />}
+                    </button>
+                  </dd>
+                </div>
                 <p className="mt-3 text-[11px] text-white/40">
-                  Stripe Pay-with-Crypto is not available everywhere, so we
-                  handle crypto via a manual escrow flow. After you confirm,
-                  we will email the escrow address from {CRYPTO_INSTRUCTIONS.contact}.
+                  After you confirm, an admin will match the on-chain
+                  transaction to your commitment and mark it funded. Questions:{" "}
+                  {CRYPTO_INSTRUCTIONS.contact}.
                 </p>
               </div>
             )}
