@@ -107,6 +107,7 @@ function ProductSpotlight() {
   return (
     <section className="py-14 md:py-24 relative min-h-[100dvh] sm:min-h-0 flex items-center">
       <div className="container mx-auto px-4 md:px-6 w-full">
+       <div className="max-w-5xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -188,6 +189,7 @@ function ProductSpotlight() {
             />
           ))}
         </div>
+       </div>
       </div>
     </section>
   );
@@ -287,6 +289,7 @@ export default function Home() {
       {/* AUDIENCE SELECTOR - consumer / business / investor entry */}
       <section className="py-14 md:py-20 relative">
         <div className="container mx-auto px-4 md:px-6">
+         <div className="max-w-5xl mx-auto">
           <div className="max-w-3xl mb-12">
             <SectionLabel>Three doors in</SectionLabel>
             <motion.h2
@@ -322,6 +325,7 @@ export default function Home() {
               </motion.div>
             ))}
           </div>
+         </div>
         </div>
       </section>
 
