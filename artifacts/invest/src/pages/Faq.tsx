@@ -66,6 +66,11 @@ const GROUPS: FaqGroup[] = [
         a: "Self-declared accreditation captured on the SAFT. The team reviews and may request supporting documents before marking verified for accreditation-restricted tiers.",
       },
       {
+        q: "What does the SAFT cover?",
+        a: "The Simple Agreement for Future Tokens (SAFT) is the binding contract for your commitment. It covers identity, accreditation, payment terms, risk acknowledgments, wallet mapping (optional at signing), and a fully signed PDF you can download from the Documents page after completion.",
+        anchor: "saft",
+      },
+      {
         q: "Can I cancel or refund my commitment?",
         a: "Until your funds are received, you can cancel by contacting the team. Once funds clear, refunds are at the company's discretion and may be processed via the original payment method.",
       },

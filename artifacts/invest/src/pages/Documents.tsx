@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { Link } from "wouter";
 import { api } from "@/lib/api";
 import PortalNav from "@/components/PortalNav";
 import { FileText, Download, Lock } from "lucide-react";
@@ -23,6 +24,28 @@ const STATIC_DOCS = [
     external: true,
   },
   {
+    title: "Whitepaper (coming soon)",
+    blurb:
+      "Full technical whitepaper covering architecture, token mechanics, and economic model. Available after counsel review.",
+    cta: "Coming soon",
+    disabled: true,
+  },
+  {
+    title: "One-pager (coming soon)",
+    blurb:
+      "Single-page round summary - terms, raise, use of proceeds, and team. Sharable with co-investors.",
+    cta: "Coming soon",
+    disabled: true,
+  },
+  {
+    title: "Sample SAFT",
+    blurb:
+      "Reference copy of the AICreatesAI SAFT. Your signed copy will be generated when you complete the SAFT flow on a commitment.",
+    href: "/faq#saft",
+    cta: "Read SAFT overview",
+    internal: true,
+  },
+  {
     title: "Round terms summary",
     blurb:
       "AICA Founders Round - tier table, pricing, target raise, deadline, and payment options.",
@@ -41,8 +64,9 @@ const STATIC_DOCS = [
     title: "Risk factors",
     blurb:
       "Standard early-stage and token-specific risk disclosures, mirrored from the SAFT acknowledgments.",
-    href: "/invest/faq#risk",
+    href: "/faq#risk",
     cta: "Read risk factors",
+    internal: true,
   },
 ];
 
@@ -106,6 +130,13 @@ export default function Documents() {
                   >
                     <Lock className="w-3.5 h-3.5 mr-2" /> {d.cta}
                   </button>
+                ) : d.internal ? (
+                  <Link
+                    href={d.href!}
+                    className="mt-5 inline-flex items-center justify-center h-10 px-4 rounded-full border border-[#00F5D4]/40 text-[#00F5D4] hover:bg-[#00F5D4]/10 text-sm"
+                  >
+                    {d.cta}
+                  </Link>
                 ) : (
                   <a
                     href={d.href}

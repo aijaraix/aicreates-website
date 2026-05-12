@@ -36,6 +36,7 @@ router.get("/me/allocations", requireAuth, async (req, res) => {
       status: saftSubmissionsTable.status,
       signedAt: saftSubmissionsTable.signedAt,
       signatureName: saftSubmissionsTable.signatureName,
+      payload: saftSubmissionsTable.payload,
     })
     .from(saftSubmissionsTable)
     .where(eq(saftSubmissionsTable.userId, user.id));
@@ -49,6 +50,8 @@ router.get("/me/allocations", requireAuth, async (req, res) => {
       totalTokens: c.tokenAllocation,
       fundedAt: c.fundedAt ?? c.completedAt,
     });
+    const saft = saftByCommitment.get(c.id);
+    const payload = (saft?.payload ?? {}) as Record<string, unknown>;
     return {
       id: c.id,
       roundSlug: c.roundSlug,
@@ -59,10 +62,16 @@ router.get("/me/allocations", requireAuth, async (req, res) => {
       tokenAllocation: c.tokenAllocation,
       state: c.state ?? c.status,
       paymentMethod: c.paymentMethod,
-      saftSignedAt: c.saftSignedAt ?? saftByCommitment.get(c.id)?.signedAt ?? null,
-      saftStatus: saftByCommitment.get(c.id)?.status ?? null,
-      saftSignerName:
-        saftByCommitment.get(c.id)?.signatureName ?? null,
+      saftSignedAt: c.saftSignedAt ?? saft?.signedAt ?? null,
+      saftStatus: saft?.status ?? null,
+      saftSignerName: saft?.signatureName ?? null,
+      kycStatus: c.kycStatus,
+      accreditationStatus: c.accreditationStatus,
+      walletAddress: c.walletAddress,
+      walletChain:
+        typeof payload["walletChain"] === "string"
+          ? (payload["walletChain"] as string)
+          : null,
       fundedAt: c.fundedAt ?? c.completedAt,
       isFunded,
       vesting: isFunded ? vesting : null,

@@ -215,7 +215,7 @@ export default function Saft() {
       case 3:
         return allRisks;
       case 4:
-        return validWallet && Boolean(form.walletChain);
+        return true;
       case 5:
         return allAcks;
       case 6:
@@ -516,8 +516,9 @@ export default function Saft() {
               <H title="Wallet mapping" />
               <p className="text-sm text-white/60">
                 Provide the wallet address that will receive your AICA
-                allocation at TGE. You can update this any time before
-                TGE by contacting the team.
+                allocation at TGE. This step is optional — you can map
+                or update your wallet any time before TGE by contacting
+                the team or returning to this flow.
               </p>
               <div>
                 <label className="text-[11px] uppercase tracking-[0.14em] text-white/50">

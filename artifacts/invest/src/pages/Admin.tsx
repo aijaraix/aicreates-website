@@ -65,6 +65,22 @@ interface Stats {
   total_tokens_allocated?: string | number;
 }
 
+interface RoundResp {
+  round: {
+    slug: string;
+    label: string;
+    targetRaiseCents: number;
+    hardCapCents: number;
+  };
+  raised: {
+    fundedCents: number;
+    inFlightCents: number;
+    fundedCount: number;
+    fundedInvestors: number;
+    totalCommitments: number;
+  };
+}
+
 interface Application {
   id: string;
   userId: string;
@@ -177,6 +193,11 @@ export default function Admin() {
     queryFn: () => api<{ entries: AuditEntry[] }>("/admin/audit-log"),
     enabled: isAdmin,
   });
+  const round = useQuery({
+    queryKey: ["rounds", "active"],
+    queryFn: () => api<RoundResp>("/rounds/active"),
+    enabled: isAdmin,
+  });
 
   const refund = useMutation({
     mutationFn: (id: string) =>
@@ -234,6 +255,18 @@ export default function Admin() {
   const s = stats.data?.stats ?? {};
   const totalCents = Number(s.total_succeeded_cents ?? 0);
   const totalTokens = Number(s.total_tokens_allocated ?? 0);
+  const r = round.data;
+  const remainingCents = r
+    ? Math.max(0, r.round.targetRaiseCents - r.raised.fundedCents)
+    : 0;
+  const investorCount = r?.raised.fundedInvestors ?? 0;
+  const avgCheckCents =
+    investorCount > 0 ? Math.round(r!.raised.fundedCents / investorCount) : 0;
+  const totalApps = apps.data?.applications.length ?? 0;
+  const conversionPct =
+    totalApps > 0
+      ? Math.round((investorCount / totalApps) * 1000) / 10
+      : 0;
 
   const downloadCsv = () => {
     const url = `/api/admin/commitments?format=csv${
@@ -256,12 +289,22 @@ export default function Admin() {
 
         <RoundContext />
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4" data-testid="admin-kpis">
           <Card label="Total raised" value={fmt(totalCents)} accent />
-          <Card label="Tokens allocated" value={totalTokens.toLocaleString()} />
+          <Card label="Remaining to target" value={fmt(remainingCents)} />
+          <Card label="Funded investors" value={String(investorCount)} />
           <Card
-            label="Investors"
-            value={String(users.data?.users.length ?? 0)}
+            label="Avg check"
+            value={avgCheckCents > 0 ? fmt(avgCheckCents) : "—"}
+          />
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <Card label="Tokens allocated" value={totalTokens.toLocaleString()} />
+          <Card label="Total accounts" value={String(users.data?.users.length ?? 0)} />
+          <Card
+            label="Application → funded"
+            value={totalApps > 0 ? `${conversionPct}%` : "—"}
+            small
           />
           <Card
             label="Funded / Pending / Wire / Crypto / Refunded"

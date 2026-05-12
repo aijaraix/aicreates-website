@@ -28,6 +28,10 @@ interface Allocation {
   saftSignedAt: string | null;
   saftStatus: string | null;
   saftSignerName: string | null;
+  kycStatus: string | null;
+  accreditationStatus: string | null;
+  walletAddress: string | null;
+  walletChain: string | null;
   fundedAt: string | null;
   isFunded: boolean;
   vesting: {
@@ -356,6 +360,49 @@ export default function Dashboard() {
                     label="Cliff ends"
                     value={a.vesting ? fmtDate(a.vesting.cliffDate) : "—"}
                   />
+                </div>
+
+                <div className="mt-3 grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+                  <Mini
+                    label="KYC"
+                    value={
+                      a.kycStatus && a.kycStatus !== "none"
+                        ? a.kycStatus
+                        : "Not started"
+                    }
+                  />
+                  <Mini
+                    label="Accreditation"
+                    value={a.accreditationStatus ?? "—"}
+                  />
+                  <div
+                    className="rounded-xl border border-white/10 bg-black/30 p-3"
+                    data-testid={`wallet-${a.id}`}
+                  >
+                    <div className="text-[10px] uppercase tracking-[0.14em] text-white/40">
+                      Wallet
+                      {a.walletChain && (
+                        <span className="ml-1 text-white/30">
+                          ({a.walletChain})
+                        </span>
+                      )}
+                    </div>
+                    {a.walletAddress ? (
+                      <div
+                        className="mt-1 text-[11px] font-mono break-all text-white/80"
+                        title={a.walletAddress}
+                      >
+                        {a.walletAddress}
+                      </div>
+                    ) : (
+                      <Link
+                        href={`/saft/${a.id}`}
+                        className="mt-1 inline-block text-[11px] text-[#00F5D4] hover:underline"
+                      >
+                        Map wallet →
+                      </Link>
+                    )}
+                  </div>
                 </div>
 
                 {a.isFunded && a.vesting && (
