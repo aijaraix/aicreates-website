@@ -470,7 +470,6 @@ export default function Home() {
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,245,212,0.10),transparent_70%)] pointer-events-none" />
             <div className="absolute inset-x-0 top-0 h-px divider-line" />
             <div className="relative">
-              <Building2 className="w-7 h-7 text-[#00F5D4] mx-auto mb-5" strokeWidth={1.5} />
               <motion.h2
                 initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -480,6 +479,9 @@ export default function Home() {
               >
                 The agentic era is not waiting.
               </motion.h2>
+              <p className="mt-5 text-base sm:text-lg text-white/65 leading-relaxed max-w-2xl mx-auto">
+                The full thesis, architecture, and economic engine of the agentic intelligence layer - laid out in one document.
+              </p>
               <div className="mt-8 flex flex-wrap gap-3 justify-center">
                 <Button
                   size="lg"
