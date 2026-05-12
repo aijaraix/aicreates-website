@@ -14,7 +14,6 @@ export default function AicaTokenMark({ className = "", testId }: Props) {
   const idGloss = `aicaGloss-${uid}`;
   const idGrid = `aicaGrid-${uid}`;
   const idMask = `aicaCoreMask-${uid}`;
-  const idShadow = `aicaShadow-${uid}`;
   const idGlyphGloss = `aicaGlyphGloss-${uid}`;
   return (
     <div
@@ -22,7 +21,7 @@ export default function AicaTokenMark({ className = "", testId }: Props) {
       data-testid={testId}
     >
       <svg
-        viewBox="0 0 200 210"
+        viewBox="0 0 200 200"
         className="relative w-full h-full overflow-visible"
         preserveAspectRatio="xMidYMid meet"
         aria-label="$AICA token"
@@ -74,12 +73,6 @@ export default function AicaTokenMark({ className = "", testId }: Props) {
           <mask id={idMask}>
             <circle cx="100" cy="100" r="70" fill="white" />
           </mask>
-          {/* Soft cast shadow below the coin */}
-          <radialGradient id={idShadow} cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#000000" stopOpacity="0.55" />
-            <stop offset="60%" stopColor="#000000" stopOpacity="0.18" />
-            <stop offset="100%" stopColor="#000000" stopOpacity="0" />
-          </radialGradient>
           {/* Glyph gloss for teal letters */}
           <linearGradient id={idGlyphGloss} x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="#9CFFE9" />
@@ -87,9 +80,6 @@ export default function AicaTokenMark({ className = "", testId }: Props) {
             <stop offset="100%" stopColor="#0BAA90" />
           </linearGradient>
         </defs>
-
-        {/* Cast shadow */}
-        <ellipse cx="100" cy="196" rx="70" ry="8" fill={`url(#${idShadow})`} />
 
         {/* Outer rim disc (the coin's outside) */}
         <circle cx="100" cy="100" r="94" fill={`url(#${idRimBevel})`} />
