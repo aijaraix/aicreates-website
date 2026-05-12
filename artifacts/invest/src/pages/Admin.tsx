@@ -450,10 +450,10 @@ export default function Admin() {
               No commitments {statusFilter ? `with status ${statusFilter}` : "yet"}.
             </div>
           ) : (
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto max-h-[70vh] overflow-y-auto rounded-xl border border-white/5">
               <table className="w-full text-sm">
-                <thead className="text-xs uppercase tracking-[0.14em] text-white/40">
-                  <tr>
+                <thead className="text-xs uppercase tracking-[0.14em] text-white/50 sticky top-0 z-10 bg-[#0A0A0A]/95 backdrop-blur-md">
+                  <tr className="border-b border-white/10">
                     <th className="text-left px-3 py-3 font-medium">Date</th>
                     <th className="text-left px-3 py-3 font-medium">Investor</th>
                     <th className="text-left px-3 py-3 font-medium">Tier</th>

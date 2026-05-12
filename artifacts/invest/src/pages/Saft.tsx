@@ -258,23 +258,61 @@ export default function Saft() {
 
       <main className="mx-auto max-w-3xl px-6 py-10 md:py-12">
 
-        {/* Stepper */}
-        <ol className="flex flex-wrap gap-2 mb-8 text-xs">
-          {STEPS.map((s, i) => (
-            <li
-              key={s}
-              className={`px-3 py-1 rounded-full border ${
-                i === step
-                  ? "border-[#00F5D4]/50 bg-[#00F5D4]/10 text-[#00F5D4]"
-                  : i < step
-                    ? "border-white/10 bg-white/[0.04] text-white/70"
-                    : "border-white/10 text-white/40"
-              }`}
-              data-testid={`step-${i}`}
-            >
-              {i + 1}. {s}
-            </li>
-          ))}
+        {/* Stepper rail */}
+        <ol
+          className="relative mb-10 grid gap-2 text-xs"
+          style={{
+            gridTemplateColumns: `repeat(${STEPS.length}, minmax(0, 1fr))`,
+          }}
+          aria-label="SAFT progress"
+        >
+          {STEPS.map((s, i) => {
+            const done = i < step;
+            const active = i === step;
+            return (
+              <li
+                key={s}
+                className="flex flex-col items-center gap-2 min-w-0"
+                data-testid={`step-${i}`}
+              >
+                <div className="relative w-full flex items-center">
+                  <div
+                    className={`h-px flex-1 ${
+                      i === 0 ? "opacity-0" : done || active ? "bg-[#00F5D4]/40" : "bg-white/10"
+                    }`}
+                  />
+                  <div
+                    className={`relative z-10 w-7 h-7 rounded-full grid place-items-center text-[11px] font-medium border transition ${
+                      active
+                        ? "border-[#00F5D4] bg-[#00F5D4]/15 text-[#00F5D4] shadow-[0_0_14px_rgba(0,245,212,0.35)]"
+                        : done
+                          ? "border-[#00F5D4]/50 bg-[#00F5D4]/10 text-[#00F5D4]"
+                          : "border-white/15 bg-white/[0.02] text-white/40"
+                    }`}
+                  >
+                    {done ? <Check className="w-3.5 h-3.5" /> : i + 1}
+                  </div>
+                  <div
+                    className={`h-px flex-1 ${
+                      i === STEPS.length - 1
+                        ? "opacity-0"
+                        : done
+                          ? "bg-[#00F5D4]/40"
+                          : "bg-white/10"
+                    }`}
+                  />
+                </div>
+                <span
+                  className={`hidden sm:block text-center truncate w-full ${
+                    active ? "text-[#00F5D4]" : done ? "text-white/70" : "text-white/40"
+                  }`}
+                  title={s}
+                >
+                  {s}
+                </span>
+              </li>
+            );
+          })}
         </ol>
 
         <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 md:p-8">

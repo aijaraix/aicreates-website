@@ -288,11 +288,27 @@ export default function Checkout() {
 
             {method === "wire" && (
               <div
-                className="rounded-2xl border border-white/10 bg-black/40 p-5 mt-4"
+                className="relative rounded-2xl border border-[#00F5D4]/20 bg-gradient-to-b from-black/60 to-black/30 p-6 mt-4 shadow-[0_0_60px_-30px_rgba(0,245,212,0.5)]"
                 data-testid="wire-instructions"
               >
-                <div className="text-xs uppercase tracking-[0.18em] text-white/40 mb-3">
-                  Wire instructions (held until SAFT confirmation)
+                <div className="flex items-start justify-between gap-4 mb-4 pb-4 border-b border-white/5">
+                  <div>
+                    <div className="text-[11px] uppercase tracking-[0.2em] text-[#00F5D4] mb-1">
+                      Official wire instructions
+                    </div>
+                    <div className="font-display text-lg text-white">
+                      AICreatesAI - Funding instructions
+                    </div>
+                    <div className="text-xs text-white/50 mt-1">
+                      Held until SAFT confirmation. Use the reference value below on your wire.
+                    </div>
+                  </div>
+                  <div className="hidden sm:block text-right text-[10px] uppercase tracking-[0.2em] text-white/40">
+                    Doc ID
+                    <div className="font-mono text-white/60 normal-case tracking-normal text-xs mt-1">
+                      {c.id.slice(0, 8)}
+                    </div>
+                  </div>
                 </div>
                 <dl className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
                   {Object.entries({
