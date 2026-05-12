@@ -494,7 +494,7 @@ export default function Home() {
                 </Button>
                 <a
                   href={`${import.meta.env.BASE_URL}litepaper.pdf`}
-                  download="AIcreatesAI-Litepaper.pdf"
+                  download="AiCreatesAi Whitepaper.pdf"
                   rel="noopener noreferrer"
                   data-testid="button-download-litepaper"
                 >
