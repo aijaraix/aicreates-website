@@ -51,6 +51,14 @@ const GROUPS: Group[] = [
         a: "No. Eve OS is designed for operators. You describe goals in plain language; the layer handles the coordination.",
       },
       {
+        q: "When can I use it?",
+        a: "Private waitlist now. Eve OS rolls out in staged cohorts as the agentic intelligence layer matures and capacity expands. Join the waitlist via Contact and we will reach out as your cohort opens.",
+      },
+      {
+        q: "Is it available in my country?",
+        a: "Eve OS is rolling out globally, with initial cohort access prioritized in the United States. Some regions may be limited at launch by infrastructure availability or local regulation; the waitlist captures your jurisdiction so we can confirm availability for you.",
+      },
+      {
         q: "Where does my data live?",
         a: "Hybrid compute lets work run locally, at the edge, or in the cloud based on the task. Sensitive data and tenancy controls keep you in command of what leaves your boundary.",
       },

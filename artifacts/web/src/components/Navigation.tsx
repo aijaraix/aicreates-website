@@ -10,16 +10,13 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 
-const PLATFORM_LINKS = [
+const PRODUCT_LINKS = [
   { name: "Platform", path: "/platform", desc: "The agentic intelligence layer" },
   { name: "Agents", path: "/agents", desc: "A coordinated team across every function" },
   { name: "Company in a Box", path: "/company-in-a-box", desc: "Run a coordinated virtual company" },
-  { name: "Token", path: "/token", desc: "$AICA - the native asset of the layer" },
-];
-
-const PRODUCT_LINKS = [
   { name: "Eve OS", path: "/eve-os", desc: "The Agentic Business Operating System" },
   { name: "NeoBank", path: "/neobank", desc: "Capital that thinks" },
+  { name: "Token", path: "/token", desc: "$AICA - the native asset of the layer" },
 ];
 
 const SOLUTION_LINKS = [
@@ -133,7 +130,6 @@ export function Navigation() {
             </span>
           </Link>
 
-          <NavDropdown label="Platform" items={PLATFORM_LINKS} testId="nav-platform" location={location} />
           <NavDropdown label="Products" items={PRODUCT_LINKS} testId="nav-products" location={location} />
           <NavDropdown label="Solutions" items={SOLUTION_LINKS} testId="nav-solutions" location={location} />
 
@@ -182,7 +178,6 @@ export function Navigation() {
                   </Link>
 
                   {[
-                    { header: "Platform", items: PLATFORM_LINKS },
                     { header: "Products", items: PRODUCT_LINKS },
                     { header: "Solutions", items: SOLUTION_LINKS },
                   ].map((group) => (

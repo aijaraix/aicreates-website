@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
 const SITE = "AIcreatesAI";
-const DEFAULT_OG = "https://www.aicreates.ai/og.png";
+const DEFAULT_OG = "https://www.aicreates.ai/opengraph.jpg";
 
 function setMeta(selector: string, attr: "name" | "property", key: string, content: string) {
   let el = document.head.querySelector<HTMLMetaElement>(selector);
