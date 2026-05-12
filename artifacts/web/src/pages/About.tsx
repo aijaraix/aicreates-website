@@ -105,15 +105,6 @@ const COMPANY_JOURNEY = [
   { n: "08", t: "Optimization", d: "The Quality Engine scores outputs, repairs failures, and improves the next cycle automatically." },
 ];
 
-const COMPANY_AREAS = [
-  { area: "AI Command Center", purpose: "Talk to Eve, set goals, approve plans, and see what every agent is doing." },
-  { area: "Apps", purpose: "Functional surfaces - marketing, sales, finance, legal, ops, support - each with resident agents." },
-  { area: "Wallet & Credits", purpose: "Programmable spend through the Credit Ledger - scoped budgets, caps, and audit per action." },
-  { area: "Memory & Files", purpose: "Persistent business memory and document store the agents read from and write to." },
-  { area: "Activity Feed", purpose: "The real-time stream of agent work, reviews, and outcomes across the company." },
-  { area: "Business Data", purpose: "Connected systems of record - CRM, accounting, analytics, vertical tools - exposed safely to agents." },
-];
-
 export default function About() {
   useSeo({
     title: "About - Platform, Agents, and Company in a Box",
@@ -302,12 +293,12 @@ export default function About() {
                 The platform and agents come together as a Company in a Box - a coordinated virtual company across every workspace area. Eve runs it. Jarvis executes it. The Quality Engine reviews everything that ships.
               </p>
               <p>
-                Eight steps from a single sentence to a compounding company. Six workspace areas - command center, apps, wallet, memory, activity, and data - that operators and agents share as one operating surface.
+                Eight steps from a single sentence to a compounding company - operators and agents working as one team across the entire operation.
               </p>
             </div>
           </div>
 
-          <div className="mb-10">
+          <div>
             <div className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/45 mb-4">The 8-step journey</div>
             <ol className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {COMPANY_JOURNEY.map((s, i) => (
@@ -325,30 +316,6 @@ export default function About() {
                 </motion.li>
               ))}
             </ol>
-          </div>
-
-          <div>
-            <div className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/45 mb-4">Workspace areas</div>
-            <div className="rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden">
-              <div className="divide-y divide-white/5">
-                {COMPANY_AREAS.map((row, i) => (
-                  <motion.div
-                    key={row.area}
-                    initial={{ opacity: 0, x: 8 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true, margin: "-60px" }}
-                    transition={{ duration: 0.3, delay: i * 0.03 }}
-                    className="grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-6 px-6 py-5 hover:bg-white/[0.02] transition-colors"
-                  >
-                    <div className="md:col-span-4 flex items-center gap-2.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#00F5D4] shadow-[0_0_8px_rgba(0,245,212,0.6)] shrink-0" />
-                      <span className="text-base font-semibold text-white">{row.area}</span>
-                    </div>
-                    <div className="md:col-span-8 text-sm text-white/65 leading-relaxed">{row.purpose}</div>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
           </div>
         </div>
       </section>
