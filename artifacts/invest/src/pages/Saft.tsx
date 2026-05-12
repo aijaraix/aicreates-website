@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
-import { useLocation, useParams } from "wouter";
-import { useQuery, useMutation } from "@tanstack/react-query";
-import { useUser } from "@clerk/react";
+import { Link, useLocation, useParams } from "wouter";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import PortalNav from "@/components/PortalNav";
 import PageHeader from "@/components/PageHeader";
+import VestingPreview from "@/components/VestingPreview";
 import {
   ACCREDITATION_OPTIONS,
   ACK_LIST,
@@ -14,15 +14,12 @@ import {
   type AckKey,
   type RiskKey,
 } from "@/data/saftFields";
-import { wireInstructionsPdfUrl, ROUND_BY_SLUG } from "@/data/rounds";
-import VestingPreview from "@/components/VestingPreview";
 import {
-  ArrowRight,
-  Check,
-  FileText,
-  Loader2,
-  Lock,
-} from "lucide-react";
+  profileLegalName,
+  profileDisplayName,
+  type InvestorProfile,
+} from "@/lib/profile";
+import { ArrowRight, Check, FileText, Loader2 } from "lucide-react";
 
 interface SaftCommitment {
   id: string;
@@ -35,6 +32,14 @@ interface SaftCommitment {
   saftSignedAt: string | null;
 }
 
+interface AllocationLine {
+  roundSlug: string;
+  roundLabel: string;
+  tokens: number;
+  usdCents: number;
+  pricePerTokenMillicents: number;
+}
+
 interface SaftResponse {
   commitment: SaftCommitment;
   submission: {
@@ -42,17 +47,11 @@ interface SaftResponse {
     signatureName: string;
     signedAt: string;
   } | null;
+  allocations: AllocationLine[];
+  profile: InvestorProfile | null;
 }
 
 interface FormState {
-  legalName: string;
-  entityType: "individual" | "entity";
-  email: string;
-  phone: string;
-  address: string;
-  jurisdiction: string;
-  dobOrFormation: string;
-  taxId: string;
   walletAddress: string;
   walletChain: string;
   paymentMethod: "card" | "ach" | "wire" | "crypto" | "";
@@ -66,11 +65,11 @@ interface FormState {
 }
 
 const STEPS = [
-  "Identity",
-  "Transaction",
+  "Confirm details",
+  "Allocation",
   "Questionnaire",
-  "Risk Disclosure",
-  "Wallet Mapping",
+  "Risk",
+  "Wallet",
   "Acknowledgments",
   "Signature",
   "Done",
@@ -84,19 +83,16 @@ function fmt(cents: number) {
   }).format(cents / 100);
 }
 
-function maskTaxId(v: string) {
-  const digits = v.replace(/\D/g, "");
-  if (digits.length <= 4) return digits;
-  return "*".repeat(digits.length - 4) + digits.slice(-4);
+function priceStr(millicents: number) {
+  return `$${(millicents / 1000).toFixed(3)}`;
 }
 
 export default function Saft() {
-  const { user } = useUser();
   const params = useParams<{ commitId: string }>();
   const commitId = params.commitId!;
   const [, setLocation] = useLocation();
+  const qc = useQueryClient();
   const [step, setStep] = useState(0);
-  const [taxIdMasked, setTaxIdMasked] = useState(false);
 
   const initialAcks = useMemo(
     () =>
@@ -122,14 +118,6 @@ export default function Saft() {
   );
 
   const [form, setForm] = useState<FormState>({
-    legalName: "",
-    entityType: "individual",
-    email: "",
-    phone: "",
-    address: "",
-    jurisdiction: "",
-    dobOrFormation: "",
-    taxId: "",
     walletAddress: "",
     walletChain: "ethereum",
     paymentMethod: "",
@@ -142,18 +130,6 @@ export default function Saft() {
     signatureIntent: false,
   });
 
-  useEffect(() => {
-    if (user?.primaryEmailAddress?.emailAddress && !form.email) {
-      setForm((f) => ({
-        ...f,
-        email: user.primaryEmailAddress?.emailAddress ?? "",
-        legalName:
-          f.legalName ||
-          [user.firstName, user.lastName].filter(Boolean).join(" "),
-      }));
-    }
-  }, [user, form.email]);
-
   const { data, isLoading } = useQuery({
     queryKey: ["saft", commitId],
     queryFn: () => api<SaftResponse>(`/saft/${commitId}`),
@@ -164,15 +140,34 @@ export default function Saft() {
   });
   const isAdmin = me.data?.user.role === "admin";
 
+  // Pre-fill signature with the legal name from profile.
+  useEffect(() => {
+    if (!data?.profile) return;
+    setForm((f) =>
+      f.signatureName ? f : { ...f, signatureName: profileLegalName(data.profile!) },
+    );
+  }, [data?.profile]);
+
   const submit = useMutation({
     mutationFn: () =>
       api<{ ok: boolean }>(`/saft/${commitId}`, {
         body: {
-          ...form,
+          walletAddress: form.walletAddress.trim() || undefined,
+          walletChain: form.walletAddress.trim()
+            ? form.walletChain
+            : undefined,
           paymentMethod: form.paymentMethod || undefined,
+          accreditationCategory: form.accreditationCategory,
+          investmentExperience: form.investmentExperience,
+          relationshipToCompany: form.relationshipToCompany,
+          acknowledgments: form.acknowledgments,
+          riskAcknowledgments: form.riskAcknowledgments,
+          signatureName: form.signatureName,
+          signatureIntent: form.signatureIntent,
         },
       }),
     onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["me", "allocations"] });
       setStep(STEPS.length - 1);
     },
     onError: (err) => alert(`Submit failed: ${(err as Error).message}`),
@@ -187,6 +182,8 @@ export default function Saft() {
   }
 
   const c = data?.commitment;
+  const profile = data?.profile;
+  const allocations = data?.allocations ?? [];
   if (!c) {
     return (
       <div className="min-h-[100dvh] bg-[#0A0A0A] text-white/60 flex items-center justify-center">
@@ -194,26 +191,24 @@ export default function Saft() {
       </div>
     );
   }
+  if (!profile) {
+    setLocation(`/profile?next=${encodeURIComponent(`/saft/${commitId}`)}`);
+    return null;
+  }
 
+  const expectedSig = profileLegalName(profile);
   const allAcks = ACK_LIST.every((a) => form.acknowledgments[a.key]);
   const allRisks = RISK_DISCLOSURES.every(
     (r) => form.riskAcknowledgments[r.key],
   );
-  const validWallet = form.walletAddress.trim().length >= 8;
   const sigMatches =
-    form.signatureName.trim().toLowerCase() ===
-      form.legalName.trim().toLowerCase() && form.signatureName.trim() !== "";
+    form.signatureName.trim().toLowerCase() === expectedSig.toLowerCase() &&
+    expectedSig.length > 0;
 
   const canNext = (() => {
     switch (step) {
       case 0:
-        return (
-          form.legalName.trim().length > 1 &&
-          form.email.includes("@") &&
-          form.address.trim().length > 4 &&
-          form.jurisdiction.trim().length > 1 &&
-          form.taxId.replace(/\D/g, "").length >= 4
-        );
+        return true; // confirm-details is read-only
       case 1:
         return Boolean(form.paymentMethod);
       case 2:
@@ -231,21 +226,23 @@ export default function Saft() {
     }
   })();
 
+  const totalCents = allocations.reduce((s, l) => s + l.usdCents, 0) || c.amountCents;
+  const totalTokens = allocations.reduce((s, l) => s + l.tokens, 0) || c.tokenAllocation;
+
   return (
     <div className="min-h-[100dvh] bg-[#0A0A0A] text-white">
       <PortalNav showAdmin={isAdmin} />
 
       <PageHeader
-        eyebrow={`Commitment ${c.id.slice(0, 8)} - Step 1 of 2`}
+        eyebrow={`Commitment ${c.id.slice(0, 8)} · Step 1 of 2`}
         title={<>Sign the SAFT.</>}
         subtitle={
           <>
-            {c.displayName} <span className="text-white/30">·</span>{" "}
-            <span className="text-[#00F5D4] font-medium">
-              {fmt(c.amountCents)}
-            </span>{" "}
+            <span className="text-[#00F5D4] font-medium">{fmt(totalCents)}</span>{" "}
             <span className="text-white/30">·</span>{" "}
-            {c.tokenAllocation.toLocaleString()} AICA
+            {totalTokens.toLocaleString()} AICA across{" "}
+            {allocations.length || 1} round
+            {(allocations.length || 1) > 1 ? "s" : ""}
           </>
         }
         back={{ href: "/dashboard", label: "Back to dashboard" }}
@@ -257,8 +254,6 @@ export default function Saft() {
       />
 
       <main className="mx-auto max-w-3xl px-6 py-10 md:py-12">
-
-        {/* Stepper rail */}
         <ol
           className="relative mb-10 grid gap-2 text-xs"
           style={{
@@ -317,112 +312,117 @@ export default function Saft() {
 
         <div className="brand-card p-6 md:p-8">
           {step === 0 && (
-            <div className="space-y-4" data-testid="saft-step-identity">
-              <H title="Investor identity" />
-              <Row>
-                <Field
-                  label="Legal name"
-                  value={form.legalName}
-                  onChange={(v) => setForm({ ...form, legalName: v })}
-                  testId="input-saft-name"
-                />
-                <Pills
-                  label="Type"
-                  value={form.entityType}
-                  options={[
-                    { value: "individual", label: "Individual" },
-                    { value: "entity", label: "Entity" },
-                  ]}
-                  onChange={(v) =>
-                    setForm({
-                      ...form,
-                      entityType: v as "individual" | "entity",
-                    })
-                  }
-                />
-              </Row>
-              <Row>
-                <Field
-                  label="Email"
-                  type="email"
-                  value={form.email}
-                  onChange={(v) => setForm({ ...form, email: v })}
-                  testId="input-saft-email"
-                />
-                <Field
-                  label="Phone"
-                  value={form.phone}
-                  onChange={(v) => setForm({ ...form, phone: v })}
-                />
-              </Row>
-              <Field
-                label="Address"
-                value={form.address}
-                onChange={(v) => setForm({ ...form, address: v })}
-                testId="input-saft-address"
-              />
-              <Row>
-                <Field
-                  label="Jurisdiction"
-                  value={form.jurisdiction}
-                  onChange={(v) => setForm({ ...form, jurisdiction: v })}
-                  placeholder="e.g. Delaware, USA"
-                  testId="input-saft-jurisdiction"
-                />
-                <Field
-                  label={
-                    form.entityType === "entity"
-                      ? "Date of formation"
-                      : "Date of birth"
-                  }
-                  type="date"
-                  value={form.dobOrFormation}
-                  onChange={(v) => setForm({ ...form, dobOrFormation: v })}
-                />
-              </Row>
-              <div>
-                <label className="text-[11px] uppercase tracking-[0.14em] text-white/50">
-                  Tax ID (SSN or EIN) <Lock className="w-3 h-3 inline ml-1" />
-                </label>
-                <input
-                  type={taxIdMasked ? "text" : "password"}
-                  value={taxIdMasked ? maskTaxId(form.taxId) : form.taxId}
-                  onChange={(e) =>
-                    setForm({ ...form, taxId: e.target.value.replace(/[^\d-]/g, "") })
-                  }
-                  onFocus={() => setTaxIdMasked(false)}
-                  onBlur={() => setTaxIdMasked(true)}
-                  className="brand-input mt-1 font-mono"
-                  data-testid="input-saft-taxid"
-                />
-                <p className="mt-1 text-[11px] text-white/40">
-                  Only the last 4 digits are retained in our records; the full value is never persisted.
-                </p>
+            <div className="space-y-5" data-testid="saft-step-confirm">
+              <div className="flex items-start justify-between gap-3">
+                <H title="Confirm your details" />
+                <Link
+                  href={`/profile?next=${encodeURIComponent(`/saft/${commitId}`)}`}
+                  className="text-xs text-[#00F5D4] hover:underline"
+                  data-testid="link-edit-profile"
+                >
+                  Edit profile →
+                </Link>
               </div>
-              <Field
-                label="Wallet address (optional, required pre-TGE)"
-                value={form.walletAddress}
-                onChange={(v) => setForm({ ...form, walletAddress: v })}
-                placeholder="0x... or chain-specific address"
-              />
+              <p className="text-sm text-white/55">
+                These details are pulled from your investor profile and used
+                to fill the SAFT. If any value is wrong, edit your profile
+                first - we'll bring you right back.
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                <ReadOnly
+                  label="Investor type"
+                  value={profile.kind === "business" ? "Business / Entity" : "Individual"}
+                />
+                <ReadOnly label="Legal name" value={profileDisplayName(profile)} />
+                {profile.kind === "business" && (
+                  <>
+                    <ReadOnly label="Entity type" value={profile.entityType ?? "-"} />
+                    <ReadOnly
+                      label="Jurisdiction"
+                      value={profile.jurisdictionOfFormation ?? "-"}
+                    />
+                    <ReadOnly
+                      label="Authorized signatory"
+                      value={
+                        `${profile.signatoryName ?? ""}${profile.signatoryTitle ? `, ${profile.signatoryTitle}` : ""}` ||
+                        "-"
+                      }
+                    />
+                  </>
+                )}
+                <ReadOnly label="Email" value={profile.email} />
+                <ReadOnly
+                  label="Phone"
+                  value={profile.phone ?? "-"}
+                />
+                <ReadOnly
+                  label="Address"
+                  value={[
+                    profile.addressLine1,
+                    profile.addressLine2,
+                    `${profile.city}, ${profile.region} ${profile.postalCode}`,
+                    profile.country,
+                  ]
+                    .filter(Boolean)
+                    .join(" · ")}
+                />
+              </div>
             </div>
           )}
 
           {step === 1 && (
-            <div className="space-y-5" data-testid="saft-step-transaction">
-              <H title="Transaction" />
-              <TokenMath
-                amountCents={c.amountCents}
-                tokenAllocation={c.tokenAllocation}
-                roundSlug={c.roundSlug}
-              />
-              <div className="grid grid-cols-3 gap-3 text-sm">
-                <ReadOnly label="Amount" value={fmt(c.amountCents)} />
-                <ReadOnly
-                  label="Allocation"
-                  value={`${c.tokenAllocation.toLocaleString()} AICA`}
-                />
-                <ReadOnly label="Round" value={c.roundSlug} />
+            <div className="space-y-5" data-testid="saft-step-allocation">
+              <H title="Your allocation" />
+              <div className="rounded-2xl border border-white/10 bg-black/30 overflow-hidden">
+                <table className="w-full text-sm">
+                  <thead className="bg-white/[0.03] text-white/45 uppercase tracking-[0.14em] text-[10px]">
+                    <tr>
+                      <th className="text-left px-3 py-2">Round</th>
+                      <th className="text-right px-3 py-2">Tokens</th>
+                      <th className="text-right px-3 py-2">Price</th>
+                      <th className="text-right px-3 py-2">USD</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-white/5">
+                    {(allocations.length > 0
+                      ? allocations
+                      : [
+                          {
+                            roundSlug: c.roundSlug,
+                            roundLabel: c.roundSlug,
+                            tokens: c.tokenAllocation,
+                            pricePerTokenMillicents: 0,
+                            usdCents: c.amountCents,
+                          },
+                        ]
+                    ).map((l) => (
+                      <tr key={l.roundSlug} data-testid={`saft-line-${l.roundSlug}`}>
+                        <td className="px-3 py-2">{l.roundLabel}</td>
+                        <td className="px-3 py-2 text-right tabular-nums">
+                          {l.tokens.toLocaleString()}
+                        </td>
+                        <td className="px-3 py-2 text-right tabular-nums text-white/60">
+                          {l.pricePerTokenMillicents
+                            ? priceStr(l.pricePerTokenMillicents)
+                            : "-"}
+                        </td>
+                        <td className="px-3 py-2 text-right tabular-nums text-[#00F5D4]">
+                          {fmt(l.usdCents)}
+                        </td>
+                      </tr>
+                    ))}
+                    <tr className="bg-white/[0.02] font-medium">
+                      <td className="px-3 py-2">Total</td>
+                      <td className="px-3 py-2 text-right tabular-nums">
+                        {totalTokens.toLocaleString()}
+                      </td>
+                      <td className="px-3 py-2"></td>
+                      <td className="px-3 py-2 text-right tabular-nums text-[#00F5D4]">
+                        {fmt(totalCents)}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
               <div>
                 <label className="text-[11px] uppercase tracking-[0.14em] text-white/50">
@@ -466,7 +466,7 @@ export default function Saft() {
 
           {step === 2 && (
             <div className="space-y-5" data-testid="saft-step-questionnaire">
-              <H title="Investor questionnaire (Exhibit B)" />
+              <H title="Investor questionnaire" />
               <div>
                 <label className="text-[11px] uppercase tracking-[0.14em] text-white/50">
                   Accreditation category
@@ -503,13 +503,15 @@ export default function Saft() {
                 label="Investment experience (optional)"
                 value={form.investmentExperience}
                 onChange={(v) => setForm({ ...form, investmentExperience: v })}
-                placeholder="e.g. early-stage tokens, public equities, real estate"
+                placeholder="e.g. early-stage tokens, public equities"
               />
               <Field
                 label="Relationship to AIcreatesAI (optional)"
                 value={form.relationshipToCompany}
-                onChange={(v) => setForm({ ...form, relationshipToCompany: v })}
-                placeholder="e.g. introduced by, advisor, customer"
+                onChange={(v) =>
+                  setForm({ ...form, relationshipToCompany: v })
+                }
+                placeholder="e.g. introduced by, advisor"
               />
             </div>
           )}
@@ -518,8 +520,7 @@ export default function Saft() {
             <div className="space-y-3" data-testid="saft-step-risk">
               <H title="Risk disclosure" />
               <p className="text-sm text-white/60">
-                Acknowledge each material risk before continuing. These
-                mirror the risk factors in the SAFT and on /faq.
+                Acknowledge each material risk before continuing.
               </p>
               {RISK_DISCLOSURES.map((r) => (
                 <label
@@ -547,9 +548,7 @@ export default function Saft() {
                   />
                   <div>
                     <div className="text-sm font-medium">{r.title}</div>
-                    <div className="text-xs text-white/60 mt-0.5">
-                      {r.body}
-                    </div>
+                    <div className="text-xs text-white/60 mt-0.5">{r.body}</div>
                   </div>
                 </label>
               ))}
@@ -561,9 +560,7 @@ export default function Saft() {
               <H title="Wallet mapping" />
               <p className="text-sm text-white/60">
                 Provide the wallet address that will receive your AICA
-                allocation at TGE, or click <span className="text-white/80">Skip for now</span> to
-                map your wallet later. You can update this any time
-                before TGE.
+                allocation at TGE, or skip to map later.
               </p>
               <button
                 type="button"
@@ -615,21 +612,21 @@ export default function Saft() {
                 testId="input-wallet-address"
               />
               <p className="text-[11px] text-white/40">
-                Triple-check this address. Tokens sent to the wrong
-                address cannot be recovered.
+                Triple-check this address. Tokens sent to the wrong address
+                cannot be recovered.
               </p>
               <div>
                 <div className="text-[11px] uppercase tracking-[0.14em] text-white/50 mb-2">
                   Vesting preview for this commitment
                 </div>
-                <VestingPreview totalTokens={c.tokenAllocation} compact />
+                <VestingPreview totalTokens={totalTokens} compact />
               </div>
             </div>
           )}
 
           {step === 5 && (
             <div className="space-y-3" data-testid="saft-step-acknowledgments">
-              <H title="Acknowledgments (Exhibits A, C, D)" />
+              <H title="Acknowledgments" />
               {ACK_LIST.map((a) => (
                 <label
                   key={a.key}
@@ -654,43 +651,45 @@ export default function Saft() {
                     }
                     className="mt-1 accent-[#00F5D4]"
                   />
-                  <span className="text-sm text-white/80">{a.text}</span>
+                  <span className="text-sm text-white/85">{a.text}</span>
                 </label>
               ))}
             </div>
           )}
 
           {step === 6 && (
-            <div className="space-y-4" data-testid="saft-step-signature">
-              <H title="Signature" />
+            <div className="space-y-5" data-testid="saft-step-signature">
+              <H title="Sign" />
               <p className="text-sm text-white/60">
-                Type your full legal name exactly as entered in step 1. We
-                capture timestamp and IP server-side.
+                Type your full legal name to sign. This SAFT is a binding
+                commitment to fund the amount above on the terms shown.
               </p>
-              <Field
-                label={`Type "${form.legalName}"`}
-                value={form.signatureName}
-                onChange={(v) => setForm({ ...form, signatureName: v })}
-                testId="input-saft-signature"
-              />
-              <div
-                className="rounded-xl border border-white/10 bg-black/30 p-5 text-center"
-                data-testid="saft-signature-preview"
-              >
-                <div className="text-[11px] uppercase tracking-[0.14em] text-white/40">
-                  Signature preview
+              <div className="rounded-xl border border-white/10 bg-black/30 p-3">
+                <div className="text-[10px] uppercase tracking-[0.14em] text-white/40">
+                  Expected signer
                 </div>
                 <div
-                  className="mt-3 text-3xl text-[#00F5D4]"
+                  className="mt-1 font-medium"
                   style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}
+                  data-testid="text-expected-signer"
                 >
-                  {form.signatureName || "-"}
+                  {expectedSig || "(profile missing legal name)"}
                 </div>
               </div>
-              <SaftPdfPreview commitId={commitId} form={form} />
+              <Field
+                label="Type your legal name to sign"
+                value={form.signatureName}
+                onChange={(v) => setForm({ ...form, signatureName: v })}
+                testId="input-signature-name"
+              />
+              {!sigMatches && form.signatureName.length > 0 && (
+                <p className="text-xs text-amber-300">
+                  Signature must match the legal name above exactly.
+                </p>
+              )}
               <label
-                className="flex items-start gap-3 cursor-pointer"
-                data-testid="check-saft-intent"
+                className="flex items-start gap-3 rounded-xl border p-3 cursor-pointer border-white/10 bg-black/30"
+                data-testid="check-sign-intent"
               >
                 <input
                   type="checkbox"
@@ -701,315 +700,72 @@ export default function Saft() {
                   className="mt-1 accent-[#00F5D4]"
                 />
                 <span className="text-sm text-white/80">
-                  I intend this typed signature to be my legal signature on
-                  the draft SAFT for AIcreatesAI.
+                  I intend my typed name above to act as my legally binding
+                  electronic signature on this SAFT, under E-SIGN, UETA, and
+                  any other applicable e-signature law.
                 </span>
               </label>
-              <div className="rounded-xl border border-amber-400/30 bg-amber-400/5 p-3 text-xs text-amber-200/80">
-                Draft for counsel review. The final SAFT language must be
-                approved by qualified securities counsel before any funds
-                are accepted. By signing here you record your intent on the
-                draft terms above.
-              </div>
             </div>
           )}
 
-          {step === 7 && (
-            <div className="text-center py-8" data-testid="saft-step-done">
-              <div className="w-14 h-14 rounded-full bg-[#00F5D4]/15 flex items-center justify-center mx-auto">
-                <Check className="w-7 h-7 text-[#00F5D4]" />
-              </div>
-              <div className="mt-5 text-2xl font-semibold">
-                SAFT signed.
-              </div>
-              <p className="mt-2 text-white/60">
-                Your draft SAFT has been recorded. Choose a payment method
-                to fund your commitment.
+          {step === STEPS.length - 1 && (
+            <div className="space-y-4" data-testid="saft-step-done">
+              <H title="SAFT signed - ready for payment." />
+              <p className="text-sm text-white/65">
+                Your draft SAFT has been recorded. Continue to payment to
+                lock in your allocation.
               </p>
-
-              {/* Commitment ID / wire memo block */}
-              <div
-                className="mx-auto mt-6 max-w-xl rounded-2xl border border-[#00F5D4]/30 bg-[#00F5D4]/5 p-4 text-left"
-                data-testid="block-wire-memo"
+              <Link
+                href={`/checkout/${commitId}`}
+                className="brand-cta inline-flex"
+                data-testid="link-go-checkout"
               >
-                <div className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#00F5D4]">
-                  Use this as your wire reference / memo
-                </div>
-                <div className="mt-2 flex items-center justify-between gap-3">
-                  <code
-                    className="font-mono text-sm sm:text-base text-white break-all"
-                    data-testid="text-commitment-id"
-                  >
-                    {c.id}
-                  </code>
-                  <button
-                    type="button"
-                    onClick={() => navigator.clipboard?.writeText(c.id)}
-                    className="shrink-0 inline-flex items-center gap-1.5 px-3 h-8 rounded-full border border-white/15 bg-black/30 text-xs text-white/80 hover:bg-white/[0.06]"
-                    data-testid="button-copy-commitment-id"
-                  >
-                    Copy
-                  </button>
-                </div>
-                <p className="mt-2 text-xs text-white/55">
-                  Paste this Commitment ID exactly into the wire reference
-                  / memo field so we can match your funds to your SAFT.
-                </p>
-              </div>
-
-              <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
-                <button
-                  type="button"
-                  onClick={() => setLocation(`/checkout/${c.id}`)}
-                  className="brand-cta"
-                  data-testid="link-go-checkout"
-                >
-                  Continue to payment <ArrowRight className="ml-2 w-4 h-4" />
-                </button>
-                <a
-                  href={`/api/saft/${c.id}/pdf`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="brand-cta-outline"
-                  data-testid="link-download-saft"
-                >
-                  Download draft SAFT
-                </a>
-                <a
-                  href={wireInstructionsPdfUrl(c.id)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  download
-                  className="inline-flex items-center justify-center h-11 px-6 rounded-full border border-[#00F5D4]/40 bg-[#00F5D4]/10 text-[#00F5D4] hover:bg-[#00F5D4]/20"
-                  data-testid="link-download-wire-instructions"
-                >
-                  Download wire transfer instructions (PDF)
-                </a>
-              </div>
+                Go to payment <ArrowRight className="ml-2 w-4 h-4" />
+              </Link>
             </div>
           )}
+        </div>
 
-          {/* Step nav */}
-          {step < STEPS.length - 1 && (
-            <div className="mt-8 flex justify-between">
+        {step < STEPS.length - 1 && (
+          <div className="mt-8 flex items-center justify-between">
+            <button
+              onClick={() => setStep(Math.max(0, step - 1))}
+              disabled={step === 0}
+              className="text-sm text-white/60 hover:text-white disabled:opacity-30"
+              data-testid="button-back"
+            >
+              ← Back
+            </button>
+            {step < STEPS.length - 2 ? (
               <button
-                type="button"
-                disabled={step === 0}
-                onClick={() => setStep(Math.max(0, step - 1))}
-                className="px-4 py-2 rounded-full border border-white/10 text-sm hover:bg-white/[0.04] disabled:opacity-30"
+                onClick={() => setStep(step + 1)}
+                disabled={!canNext}
+                className="brand-cta"
+                data-testid="button-next"
               >
-                Back
+                Continue <ArrowRight className="ml-2 w-4 h-4" />
               </button>
-              {step < STEPS.length - 2 ? (
-                <button
-                  type="button"
-                  disabled={!canNext}
-                  onClick={() => setStep(step + 1)}
-                  className="brand-cta"
-                  data-testid="button-saft-next"
-                >
-                  Continue
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  disabled={!canNext || submit.isPending}
-                  onClick={() => submit.mutate()}
-                  className="brand-cta"
-                  data-testid="button-saft-submit"
-                >
-                  {submit.isPending ? (
-                    <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" /> Signing…
-                    </>
-                  ) : (
-                    "Sign SAFT"
-                  )}
-                </button>
-              )}
-            </div>
-          )}
-        </div>
-      </main>
-    </div>
-  );
-}
-
-function SaftPdfPreview({
-  commitId,
-  form,
-}: {
-  commitId: string;
-  form: FormState;
-}) {
-  const [url, setUrl] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [err, setErr] = useState<string | null>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    let revokeUrl: string | null = null;
-    const t = setTimeout(async () => {
-      setLoading(true);
-      setErr(null);
-      try {
-        const res = await fetch(`/api/saft/${commitId}/preview`, {
-          method: "POST",
-          credentials: "include",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            ...form,
-            paymentMethod: form.paymentMethod || undefined,
-          }),
-        });
-        if (!res.ok) throw new Error(`Preview failed (${res.status})`);
-        const blob = await res.blob();
-        const objectUrl = URL.createObjectURL(blob);
-        revokeUrl = objectUrl;
-        if (!cancelled) setUrl(objectUrl);
-      } catch (e) {
-        if (!cancelled) setErr((e as Error).message);
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    }, 250);
-    return () => {
-      cancelled = true;
-      clearTimeout(t);
-      if (revokeUrl) URL.revokeObjectURL(revokeUrl);
-    };
-  }, [
-    commitId,
-    form.legalName,
-    form.entityType,
-    form.email,
-    form.address,
-    form.jurisdiction,
-    form.taxId,
-    form.walletAddress,
-    form.paymentMethod,
-    form.accreditationCategory,
-    form.signatureName,
-  ]);
-
-  return (
-    <div className="rounded-xl border border-white/10 bg-black/40 overflow-hidden">
-      <div className="px-4 py-2 border-b border-white/5 flex items-center justify-between text-[11px] uppercase tracking-[0.14em] text-white/40">
-        <span>Live SAFT preview - exactly what you are signing</span>
-        {loading && (
-          <span className="inline-flex items-center gap-1 text-white/50">
-            <Loader2 className="w-3 h-3 animate-spin" /> Updating
-          </span>
-        )}
-      </div>
-      {err ? (
-        <div className="p-4 text-sm text-red-300">{err}</div>
-      ) : url ? (
-        <iframe
-          title="SAFT preview"
-          src={url}
-          className="w-full h-[520px] bg-white"
-          data-testid="saft-pdf-preview"
-        />
-      ) : (
-        <div className="p-8 text-center text-white/40 text-sm">
-          Generating preview…
-        </div>
-      )}
-    </div>
-  );
-}
-
-function TokenMath({
-  amountCents,
-  tokenAllocation,
-  roundSlug,
-}: {
-  amountCents: number;
-  tokenAllocation: number;
-  roundSlug: string;
-}) {
-  // Resolve the commitment's round price by slug (not the currently
-  // active round) so historical commitments stay accurate when later
-  // rounds open.
-  const commitmentRound = ROUND_BY_SLUG.get(roundSlug);
-  const activeRound = useQuery({
-    queryKey: ["rounds", "active"],
-    enabled: !commitmentRound,
-    queryFn: () =>
-      api<{
-        round: { slug: string; pricePerTokenMillicents: number; label: string };
-      }>("/rounds/active"),
-  });
-  const pricePerTokenMillicents =
-    commitmentRound?.pricePerTokenMillicents ??
-    activeRound.data?.round.pricePerTokenMillicents ??
-    15;
-  // Base tokens: amountCents * 10 / millicents (since 1 millicent = 0.1c).
-  const baseTokens = Math.floor((amountCents * 10) / pricePerTokenMillicents);
-  const bonus = Math.max(0, tokenAllocation - baseTokens);
-  const bonusPct =
-    baseTokens > 0 ? Math.round((bonus / baseTokens) * 1000) / 10 : 0;
-  // Effective price in USD = amountCents / 100 / tokenAllocation.
-  const effectivePriceUsd =
-    tokenAllocation > 0
-      ? amountCents / 100 / tokenAllocation
-      : pricePerTokenMillicents / 1000;
-  const dollarsCommitted = (amountCents / 100).toLocaleString("en-US", {
-    style: "currency",
-    currency: "USD",
-    maximumFractionDigits: 0,
-  });
-  const pricePerTokenStr = `$${(pricePerTokenMillicents / 1000).toFixed(3)}`;
-  const effectivePriceStr = `$${effectivePriceUsd.toFixed(4)}`;
-  return (
-    <div
-      className="rounded-xl border border-[#00F5D4]/30 bg-[#00F5D4]/[0.04] p-4"
-      data-testid="saft-token-math"
-    >
-      <div className="text-[11px] uppercase tracking-[0.14em] text-[#00F5D4] mb-2">
-        Token math
-      </div>
-      <div
-        className="text-sm text-white/80 leading-relaxed"
-        style={{ fontFamily: "JetBrains Mono, ui-monospace, monospace" }}
-      >
-        If you commit{" "}
-        <span className="text-white font-semibold">{dollarsCommitted}</span> at{" "}
-        <span className="text-white font-semibold">{pricePerTokenStr}</span> per
-        AICA, you receive{" "}
-        <span className="text-white font-semibold">
-          ~{tokenAllocation.toLocaleString()} AICA
-        </span>{" "}
-        in the {roundSlug} round.
-      </div>
-      <div className="mt-3 grid grid-cols-3 gap-2 text-[11px]">
-        <div className="rounded-lg border border-white/10 bg-black/30 p-2">
-          <div className="text-white/40 uppercase tracking-[0.12em] text-[10px]">
-            Base tokens
-          </div>
-          <div className="mt-0.5 text-white">
-            {baseTokens.toLocaleString()} AICA
-          </div>
-        </div>
-        <div className="rounded-lg border border-white/10 bg-black/30 p-2">
-          <div className="text-white/40 uppercase tracking-[0.12em] text-[10px]">
-            Tier bonus
-          </div>
-          <div className="mt-0.5 text-[#00F5D4]">
-            +{bonus.toLocaleString()} AICA
-            {bonus > 0 && (
-              <span className="text-white/50"> ({bonusPct}%)</span>
+            ) : (
+              <button
+                onClick={() => submit.mutate()}
+                disabled={!canNext || submit.isPending}
+                className="brand-cta"
+                data-testid="button-submit-saft"
+              >
+                {submit.isPending ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" /> Signing…
+                  </>
+                ) : (
+                  <>
+                    Sign SAFT <ArrowRight className="ml-2 w-4 h-4" />
+                  </>
+                )}
+              </button>
             )}
           </div>
-        </div>
-        <div className="rounded-lg border border-white/10 bg-black/30 p-2">
-          <div className="text-white/40 uppercase tracking-[0.12em] text-[10px]">
-            Effective price
-          </div>
-          <div className="mt-0.5 text-white">{effectivePriceStr} / AICA</div>
-        </div>
-      </div>
+        )}
+      </main>
     </div>
   );
 }
@@ -1023,10 +779,6 @@ function H({ title }: { title: string }) {
       {title}
     </h2>
   );
-}
-
-function Row({ children }: { children: React.ReactNode }) {
-  return <div className="grid grid-cols-1 md:grid-cols-2 gap-3">{children}</div>;
 }
 
 function Field({
@@ -1057,42 +809,6 @@ function Field({
         className="brand-input mt-1"
         data-testid={testId}
       />
-    </div>
-  );
-}
-
-function Pills({
-  label,
-  value,
-  options,
-  onChange,
-}: {
-  label: string;
-  value: string;
-  options: Array<{ value: string; label: string }>;
-  onChange: (v: string) => void;
-}) {
-  return (
-    <div>
-      <label className="text-[11px] uppercase tracking-[0.14em] text-white/50">
-        {label}
-      </label>
-      <div className="mt-1 inline-flex rounded-full border border-white/10 p-1 text-sm">
-        {options.map((o) => (
-          <button
-            key={o.value}
-            type="button"
-            onClick={() => onChange(o.value)}
-            className={`px-4 h-8 rounded-full transition font-medium ${
-              value === o.value
-                ? "bg-[#00F5D4] text-black shadow-[0_0_16px_-4px_rgba(0,245,212,0.6)]"
-                : "text-white/60 hover:text-white"
-            }`}
-          >
-            {o.label}
-          </button>
-        ))}
-      </div>
     </div>
   );
 }

@@ -4,30 +4,24 @@ import {
   db,
   commitmentsTable,
   saftSubmissionsTable,
+  commitmentAllocationsTable,
+  investorProfilesTable,
 } from "@workspace/db";
-import { eq, and } from "drizzle-orm";
-import { renderSaftPdf } from "../lib/saftPdf";
-import { getRoundLabel } from "../lib/rounds";
+import { eq, and, asc } from "drizzle-orm";
+import { renderSaftPdf, type SaftAllocationLine, type SaftProfileForPdf } from "../lib/saftPdf";
+import { ROUND_BY_SLUG, getRoundLabel } from "../lib/rounds";
 
 const router: IRouter = Router();
 
 interface SaftBody {
-  legalName?: string;
-  entityType?: "individual" | "entity";
-  email?: string;
-  phone?: string;
-  address?: string;
-  jurisdiction?: string;
-  dobOrFormation?: string;
-  taxId?: string;
   walletAddress?: string;
+  walletChain?: string;
   paymentMethod?: "card" | "ach" | "wire" | "crypto";
   accreditationCategory?: string;
   investmentExperience?: string;
   relationshipToCompany?: string;
   acknowledgments?: Record<string, boolean>;
   riskAcknowledgments?: Record<string, boolean>;
-  walletChain?: string;
   signatureName?: string;
   signatureIntent?: boolean;
 }
@@ -74,6 +68,46 @@ const ACK_TEXT: Record<string, string> = {
     "I am solely responsible for the tax treatment of any tokens received.",
 };
 
+async function loadAllocationsForCommitment(
+  commitmentId: string,
+  legacy: { roundSlug: string; tokens: number; amountCents: number },
+): Promise<SaftAllocationLine[]> {
+  const lines = await db
+    .select()
+    .from(commitmentAllocationsTable)
+    .where(eq(commitmentAllocationsTable.commitmentId, commitmentId))
+    .orderBy(asc(commitmentAllocationsTable.createdAt));
+  if (lines.length === 0) {
+    // Legacy fallback: synthesize a single-line allocation from parent.
+    const round = ROUND_BY_SLUG.get(legacy.roundSlug);
+    return [
+      {
+        roundSlug: legacy.roundSlug,
+        roundLabel: getRoundLabel(legacy.roundSlug),
+        tokens: legacy.tokens,
+        pricePerTokenMillicents: round?.pricePerTokenMillicents ?? 0,
+        usdCents: legacy.amountCents,
+      },
+    ];
+  }
+  return lines.map((l) => ({
+    roundSlug: l.roundSlug,
+    roundLabel: getRoundLabel(l.roundSlug),
+    tokens: l.tokens,
+    pricePerTokenMillicents: l.pricePerTokenMillicents,
+    usdCents: l.usdCents,
+  }));
+}
+
+function expectedSignerName(profile: typeof investorProfilesTable.$inferSelect): string {
+  if (profile.kind === "business") {
+    return (profile.signatoryName ?? "").trim();
+  }
+  return `${profile.legalFirstName ?? ""} ${profile.legalLastName ?? ""}`
+    .trim()
+    .replace(/\s+/g, " ");
+}
+
 router.get("/saft/:commitId", requireAuth, async (req, res) => {
   const id = req.params["commitId"] as string | undefined;
   if (!id) {
@@ -107,10 +141,28 @@ router.get("/saft/:commitId", requireAuth, async (req, res) => {
     .from(saftSubmissionsTable)
     .where(eq(saftSubmissionsTable.commitmentId, commitment.id))
     .limit(1);
+  const allocations = await db
+    .select()
+    .from(commitmentAllocationsTable)
+    .where(eq(commitmentAllocationsTable.commitmentId, commitment.id))
+    .orderBy(asc(commitmentAllocationsTable.createdAt));
+  const profileRows = await db
+    .select()
+    .from(investorProfilesTable)
+    .where(eq(investorProfilesTable.userId, req.appUser!.id))
+    .limit(1);
   res.json({
     commitment,
     submission: submissions[0] ?? null,
     requiredAcknowledgments: ACK_TEXT,
+    allocations: allocations.map((a) => ({
+      roundSlug: a.roundSlug,
+      roundLabel: getRoundLabel(a.roundSlug),
+      tokens: a.tokens,
+      usdCents: a.usdCents,
+      pricePerTokenMillicents: a.pricePerTokenMillicents,
+    })),
+    profile: profileRows[0] ?? null,
   });
 });
 
@@ -122,28 +174,31 @@ router.post("/saft/:commitId", requireAuth, async (req, res) => {
   }
   const body = (req.body ?? {}) as SaftBody;
 
-  const errors: string[] = [];
-  const requireStr = (k: string, v: unknown, max = 200) => {
-    if (typeof v !== "string" || !v.trim() || v.length > max) {
-      errors.push(`${k} required`);
-      return "";
-    }
-    return v.trim();
-  };
+  // Profile must exist; identity is sourced from it (no longer in body).
+  const profileRows = await db
+    .select()
+    .from(investorProfilesTable)
+    .where(eq(investorProfilesTable.userId, req.appUser!.id))
+    .limit(1);
+  const profile = profileRows[0];
+  if (!profile) {
+    res.status(403).json({
+      error: "Investor profile required before signing the SAFT.",
+      code: "profile_required",
+    });
+    return;
+  }
 
-  const legalName = requireStr("legalName", body.legalName);
-  const entityType =
-    body.entityType === "entity" ? "entity" : "individual";
-  const email = requireStr("email", body.email, 254);
-  const address = requireStr("address", body.address, 500);
-  const jurisdiction = requireStr("jurisdiction", body.jurisdiction, 80);
-  const taxId = requireStr("taxId", body.taxId, 32);
-  const accreditationCategory = requireStr(
-    "accreditationCategory",
-    body.accreditationCategory,
-    120,
-  );
-  const signatureName = requireStr("signatureName", body.signatureName, 200);
+  const errors: string[] = [];
+  const accreditationCategory =
+    typeof body.accreditationCategory === "string" &&
+    body.accreditationCategory.trim()
+      ? body.accreditationCategory.trim().slice(0, 120)
+      : "";
+  if (!accreditationCategory) errors.push("accreditationCategory required");
+  const signatureName =
+    typeof body.signatureName === "string" ? body.signatureName.trim() : "";
+  if (!signatureName) errors.push("signatureName required");
   const paymentMethod =
     body.paymentMethod === "card" ||
     body.paymentMethod === "ach" ||
@@ -163,10 +218,6 @@ router.post("/saft/:commitId", requireAuth, async (req, res) => {
   if (missingRisk.length) {
     errors.push(`riskAcknowledgments required: ${missingRisk.join(", ")}`);
   }
-  // Wallet mapping is optional at SAFT signing — investors may defer wallet
-  // setup until before TGE. If an address is provided, a chain must accompany
-  // it; a chain alone (default selection) without an address is treated as
-  // "skip / map later".
   const walletAddressTrimmed = body.walletAddress?.trim() ?? "";
   const walletChain = walletAddressTrimmed
     ? (body.walletChain?.trim() || null)
@@ -174,12 +225,16 @@ router.post("/saft/:commitId", requireAuth, async (req, res) => {
   if (walletAddressTrimmed && !walletChain) {
     errors.push("walletChain required when walletAddress is provided");
   }
+  // Signature must match the legal name from the profile.
+  const expectedName = expectedSignerName(profile);
   if (
     signatureName &&
-    legalName &&
-    signatureName.trim().toLowerCase() !== legalName.trim().toLowerCase()
+    expectedName &&
+    signatureName.toLowerCase() !== expectedName.toLowerCase()
   ) {
-    errors.push("signatureName must match legalName");
+    errors.push(
+      `signatureName must match profile legal name (${expectedName})`,
+    );
   }
   if (errors.length || !paymentMethod) {
     res.status(400).json({ error: "Validation failed", errors });
@@ -208,25 +263,49 @@ router.post("/saft/:commitId", requireAuth, async (req, res) => {
     return;
   }
 
+  const allocations = await loadAllocationsForCommitment(commitment.id, {
+    roundSlug: commitment.roundSlug,
+    tokens: commitment.tokenAllocation,
+    amountCents: commitment.amountCents,
+  });
+
   const signedAt = new Date();
   const signerIp: string | null =
-    (req.headers["x-forwarded-for"] as string | undefined)?.split(",")[0]?.trim() ||
+    (req.headers["x-forwarded-for"] as string | undefined)
+      ?.split(",")[0]
+      ?.trim() ||
     req.socket.remoteAddress ||
     null;
   const ua = (req.headers["user-agent"] as string | undefined) ?? "";
 
+  const profileForPdf: SaftProfileForPdf = {
+    kind: profile.kind === "business" ? "business" : "individual",
+    email: profile.email,
+    phone: profile.phone,
+    addressLine1: profile.addressLine1,
+    addressLine2: profile.addressLine2,
+    city: profile.city,
+    region: profile.region,
+    postalCode: profile.postalCode,
+    country: profile.country,
+    legalFirstName: profile.legalFirstName,
+    legalLastName: profile.legalLastName,
+    dateOfBirth: profile.dateOfBirth,
+    taxIdLast4: profile.taxIdLast4,
+    legalEntityName: profile.legalEntityName,
+    entityType: profile.entityType,
+    jurisdictionOfFormation: profile.jurisdictionOfFormation,
+    einLast4: profile.einLast4,
+    signatoryName: profile.signatoryName,
+    signatoryTitle: profile.signatoryTitle,
+  };
+
   const pdfBytes = await renderSaftPdf({
     commitmentId: commitment.id,
-    amountUsd: Math.round(commitment.amountCents / 100),
-    roundLabel: getRoundLabel(commitment.roundSlug),
-    tokenAllocation: commitment.tokenAllocation,
-    legalName,
-    entityType,
-    email,
-    address,
-    jurisdiction,
-    taxIdLast4: taxId.replace(/\D/g, "").slice(-4),
-    walletAddress: body.walletAddress?.trim() || undefined,
+    profile: profileForPdf,
+    allocations,
+    walletAddress: walletAddressTrimmed || undefined,
+    walletChain,
     paymentMethod,
     accreditationCategory,
     acknowledgments: REQUIRED_ACK_KEYS.map((k) => ACK_TEXT[k] ?? k),
@@ -235,17 +314,11 @@ router.post("/saft/:commitId", requireAuth, async (req, res) => {
     signerIp,
   });
 
-  // Strip taxId before persisting payload (only last4 is kept).
   const safePayload = {
-    legalName,
-    entityType,
-    email,
-    phone: body.phone?.trim() || null,
-    address,
-    jurisdiction,
-    dobOrFormation: body.dobOrFormation?.trim() || null,
-    taxIdLast4: taxId.replace(/\D/g, "").slice(-4),
-    walletAddress: body.walletAddress?.trim() || null,
+    profileSnapshot: profileForPdf,
+    allocations,
+    walletAddress: walletAddressTrimmed || null,
+    walletChain,
     paymentMethod,
     accreditationCategory,
     investmentExperience: body.investmentExperience?.trim() || null,
@@ -264,12 +337,11 @@ router.post("/saft/:commitId", requireAuth, async (req, res) => {
       },
       {},
     ),
-    walletChain,
   };
 
   await db.transaction(async (tx) => {
     const submissionKey = `saft/${commitment.id}.pdf`;
-    const insertedRows = await tx
+    await tx
       .insert(saftSubmissionsTable)
       .values({
         commitmentId: commitment.id,
@@ -293,9 +365,7 @@ router.post("/saft/:commitId", requireAuth, async (req, res) => {
           signerUserAgent: ua,
           pdfBytes,
         },
-      })
-      .returning();
-    void insertedRows;
+      });
     await tx
       .update(commitmentsTable)
       .set({
@@ -304,7 +374,7 @@ router.post("/saft/:commitId", requireAuth, async (req, res) => {
         paymentMethod,
         saftSignedAt: signedAt,
         saftPdfKey: submissionKey,
-        walletAddress: body.walletAddress?.trim() || commitment.walletAddress,
+        walletAddress: walletAddressTrimmed || commitment.walletAddress,
         accreditationStatus: accreditationCategory,
         kycStatus:
           commitment.kycStatus === "none" ? "declared" : commitment.kycStatus,
@@ -317,9 +387,7 @@ router.post("/saft/:commitId", requireAuth, async (req, res) => {
 });
 
 /**
- * Live PDF preview from in-progress form data. Does NOT persist anything —
- * used by the Signature step in /invest/saft/:commitId so investors see
- * exactly what they are about to sign.
+ * Live PDF preview from in-progress form data. Does NOT persist anything.
  */
 router.post("/saft/:commitId/preview", requireAuth, async (req, res) => {
   const id = req.params["commitId"] as string | undefined;
@@ -342,22 +410,51 @@ router.post("/saft/:commitId/preview", requireAuth, async (req, res) => {
     res.status(404).json({ error: "Not found" });
     return;
   }
+  const profileRows = await db
+    .select()
+    .from(investorProfilesTable)
+    .where(eq(investorProfilesTable.userId, req.appUser!.id))
+    .limit(1);
+  const profile = profileRows[0];
+  if (!profile) {
+    res.status(403).json({ error: "profile_required" });
+    return;
+  }
+  const allocations = await loadAllocationsForCommitment(commitment.id, {
+    roundSlug: commitment.roundSlug,
+    tokens: commitment.tokenAllocation,
+    amountCents: commitment.amountCents,
+  });
   const body = (req.body ?? {}) as SaftBody;
   const safeStr = (v: unknown, fb = "(pending)") =>
     typeof v === "string" && v.trim() ? v.trim() : fb;
-  const taxIdLast4 = (body.taxId ?? "").replace(/\D/g, "").slice(-4);
+  const profileForPdf: SaftProfileForPdf = {
+    kind: profile.kind === "business" ? "business" : "individual",
+    email: profile.email,
+    phone: profile.phone,
+    addressLine1: profile.addressLine1,
+    addressLine2: profile.addressLine2,
+    city: profile.city,
+    region: profile.region,
+    postalCode: profile.postalCode,
+    country: profile.country,
+    legalFirstName: profile.legalFirstName,
+    legalLastName: profile.legalLastName,
+    dateOfBirth: profile.dateOfBirth,
+    taxIdLast4: profile.taxIdLast4,
+    legalEntityName: profile.legalEntityName,
+    entityType: profile.entityType,
+    jurisdictionOfFormation: profile.jurisdictionOfFormation,
+    einLast4: profile.einLast4,
+    signatoryName: profile.signatoryName,
+    signatoryTitle: profile.signatoryTitle,
+  };
   const pdfBytes = await renderSaftPdf({
     commitmentId: commitment.id,
-    amountUsd: Math.round(commitment.amountCents / 100),
-    roundLabel: getRoundLabel(commitment.roundSlug),
-    tokenAllocation: commitment.tokenAllocation,
-    legalName: safeStr(body.legalName, "(your legal name)"),
-    entityType: body.entityType === "entity" ? "entity" : "individual",
-    email: safeStr(body.email, "(your email)"),
-    address: safeStr(body.address, "(your address)"),
-    jurisdiction: safeStr(body.jurisdiction, "(your jurisdiction)"),
-    taxIdLast4,
+    profile: profileForPdf,
+    allocations,
     walletAddress: body.walletAddress?.trim() || undefined,
+    walletChain: body.walletChain?.trim() || null,
     paymentMethod: safeStr(body.paymentMethod, "(to be selected)"),
     accreditationCategory: safeStr(
       body.accreditationCategory,

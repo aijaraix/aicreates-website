@@ -1,4 +1,5 @@
-import { Link } from "wouter";
+import { useEffect, useState } from "react";
+import { Link, useLocation } from "wouter";
 import { useUser } from "@clerk/react";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
@@ -42,6 +43,13 @@ interface Allocation {
     cliffDate: string;
     schedule: VestingPoint[];
   } | null;
+  lines?: Array<{
+    roundSlug: string;
+    roundLabel: string;
+    tokens: number;
+    usdCents: number;
+    pricePerTokenMillicents: number;
+  }>;
 }
 
 interface MeAllocations {
@@ -114,6 +122,25 @@ function openAllGoogleCalendarEvents(a: Allocation) {
 
 export default function Dashboard() {
   const { user } = useUser();
+  const [, setLocation] = useLocation();
+  const [paidToast, setPaidToast] = useState<string | null>(null);
+  useEffect(() => {
+    const sp = new URLSearchParams(window.location.search);
+    const paid = sp.get("paid");
+    if (paid) {
+      setPaidToast(
+        paid === "1"
+          ? "Payment received. Your commitment will appear as funded shortly."
+          : `Payment received for commitment ${paid.slice(0, 8)}.`,
+      );
+      sp.delete("paid");
+      const q = sp.toString();
+      setLocation(`/dashboard${q ? `?${q}` : ""}`, { replace: true });
+      const t = setTimeout(() => setPaidToast(null), 6000);
+      return () => clearTimeout(t);
+    }
+    return undefined;
+  }, [setLocation]);
   const meQuery = useQuery({
     queryKey: ["me"],
     queryFn: () => api<{ user: { role: string } }>("/me"),
@@ -164,6 +191,14 @@ export default function Dashboard() {
       />
 
       <main className="mx-auto max-w-5xl px-6 py-10 md:py-12">
+        {paidToast && (
+          <div
+            className="mb-6 rounded-2xl border border-[#00F5D4]/40 bg-[#00F5D4]/10 p-4 text-sm text-[#00F5D4]"
+            data-testid="toast-paid"
+          >
+            {paidToast}
+          </div>
+        )}
         {pendingActions.length > 0 && (
           <div className="rounded-2xl border border-amber-400/30 bg-amber-400/5 p-5 mb-8 space-y-2">
             <div className="text-xs uppercase tracking-[0.18em] text-amber-300">
@@ -329,6 +364,32 @@ export default function Dashboard() {
                     )}
                   </div>
                 </div>
+
+                {a.lines && a.lines.length > 1 && (
+                  <div
+                    className="mt-4 rounded-xl border border-white/10 bg-black/30 overflow-hidden"
+                    data-testid={`lines-${a.id}`}
+                  >
+                    <div className="px-3 py-2 text-[10px] uppercase tracking-[0.16em] text-white/40 bg-white/[0.02]">
+                      Per-round breakdown ({a.lines.length} rounds)
+                    </div>
+                    <table className="w-full text-xs">
+                      <tbody className="divide-y divide-white/5">
+                        {a.lines.map((l) => (
+                          <tr key={l.roundSlug}>
+                            <td className="px-3 py-1.5">{l.roundLabel}</td>
+                            <td className="px-3 py-1.5 text-right tabular-nums">
+                              {l.tokens.toLocaleString()} AICA
+                            </td>
+                            <td className="px-3 py-1.5 text-right tabular-nums text-[#00F5D4]">
+                              {fmt(l.usdCents)}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
 
                 <div className="mt-5">
                   <StatusTimeline

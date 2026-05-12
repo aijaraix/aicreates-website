@@ -29,6 +29,8 @@ import Admin from "@/pages/Admin";
 import Gateway from "@/pages/Gateway";
 import Documents from "@/pages/Documents";
 import Faq from "@/pages/Faq";
+import Profile from "@/pages/Profile";
+import RequireProfile from "@/components/RequireProfile";
 import NotFound from "@/pages/not-found";
 import { SectionLabel } from "@/components/brand";
 import SiteHeader from "@/components/SiteHeader";
@@ -254,9 +256,16 @@ function ClerkProviderWithRoutes() {
               <Gateway />
             </Protected>
           </Route>
+          <Route path="/profile">
+            <Protected>
+              <Profile />
+            </Protected>
+          </Route>
           <Route path="/invest">
             <Protected>
-              <InvestPicker />
+              <RequireProfile>
+                <InvestPicker />
+              </RequireProfile>
             </Protected>
           </Route>
           <Route path="/documents">
@@ -271,12 +280,16 @@ function ClerkProviderWithRoutes() {
           </Route>
           <Route path="/saft/:commitId">
             <Protected>
-              <Saft />
+              <RequireProfile>
+                <Saft />
+              </RequireProfile>
             </Protected>
           </Route>
           <Route path="/checkout/:commitId">
             <Protected>
-              <Checkout />
+              <RequireProfile>
+                <Checkout />
+              </RequireProfile>
             </Protected>
           </Route>
           <Route path="/admin">

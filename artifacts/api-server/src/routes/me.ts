@@ -5,9 +5,11 @@ import {
   appUsersTable,
   commitmentsTable,
   saftSubmissionsTable,
+  commitmentAllocationsTable,
 } from "@workspace/db";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, inArray, asc } from "drizzle-orm";
 import { computeVestingSchedule } from "../lib/vesting";
+import { getRoundLabel } from "../lib/rounds";
 
 const router: IRouter = Router();
 
@@ -44,6 +46,21 @@ router.get("/me/allocations", requireAuth, async (req, res) => {
     saftRows.map((s) => [s.commitmentId, s] as const),
   );
 
+  const ids = commitments.map((c) => c.id);
+  const lineRows = ids.length
+    ? await db
+        .select()
+        .from(commitmentAllocationsTable)
+        .where(inArray(commitmentAllocationsTable.commitmentId, ids))
+        .orderBy(asc(commitmentAllocationsTable.createdAt))
+    : [];
+  const linesByCommitment = new Map<string, typeof lineRows>();
+  for (const l of lineRows) {
+    const arr = linesByCommitment.get(l.commitmentId) ?? [];
+    arr.push(l);
+    linesByCommitment.set(l.commitmentId, arr);
+  }
+
   const allocations = commitments.map((c) => {
     const isFunded = c.state === "funded" || c.status === "succeeded";
     const vesting = computeVestingSchedule({
@@ -52,6 +69,7 @@ router.get("/me/allocations", requireAuth, async (req, res) => {
     });
     const saft = saftByCommitment.get(c.id);
     const payload = (saft?.payload ?? {}) as Record<string, unknown>;
+    const lines = linesByCommitment.get(c.id) ?? [];
     return {
       id: c.id,
       roundSlug: c.roundSlug,
@@ -76,6 +94,13 @@ router.get("/me/allocations", requireAuth, async (req, res) => {
       createdAt: c.createdAt,
       isFunded,
       vesting: isFunded ? vesting : null,
+      lines: lines.map((l) => ({
+        roundSlug: l.roundSlug,
+        roundLabel: getRoundLabel(l.roundSlug),
+        tokens: l.tokens,
+        usdCents: l.usdCents,
+        pricePerTokenMillicents: l.pricePerTokenMillicents,
+      })),
     };
   });
 

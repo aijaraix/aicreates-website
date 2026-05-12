@@ -8,65 +8,216 @@ import {
   getActiveRound,
   tokensForAmountCents,
 } from "../lib/rounds";
+import { lockRoundsForUpdate, validateCapacity } from "../lib/availability";
 import {
   db,
   appUsersTable,
   commitmentsTable,
-  allocationApplicationsTable,
+  commitmentAllocationsTable,
+  investorProfilesTable,
 } from "@workspace/db";
-import { eq, and, desc } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 
 const router: IRouter = Router();
 
 const MIN_CUSTOM = 100_000; // $1,000
 const MAX_CUSTOM = 1_000_000_000; // $10,000,000
 
-function tokensForAmount(amountCents: number, roundSlug?: string): number {
-  const round = roundSlug ? ROUND_BY_SLUG.get(roundSlug) : undefined;
-  return tokensForAmountCents(amountCents, round?.pricePerTokenMillicents);
+interface AllocationLine {
+  roundSlug?: string;
+  tokens?: number;
+  usdCents?: number;
 }
 
 interface CommitBody {
+  // multi-round cart (new)
+  allocations?: AllocationLine[];
+  // legacy single-round path
   tierSlug?: string;
   customAmountCents?: number;
   roundSlug?: string;
 }
 
+function tokensForAmount(amountCents: number, roundSlug?: string): number {
+  const round = roundSlug ? ROUND_BY_SLUG.get(roundSlug) : undefined;
+  return tokensForAmountCents(amountCents, round?.pricePerTokenMillicents);
+}
+
 /**
- * Create a `pending_saft` commitment row from a tier or custom amount.
- * The user is then routed to /invest/saft/:id in the client.
+ * Create a `pending_saft` commitment row. Two paths:
+ *
+ *  - Multi-round cart: `allocations: [{ roundSlug, tokens, usdCents }]`
+ *    (preferred). Inserts one parent row plus one commitment_allocations
+ *    row per line, validating per-round capacity inside a transaction.
+ *
+ *  - Legacy single-round: `tierSlug` or `customAmountCents` (+ optional
+ *    `roundSlug`). Kept for back-compat with old clients/tests.
  */
 router.post("/commitments", requireAuth, async (req, res) => {
-  const { tierSlug, customAmountCents, roundSlug } = (req.body ?? {}) as CommitBody;
-  const round = roundSlug ?? getActiveRound().slug;
+  const body = (req.body ?? {}) as CommitBody;
+  const userId = req.appUser!.id;
+
+  // Profile gate: every commitment requires a completed investor profile.
+  const profileRows = await db
+    .select({ userId: investorProfilesTable.userId, kind: investorProfilesTable.kind })
+    .from(investorProfilesTable)
+    .where(eq(investorProfilesTable.userId, userId))
+    .limit(1);
+  if (!profileRows[0]) {
+    res.status(403).json({
+      error: "Investor profile required before committing.",
+      code: "profile_required",
+    });
+    return;
+  }
+
+  // ---- Multi-round path ----
+  if (Array.isArray(body.allocations) && body.allocations.length > 0) {
+    const lines: Array<{
+      roundSlug: string;
+      tokens: number;
+      usdCents: number;
+      pricePerTokenMillicents: number;
+    }> = [];
+
+    for (const a of body.allocations) {
+      const slug = String(a.roundSlug ?? "");
+      const round = ROUND_BY_SLUG.get(slug);
+      if (!round) {
+        res.status(400).json({ error: `Unknown round: ${slug}` });
+        return;
+      }
+      const tokens = Math.floor(Number(a.tokens) || 0);
+      const usdCents = Math.floor(Number(a.usdCents) || 0);
+      if (tokens <= 0 || usdCents <= 0) continue;
+      // Server is the source of truth: recompute USD from tokens at the
+      // round price. Reject if client value diverges by > 1 cent of rounding.
+      const expectedCents = Math.round((tokens * round.pricePerTokenMillicents) / 10);
+      if (Math.abs(expectedCents - usdCents) > 1) {
+        res.status(400).json({
+          error: `Allocation math mismatch for ${slug}: ${tokens} tokens at ${round.pricePerTokenMillicents}/1000 USD = ${expectedCents}c, got ${usdCents}c`,
+        });
+        return;
+      }
+      lines.push({
+        roundSlug: slug,
+        tokens,
+        usdCents: expectedCents,
+        pricePerTokenMillicents: round.pricePerTokenMillicents,
+      });
+    }
+
+    if (lines.length === 0) {
+      res.status(400).json({ error: "At least one allocation required" });
+      return;
+    }
+
+    const totalCents = lines.reduce((s, l) => s + l.usdCents, 0);
+    const totalTokens = lines.reduce((s, l) => s + l.tokens, 0);
+    if (totalCents < MIN_CUSTOM) {
+      res.status(400).json({
+        error: `Total must be at least $${(MIN_CUSTOM / 100).toLocaleString()}.`,
+      });
+      return;
+    }
+    if (totalCents > MAX_CUSTOM) {
+      res.status(400).json({
+        error: `Total exceeds $${(MAX_CUSTOM / 100).toLocaleString()} cap.`,
+      });
+      return;
+    }
+
+    const violations = await validateCapacity(
+      lines.map((l) => ({ roundSlug: l.roundSlug, tokens: l.tokens })),
+    );
+    if (violations.length > 0) {
+      res.status(409).json({
+        error: "Round capacity exceeded",
+        code: "capacity_exceeded",
+        violations,
+      });
+      return;
+    }
+
+    const isMulti = new Set(lines.map((l) => l.roundSlug)).size > 1;
+    const primarySlug = lines[0]!.roundSlug;
+    const tierSlug = isMulti ? "multi-round" : primarySlug;
+    const displayName = isMulti
+      ? `Multi-round commitment (${lines.length} rounds)`
+      : `${ROUND_BY_SLUG.get(primarySlug)!.label}`;
+
+    const result = await db.transaction(async (tx) => {
+      // Per-round advisory locks serialize concurrent commits against
+      // the same rounds; re-check capacity using the tx snapshot.
+      await lockRoundsForUpdate(
+        tx,
+        lines.map((l) => l.roundSlug),
+      );
+      const v2 = await validateCapacity(
+        lines.map((l) => ({ roundSlug: l.roundSlug, tokens: l.tokens })),
+        tx,
+      );
+      if (v2.length > 0) {
+        return { ok: false as const, violations: v2 };
+      }
+      const inserted = await tx
+        .insert(commitmentsTable)
+        .values({
+          userId,
+          amountCents: totalCents,
+          currency: "usd",
+          status: "pending_saft",
+          state: "pending_saft",
+          tierSlug,
+          displayName,
+          tokenAllocation: totalTokens,
+          customAmountCents: totalCents,
+          roundSlug: primarySlug,
+        })
+        .returning();
+      const c = inserted[0]!;
+      await tx.insert(commitmentAllocationsTable).values(
+        lines.map((l) => ({
+          commitmentId: c.id,
+          roundSlug: l.roundSlug,
+          tokens: l.tokens,
+          usdCents: l.usdCents,
+          pricePerTokenMillicents: l.pricePerTokenMillicents,
+        })),
+      );
+      return { ok: true as const, commitment: c };
+    });
+
+    if (!result.ok) {
+      res.status(409).json({
+        error: "Round capacity exceeded",
+        code: "capacity_exceeded",
+        violations: result.violations,
+      });
+      return;
+    }
+    res.status(201).json({
+      commitment: result.commitment,
+      allocations: lines,
+    });
+    return;
+  }
+
+  // ---- Legacy single-round path ----
+  const round = body.roundSlug ?? getActiveRound().slug;
   if (!ROUND_BY_SLUG.has(round)) {
     res.status(400).json({ error: "Unknown round" });
     return;
   }
 
-  // Gateway gate: every commitment must be preceded by a submitted
-  // AI Allocation Gateway application.
-  const apps = await db
-    .select({ id: allocationApplicationsTable.id })
-    .from(allocationApplicationsTable)
-    .where(eq(allocationApplicationsTable.userId, req.appUser!.id))
-    .orderBy(desc(allocationApplicationsTable.createdAt))
-    .limit(1);
-  if (!apps[0]) {
-    res.status(403).json({
-      error: "AI Allocation Gateway application required",
-      code: "gateway_required",
-    });
-    return;
-  }
   let amountCents: number;
   let displayName: string;
   let resolvedTierSlug: string;
   let tokenAllocation: number;
   let custom: number | null = null;
 
-  if (tierSlug) {
-    const tier = TIER_BY_SLUG.get(tierSlug);
+  if (body.tierSlug) {
+    const tier = TIER_BY_SLUG.get(body.tierSlug);
     if (!tier) {
       res.status(400).json({ error: "Unknown tier" });
       return;
@@ -75,43 +226,82 @@ router.post("/commitments", requireAuth, async (req, res) => {
     displayName = tier.displayName;
     resolvedTierSlug = tier.slug;
     tokenAllocation = tier.tokenAllocation;
-  } else if (typeof customAmountCents === "number") {
+  } else if (typeof body.customAmountCents === "number") {
     if (
-      !Number.isFinite(customAmountCents) ||
-      customAmountCents < MIN_CUSTOM ||
-      customAmountCents > MAX_CUSTOM
+      !Number.isFinite(body.customAmountCents) ||
+      body.customAmountCents < MIN_CUSTOM ||
+      body.customAmountCents > MAX_CUSTOM
     ) {
       res.status(400).json({
         error: `customAmountCents must be between ${MIN_CUSTOM} and ${MAX_CUSTOM}`,
       });
       return;
     }
-    amountCents = Math.floor(customAmountCents);
+    amountCents = Math.floor(body.customAmountCents);
     custom = amountCents;
     resolvedTierSlug = "custom";
     displayName = "Custom commitment";
     tokenAllocation = tokensForAmount(amountCents, round);
   } else {
-    res.status(400).json({ error: "tierSlug or customAmountCents required" });
+    res.status(400).json({ error: "tierSlug, customAmountCents, or allocations required" });
     return;
   }
 
-  const inserted = await db
-    .insert(commitmentsTable)
-    .values({
-      userId: req.appUser!.id,
-      amountCents,
-      currency: "usd",
-      status: "pending_saft",
-      state: "pending_saft",
-      tierSlug: resolvedTierSlug,
-      displayName,
-      tokenAllocation,
-      customAmountCents: custom,
+  const violations = await validateCapacity([
+    { roundSlug: round, tokens: tokenAllocation },
+  ]);
+  if (violations.length > 0) {
+    res.status(409).json({
+      error: "Round capacity exceeded",
+      code: "capacity_exceeded",
+      violations,
+    });
+    return;
+  }
+
+  const result = await db.transaction(async (tx) => {
+    await lockRoundsForUpdate(tx, [round]);
+    const v2 = await validateCapacity(
+      [{ roundSlug: round, tokens: tokenAllocation }],
+      tx,
+    );
+    if (v2.length > 0) return { ok: false as const, violations: v2 };
+    const inserted = await tx
+      .insert(commitmentsTable)
+      .values({
+        userId,
+        amountCents,
+        currency: "usd",
+        status: "pending_saft",
+        state: "pending_saft",
+        tierSlug: resolvedTierSlug,
+        displayName,
+        tokenAllocation,
+        customAmountCents: custom,
+        roundSlug: round,
+      })
+      .returning();
+    const c = inserted[0]!;
+    await tx.insert(commitmentAllocationsTable).values({
+      commitmentId: c.id,
       roundSlug: round,
-    })
-    .returning();
-  res.status(201).json({ commitment: inserted[0] });
+      tokens: tokenAllocation,
+      usdCents: amountCents,
+      pricePerTokenMillicents:
+        ROUND_BY_SLUG.get(round)?.pricePerTokenMillicents ?? 0,
+    });
+    return { ok: true as const, commitment: c };
+  });
+
+  if (!result.ok) {
+    res.status(409).json({
+      error: "Round capacity exceeded",
+      code: "capacity_exceeded",
+      violations: result.violations,
+    });
+    return;
+  }
+  res.status(201).json({ commitment: result.commitment });
 });
 
 interface CheckoutBody {
@@ -124,6 +314,21 @@ interface CheckoutBody {
 router.post("/checkout", requireAuth, async (req, res) => {
   const body = (req.body ?? {}) as CheckoutBody;
   const user = req.appUser!;
+
+  // Profile gate: backend mirror of the UI RequireProfile guard so the
+  // check cannot be bypassed by hitting the API directly.
+  const profileRows = await db
+    .select({ userId: investorProfilesTable.userId })
+    .from(investorProfilesTable)
+    .where(eq(investorProfilesTable.userId, user.id))
+    .limit(1);
+  if (!profileRows[0]) {
+    res.status(403).json({
+      error: "Investor profile required before checkout.",
+      code: "profile_required",
+    });
+    return;
+  }
 
   // Resolve commitment.
   let commitmentId = body.commitmentId;
@@ -165,9 +370,6 @@ router.post("/checkout", requireAuth, async (req, res) => {
     tokenAllocation = c.tokenAllocation;
     roundSlug = c.roundSlug;
   } else if (body.tierSlug) {
-    // Legacy single-shot tier checkout removed: bypassed gateway intake and
-    // SAFT signature. Clients must POST /commitments first, then /checkout
-    // with commitmentId after the SAFT is signed.
     res.status(410).json({
       error: "Legacy checkout path removed. Use POST /commitments then /checkout with commitmentId.",
       code: "legacy_checkout_removed",
@@ -204,10 +406,7 @@ router.post("/checkout", requireAuth, async (req, res) => {
     return;
   }
 
-  // Crypto path: handled out-of-band (Stripe Pay-with-Crypto is region-gated
-  // and not universally available). We move the commitment to
-  // `awaiting_crypto`, surface escrow instructions in the UI, and notify
-  // the team to coordinate the on-chain confirmation manually.
+  // Crypto path (manual escrow).
   if (paymentMethod === "crypto") {
     await db
       .update(commitmentsTable)
@@ -245,7 +444,6 @@ router.post("/checkout", requireAuth, async (req, res) => {
     return;
   }
 
-  // Ensure the user has a Stripe customer.
   let customerId = user.stripeCustomerId;
   if (!customerId) {
     const customer = await stripe.customers.create({

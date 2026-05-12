@@ -5,3 +5,5 @@ export * from "./data_center_requests";
 export * from "./allocation_applications";
 export * from "./admin_notes";
 export * from "./admin_audit_log";
+export * from "./investor_profiles";
+export * from "./commitment_allocations";

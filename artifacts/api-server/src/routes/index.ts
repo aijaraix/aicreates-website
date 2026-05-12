@@ -11,6 +11,8 @@ import dataCenterRouter from "./dataCenter";
 import wireInstructionsRouter from "./wireInstructions";
 import roundsRouter from "./rounds";
 import gatewayRouter from "./gateway";
+import profileRouter from "./profile";
+import availabilityRouter from "./availability";
 
 const router: IRouter = Router();
 
@@ -26,5 +28,7 @@ router.use(dataCenterRouter);
 router.use(wireInstructionsRouter);
 router.use(roundsRouter);
 router.use(gatewayRouter);
+router.use(profileRouter);
+router.use(availabilityRouter);
 
 export default router;

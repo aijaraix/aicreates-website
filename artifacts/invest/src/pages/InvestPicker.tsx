@@ -1,42 +1,41 @@
-import { Link, useLocation } from "wouter";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useLocation } from "wouter";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { api } from "@/lib/api";
-import { ArrowRight, Loader2, Sparkles } from "lucide-react";
-import { tokensForAmount } from "@/lib/vesting";
+import { ArrowRight, Loader2, Sparkles, Trash2, Wand2 } from "lucide-react";
 import { ROUNDS } from "@/data/rounds";
-
-interface ActiveRoundResp {
-  round: { slug: string; pricePerTokenMillicents: number; label: string };
-}
-import RoundContext from "@/components/RoundContext";
-import VestingPreview from "@/components/VestingPreview";
 import PortalNav from "@/components/PortalNav";
 import PageHeader from "@/components/PageHeader";
+import VestingPreview from "@/components/VestingPreview";
 
-interface Tier {
+interface RoundAvailability {
   slug: string;
-  displayName: string;
-  description: string;
-  amountCents: number;
-  currency: string;
-  tokenAllocation: number;
-}
-
-interface Commitment {
-  id: string;
+  label: string;
+  pricePerTokenMillicents: number;
+  capacity: number;
+  reserved: number;
+  available: number;
+  open: boolean;
 }
 
 interface MeResponse {
   user: { role: string };
 }
 
-interface Application {
-  id: string;
-  status: string;
+interface CommitResp {
+  commitment: { id: string };
 }
 
-function fmt(cents: number) {
+interface CapacityViolation {
+  roundSlug: string;
+  requested: number;
+  available: number;
+}
+
+const MIN_USD = 1_000;
+const MAX_USD = 10_000_000;
+
+function fmtUsd(cents: number) {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
@@ -44,268 +43,461 @@ function fmt(cents: number) {
   }).format(cents / 100);
 }
 
+function priceLabel(millicents: number) {
+  return `$${(millicents / 1000).toFixed(3)}`;
+}
+
+function tokensFromUsdCents(usdCents: number, millicents: number): number {
+  if (millicents <= 0) return 0;
+  return Math.floor((usdCents * 10) / millicents);
+}
+
+function usdCentsFromTokens(tokens: number, millicents: number): number {
+  return Math.round((tokens * millicents) / 10);
+}
+
+function bonusForUsd(usd: number): number {
+  if (usd >= 25_000) return 0.2;
+  if (usd >= 5_000) return 0.1;
+  return 0;
+}
+
+interface CartLine {
+  roundSlug: string;
+  tokens: number;
+  usdCents: number;
+}
+
 export default function InvestPicker() {
   const [, setLocation] = useLocation();
-  const [pending, setPending] = useState<string | null>(null);
-  const [customAmount, setCustomAmount] = useState<number>(50_000);
+  const [cart, setCart] = useState<CartLine[]>([]);
+  const [violations, setViolations] = useState<CapacityViolation[]>([]);
+  const [confirmRevised, setConfirmRevised] = useState(false);
+
   const me = useQuery({
     queryKey: ["me"],
     queryFn: () => api<MeResponse>("/me"),
   });
-  const activeRound = useQuery({
-    queryKey: ["rounds", "active"],
-    queryFn: () => api<ActiveRoundResp>("/rounds/active"),
+
+  const availability = useQuery({
+    queryKey: ["rounds", "availability"],
+    queryFn: () =>
+      api<{ rounds: RoundAvailability[] }>("/rounds/availability"),
+    refetchInterval: 30_000,
   });
-  const round = activeRound.data?.round.slug ?? ROUNDS[0]!.slug;
-  const pricePerTokenMillicents =
-    activeRound.data?.round.pricePerTokenMillicents ?? 15;
-  const priceLabel = `$${(pricePerTokenMillicents / 1000).toFixed(3)}`;
-  const gateway = useQuery({
-    queryKey: ["me", "gateway"],
-    queryFn: () => api<{ application: Application | null }>("/me/gateway"),
-  });
-  const { data, isLoading } = useQuery({
-    queryKey: ["tiers"],
-    queryFn: () => api<{ tiers: Tier[] }>("/tiers"),
-  });
+
+  const rounds = availability.data?.rounds ?? [];
+  const isAdmin = me.data?.user.role === "admin";
+
+  const byRound = useMemo(() => {
+    const m = new Map<string, RoundAvailability>();
+    for (const r of rounds) m.set(r.slug, r);
+    return m;
+  }, [rounds]);
+
+  // Seed empty cart with the first OPEN round selected (UX nicety).
+  useEffect(() => {
+    if (cart.length > 0 || rounds.length === 0) return;
+    const first = rounds.find((r) => r.open) ?? rounds[0]!;
+    setCart([
+      {
+        roundSlug: first.slug,
+        tokens: 0,
+        usdCents: 0,
+      },
+    ]);
+  }, [rounds, cart.length]);
+
+  const totalCents = cart.reduce((s, l) => s + l.usdCents, 0);
+  const totalTokens = cart.reduce((s, l) => s + l.tokens, 0);
+  const totalUsd = totalCents / 100;
+  const bonusRate = bonusForUsd(totalUsd);
+  const bonusTokens = Math.floor(totalTokens * bonusRate);
+
+  function updateLine(idx: number, patch: Partial<CartLine>) {
+    setCart((c) => c.map((l, i) => (i === idx ? { ...l, ...patch } : l)));
+    setViolations([]);
+    setConfirmRevised(false);
+  }
+
+  function setUsdForLine(idx: number, usdDollars: number, round: RoundAvailability) {
+    const usdCents = Math.max(0, Math.floor(usdDollars * 100));
+    let tokens = tokensFromUsdCents(usdCents, round.pricePerTokenMillicents);
+    if (tokens > round.available) {
+      tokens = round.available;
+    }
+    const finalCents = usdCentsFromTokens(tokens, round.pricePerTokenMillicents);
+    updateLine(idx, { tokens, usdCents: finalCents });
+  }
+
+  function setTokensForLine(idx: number, tokens: number, round: RoundAvailability) {
+    const clamped = Math.max(0, Math.min(tokens, round.available));
+    updateLine(idx, {
+      tokens: clamped,
+      usdCents: usdCentsFromTokens(clamped, round.pricePerTokenMillicents),
+    });
+  }
+
+  function useMaxForLine(idx: number, round: RoundAvailability) {
+    setTokensForLine(idx, round.available, round);
+  }
+
+  function addLine() {
+    const used = new Set(cart.map((l) => l.roundSlug));
+    const next = rounds.find((r) => !used.has(r.slug)) ?? rounds[0];
+    if (!next) return;
+    setCart((c) => [...c, { roundSlug: next.slug, tokens: 0, usdCents: 0 }]);
+  }
+
+  function removeLine(idx: number) {
+    setCart((c) => c.filter((_, i) => i !== idx));
+  }
 
   const create = useMutation({
-    mutationFn: async (args: {
-      tierSlug?: string;
-      customAmountCents?: number;
-      key: string;
-    }) => {
-      setPending(args.key);
-      const res = await api<{ commitment: Commitment }>("/commitments", {
-        body: {
-          tierSlug: args.tierSlug,
-          customAmountCents: args.customAmountCents,
-          roundSlug: round,
-        },
-      });
-      return res.commitment;
+    mutationFn: () => {
+      const allocations = cart
+        .filter((l) => l.tokens > 0 && l.usdCents > 0)
+        .map((l) => ({
+          roundSlug: l.roundSlug,
+          tokens: l.tokens,
+          usdCents: l.usdCents,
+        }));
+      return api<CommitResp>("/commitments", { body: { allocations } });
     },
-    onSuccess: (commit) => {
-      setLocation(`/saft/${commit.id}`);
+    onSuccess: (resp) => {
+      setLocation(`/saft/${resp.commitment.id}`);
     },
-    onError: (err) => {
-      setPending(null);
+    onError: async (err) => {
       const msg = (err as Error).message;
-      if (msg.includes("gateway_required") || msg.includes("Gateway")) {
-        setLocation("/gateway");
-        return;
+      // attempt to parse 409 capacity errors
+      const match = msg.match(/\{.*\}/s);
+      if (match) {
+        try {
+          const parsed = JSON.parse(match[0]) as {
+            code?: string;
+            violations?: CapacityViolation[];
+          };
+          if (parsed.code === "capacity_exceeded" && parsed.violations) {
+            // Auto-revise to the available cap on each violating row.
+            setCart((c) =>
+              c.map((l) => {
+                const v = parsed.violations!.find(
+                  (x) => x.roundSlug === l.roundSlug,
+                );
+                if (!v) return l;
+                const round = byRound.get(l.roundSlug);
+                if (!round) return l;
+                return {
+                  ...l,
+                  tokens: v.available,
+                  usdCents: usdCentsFromTokens(
+                    v.available,
+                    round.pricePerTokenMillicents,
+                  ),
+                };
+              }),
+            );
+            setViolations(parsed.violations);
+            setConfirmRevised(true);
+            availability.refetch();
+            return;
+          }
+          if (parsed.code === "profile_required") {
+            setLocation(
+              `/profile?next=${encodeURIComponent("/invest")}`,
+            );
+            return;
+          }
+        } catch {
+          // ignore parse failures
+        }
       }
-      alert(`Could not start commitment: ${msg}`);
+      alert(`Could not create commitment: ${msg}`);
     },
   });
 
-  const tiers = data?.tiers ?? [];
-  const isAdmin = me.data?.user.role === "admin";
-  const needsGateway = gateway.data && gateway.data.application === null;
+  const totalsValid = totalCents >= MIN_USD * 100 && totalCents <= MAX_USD * 100;
+  const canSubmit =
+    totalsValid &&
+    cart.some((l) => l.tokens > 0) &&
+    !create.isPending &&
+    (violations.length === 0 || confirmRevised);
 
   return (
     <div className="min-h-[100dvh] bg-[#0A0A0A] text-white">
       <PortalNav showAdmin={isAdmin} />
-
       <PageHeader
         eyebrow="Reserve allocation"
-        title={<>Pick a tier.</>}
-        subtitle="Choose a published tier or enter a custom amount. We'll route you straight to the SAFT after you reserve."
+        title={<>Build your allocation.</>}
+        subtitle="Commit across one or more rounds. We auto-route each line at the round's price, then walk you through a single SAFT covering the entire commitment."
         back={{ href: "/dashboard", label: "Back to dashboard" }}
       />
 
-      <main className="mx-auto max-w-6xl px-6 py-10 md:py-12 space-y-10">
-        <RoundContext />
-
+      <main className="mx-auto max-w-5xl px-6 py-8 md:py-12 space-y-8 pb-40">
         <div
-          className="rounded-2xl border border-[#00F5D4]/40 bg-gradient-to-br from-[#00F5D4]/[0.12] via-[#00F5D4]/[0.04] to-transparent p-5 md:p-6 flex flex-wrap items-center justify-between gap-4"
+          className="rounded-2xl border border-[#00F5D4]/30 bg-[#00F5D4]/5 p-5 flex flex-wrap items-start gap-3"
           data-testid="banner-bonus-promo"
         >
-          <div className="flex items-start gap-3">
-            <Sparkles className="w-6 h-6 text-[#00F5D4] mt-0.5 shrink-0" />
-            <div>
-              <div className="text-[10px] uppercase tracking-[0.18em] text-[#00F5D4]">
-                Strategic Seed bonus
-              </div>
-              <div
-                className="mt-1 text-base md:text-lg font-semibold text-white"
-                style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}
-              >
-                +10% allocation at $5,000 - +20% allocation at $25,000
-              </div>
-              <div className="mt-1 text-xs text-white/55">
-                Bonuses apply automatically when you commit at or above the
-                threshold. Above $25,000 we negotiate terms directly.
-              </div>
+          <Sparkles className="w-5 h-5 text-[#00F5D4] mt-0.5 shrink-0" />
+          <div className="flex-1 min-w-0 text-sm">
+            <div className="text-[10px] uppercase tracking-[0.18em] text-[#00F5D4]">
+              Cart bonuses
             </div>
-          </div>
-          <div className="text-right">
-            <div className="text-[10px] uppercase tracking-[0.18em] text-white/40">
-              Round price
-            </div>
-            <div
-              className="text-2xl font-semibold text-white"
-              style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}
-            >
-              {priceLabel} <span className="text-sm text-white/50">/ AICA</span>
+            <div className="mt-1 text-white/85">
+              +10% allocation on totals at <strong>$5,000</strong> · +20%
+              allocation on totals at <strong>$25,000</strong>. Bonus is added
+              on top of the per-round token math.
             </div>
           </div>
         </div>
 
-        {needsGateway && (
-          <div
-            className="rounded-2xl border border-[#00F5D4]/30 bg-[#00F5D4]/5 p-5 flex flex-wrap items-center justify-between gap-4"
-            data-testid="block-gateway-required"
-          >
-            <div className="flex items-start gap-3">
-              <Sparkles className="w-5 h-5 text-[#00F5D4] mt-0.5" />
-              <div>
-                <div className="font-medium">
-                  Complete the AI Allocation Gateway
-                </div>
-                <div className="text-sm text-white/60">
-                  A short intake helps us route and prioritize your
-                  commitment. Takes about 2 minutes.
-                </div>
-              </div>
+        <section className="brand-card p-0 overflow-hidden">
+          <header className="flex items-center justify-between px-5 py-3 border-b border-white/5 bg-white/[0.02]">
+            <div className="text-xs uppercase tracking-[0.18em] text-white/50">
+              Allocation cart
             </div>
-            <Link
-              href="/gateway"
-              className="brand-cta"
-              data-testid="link-go-gateway"
+            <button
+              type="button"
+              onClick={addLine}
+              disabled={cart.length >= rounds.length}
+              className="text-xs text-[#00F5D4] hover:underline disabled:opacity-40"
+              data-testid="button-add-round"
             >
-              Start gateway <ArrowRight className="ml-2 w-4 h-4" />
-            </Link>
-          </div>
-        )}
+              + Add round
+            </button>
+          </header>
 
-        <div className="grid grid-cols-1 lg:grid-cols-[2fr,1fr] gap-6 items-start">
-          <div>
-            {isLoading ? (
-              <div className="text-white/50">Loading tiers...</div>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {tiers.map((t) => (
+          {availability.isLoading ? (
+            <div className="p-6 text-white/50 flex items-center gap-2">
+              <Loader2 className="w-4 h-4 animate-spin text-[#00F5D4]" />
+              Loading round availability…
+            </div>
+          ) : (
+            <div className="divide-y divide-white/5">
+              {cart.map((line, idx) => {
+                const round =
+                  byRound.get(line.roundSlug) ?? rounds[0];
+                if (!round) return null;
+                const violation = violations.find(
+                  (v) => v.roundSlug === round.slug,
+                );
+                const overflow = line.tokens > round.available;
+                return (
                   <div
-                    key={t.slug}
-                    className="brand-card brand-hairline-teal p-6 flex flex-col hover:border-[#00F5D4]/40 transition"
-                    data-testid={`card-tier-${t.slug}`}
+                    key={`${round.slug}-${idx}`}
+                    className="grid grid-cols-1 md:grid-cols-[2fr,1.2fr,1.2fr,auto] gap-3 p-5"
+                    data-testid={`cart-row-${idx}`}
                   >
-                    <h3 className="font-display text-lg font-semibold tracking-tight">
-                      {t.displayName}
-                    </h3>
-                    <div className="mt-2 font-display text-3xl font-semibold tracking-tight text-gradient-teal">
-                      {fmt(t.amountCents)}
+                    <div>
+                      <label className="text-[10px] uppercase tracking-[0.16em] text-white/40">
+                        Round
+                      </label>
+                      <select
+                        className="brand-input mt-1"
+                        value={round.slug}
+                        onChange={(e) => {
+                          const next = byRound.get(e.target.value);
+                          if (!next) return;
+                          updateLine(idx, {
+                            roundSlug: next.slug,
+                            tokens: 0,
+                            usdCents: 0,
+                          });
+                        }}
+                        data-testid={`select-round-${idx}`}
+                      >
+                        {rounds.map((r) => {
+                          const used = cart.some(
+                            (l, i) => i !== idx && l.roundSlug === r.slug,
+                          );
+                          return (
+                            <option key={r.slug} value={r.slug} disabled={used}>
+                              {r.label} · {priceLabel(r.pricePerTokenMillicents)}
+                              {!r.open ? " (preview)" : ""}
+                            </option>
+                          );
+                        })}
+                      </select>
+                      <div className="mt-1.5 text-[11px] text-white/45">
+                        {round.available.toLocaleString()} AICA available of{" "}
+                        {round.capacity.toLocaleString()}
+                      </div>
                     </div>
-                    <div className="mt-1 text-xs uppercase tracking-[0.16em] text-white/45">
-                      {t.tokenAllocation.toLocaleString()} AICA
+                    <div>
+                      <label className="text-[10px] uppercase tracking-[0.16em] text-white/40">
+                        USD
+                      </label>
+                      <input
+                        type="number"
+                        min={0}
+                        max={MAX_USD}
+                        step={500}
+                        value={Math.round(line.usdCents / 100)}
+                        onChange={(e) =>
+                          setUsdForLine(
+                            idx,
+                            Number(e.target.value) || 0,
+                            round,
+                          )
+                        }
+                        className={`brand-input mt-1 ${
+                          overflow ? "!border-red-400/60" : ""
+                        }`}
+                        data-testid={`input-usd-${idx}`}
+                      />
                     </div>
-                    {t.description && (
-                      <p className="mt-3 text-sm text-white/60 flex-1">
-                        {t.description}
-                      </p>
-                    )}
-                    <button
-                      disabled={create.isPending || Boolean(needsGateway)}
-                      onClick={() =>
-                        create.mutate({ tierSlug: t.slug, key: t.slug })
-                      }
-                      className="brand-cta mt-5"
-                      data-testid={`button-commit-${t.slug}`}
-                    >
-                      {pending === t.slug ? (
-                        <>
-                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                          Reserving…
-                        </>
-                      ) : (
-                        "Reserve"
+                    <div>
+                      <label className="text-[10px] uppercase tracking-[0.16em] text-white/40">
+                        Tokens
+                      </label>
+                      <input
+                        type="number"
+                        min={0}
+                        step={1}
+                        value={line.tokens}
+                        onChange={(e) =>
+                          setTokensForLine(
+                            idx,
+                            Math.max(0, Math.floor(Number(e.target.value) || 0)),
+                            round,
+                          )
+                        }
+                        className={`brand-input mt-1 ${
+                          overflow ? "!border-red-400/60" : ""
+                        }`}
+                        data-testid={`input-tokens-${idx}`}
+                      />
+                      <div className="mt-1.5 flex items-center gap-2 text-[11px]">
+                        <button
+                          type="button"
+                          onClick={() => useMaxForLine(idx, round)}
+                          className="text-[#00F5D4] hover:underline inline-flex items-center gap-1"
+                          data-testid={`button-use-max-${idx}`}
+                        >
+                          <Wand2 className="w-3 h-3" /> use max
+                        </button>
+                        {overflow && (
+                          <span className="text-red-300">
+                            exceeds available
+                          </span>
+                        )}
+                        {violation && (
+                          <span
+                            className="text-amber-300"
+                            data-testid={`violation-${round.slug}`}
+                          >
+                            revised to {violation.available.toLocaleString()}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex items-end">
+                      {cart.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => removeLine(idx)}
+                          className="h-10 px-3 rounded-xl border border-white/10 text-white/55 hover:text-red-300 hover:border-red-400/40"
+                          data-testid={`button-remove-${idx}`}
+                          title="Remove row"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
                       )}
-                    </button>
+                    </div>
                   </div>
-                ))}
+                );
+              })}
+            </div>
+          )}
+        </section>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="brand-card p-5 text-xs text-white/55 leading-relaxed">
+            <div className="text-[10px] uppercase tracking-[0.18em] text-white/40 mb-2">
+              Token math
+            </div>
+            <ul className="space-y-1">
+              <li>Pricing is auto-applied per round; you can mix rounds.</li>
+              <li>+10% allocation on totals ≥ $5,000.</li>
+              <li>+20% allocation on totals ≥ $25,000.</li>
+              <li>25% unlocks at TGE, 6-month cliff, then 24-month linear.</li>
+              <li>Total private sale: 1.25B AICA across 5 rounds.</li>
+            </ul>
+          </div>
+          <VestingPreview totalTokens={totalTokens + bonusTokens} />
+        </div>
+
+        {/* Sticky totals */}
+        <div className="fixed bottom-0 inset-x-0 bg-[#0A0A0A]/90 backdrop-blur border-t border-white/10 z-30">
+          <div className="mx-auto max-w-5xl px-6 py-4 flex flex-wrap items-center justify-between gap-4">
+            <div className="flex flex-wrap items-baseline gap-x-6 gap-y-1">
+              <div>
+                <div className="text-[10px] uppercase tracking-[0.16em] text-white/40">
+                  Total commitment
+                </div>
                 <div
-                  className="brand-card-teal brand-hairline-teal p-6 flex flex-col"
-                  data-testid="card-tier-custom"
+                  className="text-2xl font-semibold text-[#00F5D4]"
+                  style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}
+                  data-testid="cart-total-usd"
                 >
-                  <h3 className="font-display text-lg font-semibold tracking-tight">
-                    Custom amount
-                  </h3>
-                  <div className="mt-2 font-display text-3xl font-semibold tracking-tight text-gradient-teal">
-                    {fmt(customAmount * 100)}
-                  </div>
-                  <div className="mt-1 text-xs uppercase tracking-[0.16em] text-white/45">
-                    ~{tokensForAmount(customAmount, pricePerTokenMillicents).toLocaleString()} AICA
-                  </div>
-                  <div className="mt-3">
-                    <label className="text-[11px] uppercase tracking-[0.14em] text-white/55">
-                      Amount (USD)
-                    </label>
-                    <input
-                      type="number"
-                      min={1000}
-                      max={10_000_000}
-                      step={1000}
-                      value={customAmount}
-                      onChange={(e) =>
-                        setCustomAmount(
-                          Math.max(0, Math.floor(Number(e.target.value) || 0)),
-                        )
-                      }
-                      className="brand-input mt-1"
-                      data-testid="input-custom-amount"
-                    />
-                    <p className="mt-2 text-[11px] text-white/40">
-                      Min $1,000 - Max $10,000,000
-                    </p>
-                  </div>
-                  <button
-                    disabled={
-                      create.isPending ||
-                      Boolean(needsGateway) ||
-                      customAmount < 1000 ||
-                      customAmount > 10_000_000
-                    }
-                    onClick={() =>
-                      create.mutate({
-                        customAmountCents: customAmount * 100,
-                        key: "custom",
-                      })
-                    }
-                    className="brand-cta mt-5"
-                    data-testid="button-commit-custom"
-                  >
-                    {pending === "custom" ? (
-                      <>
-                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                        Reserving…
-                      </>
-                    ) : (
-                      "Reserve custom amount"
-                    )}
-                  </button>
+                  {fmtUsd(totalCents)}
                 </div>
               </div>
-            )}
-          </div>
-
-          <div className="space-y-4">
-            <VestingPreview totalTokens={tokensForAmount(customAmount, pricePerTokenMillicents)} />
-            <div className="brand-card p-5 text-xs text-white/50 leading-relaxed">
-              <div className="text-[10px] uppercase tracking-[0.18em] text-white/40 mb-2">
-                Token math
+              <div>
+                <div className="text-[10px] uppercase tracking-[0.16em] text-white/40">
+                  Tokens
+                </div>
+                <div
+                  className="text-lg font-semibold text-white"
+                  data-testid="cart-total-tokens"
+                >
+                  {(totalTokens + bonusTokens).toLocaleString()}{" "}
+                  <span className="text-white/40 text-sm">AICA</span>
+                  {bonusTokens > 0 && (
+                    <span
+                      className="ml-2 text-xs text-[#00F5D4] font-normal"
+                      data-testid="cart-bonus"
+                    >
+                      +{bonusTokens.toLocaleString()} bonus (
+                      {Math.round(bonusRate * 100)}%)
+                    </span>
+                  )}
+                </div>
               </div>
-              <ul className="space-y-1">
-                <li>1 AICA = {priceLabel} USD (Strategic Seed Round price).</li>
-                <li>+10% allocation bonus at $5,000.</li>
-                <li>+20% allocation bonus at $25,000.</li>
-                <li>25% unlocks at TGE, 6-month cliff, then 24-month linear.</li>
-                <li>
-                  Total private sale: 1.25B AICA across 5 rounds at $0.015 -
-                  $0.070 per AICA.
-                </li>
-              </ul>
+              {!totalsValid && (
+                <div className="text-xs text-amber-300">
+                  Total must be between {fmtUsd(MIN_USD * 100)} and{" "}
+                  {fmtUsd(MAX_USD * 100)}.
+                </div>
+              )}
+              {confirmRevised && violations.length > 0 && (
+                <div
+                  className="text-xs text-amber-300"
+                  data-testid="cart-revised-banner"
+                >
+                  Cart auto-revised against current availability. Click
+                  Continue again to confirm.
+                </div>
+              )}
             </div>
+            <button
+              type="button"
+              disabled={!canSubmit}
+              onClick={() => create.mutate()}
+              className="brand-cta"
+              data-testid="button-cart-continue"
+            >
+              {create.isPending ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Reserving…
+                </>
+              ) : (
+                <>
+                  Continue to SAFT <ArrowRight className="ml-2 w-4 h-4" />
+                </>
+              )}
+            </button>
           </div>
         </div>
       </main>

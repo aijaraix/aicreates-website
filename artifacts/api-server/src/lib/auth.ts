@@ -1,7 +1,9 @@
 import type { Request, Response, NextFunction } from "express";
 import { getAuth, clerkClient } from "@clerk/express";
 import { db, appUsersTable } from "@workspace/db";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
+
+const LOGIN_DEBOUNCE_MS = 30 * 60 * 1000; // 30 min
 
 declare module "express-serve-static-core" {
   interface Request {
@@ -95,6 +97,25 @@ export async function requireAuth(
     if (!row) {
       res.status(500).json({ error: "User provisioning failed" });
       return;
+    }
+
+    // Login telemetry, debounced to ~once per LOGIN_DEBOUNCE_MS so that
+    // every authenticated API call doesn't write to the row.
+    const lastLogin = row.lastLoginAt
+      ? new Date(row.lastLoginAt).getTime()
+      : 0;
+    if (Date.now() - lastLogin > LOGIN_DEBOUNCE_MS) {
+      try {
+        await db
+          .update(appUsersTable)
+          .set({
+            lastLoginAt: new Date(),
+            loginCount: sql`${appUsersTable.loginCount} + 1`,
+          })
+          .where(eq(appUsersTable.id, row.id));
+      } catch (err) {
+        req.log?.warn({ err }, "login telemetry update failed");
+      }
     }
 
     req.appUser = {
