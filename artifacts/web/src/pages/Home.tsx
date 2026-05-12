@@ -10,7 +10,6 @@ import {
   Brain,
   Infinity as InfinityIcon,
 } from "lucide-react";
-import WhitepaperVisual from "@/components/WhitepaperVisual";
 import { useSeo } from "@/lib/useSeo";
 
 const AUDIENCES = [
@@ -458,63 +457,38 @@ export default function Home() {
       {/* VISUAL WHITEPAPER */}
       <section className="py-14 md:py-20 relative">
         <div className="container mx-auto px-4 md:px-6 w-full">
-          <div className="relative max-w-6xl mx-auto rounded-3xl border border-white/10 bg-gradient-to-b from-[#0E0E0E] to-[#0A0A0A] p-8 sm:p-10 md:p-14 overflow-hidden">
-            <div className="absolute inset-0 bg-grid opacity-[0.18] pointer-events-none [mask-image:radial-gradient(ellipse_70%_60%_at_30%_40%,black,transparent_85%)]" />
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(0,245,212,0.14),transparent_55%)] pointer-events-none" />
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,rgba(0,245,212,0.08),transparent_60%)] pointer-events-none" />
+          <div className="relative max-w-5xl mx-auto rounded-3xl border border-white/10 bg-gradient-to-b from-[#0E0E0E] to-[#0A0A0A] p-10 sm:p-12 md:p-20 overflow-hidden text-center">
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,245,212,0.10),transparent_70%)] pointer-events-none" />
             <div className="absolute inset-x-0 top-0 h-px divider-line" />
-            <div className="absolute inset-x-0 bottom-0 h-px divider-line opacity-60" />
-
-            <div className="absolute top-3 left-3 w-5 h-5 border-t border-l border-[#00F5D4]/60 pointer-events-none" />
-            <div className="absolute top-3 right-3 w-5 h-5 border-t border-r border-[#00F5D4]/60 pointer-events-none" />
-            <div className="absolute bottom-3 left-3 w-5 h-5 border-b border-l border-[#00F5D4]/60 pointer-events-none" />
-            <div className="absolute bottom-3 right-3 w-5 h-5 border-b border-r border-[#00F5D4]/60 pointer-events-none" />
-
-            <div className="absolute top-6 left-6 hidden md:flex items-center gap-2 text-[10px] font-mono uppercase tracking-[0.22em] text-white/40 pointer-events-none">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#00F5D4] animate-pulse" />
-              DOC.AICA / V01
-            </div>
-            <div className="absolute top-6 right-6 hidden md:block text-[10px] font-mono uppercase tracking-[0.22em] text-white/40 pointer-events-none">
-              LIVE
-            </div>
-
-            <div className="relative grid grid-cols-1 md:grid-cols-5 gap-10 md:gap-12 items-center mt-6 md:mt-4">
-              <div className="md:col-span-3 order-1">
-                <SectionLabel>Visual Whitepaper</SectionLabel>
-                <motion.h2
-                  initial={{ opacity: 0, y: 16 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-80px" }}
-                  transition={{ duration: 0.6 }}
-                  className="mt-5 text-3xl sm:text-4xl md:text-5xl font-serif font-semibold text-gradient leading-[1.05]"
-                >
-                  See the layer in motion.
-                </motion.h2>
-                <p className="mt-5 text-base sm:text-lg text-white/65 leading-relaxed max-w-xl">
-                  The full thesis, architecture, and economic engine of the agentic intelligence layer - laid out in one document.
-                </p>
-                <div className="mt-7 flex flex-wrap gap-3">
-                  <Link href="/litepaper">
-                    <Button size="lg" className="rounded-full h-12 px-8 bg-[#00F5D4] text-black hover:bg-[#00F5D4]/90 font-medium">
-                      Read the whitepaper <ArrowRight className="ml-2 w-4 h-4" />
-                    </Button>
-                  </Link>
-                  <Link href="/litepaper#tokenomics">
-                    <Button
-                      size="lg"
-                      variant="outline"
-                      className="rounded-full h-12 px-7 border-white/15 bg-transparent text-white hover:bg-white/5"
-                    >
-                      Tokenomics
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-              <div className="md:col-span-2 order-2 flex justify-center">
-                <WhitepaperVisual
-                  className="w-60 sm:w-72 md:w-full max-w-[340px]"
-                  testId="img-whitepaper-visual"
-                />
+            <div className="relative">
+              <SectionLabel>Visual Whitepaper</SectionLabel>
+              <motion.h2
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{ duration: 0.6 }}
+                className="mt-5 text-3xl sm:text-4xl md:text-5xl font-serif font-semibold text-gradient leading-[1.05]"
+              >
+                See the layer in motion.
+              </motion.h2>
+              <p className="mt-5 text-base sm:text-lg text-white/65 leading-relaxed max-w-2xl mx-auto">
+                The full thesis, architecture, and economic engine of the agentic intelligence layer - laid out in one document.
+              </p>
+              <div className="mt-8 flex flex-wrap gap-3 justify-center">
+                <Link href="/litepaper">
+                  <Button size="lg" className="rounded-full h-12 px-8 bg-[#00F5D4] text-black hover:bg-[#00F5D4]/90 font-medium">
+                    Read the whitepaper <ArrowRight className="ml-2 w-4 h-4" />
+                  </Button>
+                </Link>
+                <Link href="/litepaper#tokenomics">
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="rounded-full h-12 px-7 border-white/15 bg-transparent text-white hover:bg-white/5"
+                  >
+                    Tokenomics
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>
