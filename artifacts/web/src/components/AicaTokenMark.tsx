@@ -13,21 +13,7 @@ export default function AicaTokenMark({ className = "", testId }: Props) {
   const idFace = `aicaFace-${uid}`;
   const idGloss = `aicaGloss-${uid}`;
   const idDrop = `aicaDrop-${uid}`;
-
-  const k = 0.41421356;
-  const octagonPoints = (cx: number, cy: number, r: number) =>
-    [
-      [-k, -1],
-      [k, -1],
-      [1, -k],
-      [1, k],
-      [k, 1],
-      [-k, 1],
-      [-1, k],
-      [-1, -k],
-    ]
-      .map(([x, y]) => `${(cx + x * r).toFixed(2)},${(cy + y * r).toFixed(2)}`)
-      .join(" ");
+  const idGlyphGloss = `aicaGlyphGloss-${uid}`;
 
   return (
     <div
@@ -63,6 +49,11 @@ export default function AicaTokenMark({ className = "", testId }: Props) {
             <stop offset="55%" stopColor="#FFFFFF" stopOpacity="0.05" />
             <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0" />
           </radialGradient>
+          <linearGradient id={idGlyphGloss} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#9CFFE9" />
+            <stop offset="50%" stopColor="#00F5D4" />
+            <stop offset="100%" stopColor="#0BAA90" />
+          </linearGradient>
           <filter id={idDrop} x="-20%" y="-10%" width="140%" height="140%">
             <feDropShadow
               dx="0"
@@ -118,20 +109,32 @@ export default function AicaTokenMark({ className = "", testId }: Props) {
           strokeWidth="1"
         />
 
-        <polygon
-          points={octagonPoints(96, 104, 38)}
-          fill="none"
-          stroke="#000000"
-          strokeWidth="9"
-          strokeLinejoin="miter"
-        />
-        <polygon
-          points={octagonPoints(104, 96, 38)}
-          fill="none"
-          stroke={C}
-          strokeWidth="9"
-          strokeLinejoin="miter"
-        />
+        <text
+          x="100"
+          y="116"
+          textAnchor="middle"
+          fontFamily="'Space Grotesk', Inter, system-ui, sans-serif"
+          fontSize="40"
+          fontWeight="700"
+          fill="#000000"
+          fillOpacity="0.55"
+          style={{ letterSpacing: "2px" }}
+          transform="translate(1.6, 2)"
+        >
+          AICA
+        </text>
+        <text
+          x="100"
+          y="116"
+          textAnchor="middle"
+          fontFamily="'Space Grotesk', Inter, system-ui, sans-serif"
+          fontSize="40"
+          fontWeight="700"
+          fill={`url(#${idGlyphGloss})`}
+          style={{ letterSpacing: "2px" }}
+        >
+          AICA
+        </text>
 
         <circle
           cx="100"
