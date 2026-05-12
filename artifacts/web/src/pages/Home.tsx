@@ -9,6 +9,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import DeckCarousel from "@/components/DeckCarousel";
+import spotlightBgUrl from "@assets/Screenshot_2026-05-12_125815_1778554832550.png";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import {
   ArrowRight,
@@ -121,8 +122,19 @@ function ProductSpotlight() {
             }
           }}
         >
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(0,245,212,0.12),transparent_60%)] pointer-events-none" />
-          <div className="absolute inset-0 bg-grid opacity-40 pointer-events-none [mask-image:radial-gradient(ellipse_60%_50%_at_80%_30%,black,transparent_70%)]" />
+          <div
+            aria-hidden
+            className="absolute inset-y-0 right-0 w-[80%] md:w-[65%] pointer-events-none opacity-[0.22] mix-blend-screen [mask-image:linear-gradient(to_left,black_15%,transparent_85%)]"
+            style={{
+              backgroundImage: `url(${spotlightBgUrl})`,
+              backgroundSize: "cover",
+              backgroundPosition: "right center",
+              backgroundRepeat: "no-repeat",
+            }}
+          />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(0,245,212,0.16),transparent_60%)] pointer-events-none" />
+          <div className="absolute inset-0 bg-grid opacity-30 pointer-events-none [mask-image:radial-gradient(ellipse_60%_50%_at_80%_30%,black,transparent_70%)]" />
+          <div className="absolute inset-y-0 left-0 w-1/2 bg-gradient-to-r from-[#0A0A0A] via-[#0A0A0A]/85 to-transparent pointer-events-none" />
 
           <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 p-7 sm:p-10 md:p-14 lg:p-20 min-h-[480px]">
             <AnimatePresence mode="wait">
