@@ -145,7 +145,7 @@ export const PAYMENT_METHODS = [
   },
   {
     value: "crypto",
-    label: "Crypto (USDC)",
-    blurb: "Manually escrowed. Address provided by email after signing.",
+    label: "Crypto (BTC / ETH / SOL / USDC / USDT)",
+    blurb: "Send to our escrow address. Marked funded on-chain by an admin.",
   },
 ] as const;
