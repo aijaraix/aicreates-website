@@ -3,7 +3,7 @@ import { signIn } from "./helpers/auth";
 import { createCommitment } from "./helpers/commitment";
 import { completeSaft } from "./helpers/saft";
 import { postJson } from "./helpers/api";
-import { ADMIN_EMAIL, INVESTOR_EMAIL } from "./helpers/users";
+import { ADMIN_EMAIL } from "./helpers/users";
 
 test.describe("dashboard funded state", () => {
   test.skip(
@@ -11,7 +11,7 @@ test.describe("dashboard funded state", () => {
     "ADMIN_EMAILS env var must include at least one address",
   );
 
-  test("a funded wire commitment surfaces in the dashboard with a vesting schedule", async ({
+  test("a funded wire commitment surfaces in the dashboard with a vesting schedule and per-round line", async ({
     page,
     browser,
   }) => {
@@ -20,7 +20,6 @@ test.describe("dashboard funded state", () => {
     await page.goto(`/invest/saft/${c.id}`);
     await completeSaft(page, {
       legalName: "Portal Investor",
-      email: INVESTOR_EMAIL,
       paymentMethod: "wire",
     });
 
@@ -51,5 +50,10 @@ test.describe("dashboard funded state", () => {
     // The .ics export button only renders for funded commitments with a
     // vesting schedule, so its presence implies the schedule was computed.
     await expect(page.getByTestId(`button-ics-${c.id}`)).toBeVisible();
+
+    // The per-round breakdown should render at least one line. The
+    // multi-round dashboard groups allocations by roundSlug under
+    // `lines-${id}`; legacy single-round commitments also surface here.
+    await expect(page.getByTestId(`lines-${c.id}`)).toBeVisible();
   });
 });

@@ -72,7 +72,6 @@ test.describe("Stripe-hosted ACH (us_bank_account) checkout", () => {
     await page.goto(`/invest/saft/${c.id}`);
     await completeSaft(page, {
       legalName: "Portal Investor",
-      email: INVESTOR_EMAIL,
       paymentMethod: "ach",
     });
 

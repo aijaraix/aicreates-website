@@ -121,8 +121,18 @@ The `web` artifact is **deliberately excluded** from Replit Deployments (no `[se
    - Run `pnpm install --frozen-lockfile`.
    - Run each artifact's production `build`.
    - Start the api-server process (`node --enable-source-maps artifacts/api-server/dist/index.mjs`).
-   - Health-check `/api/healthz`.
+   - Health-check `/api/healthz` (liveness — always 200 if the process is up).
    - Route `/invest/*` to the static SPA bundle.
+
+### Post-deploy smoke test
+
+After publish, verify the deep readiness preflight before sending traffic:
+
+```bash
+curl -s https://invest.aicreates.ai/api/healthz/ready | jq
+```
+
+Expected: `{"status":"ok", checks: { database, clerk, stripe, email, ... }}` with HTTP 200. The route returns 503 if either critical check (`database`, `clerk`) fails. `stripe` and `email` are reported but non-critical — wire-only checkout still works without them.
 
 If publish ever fails with *"Could not find run command"*, the most common cause is that someone re-added a `[services.production]` block to `artifacts/web/.replit-artifact/artifact.toml`. Remove that block — see the inline comment in that file.
 

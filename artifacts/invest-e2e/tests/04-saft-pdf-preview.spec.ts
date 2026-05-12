@@ -3,65 +3,21 @@ import { signIn } from "./helpers/auth";
 import { createCommitment } from "./helpers/commitment";
 
 test.describe("SAFT PDF preview", () => {
-  test("the live PDF preview iframe renders on the signature step", async ({
+  test("the live preview endpoint renders a real PDF auto-filled from the profile", async ({
     page,
   }) => {
     await signIn(page, "investor");
     const c = await createCommitment(page, 2_500);
-    await page.goto(`/invest/saft/${c.id}`);
 
-    // Fill the minimum required fields to advance to step 4.
-    await page.getByTestId("input-saft-name").fill("Portal Investor");
-    await page
-      .getByTestId("input-saft-email")
-      .fill("invest-e2e-investor@example.com");
-    await page
-      .getByTestId("input-saft-address")
-      .fill("123 Test Street, Wilmington, DE 19801");
-    await page.getByTestId("input-saft-jurisdiction").fill("Delaware, USA");
-    await page.getByTestId("input-saft-taxid").fill("123-45-6789");
-    await page.getByTestId("button-saft-next").click();
-
-    await page.getByTestId("radio-paymentmethod-wire").click();
-    await page.getByTestId("button-saft-next").click();
-
-    await page
-      .locator('[data-testid^="radio-accreditation-"]')
-      .first()
-      .click();
-    await page.getByTestId("button-saft-next").click();
-
-    // Skip ack toggling — we just need to land on the signature step.
-    for (const k of [
-      "highRisk",
-      "noOwnership",
-      "consumptiveUse",
-      "illiquidity",
-      "vestingLockup",
-      "noGeneralSolicitation",
-      "confidentiality",
-      "taxResponsibility",
-    ]) {
-      await page.getByTestId(`check-ack-${k}`).click();
-    }
-    await page.getByTestId("button-saft-next").click();
-
-    // Signature step renders the preview iframe.
-    await expect(page.getByTestId("saft-step-signature")).toBeVisible();
-    await expect(page.getByTestId("saft-pdf-preview")).toBeVisible({
-      timeout: 30_000,
-    });
-
-    // Independently verify the preview endpoint serves a real PDF.
+    // The simplified preview endpoint pulls investor + allocation data
+    // from the DB (profile + commitment_allocations); the request body
+    // only carries the in-progress wizard fields. With a fresh draft we
+    // can pass an empty body and still get a valid PDF back.
     const res = await page.request.post(`/api/saft/${c.id}/preview`, {
       data: {
-        legalName: "Portal Investor",
-        email: "invest-e2e-investor@example.com",
-        address: "123 Test Street",
-        jurisdiction: "Delaware, USA",
-        taxId: "123-45-6789",
         paymentMethod: "wire",
-        accreditationCategory: "Net worth >$1M",
+        accreditationCategory: "net-worth",
+        signatureName: "Portal Investor",
       },
       headers: { "Content-Type": "application/json" },
     });

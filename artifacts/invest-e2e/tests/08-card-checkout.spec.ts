@@ -21,7 +21,6 @@ test.describe("Stripe-hosted card checkout", () => {
     await page.goto(`/invest/saft/${c.id}`);
     await completeSaft(page, {
       legalName: "Portal Investor",
-      email: INVESTOR_EMAIL,
       paymentMethod: "card",
     });
 

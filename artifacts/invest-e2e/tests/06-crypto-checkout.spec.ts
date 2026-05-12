@@ -3,7 +3,7 @@ import { signIn } from "./helpers/auth";
 import { createCommitment } from "./helpers/commitment";
 import { completeSaft } from "./helpers/saft";
 import { getJson } from "./helpers/api";
-import { ADMIN_EMAIL, INVESTOR_EMAIL } from "./helpers/users";
+import { ADMIN_EMAIL } from "./helpers/users";
 
 interface AdminCommitmentsResponse {
   commitments: Array<{
@@ -29,7 +29,6 @@ test.describe("crypto checkout + admin confirm", () => {
     await page.goto(`/invest/saft/${c.id}`);
     await completeSaft(page, {
       legalName: "Portal Investor",
-      email: INVESTOR_EMAIL,
       paymentMethod: "crypto",
     });
 
