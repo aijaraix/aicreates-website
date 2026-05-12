@@ -57,6 +57,12 @@ async function clickAny(
 }
 
 test.describe("Stripe-hosted ACH (us_bank_account) checkout", () => {
+  // Skipped by default: drives Stripe's Financial Connections hosted UI
+  // (vendor surface outside our control). Set RUN_STRIPE_UI=1 to opt in.
+  test.skip(
+    !process.env["RUN_STRIPE_UI"],
+    "Stripe-hosted ACH UI tests are opt-in (set RUN_STRIPE_UI=1).",
+  );
   test.skip(
     !STRIPE_CONFIGURED,
     "Stripe is not configured (no STRIPE_SECRET_KEY and no REPLIT_CONNECTORS_HOSTNAME).",

@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, type Page } from "@playwright/test";
 import { signIn } from "./helpers/auth";
 import { INVESTOR_EMAIL } from "./helpers/users";
 import { resetInvestorProfile } from "./helpers/dbReset";
@@ -20,23 +20,25 @@ test.describe("profile gate", () => {
       page.getByTestId("button-profile-kind-individual"),
     ).toBeVisible();
 
-    // Fill the minimum required fields. Labels copied verbatim from
-    // Profile.tsx so the assertions don't drift if the copy changes.
+    // Fill required fields by stable test-id (Profile.tsx renders the
+    // <label> text and the <input> as siblings without htmlFor/id, so
+    // getByLabel is unreliable here).
     await page.getByTestId("button-profile-kind-individual").click();
-    await fillByLabel(page, "Email", INVESTOR_EMAIL);
-    await fillByLabel(page, "Address line 1", "123 Test Street");
-    await fillByLabel(page, "City", "Wilmington");
-    await fillByLabel(page, "State / Region", "DE");
-    await fillByLabel(page, "Postal code", "19801");
-    await fillByLabel(page, "Country (ISO 2-letter)", "US");
-    await fillByLabel(page, "Legal first name", "Portal");
-    await fillByLabel(page, "Legal last name", "Investor");
-    await fillByLabel(page, "Date of birth", "1990-01-01");
+    await fill(page, "input-profile-email", INVESTOR_EMAIL);
+    await fill(page, "input-profile-address1", "123 Test Street");
+    await fill(page, "input-profile-city", "Wilmington");
+    await fill(page, "input-profile-region", "DE");
+    await fill(page, "input-profile-postal", "19801");
+    await fill(page, "input-profile-country", "US");
+    await fill(page, "input-profile-firstname", "Portal");
+    await fill(page, "input-profile-lastname", "Investor");
+    await fill(page, "input-profile-dob", "1990-01-01");
 
     await page.getByTestId("button-profile-save").click();
 
-    // After save the form's onSuccess routes to ?next= (which defaults
-    // to /invest). Verify RequireProfile no longer bounces us.
+    // After save the form's onSuccess primes the ["me","profile"] cache
+    // with the freshly-saved profile and only then navigates, so
+    // RequireProfile must NOT bounce us back to /profile.
     await page.waitForURL(/\/invest\/invest/, { timeout: 15_000 });
     await expect(page.getByTestId("input-usd-strategic-seed")).toBeVisible({
       timeout: 30_000,
@@ -44,18 +46,8 @@ test.describe("profile gate", () => {
   });
 });
 
-async function fillByLabel(
-  page: import("@playwright/test").Page,
-  label: string,
-  value: string,
-): Promise<void> {
-  // Labels in Profile.tsx render as <label>{label}</label><input>.
-  // Use exact match to avoid e.g. "Date of birth" matching "Date of formation".
-  const input = page
-    .getByLabel(label, { exact: true })
-    .first();
-  await input.waitFor({ state: "visible", timeout: 5_000 }).catch(() => {});
-  if (await input.isVisible().catch(() => false)) {
-    await input.fill(value);
-  }
+async function fill(page: Page, testId: string, value: string): Promise<void> {
+  // Fail-fast: if the test-id moves the spec must surface that, not
+  // silently skip.
+  await page.getByTestId(testId).fill(value);
 }

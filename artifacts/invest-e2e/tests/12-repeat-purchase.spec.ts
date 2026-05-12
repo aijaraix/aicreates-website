@@ -48,7 +48,7 @@ test.describe("repeat purchase", () => {
     // Cart starts empty; total is $0.
     await expect(page.getByTestId("cart-total-usd")).toContainText("$0");
 
-    // Second commitment via the cart UI.
+    // Second commitment via the cart UI at the documented minimum.
     await usd.fill("1000");
     await page.getByTestId("button-cart-continue").click();
     await page.waitForURL(/\/invest\/saft\/[a-zA-Z0-9-]+/, {

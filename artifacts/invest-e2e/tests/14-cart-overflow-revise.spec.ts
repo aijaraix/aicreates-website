@@ -1,8 +1,8 @@
 import { test, expect } from "@playwright/test";
 import { signIn } from "./helpers/auth";
 
-test.describe("AllocationCart 409 auto-revise", () => {
-  test("over-committing in the cart shows the revised banner and a re-confirm step", async ({
+test.describe("AllocationCart capacity overflow", () => {
+  test("over-committing in the cart shows the overflow banner and disables Continue", async ({
     page,
   }) => {
     await signIn(page, "investor");
@@ -11,35 +11,24 @@ test.describe("AllocationCart 409 auto-revise", () => {
     const usd = page.getByTestId("input-usd-strategic-seed");
     await expect(usd).toBeVisible({ timeout: 30_000 });
 
-    // strategic-seed has $3M raise + a $10M custom cap. Asking for $9M
-    // is below the cap (so we don't trigger the 400 cap rejection) but
-    // still well above the round's available capacity, so the server
-    // returns 409 capacity_exceeded and the cart auto-revises.
+    // strategic-seed has 200M tokens for sale. Asking for $9M (= 600M
+    // tokens at $0.015) clearly exceeds it, so the cart's client-side
+    // capacity check should flag it BEFORE we ever hit the server.
     await usd.fill("9000000");
-    await page.getByTestId("button-cart-continue").click();
 
-    // The cart should now show the revised banner asking the user to
-    // confirm the smaller amount the server allowed.
-    await expect(page.getByTestId("cart-revised-banner")).toBeVisible({
+    // The per-row + summary overflow banner appears, and Continue is
+    // disabled, preventing the user from posting a known-bad request.
+    // (This is the deterministic UX. The server-side 409 auto-revise
+    // path only runs when two investors race for the same capacity -
+    // it's exercised via the race-condition follow-up task, not here.)
+    await expect(page.getByTestId("cart-overflow-banner")).toBeVisible({
       timeout: 15_000,
     });
+    await expect(page.getByTestId("button-cart-continue")).toBeDisabled();
 
-    // Continuing again must be a deliberate second click (the requirement
-    // for a re-confirm). After the second click we either land on the
-    // SAFT wizard (revised total >= $1k floor) or stay put with another
-    // banner if availability collapsed to zero. The deterministic check
-    // is that the second click no longer surfaces a fresh capacity
-    // error - the revised total is by construction within capacity.
-    await page.getByTestId("button-cart-continue").click();
-
-    // Either path is acceptable: navigation to /saft/:id, OR the cart
-    // total now equals the revised (within-capacity) amount. We assert
-    // navigation when the revised total is non-zero (the common case).
-    await Promise.race([
-      page.waitForURL(/\/invest\/saft\/[a-zA-Z0-9-]+/, { timeout: 15_000 }),
-      // Fallback: if availability collapsed mid-test, the banner stays
-      // visible; that's still a valid pass for the auto-revise contract.
-      expect(page.getByTestId("cart-revised-banner")).toBeVisible(),
-    ]);
+    // Reducing the request below available re-enables Continue.
+    await usd.fill("1500");
+    await expect(page.getByTestId("cart-overflow-banner")).toHaveCount(0);
+    await expect(page.getByTestId("button-cart-continue")).toBeEnabled();
   });
 });

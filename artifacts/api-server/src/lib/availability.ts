@@ -100,8 +100,17 @@ async function reservedByRound(
     EXPIRABLE_STATES.map((s) => sql`${s}`),
     sql`, `,
   )}]::text[]`;
+  // Wrap RESERVING_STATES as a typed text[] literal too. Passing the
+  // raw JS array to sql`` makes drizzle splat it as positional params
+  // (`($1,$2,...)`) which Postgres reads as a row constructor and
+  // rejects against a text column. ARRAY[...]::text[] is the typed
+  // form that compares correctly with `c.state`.
+  const reservingSql = sql`ARRAY[${sql.join(
+    RESERVING_STATES.map((s) => sql`${s}`),
+    sql`, `,
+  )}]::text[]`;
   const reservingFilter = sql`(
-    c.state = ANY(${RESERVING_STATES})
+    c.state = ANY(${reservingSql})
     AND (
       NOT (c.state = ANY(${expirableSql}))
       OR c.created_at > now() - (${ttlDays}::int * INTERVAL '1 day')

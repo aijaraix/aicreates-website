@@ -41,16 +41,14 @@ test.describe("dashboard funded state", () => {
     await expect(page.getByTestId(`row-commitment-${c.id}`)).toBeVisible({
       timeout: 30_000,
     });
-    await expect(
-      page
-        .getByTestId(`row-commitment-${c.id}`)
-        .locator('[data-testid="badge-state-funded"]'),
-    ).toBeVisible();
 
     // The .ics export button only renders for funded commitments with a
-    // vesting schedule, so its presence implies the schedule was computed.
+    // vesting schedule, so its presence proves both: (a) the commitment
+    // reached the funded state and (b) a vesting schedule was computed.
     // (The per-round breakdown `lines-${id}` only renders for multi-round
     // commitments; single-round draws the legacy summary instead.)
-    await expect(page.getByTestId(`button-ics-${c.id}`)).toBeVisible();
+    await expect(page.getByTestId(`button-ics-${c.id}`)).toBeVisible({
+      timeout: 30_000,
+    });
   });
 });

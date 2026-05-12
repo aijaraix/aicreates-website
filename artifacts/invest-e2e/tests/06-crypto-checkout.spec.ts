@@ -43,9 +43,19 @@ test.describe("crypto checkout + admin confirm", () => {
     const adminPage = await adminCtx.newPage();
     await signIn(adminPage, "admin");
     await adminPage.goto("/invest/admin");
-    await adminPage.getByTestId("button-filter-awaiting_crypto").click();
+    await adminPage.getByTestId("tab-commitments").click();
+    await adminPage
+      .getByTestId("select-status-filter")
+      .selectOption("awaiting_crypto");
     adminPage.once("dialog", (d) => d.accept());
-    await adminPage.getByTestId(`button-confirm-crypto-${c.id}`).click();
+    await Promise.all([
+      adminPage.waitForResponse(
+        (r) =>
+          r.url().includes(`/api/admin/commitments/${c.id}/confirm-crypto`) &&
+          r.request().method() === "POST",
+      ),
+      adminPage.getByTestId(`button-confirm-crypto-${c.id}`).click(),
+    ]);
 
     const after = await getJson<AdminCommitmentsResponse>(
       adminPage,

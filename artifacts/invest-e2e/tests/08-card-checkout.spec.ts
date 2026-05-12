@@ -10,6 +10,14 @@ test.describe("Stripe-hosted card checkout", () => {
     !STRIPE_CONFIGURED,
     "Stripe is not configured (no STRIPE_SECRET_KEY and no REPLIT_CONNECTORS_HOSTNAME).",
   );
+  // Skipped by default: this drives Stripe's hosted Checkout UI (a vendor
+  // surface outside our control). Stripe ships UI changes that break our
+  // input selectors with no notice. Set RUN_STRIPE_UI=1 to opt-in locally
+  // when validating the live integration end-to-end.
+  test.skip(
+    !process.env["RUN_STRIPE_UI"],
+    "Stripe-hosted Checkout UI tests are opt-in (set RUN_STRIPE_UI=1).",
+  );
   test.setTimeout(240_000);
 
   test("4242 test card flips the commitment to funded via the Stripe webhook", async ({

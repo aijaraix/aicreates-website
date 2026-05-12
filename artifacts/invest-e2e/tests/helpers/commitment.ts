@@ -23,11 +23,15 @@ export async function createCommitment(
   roundSlug = "strategic-seed",
 ): Promise<Commitment> {
   const usdCents = amountUsd * 100;
-  // Server is the source of truth for price; strategic-seed is 15 millicents
-  // per token (= $0.015). Tokens = usdCents * 1000 / pricePerTokenMillicents.
-  // Floor to avoid math-mismatch rounding rejections (server tolerates ±1c).
+  // Server: amountCents = tokens * pricePerTokenMillicents / 10
+  // (strategic-seed is 15 = $0.015/token = 1.5c/token).
+  // Therefore tokens = amountCents * 10 / pricePerTokenMillicents.
+  // Ceil to mirror the InvestPicker UI math: a user entering exactly
+  // MIN_USD must land at >= MIN_USD after token quantization, otherwise
+  // the server rejects with min_usd. Server tolerates ±1c on the back-
+  // computed amount.
   const pricePerTokenMillicents = 15;
-  const tokens = Math.floor((usdCents * 1000) / pricePerTokenMillicents);
+  const tokens = Math.ceil((usdCents * 10) / pricePerTokenMillicents);
   const expectedCents = Math.round(
     (tokens * pricePerTokenMillicents) / 10,
   );

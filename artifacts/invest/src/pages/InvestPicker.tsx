@@ -47,8 +47,11 @@ function priceLabel(millicents: number) {
 }
 
 function tokensFromUsdCents(usdCents: number, millicents: number): number {
-  if (millicents <= 0) return 0;
-  return Math.floor((usdCents * 10) / millicents);
+  if (millicents <= 0 || usdCents <= 0) return 0;
+  // Round UP so a user entering exactly the $1k minimum lands at >= $1k
+  // after token quantization, instead of $999.99 which silently fails
+  // the MIN_USD check and disables Continue.
+  return Math.ceil((usdCents * 10) / millicents);
 }
 
 function usdCentsFromTokens(tokens: number, millicents: number): number {

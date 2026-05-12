@@ -149,8 +149,13 @@ export default function Profile() {
         body: payload,
       });
     },
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["me", "profile"] });
+    onSuccess: async (saved) => {
+      // Prime the cache with the freshly-saved profile BEFORE navigating
+      // so RequireProfile (which gates /invest, /saft, /checkout) does
+      // not see a stale "no profile" snapshot and bounce the user back
+      // to /profile while the invalidation refetch is in flight.
+      qc.setQueryData(["me", "profile"], saved);
+      await qc.invalidateQueries({ queryKey: ["me", "profile"] });
       const next =
         new URLSearchParams(window.location.search).get("next") ?? "/invest";
       setLocation(next);
