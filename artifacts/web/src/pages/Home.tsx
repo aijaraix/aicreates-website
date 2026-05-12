@@ -10,7 +10,7 @@ import {
   Brain,
   Infinity as InfinityIcon,
 } from "lucide-react";
-import WhitepaperBook from "@/components/WhitepaperBook";
+import WhitepaperVisual from "@/components/WhitepaperVisual";
 import { useSeo } from "@/lib/useSeo";
 
 const AUDIENCES = [
@@ -459,9 +459,26 @@ export default function Home() {
       <section className="py-14 md:py-20 relative">
         <div className="container mx-auto px-4 md:px-6 w-full">
           <div className="relative max-w-6xl mx-auto rounded-3xl border border-white/10 bg-gradient-to-b from-[#0E0E0E] to-[#0A0A0A] p-8 sm:p-10 md:p-14 overflow-hidden">
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(0,245,212,0.10),transparent_60%)] pointer-events-none" />
+            <div className="absolute inset-0 bg-grid opacity-[0.18] pointer-events-none [mask-image:radial-gradient(ellipse_70%_60%_at_30%_40%,black,transparent_85%)]" />
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(0,245,212,0.14),transparent_55%)] pointer-events-none" />
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,rgba(0,245,212,0.08),transparent_60%)] pointer-events-none" />
             <div className="absolute inset-x-0 top-0 h-px divider-line" />
-            <div className="relative grid grid-cols-1 md:grid-cols-5 gap-10 md:gap-12 items-center">
+            <div className="absolute inset-x-0 bottom-0 h-px divider-line opacity-60" />
+
+            <div className="absolute top-3 left-3 w-5 h-5 border-t border-l border-[#00F5D4]/60 pointer-events-none" />
+            <div className="absolute top-3 right-3 w-5 h-5 border-t border-r border-[#00F5D4]/60 pointer-events-none" />
+            <div className="absolute bottom-3 left-3 w-5 h-5 border-b border-l border-[#00F5D4]/60 pointer-events-none" />
+            <div className="absolute bottom-3 right-3 w-5 h-5 border-b border-r border-[#00F5D4]/60 pointer-events-none" />
+
+            <div className="absolute top-6 left-6 hidden md:flex items-center gap-2 text-[10px] font-mono uppercase tracking-[0.22em] text-white/40 pointer-events-none">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#00F5D4] animate-pulse" />
+              DOC.AICA / V01
+            </div>
+            <div className="absolute top-6 right-6 hidden md:block text-[10px] font-mono uppercase tracking-[0.22em] text-white/40 pointer-events-none">
+              LIVE
+            </div>
+
+            <div className="relative grid grid-cols-1 md:grid-cols-5 gap-10 md:gap-12 items-center mt-6 md:mt-4">
               <div className="md:col-span-3 order-1">
                 <SectionLabel>Visual Whitepaper</SectionLabel>
                 <motion.h2
@@ -494,9 +511,9 @@ export default function Home() {
                 </div>
               </div>
               <div className="md:col-span-2 order-2 flex justify-center">
-                <WhitepaperBook
-                  className="w-56 sm:w-64 md:w-full max-w-[300px]"
-                  testId="img-whitepaper-book"
+                <WhitepaperVisual
+                  className="w-60 sm:w-72 md:w-full max-w-[340px]"
+                  testId="img-whitepaper-visual"
                 />
               </div>
             </div>
