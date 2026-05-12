@@ -8,7 +8,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import WhitepaperVisual from "@/components/WhitepaperVisual";
+import DeckCarousel from "@/components/DeckCarousel";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import {
   ArrowRight,
@@ -533,41 +533,19 @@ export default function Home() {
       </section>
 
       <Dialog open={deckOpen} onOpenChange={setDeckOpen}>
-        <DialogContent className="max-w-3xl bg-[#0A0A0A] border-white/10 text-white">
+        <DialogContent className="max-w-5xl bg-[#0A0A0A] border-white/10 text-white p-6 md:p-8">
           <DialogHeader>
-            <DialogTitle className="text-2xl font-serif text-gradient">Pitch Deck Preview</DialogTitle>
+            <DialogTitle className="text-2xl font-serif text-gradient">AICA Visual Whitepaper</DialogTitle>
             <DialogDescription className="text-white/55">
-              An at-a-glance preview of the AIcreatesAI deck. Full deck arrives soon - reach out for early access.
+              Step through the deck - use arrows, swipe, or open it fullscreen.
             </DialogDescription>
           </DialogHeader>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center mt-2">
-            <div className="flex justify-center">
-              <WhitepaperVisual className="w-64 sm:w-72 md:w-full max-w-[320px]" testId="img-deck-preview" />
-            </div>
-            <div className="space-y-4">
-              <div className="text-[10px] font-mono uppercase tracking-[0.22em] text-white/40">
-                Inside the deck
-              </div>
-              <ul className="space-y-2 text-sm text-white/75">
-                <li className="flex gap-3"><span className="text-[#00F5D4] font-mono text-xs mt-0.5">01</span> Architecture</li>
-                <li className="flex gap-3"><span className="text-[#00F5D4] font-mono text-xs mt-0.5">02</span> Hybrid Compute Fabric</li>
-                <li className="flex gap-3"><span className="text-[#00F5D4] font-mono text-xs mt-0.5">03</span> Quality Engine</li>
-                <li className="flex gap-3"><span className="text-[#00F5D4] font-mono text-xs mt-0.5">04</span> Tokenomics</li>
-                <li className="flex gap-3"><span className="text-[#00F5D4] font-mono text-xs mt-0.5">05</span> Roadmap</li>
-              </ul>
-              <div className="flex flex-wrap gap-2 pt-2">
-                <Link href="/litepaper">
-                  <Button onClick={() => setDeckOpen(false)} className="rounded-full bg-[#00F5D4] text-black hover:bg-[#00F5D4]/90 font-medium">
-                    Read the litepaper <ArrowRight className="ml-2 w-4 h-4" />
-                  </Button>
-                </Link>
-                <Link href="/contact?interest=Investor">
-                  <Button onClick={() => setDeckOpen(false)} variant="outline" className="rounded-full border-white/15 bg-transparent text-white hover:bg-white/5">
-                    Request full deck
-                  </Button>
-                </Link>
-              </div>
-            </div>
+          <div className="mt-2">
+            <DeckCarousel
+              title="AICA Visual Whitepaper"
+              subline="Swipe, arrow keys, or fullscreen."
+              testIdPrefix="deck-home-modal"
+            />
           </div>
         </DialogContent>
       </Dialog>
