@@ -41,21 +41,47 @@ router.get("/healthz/ready", async (_req, res) => {
     };
   }
 
-  // Clerk env presence. Critical: auth is required for the portal.
-  const clerkOk = Boolean(
-    process.env["CLERK_SECRET_KEY"] &&
-      process.env["VITE_CLERK_PUBLISHABLE_KEY"],
-  );
-  checks["clerk"] = {
-    ok: clerkOk,
-    critical: true,
-    ...(clerkOk
-      ? {}
-      : {
-          detail:
-            "CLERK_SECRET_KEY and/or VITE_CLERK_PUBLISHABLE_KEY missing",
-        }),
-  };
+  // Clerk reachability. Critical: auth is required for the portal.
+  // First verify both env vars exist; then probe Clerk's API with a
+  // 3s-budgeted authenticated request so a stale or revoked secret
+  // surfaces as a hard 503 instead of a soft 200.
+  const secretKey = process.env["CLERK_SECRET_KEY"];
+  const publishableKey = process.env["VITE_CLERK_PUBLISHABLE_KEY"];
+  if (!secretKey || !publishableKey) {
+    checks["clerk"] = {
+      ok: false,
+      critical: true,
+      detail: "CLERK_SECRET_KEY and/or VITE_CLERK_PUBLISHABLE_KEY missing",
+    };
+  } else {
+    try {
+      const ctrl = new AbortController();
+      const t = setTimeout(() => ctrl.abort(), 3_000);
+      // limit=1 keeps the response tiny. Any 2xx/4xx response from Clerk
+      // (even an empty 200) proves the API is reachable AND the secret
+      // is well-formed. 401/403 means the secret is invalid -> not ok.
+      const resp = await fetch(
+        "https://api.clerk.com/v1/users?limit=1",
+        {
+          headers: { Authorization: `Bearer ${secretKey}` },
+          signal: ctrl.signal,
+        },
+      );
+      clearTimeout(t);
+      const ok = resp.status >= 200 && resp.status < 400;
+      checks["clerk"] = {
+        ok,
+        critical: true,
+        ...(ok ? {} : { detail: `clerk responded ${resp.status}` }),
+      };
+    } catch (err) {
+      checks["clerk"] = {
+        ok: false,
+        critical: true,
+        detail: `clerk unreachable: ${(err as Error).message}`,
+      };
+    }
+  }
 
   // Stripe credentials. Non-critical: portal renders without it; only
   // card/ACH/crypto checkout breaks. Wire flow keeps working.

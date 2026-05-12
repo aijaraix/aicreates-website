@@ -29,6 +29,13 @@ export async function signIn(
       "Admin sign-in requested but ADMIN_EMAILS env var is empty.",
     );
   }
+  // Seed the profile BEFORE Clerk sign-in. The seed touches only
+  // the DB + Clerk REST API (no page session needed), so doing it
+  // first means we don't slow the post-signIn navigation window and
+  // RequireProfile won't bounce us to /profile after sign-in.
+  if (seedProfile) {
+    await seedInvestorProfile(page, email);
+  }
   await setupClerkTestingToken({ page });
   await page.goto("/invest/sign-in");
   await clerk.loaded({ page });
@@ -42,9 +49,6 @@ export async function signIn(
   });
   await page.goto("/invest/dashboard");
   await page.waitForURL(/\/invest\/(dashboard|profile)/);
-  if (seedProfile) {
-    await seedInvestorProfile(page, email);
-  }
   return email;
 }
 
