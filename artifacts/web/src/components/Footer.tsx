@@ -22,9 +22,10 @@ export function Footer() {
           <div className="md:col-span-2">
             <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-white/40 mb-5">Platform</h4>
             <ul className="space-y-3">
-              <li><Link href="/platform"><span className="text-sm text-white/70 hover:text-[#00F5D4] transition-colors cursor-pointer">Platform</span></Link></li>
-              <li><Link href="/agents"><span className="text-sm text-white/70 hover:text-[#00F5D4] transition-colors cursor-pointer">Agents</span></Link></li>
-              <li><Link href="/company-in-a-box"><span className="text-sm text-white/70 hover:text-[#00F5D4] transition-colors cursor-pointer">Company in a Box</span></Link></li>
+              <li><Link href="/about"><span className="text-sm text-white/70 hover:text-[#00F5D4] transition-colors cursor-pointer">About</span></Link></li>
+              <li><Link href="/about#platform"><span className="text-sm text-white/70 hover:text-[#00F5D4] transition-colors cursor-pointer">Platform</span></Link></li>
+              <li><Link href="/about#agents"><span className="text-sm text-white/70 hover:text-[#00F5D4] transition-colors cursor-pointer">Agents</span></Link></li>
+              <li><Link href="/about#company-in-a-box"><span className="text-sm text-white/70 hover:text-[#00F5D4] transition-colors cursor-pointer">Company in a Box</span></Link></li>
               <li><Link href="/token"><span className="text-sm text-white/70 hover:text-[#00F5D4] transition-colors cursor-pointer">Token</span></Link></li>
             </ul>
           </div>

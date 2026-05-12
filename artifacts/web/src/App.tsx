@@ -14,9 +14,7 @@ import { Footer } from "@/components/Footer";
 import Home from "@/pages/Home";
 import EveOS from "@/pages/EveOS";
 import NeoBank from "@/pages/NeoBank";
-import Platform from "@/pages/Platform";
-import CompanyInABox from "@/pages/CompanyInABox";
-import Agents from "@/pages/Agents";
+import About from "@/pages/About";
 import Business from "@/pages/Business";
 import Developers from "@/pages/Developers";
 import Token from "@/pages/Token";
@@ -58,9 +56,10 @@ function Router() {
     <AnimatePresence mode="wait">
       <Switch location={location} key={location}>
         <Route path="/" component={() => <PageTransition><Home /></PageTransition>} />
-        <Route path="/platform" component={() => <PageTransition><Platform /></PageTransition>} />
-        <Route path="/company-in-a-box" component={() => <PageTransition><CompanyInABox /></PageTransition>} />
-        <Route path="/agents" component={() => <PageTransition><Agents /></PageTransition>} />
+        <Route path="/about" component={() => <PageTransition><About /></PageTransition>} />
+        <Route path="/platform" component={() => <PageTransition><About /></PageTransition>} />
+        <Route path="/agents" component={() => <PageTransition><About /></PageTransition>} />
+        <Route path="/company-in-a-box" component={() => <PageTransition><About /></PageTransition>} />
         <Route path="/business" component={() => <PageTransition><Business /></PageTransition>} />
         <Route path="/developers" component={() => <PageTransition><Developers /></PageTransition>} />
         <Route path="/token" component={() => <PageTransition><Token /></PageTransition>} />

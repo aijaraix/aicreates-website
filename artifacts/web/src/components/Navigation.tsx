@@ -11,9 +11,6 @@ import {
 } from "./ui/dropdown-menu";
 
 const PRODUCT_LINKS = [
-  { name: "Platform", path: "/platform", desc: "The agentic intelligence layer" },
-  { name: "Agents", path: "/agents", desc: "A coordinated team across every function" },
-  { name: "Company in a Box", path: "/company-in-a-box", desc: "Run a coordinated virtual company" },
   { name: "Eve OS", path: "/eve-os", desc: "The Agentic Business Operating System" },
   { name: "NeoBank", path: "/neobank", desc: "Capital that thinks" },
   { name: "Token", path: "/token", desc: "$AICA - the native asset of the layer" },
@@ -25,6 +22,7 @@ const SOLUTION_LINKS = [
 ];
 
 const NAV_LINKS = [
+  { name: "About", path: "/about" },
   { name: "Roadmap", path: "/roadmap" },
   { name: "Litepaper", path: "/litepaper" },
   { name: "Contact", path: "/contact" },
