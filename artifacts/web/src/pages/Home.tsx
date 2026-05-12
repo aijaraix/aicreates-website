@@ -124,19 +124,18 @@ function ProductSpotlight() {
         >
           <div
             aria-hidden
-            className="absolute inset-y-0 right-0 w-[80%] md:w-[65%] pointer-events-none opacity-[0.22] mix-blend-screen [mask-image:linear-gradient(to_left,black_15%,transparent_85%)]"
+            className="absolute inset-y-0 right-0 w-[78%] md:w-[68%] pointer-events-none opacity-[0.55] [mask-image:linear-gradient(to_left,black_30%,transparent_92%)]"
             style={{
               backgroundImage: `url(${spotlightBgUrl})`,
-              backgroundSize: "cover",
+              backgroundSize: "175% auto",
               backgroundPosition: "right center",
               backgroundRepeat: "no-repeat",
             }}
           />
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(0,245,212,0.16),transparent_60%)] pointer-events-none" />
-          <div className="absolute inset-0 bg-grid opacity-30 pointer-events-none [mask-image:radial-gradient(ellipse_60%_50%_at_80%_30%,black,transparent_70%)]" />
-          <div className="absolute inset-y-0 left-0 w-1/2 bg-gradient-to-r from-[#0A0A0A] via-[#0A0A0A]/85 to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(0,245,212,0.18),transparent_60%)] pointer-events-none" />
+          <div className="absolute inset-y-0 left-0 w-2/3 bg-gradient-to-r from-[#0A0A0A] via-[#0A0A0A]/90 to-transparent pointer-events-none" />
 
-          <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 p-7 sm:p-10 md:p-14 lg:p-20 min-h-[480px]">
+          <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-8 p-7 sm:p-10 md:p-14 lg:p-20 min-h-[480px]">
             <AnimatePresence mode="wait">
               <motion.div
                 key={`text-${slide.id}`}
@@ -144,6 +143,7 @@ function ProductSpotlight() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -8 }}
                 transition={{ duration: 0.5 }}
+                className="max-w-xl"
               >
                 <SectionLabel>{slide.label}</SectionLabel>
                 <h2 className="mt-5 text-4xl sm:text-5xl md:text-7xl font-serif font-semibold text-white leading-[1.0] mb-4 tracking-tight">
@@ -166,35 +166,7 @@ function ProductSpotlight() {
                 </Link>
               </motion.div>
             </AnimatePresence>
-
-            <div className="relative min-h-[320px] flex items-center justify-center">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-72 h-72 md:w-96 md:h-96 rounded-full border border-[#00F5D4]/20 animate-[spin_40s_linear_infinite]" />
-                <div className="absolute w-56 h-56 md:w-72 md:h-72 rounded-full border border-white/10 animate-[spin_30s_linear_infinite_reverse]" />
-                <div className="absolute w-40 h-40 md:w-52 md:h-52 rounded-full border border-white/5" />
-                <div className="absolute w-24 h-24 rounded-full bg-gradient-to-br from-[#00F5D4]/30 to-transparent blur-xl" />
-                <div className="absolute w-3 h-3 rounded-full bg-[#00F5D4] shadow-[0_0_30px_rgba(0,245,212,0.9)]" />
-              </div>
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={`pills-${slide.id}`}
-                  initial={{ opacity: 0, scale: 0.96 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.96 }}
-                  transition={{ duration: 0.5 }}
-                  className="relative z-10 grid grid-cols-2 gap-3 text-xs"
-                >
-                  {slide.pills.map((t) => (
-                    <div
-                      key={t}
-                      className="px-3 py-2 rounded-full bg-black/60 backdrop-blur border border-white/10 text-white/70 text-center"
-                    >
-                      {t}
-                    </div>
-                  ))}
-                </motion.div>
-              </AnimatePresence>
-            </div>
+            <div aria-hidden className="hidden lg:block" />
           </div>
         </motion.div>
 
