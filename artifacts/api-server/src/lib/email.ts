@@ -1,0 +1,301 @@
+/**
+ * Transactional email via Resend. Graceful no-op when RESEND_API_KEY is
+ * not configured so the rest of the portal keeps working in dev and in
+ * any production where the operator hasn't wired email yet.
+ *
+ * Templates are intentionally inline + plain (no MJML/JSX) so this file
+ * stays a single dependency-light unit. Each helper takes the bare data
+ * the route already has and produces both subject + HTML + text.
+ */
+import { Resend } from "resend";
+import { logger } from "./logger";
+
+const FROM_DEFAULT = "AICreatesAI <hello@aicreates.ai>";
+const REPLY_TO_DEFAULT = "sholom@aicreates.ai";
+const BRAND_BG = "#0A0A0A";
+const BRAND_FG = "#F5F5F5";
+const BRAND_ACCENT = "#00F5D4";
+
+let cachedClient: Resend | null = null;
+let cachedKey: string | null = null;
+
+function getClient(): Resend | null {
+  const key = process.env["RESEND_API_KEY"];
+  if (!key) return null;
+  if (!cachedClient || cachedKey !== key) {
+    cachedClient = new Resend(key);
+    cachedKey = key;
+  }
+  return cachedClient;
+}
+
+export function isEmailConfigured(): boolean {
+  return Boolean(process.env["RESEND_API_KEY"]);
+}
+
+export interface SendEmailArgs {
+  to: string | string[];
+  subject: string;
+  html: string;
+  text: string;
+  /** Defaults to operator inbox so investor replies land in a real mailbox. */
+  replyTo?: string;
+}
+
+/**
+ * Low-level send. Logs and swallows errors — emails are non-critical
+ * to the API contract and must never block a webhook ack or a user
+ * action like signing a SAFT.
+ */
+export async function sendEmail(args: SendEmailArgs): Promise<void> {
+  const client = getClient();
+  if (!client) {
+    logger.info(
+      { to: args.to, subject: args.subject },
+      "email skipped: RESEND_API_KEY not configured",
+    );
+    return;
+  }
+  try {
+    const result = await client.emails.send({
+      from: FROM_DEFAULT,
+      to: Array.isArray(args.to) ? args.to : [args.to],
+      subject: args.subject,
+      html: args.html,
+      text: args.text,
+      replyTo: args.replyTo ?? REPLY_TO_DEFAULT,
+    });
+    if (result.error) {
+      logger.warn(
+        { err: result.error, to: args.to, subject: args.subject },
+        "resend send returned error",
+      );
+    }
+  } catch (err) {
+    logger.error(
+      { err, to: args.to, subject: args.subject },
+      "resend send threw",
+    );
+  }
+}
+
+// ----- shared rendering helpers --------------------------------------------
+
+function fmtUsd(amountCents: number): string {
+  return `$${(amountCents / 100).toLocaleString("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })}`;
+}
+
+function shell(title: string, bodyHtml: string): string {
+  return `<!doctype html><html><body style="margin:0;padding:0;background:${BRAND_BG};color:${BRAND_FG};font-family:Inter,Arial,sans-serif;">
+  <div style="max-width:560px;margin:0 auto;padding:32px 24px;">
+    <div style="font-family:'Space Grotesk',Arial,sans-serif;font-size:22px;font-weight:600;letter-spacing:-0.01em;margin-bottom:8px;">AIcreatesAI</div>
+    <div style="height:2px;width:48px;background:${BRAND_ACCENT};margin-bottom:24px;"></div>
+    <h1 style="font-family:'Space Grotesk',Arial,sans-serif;font-size:24px;line-height:1.25;margin:0 0 16px 0;">${title}</h1>
+    ${bodyHtml}
+    <div style="margin-top:32px;padding-top:16px;border-top:1px solid #2a2a2a;color:#A1A1AA;font-size:12px;line-height:1.5;">
+      AIcreatesAI · The agentic intelligence layer<br/>
+      Questions? Reply to this email and a human will respond.
+    </div>
+  </div>
+</body></html>`;
+}
+
+function p(text: string): string {
+  return `<p style="margin:0 0 12px 0;line-height:1.55;color:${BRAND_FG};">${text}</p>`;
+}
+
+function row(label: string, value: string): string {
+  return `<tr><td style="padding:8px 12px;border-bottom:1px solid #2a2a2a;color:#A1A1AA;font-size:13px;">${label}</td><td style="padding:8px 12px;border-bottom:1px solid #2a2a2a;color:${BRAND_FG};font-size:13px;font-family:'JetBrains Mono',monospace;text-align:right;">${value}</td></tr>`;
+}
+
+// ----- templates ------------------------------------------------------------
+
+export interface SaftSignedEmail {
+  to: string;
+  investorName: string;
+  commitmentId: string;
+  totalCents: number;
+  totalTokens: number;
+  paymentMethod: "card" | "ach" | "crypto" | "wire";
+  portalUrl: string;
+}
+
+export async function emailSaftSigned(args: SaftSignedEmail): Promise<void> {
+  const subject = "Your SAFT is signed - next: complete payment";
+  const methodLabel: Record<string, string> = {
+    card: "Card / Apple Pay / Google Pay",
+    ach: "Bank transfer (ACH)",
+    crypto: "Crypto",
+    wire: "Wire transfer",
+  };
+  const html = shell(
+    "Your SAFT is signed",
+    [
+      p(`Hi ${args.investorName},`),
+      p(
+        `Your Simple Agreement for Future Tokens has been signed and recorded. The next step is funding your commitment.`,
+      ),
+      `<table cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;margin:8px 0 20px 0;">${[
+        row("Commitment", args.commitmentId),
+        row("Amount", fmtUsd(args.totalCents)),
+        row("Tokens", `${args.totalTokens.toLocaleString()} AICA`),
+        row("Payment method", methodLabel[args.paymentMethod] ?? args.paymentMethod),
+      ].join("")}</table>`,
+      `<p style="margin:0 0 16px 0;"><a href="${args.portalUrl}" style="display:inline-block;background:${BRAND_ACCENT};color:#0A0A0A;text-decoration:none;padding:12px 20px;border-radius:6px;font-weight:600;">Continue to checkout</a></p>`,
+      p("If you have questions, reply to this email."),
+    ].join(""),
+  );
+  const text = `Your SAFT is signed.\n\nCommitment: ${args.commitmentId}\nAmount: ${fmtUsd(args.totalCents)}\nTokens: ${args.totalTokens.toLocaleString()} AICA\nPayment method: ${methodLabel[args.paymentMethod] ?? args.paymentMethod}\n\nContinue to checkout: ${args.portalUrl}\n`;
+  await sendEmail({ to: args.to, subject, html, text });
+}
+
+export interface PaymentReceivedEmail {
+  to: string;
+  investorName: string;
+  commitmentId: string;
+  amountCents: number;
+  tokens: number;
+  receiptUrl?: string | null;
+  dashboardUrl: string;
+}
+
+export async function emailPaymentReceived(
+  args: PaymentReceivedEmail,
+): Promise<void> {
+  const subject = `Payment received - ${fmtUsd(args.amountCents)} AICA commitment funded`;
+  const html = shell(
+    "Payment received",
+    [
+      p(`Hi ${args.investorName},`),
+      p(
+        `Your commitment is funded. Tokens will vest per your SAFT (6-month cliff, 24-month linear vest).`,
+      ),
+      `<table cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;margin:8px 0 20px 0;">${[
+        row("Commitment", args.commitmentId),
+        row("Amount", fmtUsd(args.amountCents)),
+        row("Tokens", `${args.tokens.toLocaleString()} AICA`),
+      ].join("")}</table>`,
+      `<p style="margin:0 0 16px 0;"><a href="${args.dashboardUrl}" style="display:inline-block;background:${BRAND_ACCENT};color:#0A0A0A;text-decoration:none;padding:12px 20px;border-radius:6px;font-weight:600;">Open dashboard</a>${args.receiptUrl ? ` &nbsp; <a href="${args.receiptUrl}" style="color:${BRAND_ACCENT};text-decoration:none;font-weight:500;">View Stripe receipt</a>` : ""}</p>`,
+      p("Thanks for backing AICreatesAI."),
+    ].join(""),
+  );
+  const text = `Payment received.\n\nCommitment: ${args.commitmentId}\nAmount: ${fmtUsd(args.amountCents)}\nTokens: ${args.tokens.toLocaleString()} AICA\n\nDashboard: ${args.dashboardUrl}\n${args.receiptUrl ? `Stripe receipt: ${args.receiptUrl}\n` : ""}`;
+  await sendEmail({ to: args.to, subject, html, text });
+}
+
+export interface WireInstructionsEmail {
+  to: string;
+  investorName: string;
+  commitmentId: string;
+  amountCents: number;
+  tokens: number;
+  bank: {
+    bankName: string;
+    accountName: string;
+    accountNumber: string;
+    routingNumber: string;
+    swift?: string;
+    reference: string;
+  };
+}
+
+export async function emailWireInstructions(
+  args: WireInstructionsEmail,
+): Promise<void> {
+  const subject = `Wire instructions - ${fmtUsd(args.amountCents)} commitment ${args.commitmentId.slice(0, 8)}`;
+  const html = shell(
+    "Wire transfer instructions",
+    [
+      p(`Hi ${args.investorName},`),
+      p(
+        `Please wire <strong>${fmtUsd(args.amountCents)}</strong> using the details below. Use the reference exactly so we can match your wire to your commitment automatically.`,
+      ),
+      `<table cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;margin:8px 0 20px 0;">${[
+        row("Bank", args.bank.bankName),
+        row("Account name", args.bank.accountName),
+        row("Account #", args.bank.accountNumber),
+        row("Routing #", args.bank.routingNumber),
+        ...(args.bank.swift ? [row("SWIFT", args.bank.swift)] : []),
+        row("Reference", args.bank.reference),
+        row("Amount", fmtUsd(args.amountCents)),
+        row("Commitment", args.commitmentId),
+        row("Tokens", `${args.tokens.toLocaleString()} AICA`),
+      ].join("")}</table>`,
+      p(
+        `Wires typically settle in 1-2 business days. We'll email you again once funds are received and your commitment is marked funded.`,
+      ),
+    ].join(""),
+  );
+  const text = `Wire transfer instructions.\n\nBank: ${args.bank.bankName}\nAccount name: ${args.bank.accountName}\nAccount #: ${args.bank.accountNumber}\nRouting #: ${args.bank.routingNumber}\n${args.bank.swift ? `SWIFT: ${args.bank.swift}\n` : ""}Reference: ${args.bank.reference}\n\nAmount: ${fmtUsd(args.amountCents)}\nCommitment: ${args.commitmentId}\nTokens: ${args.tokens.toLocaleString()} AICA\n\nWires typically settle in 1-2 business days.\n`;
+  await sendEmail({ to: args.to, subject, html, text });
+}
+
+export interface RefundIssuedEmail {
+  to: string;
+  investorName: string;
+  commitmentId: string;
+  amountCents: number;
+  reason?: string | null;
+}
+
+export async function emailRefundIssued(
+  args: RefundIssuedEmail,
+): Promise<void> {
+  const subject = `Refund issued - ${fmtUsd(args.amountCents)} returned`;
+  const html = shell(
+    "Refund issued",
+    [
+      p(`Hi ${args.investorName},`),
+      p(
+        `Your refund of <strong>${fmtUsd(args.amountCents)}</strong> for commitment ${args.commitmentId} has been issued. Card refunds typically appear in 5-10 business days; ACH refunds 3-5 business days.`,
+      ),
+      args.reason
+        ? p(`Reason: <em style="color:#A1A1AA;">${args.reason}</em>`)
+        : "",
+      p("Reply to this email if you have any questions."),
+    ].join(""),
+  );
+  const text = `Refund issued.\n\nAmount: ${fmtUsd(args.amountCents)}\nCommitment: ${args.commitmentId}\n${args.reason ? `Reason: ${args.reason}\n` : ""}\nCard refunds typically appear in 5-10 business days; ACH refunds 3-5 business days.\n`;
+  await sendEmail({ to: args.to, subject, html, text });
+}
+
+export interface DisputeAdminEmail {
+  to: string | string[];
+  commitmentId: string;
+  investorEmail: string;
+  amountCents: number;
+  disputeId: string;
+  reason: string;
+  dueByIso: string | null;
+  dashboardUrl: string;
+}
+
+export async function emailDisputeAdmin(
+  args: DisputeAdminEmail,
+): Promise<void> {
+  const subject = `[URGENT] Stripe dispute opened - ${fmtUsd(args.amountCents)} from ${args.investorEmail}`;
+  const html = shell(
+    "Stripe dispute opened",
+    [
+      p(
+        `A chargeback / dispute has been opened. You must respond before the due date or the dispute will be lost by default.`,
+      ),
+      `<table cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;margin:8px 0 20px 0;">${[
+        row("Commitment", args.commitmentId),
+        row("Investor", args.investorEmail),
+        row("Amount", fmtUsd(args.amountCents)),
+        row("Reason", args.reason),
+        row("Dispute ID", args.disputeId),
+        ...(args.dueByIso
+          ? [row("Respond by", new Date(args.dueByIso).toUTCString())]
+          : []),
+      ].join("")}</table>`,
+      `<p style="margin:0 0 16px 0;"><a href="${args.dashboardUrl}" style="display:inline-block;background:${BRAND_ACCENT};color:#0A0A0A;text-decoration:none;padding:12px 20px;border-radius:6px;font-weight:600;">Open admin dashboard</a></p>`,
+    ].join(""),
+  );
+  const text = `[URGENT] Stripe dispute opened.\n\nCommitment: ${args.commitmentId}\nInvestor: ${args.investorEmail}\nAmount: ${fmtUsd(args.amountCents)}\nReason: ${args.reason}\nDispute ID: ${args.disputeId}\n${args.dueByIso ? `Respond by: ${new Date(args.dueByIso).toUTCString()}\n` : ""}\nAdmin: ${args.dashboardUrl}\n`;
+  await sendEmail({ to: args.to, subject, html, text });
+}
