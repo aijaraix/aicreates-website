@@ -7,7 +7,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { useSeo } from "@/lib/useSeo";
-import Figure, { WorkspaceAreasFigure } from "@/components/Figure";
+import Figure, { WorkspaceAreasFigure, ServicesImage } from "@/components/Figure";
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
@@ -19,14 +19,15 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 }
 
 const JOURNEY = [
-  { n: "01", t: "Intake", d: "Describe your business, goals, and constraints to Eve in plain language." },
-  { n: "02", t: "Setup", d: "The layer provisions your workspace, connects tools, and seeds business memory." },
-  { n: "03", t: "Plan", d: "A coordinated plan is drafted across every workspace area you operate in." },
-  { n: "04", t: "Execute", d: "Specialized agents run the plan against your data, tools, and approvals." },
-  { n: "05", t: "Review", d: "The Quality Engine scores, critiques, and rewrites every output before delivery." },
-  { n: "06", t: "Approve", d: "You approve, edit, or hand back - keeping policy and judgment in human hands." },
-  { n: "07", t: "Iterate", d: "Outcomes feed memory and Adam; the next cycle starts sharper than the last." },
-  { n: "08", t: "Compound", d: "Quality, speed, and capability grow with usage. The company becomes an asset." },
+  { n: "01", t: "Business Selection", d: "Pick your industry, model, and operating context. Eve loads the right defaults and starting playbooks." },
+  { n: "02", t: "Objective", d: "State the goal in plain language. The layer converts it into a measurable plan with milestones." },
+  { n: "03", t: "Asset Generation", d: "Brand, copy, site, decks, contracts, and product collateral generated from your objective." },
+  { n: "04", t: "Agent Deployment", d: "The right agents are provisioned across every workspace area with policy, scope, and credits." },
+  { n: "05", t: "Launch Stack", d: "Web, payments, email, and core infrastructure stood up and connected, ready to operate." },
+  { n: "06", t: "CRM", d: "Customer records, conversations, and lifecycle hooks wired into the system of record." },
+  { n: "07", t: "Automation", d: "Recurring workflows - outreach, billing, support, fulfillment - automated end-to-end." },
+  { n: "08", t: "Analytics", d: "Live dashboards across funnel, revenue, ops, and quality - read by both you and the agents." },
+  { n: "09", t: "Optimization", d: "The Quality Engine scores outputs, repairs failures, and improves the next cycle automatically." },
 ];
 
 const WORKSPACE_AREAS = [
@@ -154,7 +155,10 @@ export default function CompanyInABox() {
               Six surfaces. One Company in a Box.
             </h2>
           </div>
-          <Figure number="Figure 5" caption="The six workspace areas of Eve OS - the AI Command Center sits at the center, with Apps, Wallet & Credits, Memory & Files, Activity Feed, and Business Data orbiting around it.">
+          <Figure number="Figure 5" caption="The Company in a Box surface (whitepaper visual) - coordinated services running on the layer.">
+            <ServicesImage />
+          </Figure>
+          <Figure number="Figure 5a" caption="Schematic - the AI Command Center at the center, with Apps, Wallet & Credits, Memory & Files, Activity Feed, and Business Data.">
             <WorkspaceAreasFigure />
           </Figure>
           <div className="rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden mt-8">

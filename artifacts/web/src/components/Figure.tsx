@@ -1,4 +1,9 @@
 import { ReactNode } from "react";
+import architectureImg from "@/assets/about-architecture.png";
+import technologyImg from "@/assets/technology.png";
+import servicesImg from "@/assets/services.png";
+import aicaCoin from "@/assets/aica-coin.png";
+import aicaCoinShield from "@/assets/aica-coin-shield.png";
 
 type FigureProps = {
   number: string;
@@ -9,7 +14,7 @@ type FigureProps = {
 export default function Figure({ number, caption, children }: FigureProps) {
   return (
     <figure className="my-8 rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.03] to-white/[0.01] overflow-hidden">
-      <div className="aspect-[16/8] w-full bg-[#0A0A0A] flex items-center justify-center p-6">
+      <div className="aspect-[16/8] w-full bg-[#0A0A0A] flex items-center justify-center overflow-hidden">
         <div className="w-full h-full">{children}</div>
       </div>
       <figcaption className="px-6 py-4 border-t border-white/10 flex items-baseline gap-3">
@@ -17,6 +22,43 @@ export default function Figure({ number, caption, children }: FigureProps) {
         <span className="text-sm text-white/55">{caption}</span>
       </figcaption>
     </figure>
+  );
+}
+
+// Image-backed figure helpers (reuse whitepaper / brand imagery from attached_assets / src/assets).
+function ImageFigure({ src, alt }: { src: string; alt: string }) {
+  return (
+    <img
+      src={src}
+      alt={alt}
+      className="w-full h-full object-cover object-center select-none"
+      loading="lazy"
+      draggable={false}
+    />
+  );
+}
+
+export function ArchitectureImage() {
+  return <ImageFigure src={architectureImg} alt="Architecture of the Agentic Intelligence Layer" />;
+}
+export function TechnologyImage() {
+  return <ImageFigure src={technologyImg} alt="The primitives that compose the layer" />;
+}
+export function ServicesImage() {
+  return <ImageFigure src={servicesImg} alt="Coordinated services running on the layer" />;
+}
+export function AicaImage() {
+  return (
+    <div className="w-full h-full flex items-center justify-center bg-[#0A0A0A]">
+      <img src={aicaCoin} alt="$AICA - native asset" className="max-h-full object-contain" loading="lazy" draggable={false} />
+    </div>
+  );
+}
+export function AicaShieldImage() {
+  return (
+    <div className="w-full h-full flex items-center justify-center bg-[#0A0A0A]">
+      <img src={aicaCoinShield} alt="$AICA shielded by the Credit Ledger" className="max-h-full object-contain" loading="lazy" draggable={false} />
+    </div>
   );
 }
 

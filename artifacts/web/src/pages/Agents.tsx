@@ -168,6 +168,42 @@ export default function Agents() {
         </div>
       </section>
 
+      {/* SWARMS CALLOUT */}
+      <section id="swarms" className="py-14 md:py-20 relative">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="relative max-w-5xl mx-auto rounded-3xl border border-[#00F5D4]/30 bg-gradient-to-br from-[#00F5D4]/[0.06] to-transparent p-10 md:p-14 overflow-hidden">
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(0,245,212,0.18),transparent_60%)] pointer-events-none" />
+            <div className="relative">
+              <div className="flex items-center gap-3 mb-5">
+                <Bot className="w-6 h-6 text-[#00F5D4]" strokeWidth={1.5} />
+                <span className="text-xs font-mono uppercase tracking-[0.2em] text-[#00F5D4]">Swarms</span>
+              </div>
+              <h2 className="text-3xl md:text-5xl font-serif font-semibold text-gradient leading-[1.05] mb-5">
+                Agents work as swarms, not soloists.
+              </h2>
+              <p className="text-lg text-white/65 max-w-3xl leading-relaxed mb-4">
+                A swarm is a coordinated group of agents working a single objective in parallel - branching, debating, and converging on the strongest output before it ever reaches you.
+              </p>
+              <p className="text-white/55 max-w-3xl leading-relaxed">
+                Strategy proposes. Research challenges. Coding builds in parallel branches. QA scores them against rubrics. Deployment ships the winner. The swarm decides faster, with more diversity of approach, than any single agent could.
+              </p>
+              <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+                {[
+                  { t: "Parallel branches", d: "Multiple solutions explored at once and scored against each other." },
+                  { t: "Internal debate", d: "Critique agents stress-test plans before they leave the swarm." },
+                  { t: "Single best output", d: "Only the strongest, scored, repaired result reaches you." },
+                ].map((s) => (
+                  <div key={s.t} className="rounded-2xl border border-white/10 bg-[#0A0A0A]/60 p-5">
+                    <div className="text-sm font-semibold text-white mb-2">{s.t}</div>
+                    <p className="text-sm text-white/55 leading-relaxed">{s.d}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* HOW THEY COORDINATE */}
       <section className="py-14 md:py-20 relative">
         <div className="container mx-auto px-4 md:px-6">

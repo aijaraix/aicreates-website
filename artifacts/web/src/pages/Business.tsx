@@ -74,6 +74,64 @@ export default function Business() {
         </div>
       </section>
 
+      {/* SEGMENTS - SMB / Agency / Enterprise */}
+      <section className="py-14 md:py-20 relative">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="max-w-3xl mb-10">
+            <SectionLabel>Who it's for</SectionLabel>
+            <h2 className="mt-6 text-4xl md:text-5xl font-serif font-semibold text-gradient leading-[1.05]">
+              SMBs. Agencies. Enterprise.
+            </h2>
+            <p className="mt-6 text-white/55 leading-relaxed">
+              The same agentic intelligence layer adapts to the operating reality of three very different audiences.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {[
+              {
+                tag: "SMB",
+                title: "Operate like a much larger company",
+                d: "Founders and operating teams of 1 to 50 use Eve OS as their entire back office - marketing, sales, finance, support, and ops on one coordinated layer, without hiring across every function.",
+                bullets: ["Launch and run from one workspace", "Replace fragmented SaaS sprawl", "Compounding quality with usage"],
+              },
+              {
+                tag: "Agency",
+                title: "A virtual delivery team behind every account",
+                d: "Studios, agencies, and consultancies run client work through swarms of specialized agents - higher throughput per account, faster turnaround, with humans staying in the strategic and creative seat.",
+                bullets: ["Per-client workspaces and policy", "Agency-level usage and rev share", "White-label surfaces (roadmap)"],
+              },
+              {
+                tag: "Enterprise",
+                title: "Coordinated autonomy across departments",
+                d: "Larger operators bring their own systems, data, and identity into the layer with scoped permissions, spend caps, audit trails, and the Quality Engine governing every autonomous action.",
+                bullets: ["SSO, scoped permissions, audit", "Bring your data, tools, and policies", "Per-team budgets and approvals"],
+              },
+            ].map((s, i) => (
+              <motion.div
+                key={s.tag}
+                initial={{ opacity: 0, y: 18 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.5, delay: i * 0.06, ease: "easeOut" }}
+                className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 hover:border-[#00F5D4]/40 transition-colors"
+              >
+                <div className="text-[10px] font-mono uppercase tracking-[0.22em] text-[#00F5D4] mb-3">{s.tag}</div>
+                <div className="text-lg font-semibold text-white mb-3">{s.title}</div>
+                <p className="text-sm text-white/55 leading-relaxed mb-4">{s.d}</p>
+                <ul className="space-y-2">
+                  {s.bullets.map((b) => (
+                    <li key={b} className="flex items-start gap-2 text-sm text-white/65">
+                      <CheckCircle2 className="w-4 h-4 text-[#00F5D4] mt-0.5 shrink-0" strokeWidth={1.6} />
+                      <span>{b}</span>
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* OUTCOMES */}
       <section className="py-14 md:py-20 relative">
         <div className="container mx-auto px-4 md:px-6">

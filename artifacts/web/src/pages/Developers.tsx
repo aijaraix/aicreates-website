@@ -76,6 +76,46 @@ export default function Developers() {
         </div>
       </section>
 
+      {/* MARKETPLACE + REVENUE SHARE */}
+      <section id="marketplace" className="py-14 md:py-20 relative">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="max-w-3xl mb-10">
+            <SectionLabel>Skills marketplace</SectionLabel>
+            <h2 className="mt-6 text-4xl md:text-5xl font-serif font-semibold text-gradient leading-[1.05]">
+              Build a skill. Get paid every time it runs.
+            </h2>
+            <p className="mt-6 text-white/55 leading-relaxed">
+              The Skills Marketplace is the distribution surface for the agentic intelligence layer. Publish a skill, plug into the Credit Ledger, and earn a transparent revenue share every time another operator's agent uses it - no contracts, no chasing, no integrations to manage.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {[
+              { tag: "Publish", t: "Ship a skill", d: "Wrap a workflow, model, connector, or full vertical agent into a versioned, policy-aware skill." },
+              { tag: "Distribute", t: "Reach every operator", d: "Skills are discoverable from inside Eve OS the moment they're approved - no separate go-to-market." },
+              { tag: "Earn", t: "Per-use revenue share", d: "The Credit Ledger meters every invocation and settles your share automatically in $AICA." },
+            ].map((s, i) => (
+              <motion.div
+                key={s.tag}
+                initial={{ opacity: 0, y: 18 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.5, delay: i * 0.06, ease: "easeOut" }}
+                className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 hover:border-[#00F5D4]/40 transition-colors"
+              >
+                <div className="text-[10px] font-mono uppercase tracking-[0.22em] text-[#00F5D4] mb-3">{s.tag}</div>
+                <div className="text-lg font-semibold text-white mb-2">{s.t}</div>
+                <p className="text-sm text-white/55 leading-relaxed">{s.d}</p>
+              </motion.div>
+            ))}
+          </div>
+          <div className="mt-6 rounded-2xl border border-[#00F5D4]/25 bg-[#00F5D4]/[0.04] p-6">
+            <div className="text-sm text-white/70 leading-relaxed">
+              <span className="text-[#00F5D4] font-medium">Aligned by design.</span> Builders, operators, and the network all benefit when a skill performs well. The Quality Engine scores every invocation, so the marketplace ranks on outcomes - not marketing.
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* PRIMITIVES */}
       <section className="py-14 md:py-20 relative">
         <div className="container mx-auto px-4 md:px-6">

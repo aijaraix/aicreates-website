@@ -16,7 +16,14 @@ import {
   Wallet,
 } from "lucide-react";
 import { useSeo } from "@/lib/useSeo";
-import Figure, { PlatformArchitectureFigure, PrimitivesFigure, OperatingLoopFigure } from "@/components/Figure";
+import Figure, {
+  PlatformArchitectureFigure,
+  PrimitivesFigure,
+  OperatingLoopFigure,
+  ArchitectureImage,
+  TechnologyImage,
+  ServicesImage,
+} from "@/components/Figure";
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
@@ -164,7 +171,10 @@ export default function Platform() {
               The intelligence layer is built around named architectural components, each with a distinct role and a clear contract with the others.
             </p>
           </div>
-          <Figure number="Figure 1" caption="The Agentic Intelligence Layer - Adam, Eve, Jarvis, the Unified Agent Layer, and the cross-cutting Quality Engine and Credit Ledger.">
+          <Figure number="Figure 1" caption="The Agentic Intelligence Layer - Adam, Eve, Jarvis, the Unified Agent Layer, and the cross-cutting Quality Engine and Credit Ledger (whitepaper visual).">
+            <ArchitectureImage />
+          </Figure>
+          <Figure number="Figure 1a" caption="Schematic - the named layers and cross-cutting components, simplified.">
             <PlatformArchitectureFigure />
           </Figure>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -201,7 +211,10 @@ export default function Platform() {
               The foundations underneath.
             </h2>
           </div>
-          <Figure number="Figure 3" caption="The four primitives that the layer composes - hybrid compute, persistent memory, self-healing workflows, and the agentic wallet.">
+          <Figure number="Figure 3" caption="The primitive substrate that the layer composes (whitepaper visual).">
+            <TechnologyImage />
+          </Figure>
+          <Figure number="Figure 3a" caption="Schematic - hybrid compute, persistent memory, self-healing workflows, and the agentic wallet.">
             <PrimitivesFigure />
           </Figure>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -234,7 +247,10 @@ export default function Platform() {
               Intent in. Coordinated action out.
             </h2>
           </div>
-          <Figure number="Figure 4" caption="The closed operating loop - intent flows in, coordinated action flows out, and outcomes feed back into Adam.">
+          <Figure number="Figure 4" caption="Coordinated services running on the layer (whitepaper visual).">
+            <ServicesImage />
+          </Figure>
+          <Figure number="Figure 4a" caption="Schematic - intent in, coordinated action out, outcomes feed back into Adam.">
             <OperatingLoopFigure />
           </Figure>
           <ol className="grid grid-cols-1 md:grid-cols-5 gap-4">

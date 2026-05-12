@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { ArrowRight, Coins, Cpu, Users, ShieldCheck } from "lucide-react";
 import aicaCoin from "@/assets/aica-coin.png";
 import { useSeo } from "@/lib/useSeo";
-import Figure, { TokenUtilityFigure, TokenFlowFigure } from "@/components/Figure";
+import Figure, { TokenUtilityFigure, TokenFlowFigure, AicaImage, AicaShieldImage } from "@/components/Figure";
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
@@ -79,7 +79,10 @@ export default function Token() {
               What $AICA actually does.
             </h2>
           </div>
-          <Figure number="Figure 6" caption="The $AICA utility map - the native asset connects subscription discounts, the compute network, contributor rewards, governance signals, credit top-ups, and marketplace settlement.">
+          <Figure number="Figure 6" caption="$AICA - the native asset of the agentic intelligence layer (whitepaper visual).">
+            <AicaImage />
+          </Figure>
+          <Figure number="Figure 6a" caption="Schematic - the $AICA utility map across subscription discounts, compute network, rewards, governance, credits, and marketplace settlement.">
             <TokenUtilityFigure />
           </Figure>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
@@ -115,7 +118,10 @@ export default function Token() {
               Operators top up credits. The Credit Ledger scopes and caps spend. Agents act against those credits. Value created flows back as $AICA rewards - and compounds into the next cycle.
             </p>
           </div>
-          <Figure number="Figure 7" caption="The credit and token movement loop - operators buy credits, the Credit Ledger gates agentic spend, and $AICA rewards flow back to those who create value.">
+          <Figure number="Figure 7" caption="$AICA shielded by the Credit Ledger (whitepaper visual) - programmable, policy-bound spend.">
+            <AicaShieldImage />
+          </Figure>
+          <Figure number="Figure 7a" caption="Schematic - operators buy credits, the Credit Ledger gates agentic spend, and $AICA rewards flow back to value creators.">
             <TokenFlowFigure />
           </Figure>
         </div>
