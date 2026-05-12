@@ -57,7 +57,7 @@ export default function SiteHeader({
 
   return (
     <header className={wrapperCls}>
-      <div className="mx-auto max-w-7xl px-6 md:px-10 flex items-center justify-between gap-4">
+      <div className="container mx-auto px-4 md:px-6 flex items-center justify-between gap-4">
         <div className="flex items-center gap-2 lg:gap-6">
           {homeExternal ? (
             <a
