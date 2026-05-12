@@ -58,9 +58,9 @@ function fmt(cents: number) {
 }
 
 function fmtDate(v: string | null) {
-  if (!v) return "—";
+  if (!v) return "-";
   const ms = Date.parse(v);
-  if (Number.isNaN(ms)) return "—";
+  if (Number.isNaN(ms)) return "-";
   return new Date(ms).toLocaleDateString("en-US", {
     year: "numeric",
     month: "short",
@@ -221,7 +221,7 @@ export default function Dashboard() {
           <StatTile
             label="Next unlock"
             value={
-              nextUnlock ? `${nextUnlock.tokens.toLocaleString()} AICA` : "—"
+              nextUnlock ? `${nextUnlock.tokens.toLocaleString()} AICA` : "-"
             }
             hint={
               nextUnlock
@@ -365,11 +365,11 @@ export default function Dashboard() {
                   <Mini label="Funded" value={fmtDate(a.fundedAt)} />
                   <Mini
                     label="TGE"
-                    value={a.vesting ? fmtDate(a.vesting.tgeDate) : "—"}
+                    value={a.vesting ? fmtDate(a.vesting.tgeDate) : "-"}
                   />
                   <Mini
                     label="Cliff ends"
-                    value={a.vesting ? fmtDate(a.vesting.cliffDate) : "—"}
+                    value={a.vesting ? fmtDate(a.vesting.cliffDate) : "-"}
                   />
                 </div>
 
@@ -384,7 +384,7 @@ export default function Dashboard() {
                   />
                   <Mini
                     label="Accreditation"
-                    value={a.accreditationStatus ?? "—"}
+                    value={a.accreditationStatus ?? "-"}
                   />
                   <div
                     className="rounded-xl border border-white/10 bg-black/30 p-3"

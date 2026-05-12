@@ -142,7 +142,7 @@ export default function Faq() {
               <h2 className="text-xs uppercase tracking-[0.18em] text-white/40 mb-3">
                 {g.title}
               </h2>
-              <div className="rounded-2xl border border-white/10 bg-white/[0.02] divide-y divide-white/5">
+              <div className="brand-card divide-y divide-white/5 overflow-hidden">
                 {g.items.map((item, i) => {
                   const key = `${g.title}-${i}`;
                   const isOpen = open[key];

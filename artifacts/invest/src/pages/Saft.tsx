@@ -684,7 +684,7 @@ export default function Saft() {
                   className="mt-3 text-3xl text-[#00F5D4]"
                   style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}
                 >
-                  {form.signatureName || "—"}
+                  {form.signatureName || "-"}
                 </div>
               </div>
               <SaftPdfPreview commitId={commitId} form={form} />

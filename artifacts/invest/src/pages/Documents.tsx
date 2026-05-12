@@ -102,7 +102,7 @@ export default function Documents() {
             {STATIC_DOCS.map((d) => (
               <div
                 key={d.title}
-                className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 flex flex-col"
+                className="brand-card brand-hairline-teal p-6 flex flex-col"
                 data-testid={`doc-card-${d.title.toLowerCase().replace(/\s+/g, "-")}`}
               >
                 <div className="flex items-center gap-2 text-[#00F5D4]">
@@ -111,10 +111,7 @@ export default function Documents() {
                     Document
                   </span>
                 </div>
-                <h3
-                  className="mt-3 text-xl font-semibold"
-                  style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}
-                >
+                <h3 className="mt-3 font-display text-xl font-semibold tracking-tight">
                   {d.title}
                 </h3>
                 <p className="mt-2 text-sm text-white/60 flex-1">{d.blurb}</p>
@@ -126,10 +123,7 @@ export default function Documents() {
                     <Lock className="w-3.5 h-3.5 mr-2" /> {d.cta}
                   </button>
                 ) : d.internal ? (
-                  <Link
-                    href={d.href!}
-                    className="mt-5 inline-flex items-center justify-center h-10 px-4 rounded-full border border-[#00F5D4]/40 text-[#00F5D4] hover:bg-[#00F5D4]/10 text-sm"
-                  >
+                  <Link href={d.href!} className="brand-cta-outline mt-5">
                     {d.cta}
                   </Link>
                 ) : (
@@ -137,7 +131,7 @@ export default function Documents() {
                     href={d.href}
                     target={d.external ? "_blank" : undefined}
                     rel={d.external ? "noopener noreferrer" : undefined}
-                    className="mt-5 inline-flex items-center justify-center h-10 px-4 rounded-full border border-[#00F5D4]/40 text-[#00F5D4] hover:bg-[#00F5D4]/10 text-sm"
+                    className="brand-cta-outline mt-5"
                   >
                     {d.cta}
                   </a>
@@ -152,7 +146,7 @@ export default function Documents() {
             Your signed SAFTs
           </h2>
           {signed.length === 0 ? (
-            <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 text-white/50 text-sm">
+            <div className="brand-card p-6 text-white/50 text-sm">
               No signed SAFTs yet. Once you reserve a tier and complete
               the SAFT flow, your signed copies will appear here.
             </div>
@@ -164,7 +158,7 @@ export default function Documents() {
                   href={`/api/saft/${a.id}/pdf`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/[0.02] px-5 py-4 hover:border-[#00F5D4]/40"
+                  className="brand-card flex items-center justify-between px-5 py-4 transition hover:border-[#00F5D4]/40"
                   data-testid={`signed-saft-${a.id}`}
                 >
                   <div>

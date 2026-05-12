@@ -138,9 +138,9 @@ function fmt(cents: number) {
 }
 
 function fmtDate(v: string | null) {
-  if (!v) return "—";
+  if (!v) return "-";
   const ms = Date.parse(v);
-  if (Number.isNaN(ms)) return "—";
+  if (Number.isNaN(ms)) return "-";
   return new Date(ms).toLocaleDateString("en-US", {
     year: "numeric",
     month: "short",
@@ -149,9 +149,9 @@ function fmtDate(v: string | null) {
 }
 
 function fmtDateTime(v: string | null) {
-  if (!v) return "—";
+  if (!v) return "-";
   const ms = Date.parse(v);
-  if (Number.isNaN(ms)) return "—";
+  if (Number.isNaN(ms)) return "-";
   return new Date(ms).toLocaleString();
 }
 
@@ -295,7 +295,7 @@ export default function Admin() {
           <Card label="Funded investors" value={String(investorCount)} />
           <Card
             label="Avg check"
-            value={avgCheckCents > 0 ? fmt(avgCheckCents) : "—"}
+            value={avgCheckCents > 0 ? fmt(avgCheckCents) : "-"}
           />
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -303,7 +303,7 @@ export default function Admin() {
           <Card label="Total accounts" value={String(users.data?.users.length ?? 0)} />
           <Card
             label="Application → funded"
-            value={totalApps > 0 ? `${conversionPct}%` : "—"}
+            value={totalApps > 0 ? `${conversionPct}%` : "-"}
             small
           />
           <Card
@@ -351,25 +351,25 @@ export default function Admin() {
                       {fmtDate(a.createdAt)}
                     </td>
                     <td className="px-4 py-3">
-                      <div className="font-medium">{a.fullName ?? "—"}</div>
+                      <div className="font-medium">{a.fullName ?? "-"}</div>
                       <div className="text-xs text-white/50">{a.email}</div>
                     </td>
                     <td className="px-4 py-3 text-xs uppercase tracking-wider text-white/60">
-                      {a.country ?? "—"}
+                      {a.country ?? "-"}
                     </td>
                     <td className="px-4 py-3 text-xs uppercase tracking-wider text-white/60">
-                      {a.persona ?? "—"}
+                      {a.persona ?? "-"}
                     </td>
                     <td className="px-4 py-3 text-xs text-white/60">
-                      {a.accreditation ?? "—"}
+                      {a.accreditation ?? "-"}
                     </td>
                     <td className="px-4 py-3 font-medium">
                       {a.intendedAmountCents
                         ? fmt(a.intendedAmountCents)
-                        : "—"}
+                        : "-"}
                     </td>
                     <td className="px-4 py-3 text-xs text-white/60 max-w-[280px]">
-                      <div className="line-clamp-2">{a.thesisFit ?? "—"}</div>
+                      <div className="line-clamp-2">{a.thesisFit ?? "-"}</div>
                     </td>
                     <td className="px-4 py-3 text-right">
                       <select
@@ -473,7 +473,7 @@ export default function Admin() {
                         {fmtDate(c.createdAt)}
                       </td>
                       <td className="px-3 py-3">
-                        <div className="font-medium">{c.fullName ?? "—"}</div>
+                        <div className="font-medium">{c.fullName ?? "-"}</div>
                         <div className="text-xs text-white/50">{c.email}</div>
                         {c.userId && (
                           <button
@@ -542,13 +542,13 @@ export default function Admin() {
                         </select>
                       </td>
                       <td className="px-3 py-3 text-[10px] text-white/60">
-                        {c.accreditationStatus ?? "—"}
+                        {c.accreditationStatus ?? "-"}
                       </td>
                       <td
                         className="px-3 py-3 text-[10px] text-white/60 max-w-[120px] truncate font-mono"
                         title={c.walletAddress ?? undefined}
                       >
-                        {c.walletAddress ?? "—"}
+                        {c.walletAddress ?? "-"}
                       </td>
                       <td className="px-3 py-3">
                         {c.saftSignedAt ? (
@@ -561,7 +561,7 @@ export default function Admin() {
                             {c.saftSignerName ?? "View"}
                           </a>
                         ) : (
-                          <span className="text-white/30 text-[11px]">—</span>
+                          <span className="text-white/30 text-[11px]">-</span>
                         )}
                       </td>
                       <td className="px-3 py-3 text-right whitespace-nowrap">
@@ -679,12 +679,12 @@ export default function Admin() {
                       </span>
                     </td>
                     <td className="px-4 py-2 text-[11px] font-mono text-white/60">
-                      {e.targetType}/{e.targetId?.slice(0, 8) ?? "—"}
+                      {e.targetType}/{e.targetId?.slice(0, 8) ?? "-"}
                     </td>
                     <td className="px-4 py-2 text-[11px] text-white/50 font-mono">
                       {Object.keys(e.details ?? {}).length
                         ? JSON.stringify(e.details).slice(0, 120)
-                        : "—"}
+                        : "-"}
                     </td>
                   </tr>
                 ))}
@@ -722,7 +722,7 @@ export default function Admin() {
                 {(users.data?.users ?? []).map((u) => (
                   <tr key={u.id} className="border-t border-white/5">
                     <td className="px-6 py-3">{u.email}</td>
-                    <td className="px-6 py-3">{u.fullName ?? "—"}</td>
+                    <td className="px-6 py-3">{u.fullName ?? "-"}</td>
                     <td className="px-6 py-3 text-xs uppercase tracking-[0.14em] text-white/60">
                       {u.role}
                     </td>
