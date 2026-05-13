@@ -18,7 +18,7 @@ interface HeroVideoReelProps {
 export default function HeroVideoReel({
   clips,
   poster,
-  delayMs = 3500,
+  delayMs = 300,
   clipDurationMs = 6500,
   fadeMs = 1500,
   opacity = 0.55,
@@ -146,7 +146,7 @@ export default function HeroVideoReel({
             playsInline
             // eslint-disable-next-line react/no-unknown-property
             disablePictureInPicture
-            preload={armed ? "auto" : "none"}
+            preload={i === 0 ? "auto" : armed ? "auto" : "metadata"}
             className="absolute inset-0 h-full w-full object-cover will-change-[opacity]"
             style={{
               opacity: armed && active === i ? opacity : 0,

@@ -134,7 +134,7 @@ export function Navigation() {
             <Link href="/litepaper">
               <Button
                 variant="outline"
-                className="rounded-full h-9 px-5 border-white/15 bg-white/[0.02] text-white hover:bg-white/[0.06] hover:text-[#00F5D4] text-sm font-medium"
+                className="rounded-full h-9 px-5 glass-btn text-sm font-medium"
                 data-testid="button-nav-litepaper"
               >
                 Litepaper
@@ -196,7 +196,7 @@ export function Navigation() {
                   <Link href="/litepaper" onClick={() => setOpen(false)}>
                     <Button
                       variant="outline"
-                      className="w-full rounded-full h-11 border-white/15 bg-white/[0.02] text-white hover:bg-white/[0.06] hover:text-[#00F5D4]"
+                      className="w-full rounded-full h-11 glass-btn"
                       data-testid="button-mobile-nav-litepaper"
                     >
                       Litepaper

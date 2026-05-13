@@ -299,7 +299,7 @@ export default function Home() {
                 </Button>
               </Link>
               <Link href="/contact">
-                <Button size="lg" variant="outline" className="rounded-full h-12 px-7 border-white/15 bg-white/[0.02] text-white hover:bg-white/[0.06]">
+                <Button size="lg" variant="outline" className="rounded-full h-12 px-7 glass-btn">
                   Engage with us
                 </Button>
               </Link>
@@ -526,7 +526,7 @@ export default function Home() {
                   <Button
                     size="lg"
                     variant="outline"
-                    className="rounded-full h-12 px-7 border-white/15 bg-white/[0.02] text-white hover:bg-white/[0.06] hover:text-[#00F5D4]"
+                    className="rounded-full h-12 px-7 glass-btn"
                   >
                     Download
                   </Button>

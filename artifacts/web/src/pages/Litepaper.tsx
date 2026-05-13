@@ -368,7 +368,7 @@ export default function Litepaper() {
                 View Whitepaper
               </Button>
               <Link href="/contact">
-                <Button size="lg" variant="outline" className="rounded-full h-12 px-7 border-white/15 bg-white/[0.02] text-white hover:bg-white/[0.06] hover:text-[#00F5D4]" data-testid="button-get-in-touch-hero">
+                <Button size="lg" variant="outline" className="rounded-full h-12 px-7 glass-btn" data-testid="button-get-in-touch-hero">
                   Get in touch
                 </Button>
               </Link>
@@ -481,7 +481,7 @@ export default function Litepaper() {
                   size="lg"
                   variant="outline"
                   onClick={() => setDeckOpen(true)}
-                  className="rounded-full h-12 px-8 border-white/15 bg-white/[0.02] text-white hover:bg-white/[0.06] hover:text-[#00F5D4]"
+                  className="rounded-full h-12 px-8 glass-btn"
                   data-testid="button-view-whitepaper-final"
                 >
                   <BookOpen className="mr-2 w-4 h-4" />

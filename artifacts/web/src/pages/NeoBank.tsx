@@ -64,7 +64,7 @@ export default function NeoBank() {
                 </Button>
               </Link>
               <Link href="/eve-os">
-                <Button size="lg" variant="outline" className="rounded-full h-12 px-7 border-white/15 bg-white/[0.02] text-white hover:bg-white/[0.06]">
+                <Button size="lg" variant="outline" className="rounded-full h-12 px-7 glass-btn">
                   See the layer behind it
                 </Button>
               </Link>

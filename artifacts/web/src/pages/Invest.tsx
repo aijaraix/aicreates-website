@@ -113,7 +113,7 @@ export default function Invest() {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="rounded-full h-12 px-7 border-white/15 bg-white/[0.02] text-white hover:bg-white/[0.06] hover:text-[#00F5D4]"
+                  className="rounded-full h-12 px-7 glass-btn"
                   data-testid="button-hero-read-litepaper"
                 >
                   Read the Litepaper
@@ -254,7 +254,7 @@ export default function Invest() {
                   >
                     <Button
                       variant="outline"
-                      className="w-full rounded-full h-10 px-5 border-white/15 bg-white/[0.02] text-white hover:bg-white/[0.06] hover:text-[#00F5D4] group"
+                      className="w-full rounded-full h-10 px-5 glass-btn group"
                       data-testid={card.testId}
                     >
                       {card.cta} <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
@@ -264,7 +264,7 @@ export default function Invest() {
                   <Link href={card.href!}>
                     <Button
                       variant="outline"
-                      className="w-full rounded-full h-10 px-5 border-white/15 bg-white/[0.02] text-white hover:bg-white/[0.06] hover:text-[#00F5D4] group"
+                      className="w-full rounded-full h-10 px-5 glass-btn group"
                       data-testid={card.testId}
                     >
                       {card.cta} <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
@@ -303,7 +303,7 @@ export default function Invest() {
                   <Link href="/litepaper#tokenomics">
                     <Button
                       variant="outline"
-                      className="rounded-full h-10 px-5 border-white/15 bg-white/[0.02] text-white hover:bg-white/[0.06] hover:text-[#00F5D4] group"
+                      className="rounded-full h-10 px-5 glass-btn group"
                       data-testid="button-token-litepaper"
                     >
                       Read tokenomics{" "}
@@ -413,7 +413,7 @@ export default function Invest() {
                   <Button
                     size="lg"
                     variant="outline"
-                    className="rounded-full h-12 px-7 border-white/15 bg-white/[0.02] text-white hover:bg-white/[0.06] hover:text-[#00F5D4]"
+                    className="rounded-full h-12 px-7 glass-btn"
                   >
                     Download
                   </Button>

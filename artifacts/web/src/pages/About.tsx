@@ -161,7 +161,7 @@ export default function About() {
                 </Button>
               </Link>
               <Link href="/litepaper">
-                <Button size="lg" variant="outline" className="rounded-full h-12 px-7 border-white/15 bg-white/[0.02] text-white hover:bg-white/[0.06]">
+                <Button size="lg" variant="outline" className="rounded-full h-12 px-7 glass-btn">
                   Read the Litepaper
                 </Button>
               </Link>
