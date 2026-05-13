@@ -116,7 +116,7 @@ function AgentCard({
 export default function Home() {
   const sample = computeVesting(10_000);
   return (
-    <div className="min-h-[100dvh] bg-[#0A0A0A] text-white overflow-x-hidden">
+    <div className="min-h-[100dvh] text-white overflow-x-hidden">
       {/* ----------------------------- HERO ----------------------------- */}
       <SiteHeader
         homeHref="https://www.aicreates.ai"

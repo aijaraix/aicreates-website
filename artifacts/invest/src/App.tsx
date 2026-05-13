@@ -105,7 +105,7 @@ function AuthShell({
   children: React.ReactNode;
 }) {
   return (
-    <div className="relative isolate min-h-[100dvh] bg-[#0A0A0A] text-white overflow-hidden">
+    <div className="relative isolate min-h-[100dvh] text-white overflow-hidden">
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 bg-grid-fade -z-10"
