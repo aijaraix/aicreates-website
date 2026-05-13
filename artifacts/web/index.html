@@ -4,6 +4,22 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#0A0A0A" />
+    <script>
+      // The investor portal subdomain shares this deployment's path-based
+      // routing (/invest/* → portal artifact, /* → marketing site fallback).
+      // Redirect invest.aicreates.ai/<anything-not-/invest/> to /invest/ so
+      // the subdomain always lands on the portal, not the marketing home.
+      (function () {
+        try {
+          var h = location.hostname.toLowerCase();
+          if (h === "invest.aicreates.ai" || h === "portal.aicreates.ai") {
+            if (!location.pathname.toLowerCase().startsWith("/invest/")) {
+              location.replace("/invest/" + location.search + location.hash);
+            }
+          }
+        } catch (e) {}
+      })();
+    </script>
 
     <!-- Primary Meta Tags -->
     <title>AIcreatesAI | Eve OS - The Agentic Business Operating System</title>
