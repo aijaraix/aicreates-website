@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Mail, Send, Loader2, MapPin, CheckCircle2 } from "lucide-react";
+import { useSeo } from "@/lib/useSeo";
 
 const CONTACT_ENDPOINT = "https://formsubmit.co/ajax/sholom@aicreates.ai";
 
@@ -29,6 +30,12 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 }
 
 export default function Contact() {
+  useSeo({
+    title: "Contact",
+    description:
+      "Get in touch with AIcreatesAI - waitlists for Eve OS and NeoBank, investor relations, press, and partnerships.",
+    path: "/contact",
+  });
   const { toast } = useToast();
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);

@@ -8,6 +8,7 @@ import ReleaseBar from "@/components/ReleaseBar";
 import PortalNav from "@/components/PortalNav";
 import PageHeader from "@/components/PageHeader";
 import StatusTimeline from "@/components/StatusTimeline";
+import { useInvestSeo } from "@/lib/useInvestSeo";
 import { StatTile } from "@/components/brand";
 import { buildIcs } from "@/lib/vesting";
 import { ROUNDS, formatVesting } from "@/data/rounds";
@@ -130,6 +131,12 @@ function openAllGoogleCalendarEvents(a: Allocation) {
 }
 
 export default function Dashboard() {
+  useInvestSeo({
+    title: "Dashboard",
+    description:
+      "Your AICA commitments, vesting schedule, SAFTs, and exportable calendar.",
+    path: "/dashboard",
+  });
   const { user } = useUser();
   const [, setLocation] = useLocation();
   const [paidToast, setPaidToast] = useState<string | null>(null);

@@ -4,6 +4,7 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import PortalNav from "@/components/PortalNav";
 import PageHeader from "@/components/PageHeader";
+import { useInvestSeo } from "@/lib/useInvestSeo";
 import {
   ArrowRight,
   CreditCard,
@@ -67,6 +68,12 @@ function fmt(cents: number) {
 }
 
 export default function Checkout() {
+  useInvestSeo({
+    title: "Checkout",
+    description:
+      "Fund your AICA commitment by card, ACH, crypto, or wire transfer.",
+    path: "/checkout",
+  });
   const params = useParams<{ commitId: string }>();
   const commitId = params.commitId!;
   const [method, setMethod] = useState<Method>("fiat");

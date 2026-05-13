@@ -25,6 +25,7 @@ import SiteHeader from "@/components/SiteHeader";
 import Footer from "@/components/Footer";
 import HeroVideoReel from "@/components/HeroVideoReel";
 import { computeVesting } from "@/lib/vesting";
+import { useInvestSeo } from "@/lib/useInvestSeo";
 
 const HERO_VIDEO_BASE = import.meta.env.BASE_URL;
 const HERO_CLIPS = [
@@ -131,6 +132,13 @@ function AgentCard({
 }
 
 export default function Home() {
+  useInvestSeo({
+    title: "Reserve Your AICA Allocation",
+    fullTitle: "AIcreatesAI Invest | Reserve Your AICA Allocation",
+    description:
+      "Reserve your allocation in the AICA Strategic Seed Round - first of five SAFT rounds in the ~$50M private sale.",
+    path: "/",
+  });
   const sample = computeVesting(10_000);
   return (
     <div className="min-h-[100dvh] text-white overflow-x-hidden">

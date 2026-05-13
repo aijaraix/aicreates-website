@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import DeckCarousel from "@/components/DeckCarousel";
 import AicaTokenMark from "@/components/AicaTokenMark";
+import { useSeo } from "@/lib/useSeo";
 
 function withGlyphs(text: string): React.ReactNode {
   const parts = text.split(/(\$AICA)/g);
@@ -44,6 +45,12 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 }
 
 export default function Invest() {
+  useSeo({
+    title: "Invest - Back the Agentic Intelligence Layer",
+    description:
+      "Reserve your allocation in the AICA private sale. $50M strategic raise, $3.5M initial GPU cluster, fixed-supply token, and the full investor portal.",
+    path: "/invest",
+  });
   const [deckOpen, setDeckOpen] = useState(false);
   const reduce = useReducedMotion();
   const fadeUp = (delay = 0) =>

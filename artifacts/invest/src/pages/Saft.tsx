@@ -5,6 +5,7 @@ import { api } from "@/lib/api";
 import PortalNav from "@/components/PortalNav";
 import PageHeader from "@/components/PageHeader";
 import VestingPreview from "@/components/VestingPreview";
+import { useInvestSeo } from "@/lib/useInvestSeo";
 import {
   ACCREDITATION_OPTIONS,
   ACK_LIST,
@@ -88,6 +89,12 @@ function priceStr(millicents: number) {
 }
 
 export default function Saft() {
+  useInvestSeo({
+    title: "SAFT",
+    description:
+      "Complete your Simple Agreement for Future Tokens - identity, address, KYC, payment method, accreditation, and signature.",
+    path: "/saft",
+  });
   const params = useParams<{ commitId: string }>();
   const commitId = params.commitId!;
   const [, setLocation] = useLocation();

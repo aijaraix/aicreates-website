@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useSeo } from "@/lib/useSeo";
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
@@ -10,6 +11,12 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 }
 
 export default function Privacy() {
+  useSeo({
+    title: "Privacy Policy",
+    description:
+      "How AIcreatesAI collects, uses, and protects your information across the marketing site, products, and investor portal.",
+    path: "/privacy",
+  });
   return (
     <div className="flex flex-col w-full">
       <section className="relative pt-28 pb-12 md:pt-36 md:pb-16 overflow-hidden">

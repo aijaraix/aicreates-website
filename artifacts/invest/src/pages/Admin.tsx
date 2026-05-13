@@ -4,6 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import PortalNav from "@/components/PortalNav";
 import PageHeader from "@/components/PageHeader";
+import { useInvestSeo } from "@/lib/useInvestSeo";
 import {
   CheckCircle2,
   Download,
@@ -165,6 +166,12 @@ function downloadFile(url: string) {
  * =================================================================== */
 
 export default function Admin() {
+  useInvestSeo({
+    title: "Admin",
+    description:
+      "Operator console for AICA commitments, wire confirmations, refunds, and CSV export.",
+    path: "/admin",
+  });
   const [tab, setTab] = useState("overview");
   const me = useQuery({
     queryKey: ["me"],

@@ -34,6 +34,7 @@ import RequireProfile from "@/components/RequireProfile";
 import NotFound from "@/pages/not-found";
 import { SectionLabel } from "@/components/brand";
 import SiteHeader from "@/components/SiteHeader";
+import { useInvestSeo } from "@/lib/useInvestSeo";
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { staleTime: 30_000, refetchOnWindowFocus: false } },
@@ -158,6 +159,12 @@ function AuthShell({
 }
 
 function SignInPage() {
+  useInvestSeo({
+    title: "Sign In",
+    description:
+      "Sign in to your AIcreatesAI investor portal to manage AICA commitments, SAFTs, and vesting.",
+    path: "/sign-in",
+  });
   return (
     <AuthShell
       eyebrow="Investor portal"
@@ -174,6 +181,12 @@ function SignInPage() {
 }
 
 function SignUpPage() {
+  useInvestSeo({
+    title: "Sign Up",
+    description:
+      "Create your AIcreatesAI investor account to access the deck, complete a SAFT, and fund a commitment.",
+    path: "/sign-up",
+  });
   return (
     <AuthShell
       eyebrow="AICA Strategic Seed Round - 2026"

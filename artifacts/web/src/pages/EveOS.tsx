@@ -19,6 +19,7 @@ import {
   Brain,
   Eye,
 } from "lucide-react";
+import { useSeo } from "@/lib/useSeo";
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
@@ -30,6 +31,12 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 }
 
 export default function EveOS() {
+  useSeo({
+    title: "Eve OS - The Agentic Business Operating System",
+    description:
+      "Eve OS is the world's first Agentic Business Operating System - a desktop-native platform that plans, executes, reviews, and improves every business function from one unified surface.",
+    path: "/eve-os",
+  });
   return (
     <div className="flex flex-col w-full">
       {/* HERO */}

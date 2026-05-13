@@ -6,6 +6,7 @@ import { ArrowRight, Loader2, Sparkles, Wand2, AlertTriangle } from "lucide-reac
 import PortalNav from "@/components/PortalNav";
 import PageHeader from "@/components/PageHeader";
 import VestingPreview from "@/components/VestingPreview";
+import { useInvestSeo } from "@/lib/useInvestSeo";
 
 interface RoundAvailability {
   slug: string;
@@ -72,6 +73,12 @@ interface CartLine {
 }
 
 export default function InvestPicker() {
+  useInvestSeo({
+    title: "Reserve Allocation",
+    description:
+      "Pick your AICA tier or enter a custom amount. Bonus tokens at $5k and $25k.",
+    path: "/invest",
+  });
   const [, setLocation] = useLocation();
   const [byRoundLine, setByRoundLine] = useState<Record<string, CartLine>>({});
   const [violations, setViolations] = useState<CapacityViolation[]>([]);

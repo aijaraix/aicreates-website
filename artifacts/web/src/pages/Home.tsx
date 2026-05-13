@@ -239,6 +239,7 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 export default function Home() {
   useSeo({
     title: "The operating layer for the agentic era",
+    fullTitle: "AIcreatesAI | Eve OS - The Agentic Business Operating System",
     description:
       "AIcreatesAI builds the agentic intelligence layer that companies, capital, and consumers will run on. One layer. Many products. Self-improving by design.",
     path: "/",

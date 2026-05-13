@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import DeckCarousel from "@/components/DeckCarousel";
 import AicaTokenMark from "@/components/AicaTokenMark";
+import { useSeo } from "@/lib/useSeo";
 
 function withGlyphs(text: string): React.ReactNode {
   const parts = text.split(/(\$AICA)/g);
@@ -322,6 +323,12 @@ function TokenomicsCoin() {
 }
 
 export default function Litepaper() {
+  useSeo({
+    title: "Litepaper - The Agentic Intelligence Layer",
+    description:
+      "The full thesis, architecture, tokenomics, and roadmap for the Agentic Business Operating System. May 2026.",
+    path: "/litepaper",
+  });
   const [deckOpen, setDeckOpen] = useState(false);
   return (
     <div className="flex flex-col w-full">

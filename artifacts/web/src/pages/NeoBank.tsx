@@ -11,6 +11,7 @@ import {
   Briefcase,
   Activity,
 } from "lucide-react";
+import { useSeo } from "@/lib/useSeo";
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
@@ -22,6 +23,12 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 }
 
 export default function NeoBank() {
+  useSeo({
+    title: "NeoBank - Capital That Thinks",
+    description:
+      "A consumer and business neobank built on the agentic intelligence layer. Balances allocate themselves, risk manages itself, and capital becomes self-organizing.",
+    path: "/neobank",
+  });
   return (
     <div className="flex flex-col w-full">
       {/* HERO */}

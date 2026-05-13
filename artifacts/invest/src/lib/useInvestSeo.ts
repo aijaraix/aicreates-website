@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 
-const SITE = "AIcreatesAI";
-const ORIGIN = "https://www.aicreates.ai";
+const SITE = "AIcreatesAI Invest";
+const ORIGIN = "https://invest.aicreates.ai";
 const DEFAULT_OG = `${ORIGIN}/og-cover.jpg`;
 const DEFAULT_OG_SQUARE = `${ORIGIN}/og-square.jpg`;
-const DEFAULT_OG_ALT = "AIcreatesAI - The Agentic Intelligence Layer";
+const DEFAULT_OG_ALT = "AIcreatesAI Invest - Reserve Your AICA Allocation";
 
 function setMeta(selector: string, attr: "name" | "property", key: string, content: string) {
   let el = document.head.querySelector<HTMLMetaElement>(selector);
@@ -32,7 +32,6 @@ function ensureAbsolute(url: string): string {
 }
 
 function setAllOgImages(coverUrl: string, squareUrl: string, alt: string) {
-  // Remove existing og:image* tags so we can rewrite them in the right order.
   const props = [
     "og:image",
     "og:image:secure_url",
@@ -64,21 +63,17 @@ function setAllOgImages(coverUrl: string, squareUrl: string, alt: string) {
   append("og:image:alt", alt);
 }
 
-export type SeoOptions = {
+export type InvestSeoOptions = {
   title: string;
   description: string;
   path: string;
-  /** Optional full title that bypasses the `<title> | AIcreatesAI` suffix. */
   fullTitle?: string;
-  /** 1200x630 cover image (absolute URL or path under /). */
   image?: string;
-  /** 600x600 square image for WhatsApp/iMessage (absolute URL or path under /). */
   squareImage?: string;
-  /** Alt text for both images. */
   imageAlt?: string;
 };
 
-export function useSeo({
+export function useInvestSeo({
   title,
   description,
   path,
@@ -86,7 +81,7 @@ export function useSeo({
   image = DEFAULT_OG,
   squareImage = DEFAULT_OG_SQUARE,
   imageAlt = DEFAULT_OG_ALT,
-}: SeoOptions) {
+}: InvestSeoOptions) {
   useEffect(() => {
     const fullTitle = fullTitleOverride ?? `${title} | ${SITE}`;
     const url = `${ORIGIN}${path}`;
