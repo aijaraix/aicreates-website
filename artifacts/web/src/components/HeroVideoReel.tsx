@@ -21,7 +21,7 @@ export default function HeroVideoReel({
   delayMs = 3500,
   clipDurationMs = 6500,
   fadeMs = 1500,
-  opacity = 0.7,
+  opacity = 0.55,
   className,
 }: HeroVideoReelProps) {
   const [armed, setArmed] = useState(false);
@@ -151,13 +151,15 @@ export default function HeroVideoReel({
             style={{
               opacity: armed && active === i ? opacity : 0,
               transition: `opacity ${fadeMs}ms ease-in-out`,
-              filter: "brightness(1.35) contrast(1.05) saturate(1.1)",
+              filter: "brightness(1.2) contrast(1.03) saturate(1.05)",
             }}
           />
         );
       })}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#0A0A0A]/55 via-[#0A0A0A]/30 to-[#0A0A0A]/75" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#0A0A0A]/65 via-[#0A0A0A]/35 to-[#0A0A0A]/55" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_60%_at_50%_50%,transparent,rgba(10,10,10,0.45))]" />
+      {/* Bottom fade so the hero blends into the next section instead of cutting off */}
+      <div className="absolute inset-x-0 bottom-0 h-40 sm:h-56 bg-gradient-to-b from-transparent to-[#0A0A0A]" />
     </div>
   );
 }

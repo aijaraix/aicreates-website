@@ -83,7 +83,7 @@ export default function Invest() {
               {...fadeUp(0.05)}
               className="mt-6 text-[40px] sm:text-5xl md:text-7xl lg:text-[88px] font-serif font-bold leading-[1.02] text-white tracking-tight [text-shadow:0_2px_30px_rgba(0,245,212,0.25),0_2px_24px_rgba(0,0,0,0.6)]"
             >
-              The Opportunity in the <span className="text-[#00F5D4]">Agentic Era</span>.
+              The Opportunity in the Agentic Era.
             </motion.h1>
             <motion.p
               {...fadeUp(0.15)}

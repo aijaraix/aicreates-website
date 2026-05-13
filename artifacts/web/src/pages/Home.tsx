@@ -258,7 +258,7 @@ export default function Home() {
               transition={{ duration: 0.7, delay: 0.05 }}
               className="text-[36px] sm:text-5xl md:text-6xl lg:text-[88px] font-serif font-bold leading-[1.04] sm:leading-[1.02] mb-5 sm:mb-6 text-white tracking-tight [text-shadow:0_2px_36px_rgba(0,245,212,0.18),0_2px_24px_rgba(0,0,0,0.75)]"
             >
-              The operating layer for the <span className="text-[#00F5D4]">agentic era</span>.
+              The operating layer for the agentic era.
             </motion.h1>
 
             <motion.p
