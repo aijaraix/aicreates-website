@@ -25,10 +25,13 @@ export default function ChatWidget({ hidden }: { hidden?: boolean }) {
   const socketRef = useRef<ChatSocket | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  // Only fetch the thread once the panel is opened. Pass markRead so
+  // the server clears unread state for messages the investor is now
+  // viewing -- a background prefetch must never silently zero unread.
   const thread = useQuery({
-    queryKey: ["chat", "thread"],
-    queryFn: () => api<ThreadResp>("/chat/thread"),
-    enabled: !hidden,
+    queryKey: ["chat", "thread", open],
+    queryFn: () => api<ThreadResp>("/chat/thread?markRead=true"),
+    enabled: !hidden && open,
     staleTime: 10_000,
   });
 

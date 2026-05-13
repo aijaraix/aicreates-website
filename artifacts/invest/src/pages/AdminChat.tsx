@@ -304,7 +304,7 @@ function ThreadView({
     queryKey: ["admin", "chat", "thread", investorUserId],
     queryFn: () =>
       api<ThreadResp>(
-        `/chat/thread?investorUserId=${encodeURIComponent(investorUserId)}`,
+        `/chat/thread?investorUserId=${encodeURIComponent(investorUserId)}&markRead=true`,
       ),
   });
 

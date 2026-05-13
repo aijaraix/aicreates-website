@@ -87,8 +87,11 @@ router.get("/chat/thread", requireAuth, async (req, res) => {
     .where(eq(chatMessagesTable.threadId, thread.id))
     .orderBy(chatMessagesTable.createdAt);
 
-  // Mark counterparty messages as read on open.
-  if (role === "admin") {
+  // Mark counterparty messages as read only when the caller signals
+  // the thread is actually being opened (?markRead=true). Plain
+  // background prefetches must NOT clear unread state.
+  const markRead = req.query["markRead"] === "true";
+  if (markRead && role === "admin") {
     await db
       .update(chatMessagesTable)
       .set({ readByAdminAt: new Date() })
@@ -99,7 +102,7 @@ router.get("/chat/thread", requireAuth, async (req, res) => {
           isNull(chatMessagesTable.readByAdminAt),
         ),
       );
-  } else {
+  } else if (markRead) {
     await db
       .update(chatMessagesTable)
       .set({ readByInvestorAt: new Date() })
