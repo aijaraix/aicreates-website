@@ -47,14 +47,14 @@ export default function PortalNav({ showAdmin }: { showAdmin?: boolean }) {
               href="https://www.aicreates.ai/litepaper"
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden md:inline-flex items-center justify-center rounded-full h-9 px-5 border border-white/15 bg-white/[0.02] text-white hover:bg-white/[0.06] hover:text-[#00F5D4] text-sm font-medium transition"
+              className="hidden md:inline-flex items-center justify-center rounded-full h-9 px-5 glass-btn text-sm font-medium"
               data-testid="link-portal-litepaper"
             >
               Litepaper
             </a>
             <Link
               href="/invest"
-              className="hidden md:inline-flex items-center justify-center rounded-full h-9 px-5 bg-[#00F5D4] text-black hover:bg-[#00F5D4]/90 text-sm font-medium transition"
+              className="hidden md:inline-flex items-center justify-center rounded-full h-9 px-5 teal-btn text-sm"
               data-testid="link-portal-reserve"
             >
               Reserve allocation
@@ -62,7 +62,7 @@ export default function PortalNav({ showAdmin }: { showAdmin?: boolean }) {
             {showAdmin && (
               <Link
                 href="/admin"
-                className="hidden sm:inline-flex items-center justify-center rounded-full h-9 px-5 border border-white/15 bg-white/[0.02] text-white hover:bg-white/[0.06] hover:text-[#00F5D4] text-sm font-medium transition"
+                className="hidden sm:inline-flex items-center justify-center rounded-full h-9 px-5 glass-btn text-sm font-medium"
                 data-testid="link-admin"
               >
                 Admin
@@ -73,14 +73,14 @@ export default function PortalNav({ showAdmin }: { showAdmin?: boolean }) {
             </span>
             <button
               onClick={() => signOut({ redirectUrl: window.location.origin })}
-              className="hidden md:inline-flex items-center justify-center gap-1.5 rounded-full h-9 px-5 border border-white/15 bg-white/[0.02] text-white hover:bg-white/[0.06] hover:text-[#00F5D4] text-sm font-medium transition"
+              className="hidden md:inline-flex items-center justify-center gap-1.5 rounded-full h-9 px-5 glass-btn text-sm font-medium"
               data-testid="button-signout"
             >
               <LogOut className="w-3.5 h-3.5" /> Sign out
             </button>
             <button
               onClick={() => setOpen((v) => !v)}
-              className="md:hidden inline-flex items-center justify-center h-9 w-9 rounded-full border border-white/15 bg-white/[0.02] hover:bg-white/[0.06]"
+              className="md:hidden inline-flex items-center justify-center h-9 w-9 rounded-full glass-btn"
               aria-label="Open menu"
               data-testid="button-mobile-menu"
             >
@@ -120,7 +120,7 @@ export default function PortalNav({ showAdmin }: { showAdmin?: boolean }) {
               </span>
               <button
                 onClick={() => signOut({ redirectUrl: window.location.origin })}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/15 bg-white/[0.02] hover:bg-white/[0.06] text-xs"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full glass-btn text-xs"
               >
                 <LogOut className="w-3.5 h-3.5" /> Sign out
               </button>

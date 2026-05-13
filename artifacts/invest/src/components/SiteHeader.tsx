@@ -116,8 +116,8 @@ export default function SiteHeader({
           {ctas.map((c) => {
             const cls =
               c.variant === "primary"
-                ? "inline-flex items-center justify-center rounded-full h-9 px-5 bg-[#00F5D4] text-black hover:bg-[#00F5D4]/90 text-sm font-medium transition"
-                : "inline-flex items-center justify-center rounded-full h-9 px-5 border border-white/15 bg-white/[0.02] text-white hover:bg-white/[0.06] hover:text-[#00F5D4] text-sm font-medium transition";
+                ? "inline-flex items-center justify-center rounded-full h-9 px-5 teal-btn text-sm"
+                : "inline-flex items-center justify-center rounded-full h-9 px-5 glass-btn text-sm font-medium";
             if (c.external) {
               return (
                 <a

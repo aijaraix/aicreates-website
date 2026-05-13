@@ -219,14 +219,14 @@ export default function Dashboard() {
                 {a.state === "pending_saft" ? (
                   <Link
                     href={`/saft/${a.id}`}
-                    className="text-sm inline-flex items-center px-4 h-9 rounded-full bg-[#00F5D4] text-black font-medium"
+                    className="text-sm inline-flex items-center px-4 h-9 rounded-full teal-btn"
                   >
                     Sign SAFT <ArrowRight className="ml-2 w-4 h-4" />
                   </Link>
                 ) : a.state === "pending_payment" ? (
                   <Link
                     href={`/checkout/${a.id}`}
-                    className="text-sm inline-flex items-center px-4 h-9 rounded-full bg-[#00F5D4] text-black font-medium shadow-[0_0_20px_-6px_rgba(0,245,212,0.6)]"
+                    className="text-sm inline-flex items-center px-4 h-9 rounded-full teal-btn"
                   >
                     Complete payment <ArrowRight className="ml-2 w-4 h-4" />
                   </Link>

@@ -924,7 +924,7 @@ function CommitmentsTab() {
                   bulk.mutate("confirm-wire");
               }}
               disabled={bulk.isPending}
-              className="px-3 py-1.5 text-xs rounded-full border border-[#00F5D4]/40 text-[#00F5D4] hover:bg-[#00F5D4]/10 disabled:opacity-50"
+              className="px-3 py-1.5 text-xs rounded-full teal-btn disabled:opacity-50"
               data-testid="button-bulk-confirm-wire"
             >
               Bulk confirm wire
@@ -939,7 +939,7 @@ function CommitmentsTab() {
                   bulk.mutate("confirm-crypto");
               }}
               disabled={bulk.isPending}
-              className="px-3 py-1.5 text-xs rounded-full border border-[#00F5D4]/40 text-[#00F5D4] hover:bg-[#00F5D4]/10 disabled:opacity-50"
+              className="px-3 py-1.5 text-xs rounded-full teal-btn disabled:opacity-50"
               data-testid="button-bulk-confirm-crypto"
             >
               Bulk confirm crypto
@@ -1071,7 +1071,7 @@ function CommitmentsTab() {
                                 confirmWire.mutate(c.id);
                             }}
                             disabled={confirmWire.isPending}
-                            className="inline-flex items-center gap-1 px-2 py-1 text-[10px] rounded-full border border-[#00F5D4]/40 text-[#00F5D4] hover:bg-[#00F5D4]/10 disabled:opacity-50"
+                            className="inline-flex items-center gap-1 px-2 py-1 text-[10px] rounded-full teal-btn disabled:opacity-50"
                             data-testid={`button-confirm-wire-${c.id}`}
                           >
                             <CheckCircle2 className="w-3 h-3" /> Wire
@@ -1088,7 +1088,7 @@ function CommitmentsTab() {
                                 confirmCrypto.mutate(c.id);
                             }}
                             disabled={confirmCrypto.isPending}
-                            className="inline-flex items-center gap-1 px-2 py-1 text-[10px] rounded-full border border-[#00F5D4]/40 text-[#00F5D4] hover:bg-[#00F5D4]/10 disabled:opacity-50"
+                            className="inline-flex items-center gap-1 px-2 py-1 text-[10px] rounded-full teal-btn disabled:opacity-50"
                             data-testid={`button-confirm-crypto-${c.id}`}
                           >
                             <CheckCircle2 className="w-3 h-3" /> Crypto

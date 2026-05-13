@@ -362,7 +362,7 @@ export default function Checkout() {
                     target="_blank"
                     rel="noopener noreferrer"
                     download
-                    className="inline-flex items-center gap-2 px-4 h-9 rounded-full border border-[#00F5D4]/40 bg-[#00F5D4]/10 text-[#00F5D4] text-sm hover:bg-[#00F5D4]/20"
+                    className="inline-flex items-center gap-2 px-4 h-9 rounded-full teal-btn text-sm"
                     data-testid="link-wire-instructions-pdf"
                   >
                     <Download className="w-3.5 h-3.5" /> Download wire instructions (PDF)
@@ -371,7 +371,7 @@ export default function Checkout() {
                     href={wireInstructionsImageUrl(c.id)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 h-9 rounded-full border border-white/15 bg-white/[0.02] text-white/80 text-sm hover:bg-white/[0.06]"
+                    className="inline-flex items-center gap-2 px-4 h-9 rounded-full glass-btn text-sm"
                     data-testid="link-wire-instructions-image"
                   >
                     <ImageIcon className="w-3.5 h-3.5" /> View as image

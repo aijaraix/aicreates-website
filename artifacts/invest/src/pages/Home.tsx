@@ -177,7 +177,7 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Link
                 href="/sign-up"
-                className="inline-flex items-center justify-center h-12 px-7 rounded-full bg-[#00F5D4] text-black font-medium hover:bg-[#00F5D4]/90 transition"
+                className="inline-flex items-center justify-center h-12 px-7 rounded-full teal-btn"
                 data-testid="link-hero-reserve"
               >
                 Reserve allocation
@@ -187,7 +187,7 @@ export default function Home() {
                 href="/invest/litepaper.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center h-12 px-7 rounded-full border border-white/15 bg-white/[0.02] text-white hover:bg-white/[0.06] transition"
+                className="inline-flex items-center justify-center h-12 px-7 rounded-full glass-btn"
                 data-testid="link-hero-litepaper"
               >
                 <Download className="mr-2 w-4 h-4" /> Download Litepaper
@@ -409,7 +409,7 @@ export default function Home() {
             href="https://www.aicreates.ai/about"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center justify-center h-10 px-5 rounded-full border border-white/15 bg-white/[0.02] text-sm text-white hover:bg-white/[0.06] hover:text-[#00F5D4] transition"
+            className="inline-flex items-center justify-center h-10 px-5 rounded-full glass-btn text-sm"
             data-testid="link-platform-about"
           >
             Read the layer architecture <ArrowRight className="ml-2 w-4 h-4" />
@@ -418,7 +418,7 @@ export default function Home() {
             href="https://www.aicreates.ai/eve-os"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center justify-center h-10 px-5 rounded-full border border-white/15 bg-white/[0.02] text-sm text-white hover:bg-white/[0.06] hover:text-[#00F5D4] transition"
+            className="inline-flex items-center justify-center h-10 px-5 rounded-full glass-btn text-sm"
             data-testid="link-platform-eve-os"
           >
             Eve OS <ArrowRight className="ml-2 w-4 h-4" />
@@ -427,7 +427,7 @@ export default function Home() {
             href="https://www.aicreates.ai/neobank"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center justify-center h-10 px-5 rounded-full border border-white/15 bg-white/[0.02] text-sm text-white hover:bg-white/[0.06] hover:text-[#00F5D4] transition"
+            className="inline-flex items-center justify-center h-10 px-5 rounded-full glass-btn text-sm"
             data-testid="link-platform-neobank"
           >
             NeoBank <ArrowRight className="ml-2 w-4 h-4" />
@@ -436,7 +436,7 @@ export default function Home() {
             href="https://www.aicreates.ai/litepaper#tokenomics"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center justify-center h-10 px-5 rounded-full border border-white/15 bg-white/[0.02] text-sm text-white hover:bg-white/[0.06] hover:text-[#00F5D4] transition"
+            className="inline-flex items-center justify-center h-10 px-5 rounded-full glass-btn text-sm"
             data-testid="link-platform-tokenomics"
           >
             Tokenomics <ArrowRight className="ml-2 w-4 h-4" />
@@ -1078,14 +1078,14 @@ export default function Home() {
               <div className="mt-8 flex flex-wrap gap-3 justify-center">
                 <Link
                   href="/sign-up"
-                  className="inline-flex items-center justify-center h-12 px-8 rounded-full bg-[#00F5D4] text-black font-medium hover:bg-[#00F5D4]/90 transition"
+                  className="inline-flex items-center justify-center h-12 px-8 rounded-full teal-btn"
                   data-testid="link-final-reserve"
                 >
                   Reserve allocation <ArrowRight className="ml-2 w-4 h-4" />
                 </Link>
                 <Link
                   href="/sign-in"
-                  className="inline-flex items-center justify-center h-12 px-7 rounded-full border border-white/15 bg-transparent text-white hover:bg-white/5 transition"
+                  className="inline-flex items-center justify-center h-12 px-7 rounded-full glass-btn"
                 >
                   Sign in
                 </Link>
