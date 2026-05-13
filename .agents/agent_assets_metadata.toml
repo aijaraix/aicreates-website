@@ -95,3 +95,9 @@ id = "dsDyanguTXYgye5APwe7h"
 uri = "file://artifacts/web/src/assets/_wide_crop.png"
 type = "image"
 title = "Wider crop preview"
+
+[[outputs]]
+id = "LG94lVEsatzpL1_gUWrVP"
+uri = "file://artifacts/web/src/assets/aica-wordmark.png"
+type = "image"
+title = "Wordmark from your logo"

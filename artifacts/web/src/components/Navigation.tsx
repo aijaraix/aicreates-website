@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { LogoMark } from "./LogoMark";
+import wordmark from "@/assets/aica-wordmark.png";
 
 const PRODUCT_LINKS = [
   { name: "Eve OS", path: "/eve-os", desc: "The Agentic Business Operating System" },
@@ -36,19 +37,19 @@ const COMPANY_LINKS = [
 ];
 
 function Wordmark({ size = "md" }: { size?: "sm" | "md" }) {
-  const cls = size === "sm" ? "text-base" : "text-lg";
   const iconCls = size === "sm" ? "h-5 w-auto shrink-0" : "h-6 w-auto shrink-0";
+  const textCls = size === "sm" ? "h-3 w-auto" : "h-4 w-auto";
   return (
     <span className="inline-flex items-center gap-2">
       <LogoMark className={iconCls} />
-      <span
-        className={`font-semibold uppercase tracking-[0.08em] text-white ${cls} leading-none`}
-        style={{ fontFamily: "var(--app-font-wordmark)" }}
-      >
-        <span className="text-[hsl(168_100%_48%)]">AI</span>
-        <span className="font-normal">creates</span>
-        <span className="text-[hsl(168_100%_48%)]">AI</span>
-      </span>
+      <img
+        src={wordmark}
+        alt="AIcreatesAI"
+        draggable={false}
+        decoding="async"
+        loading="eager"
+        className={textCls}
+      />
     </span>
   );
 }

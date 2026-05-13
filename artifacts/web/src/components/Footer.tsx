@@ -2,6 +2,7 @@ import { Link } from "wouter";
 import { useState, type FormEvent } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { LogoMark } from "./LogoMark";
+import wordmark from "@/assets/aica-wordmark.png";
 
 const COLUMNS: { heading: string; links: { name: string; href: string }[] }[] = [
   {
@@ -184,14 +185,14 @@ export function Footer() {
             <div>
               <Link href="/" className="inline-flex items-center gap-2.5 mb-3">
                 <LogoMark className="h-6 w-auto shrink-0" />
-                <span
-                  className="font-semibold uppercase tracking-[0.08em] text-white text-lg leading-none"
-                  style={{ fontFamily: "var(--app-font-wordmark)" }}
-                >
-                  <span className="text-[#00F5D4]">AI</span>
-                  <span className="font-normal">creates</span>
-                  <span className="text-[#00F5D4]">AI</span>
-                </span>
+                <img
+                  src={wordmark}
+                  alt="AIcreatesAI"
+                  draggable={false}
+                  decoding="async"
+                  loading="eager"
+                  className="h-4 w-auto"
+                />
               </Link>
               <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-white/70 mb-5">
                 Automate. <span className="text-[#00F5D4]">Innovate.</span> Elevate.
