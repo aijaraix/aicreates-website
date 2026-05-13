@@ -37,8 +37,8 @@ const COMPANY_LINKS = [
 ];
 
 function Wordmark({ size = "md" }: { size?: "sm" | "md" }) {
-  const iconCls = size === "sm" ? "h-5 w-auto shrink-0" : "h-6 w-auto shrink-0";
-  const textCls = size === "sm" ? "h-3 w-auto" : "h-4 w-auto";
+  const iconCls = size === "sm" ? "h-4 w-auto shrink-0" : "h-[19px] w-auto shrink-0";
+  const textCls = size === "sm" ? "h-[10px] w-auto" : "h-[13px] w-auto";
   return (
     <span className="inline-flex items-center gap-2">
       <LogoMark className={iconCls} />

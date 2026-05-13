@@ -194,12 +194,11 @@ export function Footer() {
                   className="h-4 w-auto"
                 />
               </Link>
-              <p
-                className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/70 mb-5 whitespace-nowrap w-56"
-                style={{ textAlign: "justify", textAlignLast: "justify" }}
-              >
-                Automate. <span className="text-[#00F5D4]">Innovate.</span> Elevate.
-              </p>
+              <div className="flex justify-between font-mono text-[10px] uppercase tracking-[0.14em] text-white/70 mb-5 w-[225px]">
+                <span>Automate.</span>
+                <span className="text-[#00F5D4]">Innovate.</span>
+                <span>Elevate.</span>
+              </div>
               <p className="text-white/50 text-sm leading-relaxed max-w-sm mb-6">
                 Building the agentic intelligence layer for the next generation of companies, capital, and consumers.
               </p>
