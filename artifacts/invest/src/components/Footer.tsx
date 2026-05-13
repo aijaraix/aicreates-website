@@ -28,16 +28,14 @@ export default function Footer() {
         </p>
       </div>
 
-      {/* Solid dark base bar - covers the page texture for visual separation */}
-      <div className="relative bg-[#0A0A0A] border-t border-white/5">
-        <div className="container mx-auto px-4 md:px-6 py-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-          <p className="text-white/30 text-xs tracking-wide">
-            © {new Date().getFullYear()} AIcreatesAI. All rights reserved.
-          </p>
-          <p className="text-white/30 text-xs tracking-wide">
-            Engineered for the agentic era.
-          </p>
-        </div>
+      {/* Bottom bar - transparent, sits over the page texture */}
+      <div className="container mx-auto px-4 md:px-6 pb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <p className="text-white/30 text-xs tracking-wide">
+          © {new Date().getFullYear()} AIcreatesAI. All rights reserved.
+        </p>
+        <p className="text-white/30 text-xs tracking-wide">
+          Engineered for the agentic era.
+        </p>
       </div>
     </footer>
   );
