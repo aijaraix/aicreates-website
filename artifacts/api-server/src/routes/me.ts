@@ -9,7 +9,7 @@ import {
 } from "@workspace/db";
 import { eq, desc, inArray, asc } from "drizzle-orm";
 import { computeVestingSchedule } from "../lib/vesting";
-import { getRoundLabel } from "../lib/rounds";
+import { getRoundLabel, ROUND_BY_SLUG } from "../lib/rounds";
 
 const router: IRouter = Router();
 
@@ -70,6 +70,20 @@ router.get("/me/allocations", requireAuth, async (req, res) => {
     const saft = saftByCommitment.get(c.id);
     const payload = (saft?.payload ?? {}) as Record<string, unknown>;
     const lines = linesByCommitment.get(c.id) ?? [];
+    // Derive a top-level price-per-token for the commitment. For multi-round
+    // commitments fall back to a tokens-weighted average across the per-round
+    // lines so the displayed "price paid" is a true blended price.
+    const roundPrice =
+      ROUND_BY_SLUG.get(c.roundSlug)?.pricePerTokenMillicents ?? null;
+    let pricePerTokenMillicents: number | null = roundPrice;
+    if (lines.length > 1) {
+      const totalTok = lines.reduce((s, l) => s + l.tokens, 0);
+      const totalUsd = lines.reduce((s, l) => s + l.usdCents, 0);
+      // millicents-per-token = (usdCents * 10) / tokens
+      if (totalTok > 0) {
+        pricePerTokenMillicents = Math.round((totalUsd * 10) / totalTok);
+      }
+    }
     return {
       id: c.id,
       roundSlug: c.roundSlug,
@@ -78,6 +92,7 @@ router.get("/me/allocations", requireAuth, async (req, res) => {
       amountCents: c.amountCents,
       currency: c.currency,
       tokenAllocation: c.tokenAllocation,
+      pricePerTokenMillicents,
       state: c.state ?? c.status,
       paymentMethod: c.paymentMethod,
       saftSignedAt: c.saftSignedAt ?? saft?.signedAt ?? null,

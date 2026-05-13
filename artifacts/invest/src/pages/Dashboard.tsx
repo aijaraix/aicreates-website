@@ -4,7 +4,7 @@ import { useUser } from "@clerk/react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { ArrowRight, Calendar, Check, Download, FileText, Loader2, Wallet } from "lucide-react";
-import VestingCalendar from "@/components/VestingCalendar";
+import ReleaseBar from "@/components/ReleaseBar";
 import PortalNav from "@/components/PortalNav";
 import PageHeader from "@/components/PageHeader";
 import StatusTimeline from "@/components/StatusTimeline";
@@ -28,6 +28,7 @@ interface Allocation {
   amountCents: number;
   currency: string;
   tokenAllocation: number;
+  pricePerTokenMillicents: number | null;
   state: string;
   paymentMethod: string | null;
   saftSignedAt: string | null;
@@ -64,6 +65,13 @@ function fmt(cents: number) {
     currency: "USD",
     maximumFractionDigits: 0,
   }).format(cents / 100);
+}
+
+/** Format a per-token price in USD millicents as e.g. "$0.010". */
+function fmtPricePerToken(millicents: number | null | undefined): string {
+  if (millicents == null || !Number.isFinite(millicents)) return "-";
+  // 1 millicent = $0.001, so USD per token = millicents / 1000
+  return `$${(millicents / 1000).toFixed(3)}`;
 }
 
 function fmtDate(v: string | null) {
@@ -268,6 +276,8 @@ export default function Dashboard() {
           />
         </div>
 
+        <CurrentRoundStrip />
+
         <TokenRoundsSection />
 
         <div className="flex items-center justify-between mb-4">
@@ -313,6 +323,21 @@ export default function Dashboard() {
                           <span>•</span>
                           <span className="uppercase tracking-wider text-[10px]">
                             {a.paymentMethod}
+                          </span>
+                        </>
+                      )}
+                      {a.pricePerTokenMillicents != null && (
+                        <>
+                          <span>•</span>
+                          <span
+                            className="text-white/70"
+                            data-testid={`price-paid-${a.id}`}
+                          >
+                            Price paid{" "}
+                            <span className="text-[#00F5D4] font-medium">
+                              {fmtPricePerToken(a.pricePerTokenMillicents)}
+                            </span>{" "}
+                            / AICA
                           </span>
                         </>
                       )}
@@ -375,6 +400,10 @@ export default function Dashboard() {
                         {a.lines.map((l) => (
                           <tr key={l.roundSlug}>
                             <td className="px-3 py-1.5">{l.roundLabel}</td>
+                            <td className="px-3 py-1.5 text-right tabular-nums text-white/60">
+                              {fmtPricePerToken(l.pricePerTokenMillicents)}{" "}
+                              <span className="text-white/40">/ AICA</span>
+                            </td>
                             <td className="px-3 py-1.5 text-right tabular-nums">
                               {l.tokens.toLocaleString()} AICA
                             </td>
@@ -474,10 +503,7 @@ export default function Dashboard() {
 
                 {a.isFunded && a.vesting && (
                   <div className="mt-6">
-                    <div className="text-xs uppercase tracking-[0.18em] text-white/40 mb-3">
-                      Vesting calendar
-                    </div>
-                    <VestingCalendar
+                    <ReleaseBar
                       schedule={a.vesting.schedule}
                       total={a.tokenAllocation}
                     />
@@ -489,6 +515,78 @@ export default function Dashboard() {
         )}
       </main>
     </div>
+  );
+}
+
+/**
+ * Compact strip rendered just above the full Token Rounds table. Shows the
+ * currently open round's price, the next round's step-up price, and a
+ * stubbed "Live price" tile. The live tile is intentionally a placeholder
+ * until a real venue / price feed exists - the structure is kept so a
+ * price source can be wired in without re-styling.
+ */
+function CurrentRoundStrip() {
+  const openIdx = ROUNDS.findIndex((r) => r.open);
+  const open = openIdx >= 0 ? ROUNDS[openIdx] : null;
+  const next = openIdx >= 0 ? ROUNDS[openIdx + 1] : null;
+  if (!open) return null;
+  return (
+    <section
+      className="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4"
+      data-testid="current-round-strip"
+    >
+      <div className="brand-card p-5">
+        <div className="text-[10px] uppercase tracking-[0.18em] text-[#00F5D4]">
+          Current round
+        </div>
+        <div className="mt-1.5 font-display text-lg font-semibold tracking-tight">
+          {open.name}
+        </div>
+        <div className="mt-2 flex items-baseline gap-2">
+          <span className="text-2xl font-semibold tabular-nums text-[#00F5D4]">
+            {open.pricePerToken.replace(" per AICA", "")}
+          </span>
+          <span className="text-xs text-white/45">per AICA</span>
+        </div>
+      </div>
+      <div className="brand-card p-5">
+        <div className="text-[10px] uppercase tracking-[0.18em] text-white/45">
+          Next round
+        </div>
+        {next ? (
+          <>
+            <div className="mt-1.5 font-display text-lg font-semibold tracking-tight text-white/90">
+              {next.name}
+            </div>
+            <div className="mt-2 flex items-baseline gap-2">
+              <span className="text-2xl font-semibold tabular-nums text-white/85">
+                {next.pricePerToken.replace(" per AICA", "")}
+              </span>
+              <span className="text-xs text-white/45">per AICA</span>
+            </div>
+            <div className="mt-1 text-[11px] text-white/45">
+              Step-up from {open.pricePerToken.replace(" per AICA", "")}
+            </div>
+          </>
+        ) : (
+          <div className="mt-1.5 text-sm text-white/55">
+            All rounds opened
+          </div>
+        )}
+      </div>
+      <div className="brand-card p-5" data-testid="live-price-tile">
+        <div className="text-[10px] uppercase tracking-[0.18em] text-white/45">
+          Live price
+        </div>
+        <div className="mt-1.5 font-display text-lg font-semibold tracking-tight text-white/70">
+          Pre-TGE
+        </div>
+        <div className="mt-2 text-sm text-white/55">Not yet trading</div>
+        <div className="mt-1 text-[11px] text-white/40">
+          A live market price will appear here after token generation.
+        </div>
+      </div>
+    </section>
   );
 }
 
