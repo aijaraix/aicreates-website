@@ -77,11 +77,11 @@ const GROUPS: Group[] = [
       },
       {
         q: "How much of the supply is being sold in the private sale?",
-        a: "25% (2,500,000,000 $AICA) is allocated to the private sale across five SAFT rounds for a $50M target raise (~$200M FDV). Pricing ladders from $0.010 (Strategic Seed) to $0.036 (Community / Launchpad).",
+        a: "22.5% (2,250,000,000 $AICA) is allocated to the private sale across five SAFT rounds for a $50M target raise (~$230M FDV). Pricing ladders from $0.010 (Strategic Seed) to $0.034 (Community / Launchpad).",
       },
       {
         q: "What are the five SAFT rounds?",
-        a: "Strategic Seed - $0.010 per AICA, 500M tokens, $5M, $100M FDV (open now). Private Round 1 - $0.015, 800M, $12M, $150M FDV. Private Round 2 - $0.020, 900M, $18M, $200M FDV. Infrastructure / Strategic - $0.028, 357,142,857, $10M, $280M FDV. Community / Launchpad - $0.036, 138,888,889, $5M, $360M FDV. Aggregate: 2,500,000,000 AICA = 25% of the 10,000,000,000 fixed supply, $50M target raise, ~$200M FDV.",
+        a: "Strategic Seed - $0.010 per AICA, 500M tokens, $5M, $100M FDV (open now). Private Round 1 - $0.015, 800M, $12M, $150M FDV. Private Round 2 - $0.020, 900M, $18M, $200M FDV. Infrastructure / Strategic - $0.026, 384,615,385, $10M, $260M FDV. Community / Launchpad - $0.034, 147,058,824, $5M, $340M FDV. Aggregate: 2,250,000,000 AICA = 22.5% of the 10,000,000,000 fixed supply, $50M target raise, ~$230M FDV.",
       },
       {
         q: "Which round is open right now?",

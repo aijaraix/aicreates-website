@@ -4,8 +4,8 @@
  * artifacts/invest/src/data/rounds.ts but the server is the source of
  * truth for token math, raise totals, and capacity gating.
  *
- * Aggregate: 2,500,000,000 AICA across 5 rounds = 25% of the
- * 10,000,000,000 fixed supply, raising $50,000,000 (~$200M FDV at
+ * Aggregate: 2,250,000,000 AICA across 5 rounds = 22.5% of the
+ * 10,000,000,000 fixed supply, raising $50,000,000 (~$230M FDV at
  * blended round pricing).
  */
 export interface RoundDef {
@@ -58,8 +58,8 @@ export const ROUNDS: readonly RoundDef[] = [
   {
     slug: "infrastructure",
     label: "Infrastructure / Strategic",
-    pricePerTokenMillicents: 28, // $0.028 per AICA
-    tokensForSale: 357_142_857,
+    pricePerTokenMillicents: 26, // $0.026 per AICA
+    tokensForSale: 384_615_385,
     targetRaiseCents: 1_000_000_000, // $10M
     hardCapCents: 1_000_000_000,
     deadline: "2027-09-30T23:59:59Z",
@@ -68,8 +68,8 @@ export const ROUNDS: readonly RoundDef[] = [
   {
     slug: "community-launchpad",
     label: "Community / Launchpad",
-    pricePerTokenMillicents: 36, // $0.036 per AICA
-    tokensForSale: 138_888_889,
+    pricePerTokenMillicents: 34, // $0.034 per AICA
+    tokensForSale: 147_058_824,
     targetRaiseCents: 500_000_000, // $5M
     hardCapCents: 500_000_000,
     deadline: "2027-12-31T23:59:59Z",

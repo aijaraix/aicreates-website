@@ -593,7 +593,7 @@ export default function Home() {
               <span className="text-[#00F5D4] text-2xl">AICA</span>
             </div>
             <ul className="mt-5 space-y-2 text-sm text-white/70">
-              <li>- 25% Private Sale - 2.5B AICA across 5 SAFT rounds, $50M raise ($0.010 → $0.036 per AICA, ~$200M FDV)</li>
+              <li>- 22.5% Private Sale - 2.25B AICA across 5 SAFT rounds, $50M raise ($0.010 → $0.034 per AICA, ~$230M FDV)</li>
               <li>- 75% Reserved per whitepaper across ecosystem rewards, team and advisors, treasury, and public sale</li>
               <li>- All private-round tokens subject to appropriate vesting</li>
             </ul>

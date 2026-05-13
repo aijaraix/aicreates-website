@@ -58,23 +58,23 @@ export const ROUNDS: RoundDef[] = [
   {
     slug: "infrastructure",
     name: "Infrastructure / Strategic",
-    pricePerTokenMillicents: 28,
-    pricePerToken: "$0.028 per AICA",
-    tokens: "357,142,857 AICA",
+    pricePerTokenMillicents: 26,
+    pricePerToken: "$0.026 per AICA",
+    tokens: "384,615,385 AICA",
     totalRaise: "$10,000,000",
-    supplyPct: "3.57%",
-    fdv: "$280M",
+    supplyPct: "3.85%",
+    fdv: "$260M",
     open: false,
   },
   {
     slug: "community-launchpad",
     name: "Community / Launchpad",
-    pricePerTokenMillicents: 36,
-    pricePerToken: "$0.036 per AICA",
-    tokens: "138,888,889 AICA",
+    pricePerTokenMillicents: 34,
+    pricePerToken: "$0.034 per AICA",
+    tokens: "147,058,824 AICA",
     totalRaise: "$5,000,000",
-    supplyPct: "1.39%",
-    fdv: "$360M",
+    supplyPct: "1.47%",
+    fdv: "$340M",
     open: false,
   },
 ];
@@ -84,10 +84,10 @@ export const ROUND_BY_SLUG: Map<string, RoundDef> = new Map(
 );
 
 export const ROUND_TOTALS = {
-  tokens: "2,500,000,000 AICA",
-  supplyPct: "25%",
+  tokens: "2,250,000,000 AICA",
+  supplyPct: "22.5%",
   totalRaise: "$50,000,000",
-  fdv: "~$200M",
+  fdv: "~$230M",
 };
 
 export const TIER_ROWS = [

@@ -292,8 +292,8 @@ function SaftRoundTable() {
     { name: "Strategic Seed", price: "$0.010", tokens: "500,000,000", raise: "$5,000,000", fdv: "$100M", supplyPct: "5.00%", open: true },
     { name: "Private Round 1", price: "$0.015", tokens: "800,000,000", raise: "$12,000,000", fdv: "$150M", supplyPct: "8.00%", open: false },
     { name: "Private Round 2", price: "$0.020", tokens: "900,000,000", raise: "$18,000,000", fdv: "$200M", supplyPct: "9.00%", open: false },
-    { name: "Infrastructure / Strategic", price: "$0.028", tokens: "357,142,857", raise: "$10,000,000", fdv: "$280M", supplyPct: "3.57%", open: false },
-    { name: "Community / Launchpad", price: "$0.036", tokens: "138,888,889", raise: "$5,000,000", fdv: "$360M", supplyPct: "1.39%", open: false },
+    { name: "Infrastructure / Strategic", price: "$0.026", tokens: "384,615,385", raise: "$10,000,000", fdv: "$260M", supplyPct: "3.85%", open: false },
+    { name: "Community / Launchpad", price: "$0.034", tokens: "147,058,824", raise: "$5,000,000", fdv: "$340M", supplyPct: "1.47%", open: false },
   ];
   return (
     <div className="my-8 rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden">
@@ -302,7 +302,7 @@ function SaftRoundTable() {
           Private SAFT round schedule
         </div>
         <div className="mt-1 text-lg font-semibold text-white" style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}>
-          2,500,000,000 AICA - 25% of supply - $50M raise - ~$200M FDV
+          2,250,000,000 AICA - 22.5% of supply - $50M raise - ~$230M FDV
         </div>
       </div>
       <div className="overflow-x-auto">
@@ -473,7 +473,7 @@ export default function Litepaper() {
                       Disclaimer
                     </div>
                     <p className="text-white/50 text-sm leading-relaxed">
-                      This page is for informational purposes only and does not constitute an offer to sell or a solicitation to buy any securities or tokens. The AICA private sale is structured as five sequential SAFT rounds priced from $0.010 to $0.036 per AICA, totaling 2,500,000,000 AICA (25% of the 10,000,000,000 fixed supply) for a $50M raise targeting ~$200M FDV. SAFT terms are draft pending counsel review. AICA tokens, when issued, will be utility tokens for consumptive use within the AIcreatesAI ecosystem and are subject to vesting and jurisdictional restrictions. Early-stage technology and cryptocurrency commitments involve significant risk and you may lose all funds.
+                      This page is for informational purposes only and does not constitute an offer to sell or a solicitation to buy any securities or tokens. The AICA private sale is structured as five sequential SAFT rounds priced from $0.010 to $0.034 per AICA, totaling 2,250,000,000 AICA (22.5% of the 10,000,000,000 fixed supply) for a $50M raise targeting ~$230M FDV. SAFT terms are draft pending counsel review. AICA tokens, when issued, will be utility tokens for consumptive use within the AIcreatesAI ecosystem and are subject to vesting and jurisdictional restrictions. Early-stage technology and cryptocurrency commitments involve significant risk and you may lose all funds.
                     </p>
                   </div>
                 </div>
