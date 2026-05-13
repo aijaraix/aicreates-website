@@ -4,6 +4,7 @@ import { createClerkClient } from "@clerk/backend";
 import {
   ADMIN_EMAIL,
   INVESTOR_EMAIL,
+  INVESTOR_EMAIL_2,
   TEST_PASSWORD,
 } from "./users";
 import { seedInvestorProfile, getClerkUserId } from "./profile";
@@ -20,11 +21,16 @@ import { seedInvestorProfile, getClerkUserId } from "./profile";
  */
 export async function signIn(
   page: Page,
-  who: "investor" | "admin",
+  who: "investor" | "investor2" | "admin",
   opts: { seedProfile?: boolean } = {},
 ): Promise<string> {
   const seedProfile = opts.seedProfile !== false;
-  const email = who === "admin" ? ADMIN_EMAIL : INVESTOR_EMAIL;
+  const email =
+    who === "admin"
+      ? ADMIN_EMAIL
+      : who === "investor2"
+        ? INVESTOR_EMAIL_2
+        : INVESTOR_EMAIL;
   if (!email) {
     throw new Error(
       "Admin sign-in requested but ADMIN_EMAILS env var is empty.",

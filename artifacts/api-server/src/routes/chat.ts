@@ -66,17 +66,18 @@ router.get("/chat/thread", requireAuth, async (req, res) => {
   const u = req.appUser!;
   const role = isEmailAdmin(u.email) ? "admin" : "investor";
 
-  // Admin can read any thread by ?investorUserId=
+  // Admin can read any thread by ?investorUserId=. Non-admins are
+  // strictly scoped to their own thread; passing a different
+  // investorUserId is rejected explicitly so the failure mode is loud.
   let investorUserId = u.id;
-  if (role === "admin") {
-    const q = req.query["investorUserId"];
-    if (typeof q === "string" && q) investorUserId = q;
-  }
-
-  // Non-admin must only ever see their own thread.
-  if (role !== "admin" && investorUserId !== u.id) {
-    res.status(403).json({ error: "Forbidden" });
-    return;
+  const q = req.query["investorUserId"];
+  if (typeof q === "string" && q) {
+    if (role === "admin") {
+      investorUserId = q;
+    } else if (q !== u.id) {
+      res.status(403).json({ error: "Forbidden" });
+      return;
+    }
   }
 
   const thread = await ensureThreadFor(investorUserId);
@@ -271,21 +272,24 @@ router.get(
   requireAuth,
   requireAdmin,
   async (_req, res) => {
-    const threads = await db
+    // Source of truth is app_users (every non-admin investor) so the
+    // admin inbox can show online investors who have never messaged
+    // and let admins send the first reach-out. Threads are LEFT JOINed.
+    const rows = await db
       .select({
-        thread: chatThreadsTable,
         user: appUsersTable,
+        thread: chatThreadsTable,
       })
-      .from(chatThreadsTable)
-      .innerJoin(
-        appUsersTable,
-        eq(appUsersTable.id, chatThreadsTable.investorUserId),
+      .from(appUsersTable)
+      .leftJoin(
+        chatThreadsTable,
+        eq(chatThreadsTable.investorUserId, appUsersTable.id),
       )
-      .orderBy(desc(chatThreadsTable.lastMessageAt));
+      .where(eq(appUsersTable.role, "investor"));
 
-    // Per-thread unread (by admin) and last message preview.
-    // Use ANY() against an array of UUIDs to keep this to one round trip.
-    const threadIds = threads.map((t) => t.thread.id);
+    const threadIds = rows
+      .map((r) => r.thread?.id)
+      .filter((id): id is string => Boolean(id));
     const unreadByThread = new Map<string, number>();
     const lastMsgByThread = new Map<
       string,
@@ -346,15 +350,17 @@ router.get(
     }
 
     const onlineSet = new Set(onlineInvestorIds());
-    const items = threads.map((t) => ({
-      threadId: t.thread.id,
-      investorUserId: t.user.id,
-      investorEmail: t.user.email,
-      investorName: t.user.fullName,
-      online: onlineSet.has(t.user.id),
-      unread: unreadByThread.get(t.thread.id) ?? 0,
-      lastMessageAt: t.thread.lastMessageAt,
-      lastMessage: lastMsgByThread.get(t.thread.id) ?? null,
+    const items = rows.map((r) => ({
+      threadId: r.thread?.id ?? null,
+      investorUserId: r.user.id,
+      investorEmail: r.user.email,
+      investorName: r.user.fullName,
+      online: onlineSet.has(r.user.id),
+      unread: r.thread ? (unreadByThread.get(r.thread.id) ?? 0) : 0,
+      lastMessageAt: r.thread?.lastMessageAt ?? null,
+      lastMessage: r.thread
+        ? (lastMsgByThread.get(r.thread.id) ?? null)
+        : null,
     }));
 
     // Sort: online first, then by lastMessageAt desc.

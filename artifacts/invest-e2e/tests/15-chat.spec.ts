@@ -67,4 +67,55 @@ test.describe("chat", () => {
       await adminCtx.close();
     }
   });
+
+  test("a second investor cannot read the first investor's thread", async ({
+    browser,
+  }) => {
+    const inv1Ctx = await browser.newContext();
+    const inv2Ctx = await browser.newContext();
+    const inv1 = await inv1Ctx.newPage();
+    const inv2 = await inv2Ctx.newPage();
+    try {
+      await signIn(inv1, "investor");
+      await signIn(inv2, "investor2");
+
+      // Investor 1 sends a private message.
+      const secret = `private-${Date.now()}`;
+      await inv1.getByTestId("chat-toggle").click();
+      await inv1.getByTestId("chat-composer").fill(secret);
+      await inv1.getByTestId("chat-send").click();
+      await expect(
+        inv1.getByTestId("chat-messages").getByText(secret),
+      ).toBeVisible();
+
+      // Resolve investor 1's app user id from /me so investor 2 can
+      // attempt to query it explicitly.
+      const inv1UserId = await inv1.evaluate(async () => {
+        const r = await fetch("/api/me", { credentials: "include" });
+        const j = (await r.json()) as { user: { id: string } };
+        return j.user.id;
+      });
+
+      // Investor 2 attempts to read investor 1's thread by passing
+      // their userId -- the server must respond 403.
+      const status = await inv2.evaluate(async (otherId: string) => {
+        const r = await fetch(
+          `/api/chat/thread?investorUserId=${encodeURIComponent(otherId)}`,
+          { credentials: "include" },
+        );
+        return r.status;
+      }, inv1UserId);
+      expect(status).toBe(403);
+
+      // And investor 2's own thread does NOT contain investor 1's message.
+      const ownThread = await inv2.evaluate(async () => {
+        const r = await fetch("/api/chat/thread", { credentials: "include" });
+        return (await r.json()) as { messages: Array<{ body: string }> };
+      });
+      expect(ownThread.messages.find((m) => m.body === secret)).toBeUndefined();
+    } finally {
+      await inv1Ctx.close();
+      await inv2Ctx.close();
+    }
+  });
 });

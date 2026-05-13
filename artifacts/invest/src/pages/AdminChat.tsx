@@ -17,7 +17,7 @@ interface MeResp {
 }
 
 interface ThreadListItem {
-  threadId: string;
+  threadId: string | null;
   investorUserId: string;
   investorEmail: string;
   investorName: string | null;
@@ -213,7 +213,7 @@ function ChatConsole() {
           )}
           <ul className="divide-y divide-white/5">
             {threads.data?.threads.map((t) => (
-              <li key={t.threadId}>
+              <li key={t.investorUserId}>
                 <button
                   type="button"
                   onClick={() => setSelectedInvestorId(t.investorUserId)}

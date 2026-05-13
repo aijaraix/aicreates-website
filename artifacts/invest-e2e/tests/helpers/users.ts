@@ -8,6 +8,7 @@ const PASSWORD = "PortalE2E!Pass1234";
  * runs without leaking new users every time.
  */
 export const INVESTOR_EMAIL = "invest-e2e-investor@example.com";
+export const INVESTOR_EMAIL_2 = "invest-e2e-investor2@example.com";
 
 function adminEmailFromEnv(): string | null {
   const list = (process.env.ADMIN_EMAILS ?? "")
@@ -66,6 +67,7 @@ async function ensureUser(
 
 export async function ensureTestUsers(): Promise<void> {
   await ensureUser(INVESTOR_EMAIL, "Portal", "Investor");
+  await ensureUser(INVESTOR_EMAIL_2, "Portal", "Investor2");
   if (ADMIN_EMAIL) {
     await ensureUser(ADMIN_EMAIL, "Portal", "Admin");
   }
