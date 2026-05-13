@@ -6,20 +6,19 @@ export default function Footer() {
     >
       {/* Giant wordmark - full width, faded. Texture/glow lives on the page background. */}
       <div className="relative w-full">
-        <a
-          href="https://www.aicreates.ai"
-          className="relative block w-full text-center leading-[0.85] font-semibold tracking-[-0.04em] select-none opacity-60 hover:opacity-80 transition-opacity"
+        <div
+          className="relative block w-full text-center leading-[0.85] font-semibold tracking-[-0.04em] select-none opacity-60"
           style={{
             fontFamily: "Space Grotesk, system-ui, sans-serif",
             fontSize: "clamp(64px, 18vw, 320px)",
           }}
-          data-testid="link-footer-wordmark"
+          data-testid="footer-wordmark"
           aria-label="AIcreatesAI"
         >
           <span className="text-[#00F5D4]">AI</span>
           <span className="text-white/85 font-light">creates</span>
           <span className="text-[#00F5D4]">AI</span>
-        </a>
+        </div>
       </div>
 
       {/* Disclaimer - full width below wordmark */}
@@ -31,7 +30,7 @@ export default function Footer() {
 
       {/* Solid dark base bar - covers the page texture for visual separation */}
       <div className="relative bg-[#0A0A0A] border-t border-white/5">
-        <div className="container mx-auto px-4 md:px-6 py-5 flex flex-col md:flex-row justify-between items-center gap-3">
+        <div className="container mx-auto px-4 md:px-6 py-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <p className="text-white/30 text-xs tracking-wide">
             © {new Date().getFullYear()} AIcreatesAI. All rights reserved.
           </p>
