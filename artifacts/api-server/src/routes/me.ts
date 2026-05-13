@@ -63,13 +63,26 @@ router.get("/me/allocations", requireAuth, async (req, res) => {
 
   const allocations = commitments.map((c) => {
     const isFunded = c.state === "funded" || c.status === "succeeded";
-    const vesting = computeVestingSchedule({
-      totalTokens: c.tokenAllocation,
-      fundedAt: c.fundedAt ?? c.completedAt,
-    });
     const saft = saftByCommitment.get(c.id);
     const payload = (saft?.payload ?? {}) as Record<string, unknown>;
     const lines = linesByCommitment.get(c.id) ?? [];
+    // Per-round vesting params drive the per-commitment schedule. For
+    // multi-round commitments use the round whose tokens are largest
+    // (typically the entry round) so the bar reflects the dominant
+    // lockup; this also matches single-round semantics when there's only
+    // one line.
+    const vestingRoundSlug =
+      lines.length > 1
+        ? [...lines].sort((a, b) => b.tokens - a.tokens)[0]!.roundSlug
+        : c.roundSlug;
+    const roundVesting = ROUND_BY_SLUG.get(vestingRoundSlug)?.vesting;
+    const vesting = computeVestingSchedule({
+      totalTokens: c.tokenAllocation,
+      fundedAt: c.fundedAt ?? c.completedAt,
+      tgePercent: roundVesting?.tgePercent,
+      cliffMonths: roundVesting?.cliffMonths,
+      vestingMonths: roundVesting?.vestingMonths,
+    });
     // Derive a top-level price-per-token for the commitment. For multi-round
     // commitments fall back to a tokens-weighted average across the per-round
     // lines so the displayed "price paid" is a true blended price.

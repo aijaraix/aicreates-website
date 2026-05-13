@@ -22,6 +22,16 @@ export interface RoundDef {
   /** ISO date string the round closes. */
   deadline: string;
   open: boolean;
+  /**
+   * Per-round vesting parameters. Earlier rounds carry longer lockups;
+   * later rounds vest faster. Mirrors the client-side definitions in
+   * `artifacts/invest/src/data/rounds.ts`.
+   */
+  vesting: {
+    tgePercent: number;
+    cliffMonths: number;
+    vestingMonths: number;
+  };
 }
 
 export const ROUNDS: readonly RoundDef[] = [
@@ -34,6 +44,7 @@ export const ROUNDS: readonly RoundDef[] = [
     hardCapCents: 500_000_000,
     deadline: "2026-12-31T23:59:59Z",
     open: true,
+    vesting: { tgePercent: 0.1, cliffMonths: 3, vestingMonths: 12 },
   },
   {
     slug: "private-1",
@@ -44,6 +55,7 @@ export const ROUNDS: readonly RoundDef[] = [
     hardCapCents: 1_200_000_000,
     deadline: "2027-03-31T23:59:59Z",
     open: false,
+    vesting: { tgePercent: 0.15, cliffMonths: 2, vestingMonths: 10 },
   },
   {
     slug: "private-2",
@@ -54,6 +66,7 @@ export const ROUNDS: readonly RoundDef[] = [
     hardCapCents: 1_800_000_000,
     deadline: "2027-06-30T23:59:59Z",
     open: false,
+    vesting: { tgePercent: 0.2, cliffMonths: 2, vestingMonths: 7 },
   },
   {
     slug: "infrastructure",
@@ -64,6 +77,7 @@ export const ROUNDS: readonly RoundDef[] = [
     hardCapCents: 1_000_000_000,
     deadline: "2027-09-30T23:59:59Z",
     open: false,
+    vesting: { tgePercent: 0.25, cliffMonths: 1, vestingMonths: 5 },
   },
   {
     slug: "community-launchpad",
@@ -74,6 +88,7 @@ export const ROUNDS: readonly RoundDef[] = [
     hardCapCents: 500_000_000,
     deadline: "2027-12-31T23:59:59Z",
     open: false,
+    vesting: { tgePercent: 0.3, cliffMonths: 0, vestingMonths: 3 },
   },
 ] as const;
 
