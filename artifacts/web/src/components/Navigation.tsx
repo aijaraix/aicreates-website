@@ -118,7 +118,6 @@ export function Navigation() {
       <div className="container mx-auto px-4 md:px-6 flex items-center justify-between">
         <div className="flex items-center gap-2 lg:gap-6">
           <Link href="/" className="flex items-center gap-2.5 group" data-testid="link-home-logo">
-            <div className="relative w-2.5 h-2.5 rounded-full bg-[#00F5D4] shadow-[0_0_12px_rgba(0,245,212,0.7)]" />
             <Wordmark />
           </Link>
 
@@ -164,7 +163,6 @@ export function Navigation() {
             <SheetContent side="right" className="bg-[#0A0A0A] border-l border-white/5 w-screen max-w-none sm:max-w-none p-6 overflow-y-auto">
               <div className="flex flex-col h-full">
                 <div className="flex items-center gap-2.5 mb-10">
-                  <div className="w-2.5 h-2.5 rounded-full bg-[#00F5D4]" />
                   <Wordmark />
                 </div>
 

@@ -182,7 +182,6 @@ export function Footer() {
           <div className="md:col-span-5 lg:col-span-4 flex flex-col gap-8">
             <div>
             <Link href="/" className="flex items-center gap-2.5 mb-5">
-              <div className="w-2.5 h-2.5 rounded-full bg-[#00F5D4] shadow-[0_0_10px_rgba(0,245,212,0.6)]" />
               <span className="font-sans font-semibold tracking-tight text-white text-lg leading-none">
                 <span className="text-[#00F5D4]">AI</span>
                 <span className="font-light">creates</span>
@@ -199,7 +198,6 @@ export function Footer() {
               aria-label="AIcreatesAI on X"
               className="inline-flex items-center gap-2 text-sm text-white/70 hover:text-[#00F5D4] transition-colors"
             >
-              <span className="w-1.5 h-1.5 rounded-full bg-[#00F5D4] shadow-[0_0_8px_rgba(0,245,212,0.6)]" />
               @theaicreatesai
             </a>
           </div>
