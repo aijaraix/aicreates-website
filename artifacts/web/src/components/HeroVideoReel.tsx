@@ -151,6 +151,7 @@ export default function HeroVideoReel({
             style={{
               opacity: armed && active === i ? opacity : 0,
               transition: `opacity ${fadeMs}ms ease-in-out`,
+              filter: "brightness(1.1)",
             }}
           />
         );

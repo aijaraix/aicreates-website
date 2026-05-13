@@ -8,7 +8,6 @@ const COLUMNS: { heading: string; links: { name: string; href: string }[] }[] = 
     links: [
       { name: "Eve OS", href: "/eve-os" },
       { name: "NeoBank", href: "/neobank" },
-      { name: "Token", href: "/token" },
     ],
   },
   {
@@ -32,7 +31,8 @@ const COLUMNS: { heading: string; links: { name: string; href: string }[] }[] = 
     links: [
       { name: "About", href: "/about" },
       { name: "Contact", href: "/contact" },
-      { name: "Invest", href: "/invest" },
+      { name: "Token", href: "/token" },
+      { name: "Opportunity", href: "/invest" },
       { name: "Privacy", href: "/privacy" },
       { name: "Terms", href: "/terms" },
     ],

@@ -13,7 +13,6 @@ import {
 const PRODUCT_LINKS = [
   { name: "Eve OS", path: "/eve-os", desc: "The Agentic Business Operating System" },
   { name: "NeoBank", path: "/neobank", desc: "Capital that thinks" },
-  { name: "Token", path: "/token", desc: "$AICA - the native asset of the layer" },
 ];
 
 const SOLUTION_LINKS = [
@@ -31,7 +30,8 @@ const RESOURCE_LINKS = [
 const COMPANY_LINKS = [
   { name: "About", path: "/about", desc: "Platform, agents, and Company in a Box" },
   { name: "Contact", path: "/contact", desc: "Get in touch with the team" },
-  { name: "Invest", path: "/invest", desc: "Investor opportunity and materials" },
+  { name: "Token", path: "/token", desc: "$AICA - the native asset of the layer" },
+  { name: "Opportunity", path: "/invest", desc: "Investor opportunity and materials" },
 ];
 
 function Wordmark({ size = "md" }: { size?: "sm" | "md" }) {
