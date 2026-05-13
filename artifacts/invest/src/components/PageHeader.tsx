@@ -36,7 +36,7 @@ export default function PageHeader({
       />
       <div
         className={`mx-auto max-w-6xl px-6 md:px-10 ${
-          isCompact ? "pt-8 md:pt-10 pb-6" : "pt-12 md:pt-16 pb-8 md:pb-10"
+          isCompact ? "pt-14 md:pt-16 pb-6" : "pt-20 md:pt-24 pb-8 md:pb-10"
         }`}
       >
         {back && (
