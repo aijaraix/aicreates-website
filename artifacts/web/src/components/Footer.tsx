@@ -177,10 +177,9 @@ export function Footer() {
   return (
     <footer className="bg-[#0A0A0A] relative border-t border-white/5 pt-20 pb-10 mt-24">
       <div className="container mx-auto px-4 md:px-6">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-12 mb-12 pb-12 border-b border-white/5">
-          {/* Brand + Newsletter */}
-          <div className="md:col-span-5 lg:col-span-4 flex flex-col gap-8">
-            <div>
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-12 mb-12">
+          {/* Brand */}
+          <div className="md:col-span-5 lg:col-span-4">
             <Link href="/" className="flex items-center gap-2.5 mb-5">
               <span className="font-sans font-semibold tracking-tight text-white text-lg leading-none">
                 <span className="text-[#00F5D4]">AI</span>
@@ -200,8 +199,6 @@ export function Footer() {
             >
               @theaicreatesai
             </a>
-          </div>
-          <NewsletterSubscribe />
           </div>
 
           {/* Link columns */}
@@ -227,7 +224,12 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="pt-2 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        {/* Newsletter sits below the brand + link columns, full-width */}
+        <div className="border-t border-white/5 pt-10 pb-10 mb-2">
+          <NewsletterSubscribe />
+        </div>
+
+        <div className="pt-6 border-t border-white/5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <p className="text-white/30 text-xs tracking-wide">
             © 2026 AIcreatesAI. All rights reserved.
           </p>
