@@ -2,7 +2,6 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import {
-  ArrowRight,
   Wallet,
   TrendingUp,
   ShieldCheck,
@@ -58,11 +57,14 @@ export default function NeoBank() {
               transition={{ duration: 0.7, delay: 0.25 }}
               className="mt-10 flex flex-col sm:flex-row gap-3"
             >
-              <Link href="/contact">
-                <Button size="lg" className="rounded-full h-12 px-7 teal-btn">
-                  Request access <ArrowRight className="ml-2 w-4 h-4" />
-                </Button>
-              </Link>
+              <Button
+                size="lg"
+                disabled
+                aria-disabled="true"
+                className="rounded-full h-12 px-7 teal-btn cursor-not-allowed opacity-60"
+              >
+                Coming soon
+              </Button>
               <Link href="/eve-os">
                 <Button size="lg" variant="outline" className="rounded-full h-12 px-7 glass-btn">
                   See the layer behind it
@@ -218,14 +220,17 @@ export default function NeoBank() {
                   Capital that thinks for itself.
                 </h2>
                 <p className="text-lg text-white/55 max-w-xl">
-                  NeoBank is in active development. Get on the early access list and be first to deploy.
+                  NeoBank is in active development. Stay tuned, we will share more soon.
                 </p>
               </div>
-              <Link href="/contact">
-                <Button size="lg" className="rounded-full h-12 px-8 teal-btn whitespace-nowrap">
-                  Request access <ArrowRight className="ml-2 w-4 h-4" />
-                </Button>
-              </Link>
+              <Button
+                size="lg"
+                disabled
+                aria-disabled="true"
+                className="rounded-full h-12 px-8 teal-btn whitespace-nowrap cursor-not-allowed opacity-60"
+              >
+                Coming soon
+              </Button>
             </div>
           </div>
         </div>
