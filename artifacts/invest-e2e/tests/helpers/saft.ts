@@ -8,7 +8,11 @@ interface SaftOptions {
    * `Portal Investor` for the default seedInvestorProfile() output).
    */
   legalName: string;
-  paymentMethod: "card" | "ach" | "wire" | "crypto";
+  // SAFT picker was aligned with the Checkout picker in Task #72:
+  // fiat (collapsed card+ACH) and wire are the only public options;
+  // legacy card/ach/crypto values remain accepted for older specs but
+  // tests should prefer "fiat" or "wire" going forward.
+  paymentMethod: "fiat" | "card" | "ach" | "wire" | "crypto";
 }
 
 /**
@@ -39,9 +43,17 @@ export async function completeSaft(
   });
   await page.getByTestId("button-next").click();
 
-  // Step 1 - Allocation + payment method.
+  // Step 1 - Allocation + payment method. Map legacy card/ach/crypto
+  // inputs to the current "fiat" pill so older specs keep working
+  // without rewriting every call site.
   await expect(page.getByTestId("saft-step-allocation")).toBeVisible();
-  await page.getByTestId(`radio-paymentmethod-${opts.paymentMethod}`).click();
+  const saftMethod =
+    opts.paymentMethod === "card" ||
+    opts.paymentMethod === "ach" ||
+    opts.paymentMethod === "crypto"
+      ? "fiat"
+      : opts.paymentMethod;
+  await page.getByTestId(`radio-paymentmethod-${saftMethod}`).click();
   await page.getByTestId("button-next").click();
 
   // Step 2 - Questionnaire (accreditation).
