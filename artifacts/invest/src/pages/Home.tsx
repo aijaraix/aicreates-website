@@ -74,6 +74,45 @@ function Section({
   );
 }
 
+function AgentCard({
+  icon: Icon,
+  name,
+  desc,
+  align,
+}: {
+  icon: React.ComponentType<{ className?: string; strokeWidth?: number }>;
+  name: string;
+  desc: string;
+  align: "left" | "right";
+}) {
+  return (
+    <div
+      className={`group relative rounded-xl border border-white/10 bg-black/40 backdrop-blur-sm p-3.5 md:p-4 hover:border-[#00F5D4]/30 hover:bg-black/60 transition-all flex items-center gap-3 ${
+        align === "right" ? "md:flex-row-reverse md:text-right" : ""
+      }`}
+      data-testid={`agent-card-${name.toLowerCase()}`}
+    >
+      <div className="w-9 h-9 md:w-10 md:h-10 rounded-lg bg-[#00F5D4]/10 border border-[#00F5D4]/20 flex items-center justify-center shrink-0">
+        <Icon className="w-4 h-4 md:w-5 md:h-5 text-[#00F5D4]" strokeWidth={1.5} />
+      </div>
+      <div className="min-w-0">
+        <div className="text-[9px] md:text-[10px] uppercase tracking-[0.18em] text-[#00F5D4]/80">
+          Agent
+        </div>
+        <div
+          className="text-sm md:text-base font-semibold text-white leading-tight truncate"
+          style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}
+        >
+          {name}
+        </div>
+        <div className="text-[10px] md:text-xs text-white/50 leading-tight mt-0.5 truncate">
+          {desc}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function Home() {
   const sample = computeVesting(10_000);
   return (
@@ -393,42 +432,94 @@ export default function Home() {
           </>
         }
       >
-        <div className="grid md:grid-cols-[1.1fr,1fr] gap-8 items-center">
-          <div className="space-y-4 text-white/70 leading-relaxed">
-            <p>
-              Eve OS is the Company in a Box. One agentic operator coordinates
-              marketing, sales, finance, legal, operations, and development -
-              one shared memory, one observable runtime, one accountable
-              outcome owner.
-            </p>
-            <ul className="space-y-2 text-sm">
-              <li>- Coordinated execution across every business function.</li>
-              <li>- Native voice, vision, and document workflows.</li>
-              <li>- Counted in outcomes shipped, not seats sold.</li>
-            </ul>
-          </div>
-          <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 relative overflow-hidden">
-            <div className="absolute inset-0 portal-aurora opacity-30" />
-            <div className="relative grid grid-cols-2 gap-3 text-xs">
+        <div className="space-y-4 text-white/70 leading-relaxed mb-10 max-w-3xl">
+          <p>
+            Eve OS is the Company in a Box. One agentic operator coordinates
+            marketing, sales, finance, legal, operations, and development -
+            one shared memory, one observable runtime, one accountable
+            outcome owner.
+          </p>
+          <ul className="space-y-2 text-sm">
+            <li>- Coordinated execution across every business function.</li>
+            <li>- Native voice, vision, and document workflows.</li>
+            <li>- Counted in outcomes shipped, not seats sold.</li>
+          </ul>
+        </div>
+
+        {/* Agent constellation */}
+        <div className="relative rounded-3xl border border-white/10 bg-gradient-to-b from-[#0E0E0E] to-[#0A0A0A] p-6 md:p-10 overflow-hidden">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_50%,rgba(0,245,212,0.10),transparent_70%)] pointer-events-none" />
+          <div className="absolute inset-0 bg-grid opacity-20 pointer-events-none [mask-image:radial-gradient(ellipse_70%_60%_at_50%_50%,black,transparent_85%)]" />
+
+          {/* Central core */}
+          <div className="relative grid md:grid-cols-[1fr_auto_1fr] gap-6 md:gap-10 items-center">
+            {/* Left column: 3 agents */}
+            <div className="space-y-3 md:space-y-4">
               {[
-                "Marketing",
-                "Sales",
-                "Finance",
-                "Legal",
-                "Operations",
-                "Development",
-              ].map((m) => (
-                <div
-                  key={m}
-                  className="rounded-lg border border-white/10 bg-black/40 p-3"
-                >
-                  <div className="text-[10px] uppercase tracking-[0.18em] text-[#00F5D4]">
-                    Agent
-                  </div>
-                  <div className="mt-1 font-medium">{m}</div>
-                </div>
+                { icon: Sparkles, name: "Marketing", desc: "Campaigns, content, attribution loops" },
+                { icon: TrendingUp, name: "Sales", desc: "Pipeline, outreach, deal cycles" },
+                { icon: Banknote, name: "Finance", desc: "Books, forecasts, treasury" },
+              ].map((a) => (
+                <AgentCard key={a.name} icon={a.icon} name={a.name} desc={a.desc} align="right" />
               ))}
             </div>
+
+            {/* Center: Eve core */}
+            <div className="flex flex-col items-center justify-center py-4 md:py-0">
+              <div className="relative">
+                <div className="absolute inset-0 rounded-full bg-[#00F5D4]/20 blur-2xl" />
+                <div
+                  className="relative w-32 h-32 md:w-44 md:h-44 rounded-full border-2 border-[#00F5D4]/40 bg-gradient-to-br from-[#00F5D4]/15 to-[#00F5D4]/5 flex flex-col items-center justify-center shadow-[0_0_60px_rgba(0,245,212,0.25)]"
+                  data-testid="eve-core"
+                >
+                  <Brain className="w-9 h-9 md:w-12 md:h-12 text-[#00F5D4]" strokeWidth={1.5} />
+                  <div
+                    className="mt-2 text-base md:text-lg font-semibold text-white tracking-tight"
+                    style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}
+                  >
+                    Eve OS
+                  </div>
+                  <div className="text-[10px] uppercase tracking-[0.18em] text-[#00F5D4]/80">
+                    Operator
+                  </div>
+                </div>
+              </div>
+              <div className="mt-4 text-[10px] uppercase tracking-[0.22em] text-white/40 text-center">
+                Shared memory · Observable runtime
+              </div>
+            </div>
+
+            {/* Right column: 3 agents */}
+            <div className="space-y-3 md:space-y-4">
+              {[
+                { icon: ShieldCheck, name: "Legal", desc: "Contracts, compliance, risk" },
+                { icon: Layers, name: "Operations", desc: "Workflows, vendors, logistics" },
+                { icon: Bot, name: "Development", desc: "Specs, code, deploys, support" },
+              ].map((a) => (
+                <AgentCard key={a.name} icon={a.icon} name={a.name} desc={a.desc} align="left" />
+              ))}
+            </div>
+          </div>
+
+          {/* Footer stat strip */}
+          <div className="relative mt-8 md:mt-10 pt-6 border-t border-white/5 grid grid-cols-3 gap-4">
+            {[
+              { k: "1", v: "Operator" },
+              { k: "6", v: "Coordinated functions" },
+              { k: "24/7", v: "Observable runtime" },
+            ].map((s) => (
+              <div key={s.v} className="text-center">
+                <div
+                  className="text-2xl md:text-3xl font-semibold text-[#00F5D4] tracking-tight"
+                  style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}
+                >
+                  {s.k}
+                </div>
+                <div className="mt-1 text-[10px] md:text-xs uppercase tracking-[0.18em] text-white/45">
+                  {s.v}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </Section>
@@ -535,41 +626,102 @@ export default function Home() {
       <Section
         id="use-of-funds"
         eyebrow="Use of funds"
-        title="$50M raise. Built for compounding leverage."
+        title={<>$50M raise. Built for <span className="text-[#00F5D4]">compounding leverage</span>.</>}
       >
-        <div className="grid md:grid-cols-[1fr,1fr] gap-8 items-center">
-          <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-7">
+        <div className="grid md:grid-cols-[1.15fr,1fr] gap-8 items-stretch">
+          <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 md:p-8 space-y-5">
             {[
-              { label: "GPU cluster + data-center build", pct: 40 },
-              { label: "Eve OS R&D + engineering", pct: 28 },
-              { label: "NeoBank + go-to-market", pct: 18 },
-              { label: "Closed-Loop Quality Engine", pct: 9 },
-              { label: "Operating + reserves", pct: 5 },
+              {
+                label: "GPU cluster + data-center build",
+                pct: 40,
+                detail: "Anchored by a $3.5M Blackwell-class GPU cluster - inference economics in-house",
+                icon: Cpu,
+              },
+              {
+                label: "Eve OS R&D + engineering",
+                pct: 28,
+                detail: "Operator runtime, shared memory, agent skills, voice + vision",
+                icon: Brain,
+              },
+              {
+                label: "NeoBank + go-to-market",
+                pct: 18,
+                detail: "Consumer + business launch, treasury + payment rails",
+                icon: Banknote,
+              },
+              {
+                label: "Closed-Loop Quality Engine",
+                pct: 9,
+                detail: "Auto-repair, evals, feedback rewards loop",
+                icon: ShieldCheck,
+              },
+              {
+                label: "Operating + reserves",
+                pct: 5,
+                detail: "Runway, legal, compliance, contingency",
+                icon: Layers,
+              },
             ].map((row) => (
-              <div key={row.label} className="mb-4 last:mb-0">
-                <div className="flex justify-between text-sm">
-                  <span>{row.label}</span>
-                  <span className="text-[#00F5D4] font-medium">{row.pct}%</span>
+              <div key={row.label}>
+                <div className="flex items-center justify-between gap-3 text-sm">
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <span className="w-7 h-7 rounded-lg bg-[#00F5D4]/10 border border-[#00F5D4]/20 flex items-center justify-center shrink-0">
+                      <row.icon className="w-3.5 h-3.5 text-[#00F5D4]" strokeWidth={1.75} />
+                    </span>
+                    <span className="font-medium text-white truncate">{row.label}</span>
+                  </div>
+                  <span
+                    className="text-[#00F5D4] font-semibold tabular-nums"
+                    style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}
+                  >
+                    {row.pct}%
+                  </span>
                 </div>
-                <div className="mt-1.5 h-2 rounded-full bg-white/10 overflow-hidden">
+                <div className="mt-2 h-2 rounded-full bg-white/[0.06] overflow-hidden">
                   <div
-                    className="h-full bg-gradient-to-r from-[#00F5D4] to-[#3b82f6]"
+                    className="h-full rounded-full bg-gradient-to-r from-[#00F5D4] to-[#3b82f6] shadow-[0_0_12px_rgba(0,245,212,0.35)]"
                     style={{ width: `${row.pct}%` }}
                   />
                 </div>
+                <p className="mt-1.5 text-xs text-white/45 leading-relaxed pl-9">{row.detail}</p>
               </div>
             ))}
           </div>
-          <div className="space-y-4 text-white/70">
-            <p>
-              Anchored by a $3.5M GPU cluster buildout that brings inference
-              economics in-house. The cluster powers Eve OS, NeoBank, and a
-              growing list of partner deployments.
-            </p>
-            <p>
-              Capital is sequenced against shipping milestones, not headcount
-              targets. Every dollar is mapped to a measurable artifact.
-            </p>
+          <div className="grid gap-4">
+            <div className="rounded-2xl border border-[#00F5D4]/25 bg-gradient-to-br from-[#00F5D4]/[0.06] to-transparent p-6 md:p-7">
+              <div className="text-xs uppercase tracking-[0.18em] text-[#00F5D4] mb-3">
+                Anchor capex
+              </div>
+              <div
+                className="text-3xl md:text-4xl font-semibold text-white tracking-tight"
+                style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}
+              >
+                $3.5M GPU cluster
+              </div>
+              <p className="mt-3 text-sm text-white/65 leading-relaxed">
+                Blackwell-class build that brings inference economics in-house and powers Eve OS, NeoBank, and partner deployments from day one.
+              </p>
+            </div>
+            <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 md:p-7">
+              <div className="text-xs uppercase tracking-[0.18em] text-white/40 mb-3">
+                Discipline
+              </div>
+              <p className="text-white/70 text-sm leading-relaxed">
+                Capital is sequenced against shipping milestones, not headcount targets. Every dollar is mapped to a measurable artifact.
+              </p>
+              <ul className="mt-4 space-y-2 text-sm text-white/65">
+                {[
+                  "Outcome-gated tranching across phases",
+                  "Real-time burn vs milestone reporting",
+                  "Reserves preserve > 18 months runway",
+                ].map((it) => (
+                  <li key={it} className="flex items-start gap-2.5">
+                    <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#00F5D4] shrink-0 shadow-[0_0_6px_rgba(0,245,212,0.6)]" />
+                    <span>{it}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
       </Section>

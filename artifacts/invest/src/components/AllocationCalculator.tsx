@@ -93,7 +93,7 @@ export default function AllocationCalculator() {
       <p className="mt-5 text-xs text-white/40">
         Computed at the active round price (
         {`$${(price / 1000).toFixed(3)}`} per AICA). Vesting: 25% at TGE,
-        6-month cliff, then linear over 24 months. Final terms are pending
+        6-month cliff, then linear over 24 months. SAFT terms are pending
         counsel review.
       </p>
     </div>
