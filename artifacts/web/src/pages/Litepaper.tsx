@@ -1,7 +1,16 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Download } from "lucide-react";
+import { ArrowRight, BookOpen, TrendingUp } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import DeckCarousel from "@/components/DeckCarousel";
 import AicaTokenMark from "@/components/AicaTokenMark";
 
 function withGlyphs(text: string): React.ReactNode {
@@ -313,6 +322,7 @@ function TokenomicsCoin() {
 }
 
 export default function Litepaper() {
+  const [deckOpen, setDeckOpen] = useState(false);
   return (
     <div className="flex flex-col w-full">
       {/* HERO */}
@@ -348,22 +358,17 @@ export default function Litepaper() {
               transition={{ duration: 0.7, delay: 0.25 }}
               className="mt-10 flex flex-col sm:flex-row gap-3"
             >
-              <a
-                href={`${import.meta.env.BASE_URL}litepaper.pdf`}
-                download="AiCreatesAi Whitepaper.pdf"
-                rel="noopener noreferrer"
+              <Button
+                size="lg"
+                onClick={() => setDeckOpen(true)}
+                className="rounded-full h-12 px-7 bg-[#00F5D4] text-black hover:bg-[#00F5D4]/90 font-medium"
+                data-testid="button-view-whitepaper"
               >
-                <Button
-                  size="lg"
-                  className="rounded-full h-12 px-7 bg-[#00F5D4] text-black hover:bg-[#00F5D4]/90 font-medium"
-                  data-testid="button-download-whitepaper"
-                >
-                  <Download className="mr-2 w-4 h-4" />
-                  Download Whitepaper
-                </Button>
-              </a>
+                <BookOpen className="mr-2 w-4 h-4" />
+                View Whitepaper
+              </Button>
               <Link href="/contact">
-                <Button size="lg" variant="outline" className="rounded-full h-12 px-7 border-white/15 bg-white/[0.02] text-white hover:bg-white/[0.06]" data-testid="button-get-in-touch-hero">
+                <Button size="lg" variant="outline" className="rounded-full h-12 px-7 border-white/15 bg-white/[0.02] text-white hover:bg-white/[0.06] hover:text-[#00F5D4]" data-testid="button-get-in-touch-hero">
                   Get in touch
                 </Button>
               </Link>
@@ -458,21 +463,48 @@ export default function Litepaper() {
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,245,212,0.10),transparent_70%)] pointer-events-none" />
             <div className="absolute inset-x-0 top-0 h-px divider-line" />
             <div className="relative">
+              <TrendingUp className="w-7 h-7 text-[#00F5D4] mx-auto mb-5" strokeWidth={1.5} />
+              <div className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#00F5D4] mb-3">The Opportunity</div>
               <h2 className="text-3xl md:text-5xl font-serif font-semibold text-gradient leading-[1.05] mb-5">
-                Want to go deeper?
+                Back the agentic intelligence layer.
               </h2>
               <p className="text-base md:text-lg text-white/55 max-w-xl mx-auto mb-8">
-                Reach out for the full investor materials, product walkthroughs, or partnership conversations.
+                The investor portal has the full thesis, allocation tiers, and SAFT flow. View the visual whitepaper for a guided walkthrough.
               </p>
-              <Link href="/contact">
-                <Button size="lg" className="rounded-full h-12 px-8 bg-[#00F5D4] text-black hover:bg-[#00F5D4]/90 font-medium" data-testid="button-get-in-touch-final">
-                  Get in touch <ArrowRight className="ml-2 w-4 h-4" />
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <a href="https://invest.aicreates.ai/" target="_blank" rel="noopener noreferrer">
+                  <Button size="lg" className="rounded-full h-12 px-8 bg-[#00F5D4] text-black hover:bg-[#00F5D4]/90 font-medium" data-testid="button-investor-portal">
+                    Open the investor portal <ArrowRight className="ml-2 w-4 h-4" />
+                  </Button>
+                </a>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  onClick={() => setDeckOpen(true)}
+                  className="rounded-full h-12 px-8 border-white/15 bg-white/[0.02] text-white hover:bg-white/[0.06] hover:text-[#00F5D4]"
+                  data-testid="button-view-whitepaper-final"
+                >
+                  <BookOpen className="mr-2 w-4 h-4" />
+                  View Whitepaper
                 </Button>
-              </Link>
+              </div>
             </div>
           </div>
         </div>
       </section>
+
+      <Dialog open={deckOpen} onOpenChange={setDeckOpen}>
+        <DialogContent className="max-w-5xl w-[95vw] p-0 gap-0 border-0 bg-transparent shadow-none sm:rounded-none [&>button]:bg-black/60 [&>button]:text-white [&>button]:rounded-full [&>button]:p-1.5 [&>button]:opacity-100 [&>button]:right-2 [&>button]:top-2 [&>button]:z-10">
+          <DialogHeader className="sr-only">
+            <DialogTitle>AICA Whitepaper</DialogTitle>
+            <DialogDescription>Step through the AIcreatesAI whitepaper.</DialogDescription>
+          </DialogHeader>
+          <DeckCarousel
+            showHeader={false}
+            testIdPrefix="deck-litepaper-modal"
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

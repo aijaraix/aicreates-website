@@ -61,7 +61,7 @@ export default function Developers() {
               transition={{ duration: 0.7, delay: 0.25 }}
               className="mt-10 flex flex-col sm:flex-row gap-3"
             >
-              <Link href="/contact">
+              <Link href="/contact?interest=Developer%20Waitlist">
                 <Button size="lg" className="rounded-full h-12 px-7 bg-[#00F5D4] text-black hover:bg-[#00F5D4]/90 font-medium">
                   Join the developer waitlist <ArrowRight className="ml-2 w-4 h-4" />
                 </Button>
@@ -185,7 +185,7 @@ export default function Developers() {
                   Developer access is rolling out in phases. Get on the list and we will be in touch.
                 </p>
               </div>
-              <Link href="/contact">
+              <Link href="/contact?interest=Developer%20Waitlist">
                 <Button size="lg" className="rounded-full h-12 px-8 bg-[#00F5D4] text-black hover:bg-[#00F5D4]/90 font-medium whitespace-nowrap">
                   Join the waitlist <ArrowRight className="ml-2 w-4 h-4" />
                 </Button>

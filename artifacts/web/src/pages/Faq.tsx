@@ -52,7 +52,7 @@ const GROUPS: Group[] = [
       },
       {
         q: "When can I use it?",
-        a: "Private waitlist now. Eve OS rolls out in staged cohorts as the agentic intelligence layer matures and capacity expands. Join the waitlist via Contact and we will reach out as your cohort opens.",
+        a: "Private waitlist now. Eve OS rolls out in staged cohorts as the agentic intelligence layer matures and capacity expands. Join the Eve OS waitlist via Contact and we will reach out as your cohort opens.",
       },
       {
         q: "Is it available in my country?",
@@ -68,36 +68,28 @@ const GROUPS: Group[] = [
     title: "$AICA token",
     items: [
       {
-        q: "What does $AICA do?",
-        a: "It powers subscription discounts, compute network participation, and contributor rewards across the agentic intelligence layer.",
+        q: "What is $AICA?",
+        a: "$AICA is the native utility token of the AIcreatesAI agentic intelligence layer. It powers participation, settlement, and rewards across the ecosystem.",
       },
       {
         q: "What is the supply?",
-        a: "Total supply is fixed at 10,000,000,000 $AICA.",
+        a: "Total supply is fixed at 10,000,000,000 $AICA. No additional tokens will ever be minted.",
       },
       {
-        q: "How is the private sale structured?",
-        a: "A portion of the fixed supply is allocated to a private sale across multiple SAFT rounds. Pricing, allocations, and round schedule are available to accredited investors via the investor portal at invest.aicreates.ai.",
+        q: "What can I use $AICA for?",
+        a: "Subscription discounts on Eve OS and connected products, participation in the compute network, settlement of agentic actions, and access to the future Skills Marketplace.",
       },
       {
-        q: "Which round is open right now?",
-        a: "The Strategic Seed Round is currently open to accredited investors. Reserve your allocation, view pricing, and access SAFT documents on the investor portal at invest.aicreates.ai.",
+        q: "How do contributors earn $AICA?",
+        a: "Operators of compute, data providers, model contributors, and ecosystem builders earn $AICA proportional to their measured contribution to the network.",
       },
       {
-        q: "What does the GPU cluster do?",
-        a: "Anchored by a $3.5M initial high-end GPU cluster, the Hybrid Compute Fabric brings inference economics in-house. The cluster trains and serves the proprietary models that power Eve OS and the agentic intelligence layer.",
-      },
-      {
-        q: "When is TGE?",
-        a: "Target token generation event is December 1, 2026. Updates are posted to investors and on the materials page.",
-      },
-      {
-        q: "Are private-round tokens vested?",
-        a: "Yes. All tokens sold in private rounds are subject to appropriate vesting schedules.",
+        q: "How does the token economy stay sustainable?",
+        a: "Revenue from real platform usage flows back into the ecosystem and recycles into rewards, compute, and contributor incentives - so demand and supply are anchored to actual work performed on the layer.",
       },
       {
         q: "Is the token a security?",
-        a: "Token utility, parameters, and offering structure are designed with applicable regulation in mind. This page is informational and not an offer or solicitation.",
+        a: "$AICA is designed as a utility token for consumptive use within the AIcreatesAI ecosystem. This page is informational only and does not constitute an offer or solicitation.",
       },
     ],
   },
@@ -114,7 +106,7 @@ const GROUPS: Group[] = [
       },
       {
         q: "What are the materials?",
-        a: "The litepaper is the public long-form. The whitepaper and additional investor materials are available for download or upon request.",
+        a: "The litepaper is the public long-form positioning, architecture, and tokenomics. View it on the Litepaper page; additional investor materials are available on request.",
       },
     ],
   },

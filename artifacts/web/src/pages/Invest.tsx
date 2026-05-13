@@ -109,21 +109,16 @@ export default function Invest() {
                   Reserve Allocation <ArrowRight className="ml-2 w-4 h-4" />
                 </Button>
               </a>
-              <a
-                href={`${import.meta.env.BASE_URL}litepaper.pdf`}
-                download="AiCreatesAi Whitepaper.pdf"
-                rel="noopener noreferrer"
-              >
+              <Link href="/litepaper">
                 <Button
                   size="lg"
                   variant="outline"
-                  className="rounded-full h-12 px-7 border-white/15 bg-white/[0.02] text-white hover:bg-white/[0.06]"
-                  data-testid="button-hero-download-whitepaper"
+                  className="rounded-full h-12 px-7 border-white/15 bg-white/[0.02] text-white hover:bg-white/[0.06] hover:text-[#00F5D4]"
+                  data-testid="button-hero-read-litepaper"
                 >
-                  <Download className="mr-2 w-4 h-4" />
-                  Download Whitepaper
+                  Read the Litepaper
                 </Button>
-              </a>
+              </Link>
             </motion.div>
           </div>
         </div>
@@ -221,24 +216,14 @@ export default function Invest() {
                 testId: "button-view-portal",
               },
               {
-                icon: Download,
-                title: "Download Whitepaper",
-                desc: "PDF version of the AiCreatesAi whitepaper for offline review.",
-                disabled: false,
-                href: `${import.meta.env.BASE_URL}litepaper.pdf` as string | undefined,
-                external: true,
-                cta: "Download PDF",
-                testId: "button-download-whitepaper",
-              },
-              {
                 icon: BookOpen,
-                title: "Read the Litepaper",
-                desc: "The full positioning, architecture, roadmap, and tokenomics.",
+                title: "View the Whitepaper",
+                desc: "Step through the visual whitepaper, with the full PDF available to download from the viewer.",
                 disabled: false,
-                href: "/litepaper",
+                href: "/litepaper" as string | undefined,
                 external: false,
-                cta: "Read the Litepaper",
-                testId: "button-read-litepaper",
+                cta: "Open the viewer",
+                testId: "button-view-whitepaper-card",
               },
             ].map((card) => (
               <motion.div

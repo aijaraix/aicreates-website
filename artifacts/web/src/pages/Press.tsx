@@ -1,8 +1,9 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { ArrowRight, Mail, FileText, Image as ImageIcon, Download, User } from "lucide-react";
+import { ArrowRight, Mail, FileText, Image as ImageIcon, Download, Palette, Type } from "lucide-react";
 import { useSeo } from "@/lib/useSeo";
+import sholomPortrait from "@/assets/sholom-portrait.jpeg";
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
@@ -104,9 +105,13 @@ export default function Press() {
             Leadership.
           </h2>
           <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-7 md:p-10 grid grid-cols-1 md:grid-cols-[160px_1fr] gap-8 items-start">
-            <div className="w-40 h-40 rounded-2xl border border-white/10 bg-white/[0.03] flex items-center justify-center overflow-hidden">
-              {/* Founder photo placeholder - swap to <img src="/press/founder.jpg" /> when ready. */}
-              <User className="w-14 h-14 text-white/30" strokeWidth={1.25} />
+            <div className="w-40 h-40 rounded-2xl border border-white/10 bg-white/[0.03] overflow-hidden">
+              <img
+                src={sholomPortrait}
+                alt="Sholom Hammond - Founder and CEO of AIcreatesAI"
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
             </div>
             <div>
               <h3 className="text-2xl font-serif font-semibold text-white">Sholom Hammond</h3>
@@ -167,6 +172,70 @@ export default function Press() {
           <p className="mt-4 text-xs text-white/40">
             Files are hosted under <span className="font-mono">/press/</span>. If a download is missing, email{" "}
             <a href="mailto:sholom@aicreates.ai" className="text-white/60 hover:text-[#00F5D4]">sholom@aicreates.ai</a>.
+          </p>
+        </div>
+      </section>
+
+      {/* BRAND COLORS & TYPOGRAPHY */}
+      <section className="py-10 md:py-14 relative">
+        <div className="container mx-auto px-4 md:px-6 max-w-5xl">
+          <SectionLabel>Brand system</SectionLabel>
+          <h2 className="mt-5 text-3xl md:text-4xl font-serif font-semibold text-gradient leading-[1.1] mb-8">
+            Colors and typography.
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+            <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6">
+              <div className="flex items-center gap-2 mb-5">
+                <Palette className="w-4 h-4 text-[#00F5D4]" strokeWidth={1.75} />
+                <div className="text-[10px] uppercase tracking-[0.22em] text-white/40">Color palette</div>
+              </div>
+              <ul className="space-y-3">
+                {[
+                  { name: "Background", hex: "#0A0A0A", swatch: "#0A0A0A", border: true },
+                  { name: "Surface", hex: "#121212", swatch: "#121212", border: true },
+                  { name: "Text - primary", hex: "#F5F5F5", swatch: "#F5F5F5" },
+                  { name: "Text - muted", hex: "#A1A1AA", swatch: "#A1A1AA" },
+                  { name: "Accent", hex: "#00F5D4", swatch: "#00F5D4" },
+                ].map((c) => (
+                  <li key={c.hex} className="flex items-center gap-4">
+                    <span
+                      className={`w-9 h-9 rounded-md shrink-0 ${c.border ? "border border-white/15" : ""}`}
+                      style={{ backgroundColor: c.swatch }}
+                    />
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm text-white">{c.name}</div>
+                      <div className="text-xs font-mono text-white/40">{c.hex}</div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6">
+              <div className="flex items-center gap-2 mb-5">
+                <Type className="w-4 h-4 text-[#00F5D4]" strokeWidth={1.75} />
+                <div className="text-[10px] uppercase tracking-[0.22em] text-white/40">Typography</div>
+              </div>
+              <ul className="space-y-5">
+                <li>
+                  <div className="text-[10px] uppercase tracking-[0.18em] text-white/40 mb-1">Display</div>
+                  <div className="font-serif text-2xl text-white">Space Grotesk</div>
+                </li>
+                <li>
+                  <div className="text-[10px] uppercase tracking-[0.18em] text-white/40 mb-1">Body</div>
+                  <div className="font-sans text-lg text-white">Inter</div>
+                </li>
+                <li>
+                  <div className="text-[10px] uppercase tracking-[0.18em] text-white/40 mb-1">Mono</div>
+                  <div className="font-mono text-base text-white">JetBrains Mono</div>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <p className="text-xs text-white/40">
+            Copy convention: hyphens only - no em dashes, no en dashes.
           </p>
         </div>
       </section>

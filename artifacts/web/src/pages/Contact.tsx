@@ -9,7 +9,14 @@ import { Mail, Send, Loader2, MapPin, CheckCircle2 } from "lucide-react";
 
 const CONTACT_ENDPOINT = "https://formsubmit.co/ajax/sholom@aicreates.ai";
 
-const INTERESTS = ["Eve OS", "NeoBank", "Investor", "Press", "Other"] as const;
+const INTERESTS = [
+  "Eve OS Waitlist",
+  "NeoBank Waitlist",
+  "Developer Waitlist",
+  "Investor",
+  "Press",
+  "Other",
+] as const;
 type Interest = typeof INTERESTS[number];
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
@@ -25,7 +32,7 @@ export default function Contact() {
   const { toast } = useToast();
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [interest, setInterest] = useState<Interest>("Eve OS");
+  const [interest, setInterest] = useState<Interest>("Eve OS Waitlist");
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -33,7 +40,17 @@ export default function Contact() {
     const raw = params.get("interest") || window.location.hash.replace(/^#/, "");
     if (!raw) return;
     const decoded = decodeURIComponent(raw).toLowerCase();
-    const match = INTERESTS.find((i) => i.toLowerCase() === decoded);
+    // Exact match first, then a few legacy aliases.
+    let match: Interest | undefined = INTERESTS.find((i) => i.toLowerCase() === decoded);
+    if (!match) {
+      const aliases: Record<string, Interest> = {
+        "eve os": "Eve OS Waitlist",
+        "neobank": "NeoBank Waitlist",
+        "developer": "Developer Waitlist",
+        "developers": "Developer Waitlist",
+      };
+      match = aliases[decoded];
+    }
     if (match) setInterest(match);
   }, []);
 
