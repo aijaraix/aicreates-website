@@ -12,6 +12,11 @@ import {
 } from "../lib/rounds";
 import { lockRoundsForUpdate, validateCapacity } from "../lib/availability";
 import {
+  evaluateRoundTransitions,
+  getRoundStatuses,
+  getRoundStatusesTx,
+} from "../lib/roundStatus";
+import {
   db,
   appUsersTable,
   commitmentsTable,
@@ -129,6 +134,20 @@ router.post("/commitments", requireAuth, async (req, res) => {
       return;
     }
 
+    // Defense-in-depth: reject any line whose round is not currently open.
+    const statuses = await getRoundStatuses();
+    const closedSlugs = lines
+      .map((l) => l.roundSlug)
+      .filter((slug) => statuses.get(slug)?.status !== "open");
+    if (closedSlugs.length > 0) {
+      res.status(409).json({
+        error: `Round not open for commitments: ${closedSlugs.join(", ")}`,
+        code: "round_not_open",
+        closedRounds: closedSlugs,
+      });
+      return;
+    }
+
     const violations = await validateCapacity(
       lines.map((l) => ({ roundSlug: l.roundSlug, tokens: l.tokens })),
     );
@@ -155,12 +174,30 @@ router.post("/commitments", requireAuth, async (req, res) => {
         tx,
         lines.map((l) => l.roundSlug),
       );
+      // Re-check round status inside the locked tx so a status flip
+      // between the precheck and the insert cannot slip a commit into
+      // a now-closed round.
+      const txStatuses = await getRoundStatusesTx(tx);
+      const txClosed = lines
+        .map((l) => l.roundSlug)
+        .filter((s) => txStatuses.get(s)?.status !== "open");
+      if (txClosed.length > 0) {
+        return {
+          ok: false as const,
+          kind: "closed" as const,
+          closedRounds: txClosed,
+        };
+      }
       const v2 = await validateCapacity(
         lines.map((l) => ({ roundSlug: l.roundSlug, tokens: l.tokens })),
         tx,
       );
       if (v2.length > 0) {
-        return { ok: false as const, violations: v2 };
+        return {
+          ok: false as const,
+          kind: "capacity" as const,
+          violations: v2,
+        };
       }
       const inserted = await tx
         .insert(commitmentsTable)
@@ -191,6 +228,14 @@ router.post("/commitments", requireAuth, async (req, res) => {
     });
 
     if (!result.ok) {
+      if (result.kind === "closed") {
+        res.status(409).json({
+          error: `Round not open for commitments: ${result.closedRounds.join(", ")}`,
+          code: "round_not_open",
+          closedRounds: result.closedRounds,
+        });
+        return;
+      }
       res.status(409).json({
         error: "Round capacity exceeded",
         code: "capacity_exceeded",
@@ -198,6 +243,11 @@ router.post("/commitments", requireAuth, async (req, res) => {
       });
       return;
     }
+    // After every successful commit, sweep transitions so a sold-out
+    // round auto-closes and the next round opens without an admin step.
+    evaluateRoundTransitions({ reason: "commit" }).catch((err) =>
+      req.log?.error({ err }, "post-commit round transition failed"),
+    );
     res.status(201).json({
       commitment: result.commitment,
       allocations: lines,
@@ -209,6 +259,15 @@ router.post("/commitments", requireAuth, async (req, res) => {
   const round = body.roundSlug ?? getActiveRound().slug;
   if (!ROUND_BY_SLUG.has(round)) {
     res.status(400).json({ error: "Unknown round" });
+    return;
+  }
+  const legacyStatuses = await getRoundStatuses();
+  if (legacyStatuses.get(round)?.status !== "open") {
+    res.status(409).json({
+      error: `Round not open for commitments: ${round}`,
+      code: "round_not_open",
+      closedRounds: [round],
+    });
     return;
   }
 
@@ -263,11 +322,24 @@ router.post("/commitments", requireAuth, async (req, res) => {
 
   const result = await db.transaction(async (tx) => {
     await lockRoundsForUpdate(tx, [round]);
+    const txStatuses = await getRoundStatusesTx(tx);
+    if (txStatuses.get(round)?.status !== "open") {
+      return {
+        ok: false as const,
+        kind: "closed" as const,
+        closedRounds: [round],
+      };
+    }
     const v2 = await validateCapacity(
       [{ roundSlug: round, tokens: tokenAllocation }],
       tx,
     );
-    if (v2.length > 0) return { ok: false as const, violations: v2 };
+    if (v2.length > 0)
+      return {
+        ok: false as const,
+        kind: "capacity" as const,
+        violations: v2,
+      };
     const inserted = await tx
       .insert(commitmentsTable)
       .values({
@@ -296,6 +368,14 @@ router.post("/commitments", requireAuth, async (req, res) => {
   });
 
   if (!result.ok) {
+    if (result.kind === "closed") {
+      res.status(409).json({
+        error: `Round not open for commitments: ${result.closedRounds.join(", ")}`,
+        code: "round_not_open",
+        closedRounds: result.closedRounds,
+      });
+      return;
+    }
     res.status(409).json({
       error: "Round capacity exceeded",
       code: "capacity_exceeded",
@@ -303,6 +383,9 @@ router.post("/commitments", requireAuth, async (req, res) => {
     });
     return;
   }
+  evaluateRoundTransitions({ reason: "commit" }).catch((err) =>
+    req.log?.error({ err }, "post-commit round transition failed"),
+  );
   res.status(201).json({ commitment: result.commitment });
 });
 

@@ -1,12 +1,20 @@
 import { Router, type IRouter } from "express";
 import { db } from "@workspace/db";
 import { sql } from "drizzle-orm";
-import { getActiveRound, ROUNDS } from "../lib/rounds";
+import { getActiveRound, ROUNDS, ROUND_BY_SLUG } from "../lib/rounds";
+import { getActiveRoundSlug } from "../lib/roundStatus";
 
 const router: IRouter = Router();
 
 router.get("/rounds/active", async (_req, res) => {
-  const round = getActiveRound();
+  const activeSlug = await getActiveRoundSlug();
+  // When no round is currently `open`, fall back to the last catalog
+  // round so the public scoreboard still renders, but signal the
+  // truth via `status` and `hasActive` so consumers can degrade.
+  const fallback = ROUNDS[ROUNDS.length - 1] ?? getActiveRound();
+  const round =
+    (activeSlug ? ROUND_BY_SLUG.get(activeSlug) : undefined) ?? fallback;
+  const hasActive = activeSlug !== null;
   const result = await db.execute(sql`
     SELECT
       COUNT(*) FILTER (WHERE state = 'funded' OR status = 'succeeded') AS funded_count,
@@ -22,6 +30,8 @@ router.get("/rounds/active", async (_req, res) => {
   const row = (result.rows[0] ?? {}) as Record<string, unknown>;
   res.json({
     round,
+    hasActive,
+    status: hasActive ? "open" : "closed",
     raised: {
       fundedCents: Number(row["funded_cents"] ?? 0),
       inFlightCents: Number(row["in_flight_cents"] ?? 0),

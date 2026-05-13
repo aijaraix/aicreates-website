@@ -2,6 +2,7 @@ import { runMigrations } from "stripe-replit-sync";
 import app from "./app";
 import { logger } from "./lib/logger";
 import { getStripeSync, isStripeConfigured } from "./lib/stripeClient";
+import { startRoundSweep, evaluateRoundTransitions } from "./lib/roundStatus";
 
 async function initStripe(): Promise<void> {
   const databaseUrl = process.env.DATABASE_URL;
@@ -61,4 +62,10 @@ app.listen(port, (err) => {
     process.exit(1);
   }
   logger.info({ port }, "Server listening");
+  // Seed round_state on first boot and run an initial transition pass
+  // so a server restart doesn't miss a deadline that lapsed while down.
+  evaluateRoundTransitions({ reason: "sweep" }).catch((sweepErr) =>
+    logger.error({ err: sweepErr }, "initial round transition failed"),
+  );
+  startRoundSweep();
 });

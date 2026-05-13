@@ -371,3 +371,92 @@ export async function emailDisputeAdmin(
   const text = `[URGENT] Stripe dispute opened.\n\nCommitment: ${args.commitmentId}\nInvestor: ${args.investorEmail}\nAmount: ${fmtUsd(args.amountCents)}\nReason: ${args.reason}\nDispute ID: ${args.disputeId}\n${args.dueByIso ? `Respond by: ${new Date(args.dueByIso).toUTCString()}\n` : ""}\nAdmin: ${args.dashboardUrl}\n`;
   await sendEmail({ to: args.to, subject, html, text });
 }
+
+// ---- Round transition operator notice -------------------------------------
+
+export interface RoundAdvancedEmail {
+  to: string | string[];
+  reason: string;
+  closed: Array<{ slug: string; label: string }>;
+  opened: Array<{
+    slug: string;
+    label: string;
+    pricePerTokenMillicents: number;
+  }>;
+}
+
+export async function emailRoundAdvanced(
+  args: RoundAdvancedEmail,
+): Promise<void> {
+  const closedLabels = args.closed.map((r) => r.label).join(", ") || "none";
+  const openedLabels = args.opened.map((r) => r.label).join(", ") || "none";
+  const subject = `Round transition - ${
+    args.opened[0]
+      ? `${args.opened[0].label} is now live`
+      : args.closed[0]
+        ? `${args.closed[0].label} is closed`
+        : "no-op"
+  }`;
+  const html = shell(
+    "Round transition",
+    [
+      p(`Trigger: <strong>${args.reason}</strong>`),
+      `<table cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;margin:8px 0 20px 0;">${[
+        row("Closed", closedLabels),
+        row("Opened", openedLabels),
+        ...args.opened.map((r) =>
+          row(
+            `${r.label} price`,
+            `$${(r.pricePerTokenMillicents / 1000).toFixed(3)} / AICA`,
+          ),
+        ),
+      ].join("")}</table>`,
+      p(
+        "Investors with stranded pending_saft commitments on the closed round have been emailed a re-commit prompt.",
+      ),
+    ].join(""),
+  );
+  const text = `Round transition (${args.reason}).\nClosed: ${closedLabels}\nOpened: ${openedLabels}\n`;
+  await sendEmail({ to: args.to, subject, html, text });
+}
+
+// ---- Investor "your round closed, re-commit" notice -----------------------
+
+export interface RecommitNeededEmail {
+  to: string;
+  investorName: string;
+  commitmentId: string;
+  closedRoundLabel: string;
+  newRoundLabel: string | null;
+  newRoundPriceLabel: string | null;
+  portalUrl: string;
+}
+
+export async function emailRecommitNeeded(
+  args: RecommitNeededEmail,
+): Promise<void> {
+  const subject = args.newRoundLabel
+    ? `${args.closedRoundLabel} closed - re-commit on ${args.newRoundLabel}`
+    : `${args.closedRoundLabel} closed - your unfunded commitment needs to be re-issued`;
+  const newRoundLine = args.newRoundLabel
+    ? `<strong>${args.newRoundLabel}</strong> is now the active round${
+        args.newRoundPriceLabel ? ` at ${args.newRoundPriceLabel}` : ""
+      }.`
+    : "A new round will be announced shortly.";
+  const html = shell(
+    "Your committed round just closed",
+    [
+      p(`Hi ${args.investorName},`),
+      p(
+        `Your unfunded commitment on <strong>${args.closedRoundLabel}</strong> (commitment ${args.commitmentId.slice(0, 8)}) cannot proceed because the round is now closed. ${newRoundLine}`,
+      ),
+      p(
+        "To complete an investment, please re-commit on the active round at the new price. Your previous unfunded commitment will be ignored.",
+      ),
+      `<p style="margin:0 0 16px 0;"><a href="${args.portalUrl}" style="display:inline-block;background:${BRAND_ACCENT};color:#0A0A0A;text-decoration:none;padding:12px 20px;border-radius:6px;font-weight:600;">Re-commit now</a></p>`,
+      p("Reply to this email if you have any questions."),
+    ].join(""),
+  );
+  const text = `Your committed round just closed.\n\n${args.closedRoundLabel} is closed. ${args.newRoundLabel ? `${args.newRoundLabel} is now active${args.newRoundPriceLabel ? ` at ${args.newRoundPriceLabel}` : ""}.` : "A new round will be announced shortly."}\n\nRe-commit: ${args.portalUrl}\n`;
+  await sendEmail({ to: args.to, subject, html, text });
+}

@@ -15,6 +15,7 @@ interface RoundAvailability {
   reserved: number;
   available: number;
   open: boolean;
+  status: "upcoming" | "open" | "closed";
 }
 
 interface MeResponse {
@@ -310,6 +311,16 @@ export default function InvestPicker() {
                 );
                 const overflow = line.tokens > round.available;
                 const soldOut = round.available <= 0;
+                const isClosed = round.status === "closed";
+                const isUpcoming = round.status === "upcoming";
+                const inputsDisabled = soldOut || isClosed || isUpcoming;
+                const stateLabel = isClosed
+                  ? "Closed"
+                  : isUpcoming
+                    ? "Coming soon"
+                    : soldOut
+                      ? "Sold out"
+                      : null;
                 return (
                   <div
                     key={round.slug}
@@ -327,8 +338,15 @@ export default function InvestPicker() {
                           {priceLabel(round.pricePerTokenMillicents)} / AICA
                         </div>
                         {!round.open && (
-                          <span className="text-[10px] text-white/40 uppercase tracking-wider">
-                            preview
+                          <span
+                            className="text-[10px] text-white/40 uppercase tracking-wider"
+                            data-testid={`round-state-label-${round.slug}`}
+                          >
+                            {isClosed
+                              ? "Closed"
+                              : isUpcoming
+                                ? "Coming soon"
+                                : "preview"}
                           </span>
                         )}
                       </div>
@@ -341,9 +359,18 @@ export default function InvestPicker() {
                         </span>{" "}
                         of {round.capacity.toLocaleString()}
                       </div>
-                      {soldOut && (
-                        <div className="mt-1 text-[11px] text-amber-300">
-                          Sold out
+                      {stateLabel && (
+                        <div
+                          className={`mt-1 text-[11px] ${
+                            isClosed
+                              ? "text-white/45"
+                              : isUpcoming
+                                ? "text-white/45"
+                                : "text-amber-300"
+                          }`}
+                          data-testid={`round-state-${round.slug}`}
+                        >
+                          {stateLabel}
                         </div>
                       )}
                     </div>
@@ -356,7 +383,7 @@ export default function InvestPicker() {
                         min={0}
                         max={MAX_USD}
                         step={500}
-                        disabled={soldOut}
+                        disabled={inputsDisabled}
                         value={Math.round(line.usdCents / 100) || ""}
                         onChange={(e) =>
                           setUsdForLine(
@@ -379,7 +406,7 @@ export default function InvestPicker() {
                         type="number"
                         min={0}
                         step={1}
-                        disabled={soldOut}
+                        disabled={inputsDisabled}
                         value={line.tokens || ""}
                         onChange={(e) =>
                           setTokensForLine(
@@ -397,7 +424,7 @@ export default function InvestPicker() {
                         <button
                           type="button"
                           onClick={() => useMaxForLine(round.slug, round)}
-                          disabled={soldOut}
+                          disabled={inputsDisabled}
                           className="text-[#00F5D4] hover:underline inline-flex items-center gap-1 disabled:opacity-40"
                           data-testid={`button-use-max-${round.slug}`}
                         >

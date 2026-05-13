@@ -206,6 +206,9 @@ export default function Admin() {
             <TabsTrigger value="commitments" data-testid="tab-commitments">
               Commitments
             </TabsTrigger>
+            <TabsTrigger value="rounds" data-testid="tab-rounds">
+              Rounds
+            </TabsTrigger>
             <TabsTrigger value="audit" data-testid="tab-audit">
               Audit
             </TabsTrigger>
@@ -218,6 +221,9 @@ export default function Admin() {
           </TabsContent>
           <TabsContent value="commitments">
             <CommitmentsTab />
+          </TabsContent>
+          <TabsContent value="rounds">
+            <RoundsTab />
           </TabsContent>
           <TabsContent value="audit">
             <AuditTab />
@@ -1377,6 +1383,273 @@ function EditAllocationDialog({
 /* ===================================================================
  * Audit tab
  * =================================================================== */
+
+/* ---------------------- Rounds tab ------------------------------- */
+
+interface AdminRoundView {
+  slug: string;
+  label: string;
+  status: "upcoming" | "open" | "closed";
+  softClosePct: number;
+  openedAt: string | null;
+  closedAt: string | null;
+  capacity: number;
+  reserved: number;
+  available: number;
+  pricePerTokenMillicents: number;
+  hardCapCents: number;
+  fundedCents: number;
+  inFlightCents: number;
+  fundedCount: number;
+  soldPct: number;
+  deadline: string;
+}
+
+function statusPillClass(s: AdminRoundView["status"]): string {
+  if (s === "open")
+    return "bg-[#00F5D4]/10 text-[#00F5D4] border border-[#00F5D4]/30";
+  if (s === "closed")
+    return "bg-white/[0.04] text-white/40 border border-white/10";
+  return "bg-amber-300/10 text-amber-300 border border-amber-300/30";
+}
+
+function deadlineCountdown(iso: string): string {
+  const ms = Date.parse(iso) - Date.now();
+  if (Number.isNaN(ms)) return "-";
+  if (ms <= 0) return "deadline passed";
+  const days = Math.floor(ms / 86400000);
+  const hours = Math.floor((ms % 86400000) / 3600000);
+  if (days >= 2) return `${days} days`;
+  return `${days}d ${hours}h`;
+}
+
+function RoundsTab() {
+  const qc = useQueryClient();
+  const rounds = useQuery({
+    queryKey: ["admin", "rounds"],
+    queryFn: () => api<{ rounds: AdminRoundView[] }>("/admin/rounds"),
+    refetchInterval: 30_000,
+  });
+
+  const refresh = () => {
+    qc.invalidateQueries({ queryKey: ["admin", "rounds"] });
+  };
+
+  const action = useMutation({
+    mutationFn: async (args: {
+      slug: string;
+      verb: "open" | "close" | "reopen";
+    }) =>
+      api(`/admin/rounds/${args.slug}/${args.verb}`, {
+        method: "POST",
+      }),
+    onSuccess: refresh,
+  });
+
+  const evaluateAll = useMutation({
+    mutationFn: () => api(`/admin/rounds/evaluate`, { method: "POST" }),
+    onSuccess: refresh,
+  });
+
+  const setSoftClose = useMutation({
+    mutationFn: async (args: { slug: string; softClosePct: number }) =>
+      api(`/admin/rounds/${args.slug}`, {
+        method: "PATCH",
+        body: JSON.stringify({ softClosePct: args.softClosePct }),
+      }),
+    onSuccess: refresh,
+  });
+
+  return (
+    <div className="space-y-6" data-testid="rounds-tab">
+      <div className="flex items-center justify-between gap-3">
+        <p className="text-sm text-white/55">
+          Auto-close fires when sold% exceeds the soft-close threshold or
+          the deadline lapses. Manual overrides are logged in the audit trail
+          and emailed to operators.
+        </p>
+        <button
+          type="button"
+          onClick={() => evaluateAll.mutate()}
+          disabled={evaluateAll.isPending}
+          className="brand-button-secondary"
+          data-testid="button-evaluate-rounds"
+        >
+          {evaluateAll.isPending ? (
+            <Loader2 className="w-4 h-4 animate-spin" />
+          ) : (
+            <RefreshCw className="w-4 h-4" />
+          )}
+          Re-evaluate now
+        </button>
+      </div>
+
+      {rounds.isLoading && (
+        <div className="brand-card p-6 text-white/50 flex items-center gap-2">
+          <Loader2 className="w-4 h-4 animate-spin text-[#00F5D4]" /> Loading
+          rounds...
+        </div>
+      )}
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {(rounds.data?.rounds ?? []).map((r) => (
+          <RoundCard
+            key={r.slug}
+            round={r}
+            onAction={(verb) => action.mutate({ slug: r.slug, verb })}
+            onSoftClose={(pct) =>
+              setSoftClose.mutate({ slug: r.slug, softClosePct: pct })
+            }
+            pending={
+              action.isPending &&
+              action.variables?.slug === r.slug
+            }
+            savingSoftClose={
+              setSoftClose.isPending &&
+              setSoftClose.variables?.slug === r.slug
+            }
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function RoundCard(props: {
+  round: AdminRoundView;
+  onAction: (verb: "open" | "close" | "reopen") => void;
+  onSoftClose: (pct: number) => void;
+  pending: boolean;
+  savingSoftClose: boolean;
+}) {
+  const { round: r } = props;
+  const [pct, setPct] = useState<number>(r.softClosePct);
+  useEffect(() => {
+    setPct(r.softClosePct);
+  }, [r.softClosePct]);
+  const dirty = pct !== r.softClosePct;
+
+  return (
+    <section
+      className="brand-card p-5 space-y-4"
+      data-testid={`round-card-${r.slug}`}
+    >
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <div className="text-sm font-semibold text-white">{r.label}</div>
+          <div className="text-[11px] text-white/45 font-mono">{r.slug}</div>
+        </div>
+        <span
+          className={`text-[10px] uppercase tracking-[0.16em] px-2 py-0.5 rounded-full ${statusPillClass(r.status)}`}
+          data-testid={`round-status-${r.slug}`}
+        >
+          {r.status}
+        </span>
+      </div>
+
+      <div className="grid grid-cols-2 gap-3 text-[11px]">
+        <Stat
+          label="Raised"
+          value={fmt(r.fundedCents)}
+          sub={`of ${fmt(r.hardCapCents)}`}
+        />
+        <Stat
+          label="In flight"
+          value={fmt(r.inFlightCents)}
+          sub={`${r.fundedCount} funded`}
+        />
+        <Stat
+          label="Tokens sold"
+          value={`${r.soldPct.toFixed(1)}%`}
+          sub={`${(r.capacity - r.available).toLocaleString()} / ${r.capacity.toLocaleString()}`}
+        />
+        <Stat
+          label="Deadline"
+          value={deadlineCountdown(r.deadline)}
+          sub={fmtDate(r.deadline)}
+        />
+      </div>
+
+      <div className="space-y-1.5">
+        <label className="text-[10px] uppercase tracking-[0.16em] text-white/40">
+          Soft-close threshold
+        </label>
+        <div className="flex items-center gap-2">
+          <input
+            type="number"
+            min={1}
+            max={100}
+            value={pct}
+            onChange={(e) =>
+              setPct(
+                Math.max(1, Math.min(100, Number(e.target.value) || 0)),
+              )
+            }
+            className="brand-input !h-9 !text-sm w-24"
+            data-testid={`input-soft-close-${r.slug}`}
+          />
+          <span className="text-xs text-white/55">% sold</span>
+          <button
+            type="button"
+            onClick={() => props.onSoftClose(pct)}
+            disabled={!dirty || props.savingSoftClose}
+            className="brand-button-secondary !h-9"
+            data-testid={`button-save-soft-close-${r.slug}`}
+          >
+            {props.savingSoftClose ? (
+              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+            ) : null}
+            Save
+          </button>
+        </div>
+      </div>
+
+      <div className="flex flex-wrap gap-2 pt-1">
+        {r.status !== "open" && (
+          <button
+            type="button"
+            onClick={() =>
+              props.onAction(r.status === "closed" ? "reopen" : "open")
+            }
+            disabled={props.pending}
+            className="brand-button-primary !h-9"
+            data-testid={`button-${r.status === "closed" ? "reopen" : "open"}-${r.slug}`}
+          >
+            {r.status === "closed" ? "Reopen" : "Open"}
+          </button>
+        )}
+        {r.status === "open" && (
+          <button
+            type="button"
+            onClick={() => props.onAction("close")}
+            disabled={props.pending}
+            className="brand-button-secondary !h-9"
+            data-testid={`button-close-${r.slug}`}
+          >
+            Close
+          </button>
+        )}
+      </div>
+
+      <div className="text-[11px] text-white/40 space-y-0.5">
+        {r.openedAt && <div>Opened {fmtDateTime(r.openedAt)}</div>}
+        {r.closedAt && <div>Closed {fmtDateTime(r.closedAt)}</div>}
+      </div>
+    </section>
+  );
+}
+
+function Stat(props: { label: string; value: string; sub?: string }) {
+  return (
+    <div>
+      <div className="text-[10px] uppercase tracking-[0.16em] text-white/40">
+        {props.label}
+      </div>
+      <div className="text-sm text-white">{props.value}</div>
+      {props.sub && <div className="text-[10px] text-white/45">{props.sub}</div>}
+    </div>
+  );
+}
 
 function AuditTab() {
   const [actor, setActor] = useState("");

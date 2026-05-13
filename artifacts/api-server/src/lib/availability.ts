@@ -1,6 +1,7 @@
 import { db } from "@workspace/db";
 import { sql } from "drizzle-orm";
 import { ROUNDS, ROUND_BY_SLUG, type RoundDef } from "./rounds";
+import { getRoundStatuses } from "./roundStatus";
 
 /**
  * States that consume capacity. Funded purchases are obviously locked
@@ -45,7 +46,9 @@ export interface RoundAvailability {
   capacity: number;
   reserved: number;
   available: number;
+  /** True iff the round is currently the active sale round. */
   open: boolean;
+  status: "upcoming" | "open" | "closed";
 }
 
 /**
@@ -89,7 +92,7 @@ export async function lockRoundsForUpdate(
  * Pass `executor` = the transaction handle when called inside a tx so
  * the read sees the same snapshot as subsequent writes.
  */
-async function reservedByRound(
+export async function reservedByRound(
   executor: Executor = db,
 ): Promise<Map<string, number>> {
   // Lazy sweep: a pending_saft / pending_payment row older than the TTL
@@ -153,10 +156,14 @@ async function reservedByRound(
 }
 
 export async function getAvailability(): Promise<RoundAvailability[]> {
-  const reserved = await reservedByRound();
+  const [reserved, statuses] = await Promise.all([
+    reservedByRound(),
+    getRoundStatuses(),
+  ]);
   return ROUNDS.map((r: RoundDef) => {
     const used = reserved.get(r.slug) ?? 0;
     const available = Math.max(0, r.tokensForSale - used);
+    const state = statuses.get(r.slug);
     return {
       slug: r.slug,
       label: r.label,
@@ -164,7 +171,11 @@ export async function getAvailability(): Promise<RoundAvailability[]> {
       capacity: r.tokensForSale,
       reserved: used,
       available,
-      open: r.open,
+      open: state?.status === "open",
+      status: (state?.status ?? "upcoming") as
+        | "upcoming"
+        | "open"
+        | "closed",
     };
   });
 }
