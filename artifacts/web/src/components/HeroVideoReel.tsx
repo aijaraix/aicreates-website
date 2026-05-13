@@ -159,7 +159,7 @@ export default function HeroVideoReel({
       <div className="absolute inset-0 bg-gradient-to-b from-[#0A0A0A]/65 via-[#0A0A0A]/35 to-[#0A0A0A]/55" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_60%_at_50%_50%,transparent,rgba(10,10,10,0.45))]" />
       {/* Bottom fade so the hero blends into the next section instead of cutting off */}
-      <div className="absolute inset-x-0 bottom-0 h-20 sm:h-56 bg-gradient-to-b from-transparent to-[#0A0A0A]" />
+      <div className="absolute inset-x-0 bottom-0 h-40 sm:h-56 bg-gradient-to-b from-transparent to-[#0A0A0A]" />
     </div>
   );
 }
