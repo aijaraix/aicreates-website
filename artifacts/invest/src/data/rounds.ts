@@ -41,7 +41,7 @@ export const ROUNDS: RoundDef[] = [
     supplyPct: "5.00%",
     fdv: "$100M",
     open: true,
-    vesting: { tgePercent: 0.1, cliffMonths: 12, vestingMonths: 24 },
+    vesting: { tgePercent: 0.1, cliffMonths: 3, vestingMonths: 12 },
   },
   {
     slug: "private-1",
@@ -53,7 +53,7 @@ export const ROUNDS: RoundDef[] = [
     supplyPct: "8.00%",
     fdv: "$150M",
     open: false,
-    vesting: { tgePercent: 0.15, cliffMonths: 9, vestingMonths: 24 },
+    vesting: { tgePercent: 0.15, cliffMonths: 2, vestingMonths: 10 },
   },
   {
     slug: "private-2",
@@ -65,7 +65,7 @@ export const ROUNDS: RoundDef[] = [
     supplyPct: "9.00%",
     fdv: "$200M",
     open: false,
-    vesting: { tgePercent: 0.2, cliffMonths: 6, vestingMonths: 24 },
+    vesting: { tgePercent: 0.2, cliffMonths: 2, vestingMonths: 7 },
   },
   {
     slug: "infrastructure",
@@ -77,7 +77,7 @@ export const ROUNDS: RoundDef[] = [
     supplyPct: "3.85%",
     fdv: "$260M",
     open: false,
-    vesting: { tgePercent: 0.25, cliffMonths: 6, vestingMonths: 18 },
+    vesting: { tgePercent: 0.25, cliffMonths: 1, vestingMonths: 5 },
   },
   {
     slug: "community-launchpad",
@@ -89,7 +89,7 @@ export const ROUNDS: RoundDef[] = [
     supplyPct: "1.47%",
     fdv: "$340M",
     open: false,
-    vesting: { tgePercent: 0.3, cliffMonths: 3, vestingMonths: 12 },
+    vesting: { tgePercent: 0.3, cliffMonths: 0, vestingMonths: 3 },
   },
 ];
 

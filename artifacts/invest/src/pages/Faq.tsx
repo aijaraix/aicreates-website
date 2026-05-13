@@ -63,7 +63,7 @@ const GROUPS: FaqGroup[] = [
       },
       {
         q: "What is the vesting schedule?",
-        a: "Vesting is per round - earlier rounds carry longer lockups, later rounds vest faster. Strategic Seed: 10% at TGE, 12-month cliff, 24-month linear. Private Round 1: 15% at TGE, 9-month cliff, 24-month linear. Private Round 2: 20% at TGE, 6-month cliff, 24-month linear. Infrastructure / Strategic: 25% at TGE, 6-month cliff, 18-month linear. Community / Launchpad: 30% at TGE, 3-month cliff, 12-month linear. Toggle the SAFT schedule on your dashboard to compare. Final terms are subject to counsel review.",
+        a: "Vesting is per round - earlier rounds carry longer lockups, later rounds vest faster. Strategic Seed: 3-month cliff, 12-month linear (15-month total lock). Private Round 1: 2-month cliff, 10-month linear (12-month total). Private Round 2: 2-month cliff, 7-month linear (9-month total). Infrastructure / Strategic: 1-month cliff, 5-month linear (6-month total). Community / Launchpad: no cliff, 3-month linear. Toggle the SAFT schedule on your dashboard to compare. Final terms are subject to counsel review.",
       },
       {
         q: "Why does vesting differ by round?",

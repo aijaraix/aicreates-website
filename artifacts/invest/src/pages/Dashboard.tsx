@@ -180,15 +180,6 @@ export default function Dashboard() {
           </>
         }
         subtitle="Track every AICA Founders commitment - SAFT status, funding, vesting, and unlocks - in one place."
-        actions={
-          <Link
-            href="/invest"
-            className="brand-cta"
-            data-testid="link-make-commitment-header"
-          >
-            New commitment <ArrowRight className="ml-2 w-4 h-4" />
-          </Link>
-        }
       />
 
       <main className="mx-auto max-w-5xl px-6 py-10 md:py-12">
