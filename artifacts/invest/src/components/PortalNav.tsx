@@ -60,8 +60,7 @@ export default function PortalNav({ showAdmin }: { showAdmin?: boolean }) {
   return (
     <>
       <SiteHeader
-        homeHref="https://www.aicreates.ai"
-        homeExternal
+        homeHref="/dashboard"
         homeTestId="link-portal-home"
         sticky
         navLinks={navLinks}
