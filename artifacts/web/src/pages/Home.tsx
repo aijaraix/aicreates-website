@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import DeckCarousel from "@/components/DeckCarousel";
 import HeroVideoReel from "@/components/HeroVideoReel";
-import spotlightBgUrl from "@/assets/spotlight-bg.png";
+import neobankSpotlightUrl from "@/assets/neobank-spotlight.png";
 import eveOsSpotlightUrl from "@/assets/eve-os-spotlight.png";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 
@@ -107,8 +107,8 @@ const SLIDES: Slide[] = [
     ctaText: "Inside NeoBank",
     ctaHref: "/neobank",
     pills: ["Treasury", "Payments", "Credit", "Yield", "Compliance", "Identity"],
-    bgImage: spotlightBgUrl,
-    bgSize: "auto 110%",
+    bgImage: neobankSpotlightUrl,
+    bgSize: "contain",
     bgPosition: "right center",
   },
 ];
