@@ -41,9 +41,12 @@ function Wordmark({ size = "md" }: { size?: "sm" | "md" }) {
   return (
     <span className="inline-flex items-center gap-2">
       <LogoMark className={iconCls} />
-      <span className={`font-sans font-semibold tracking-tight text-white ${cls} leading-none`}>
+      <span
+        className={`font-semibold uppercase tracking-[0.08em] text-white ${cls} leading-none`}
+        style={{ fontFamily: "var(--app-font-wordmark)" }}
+      >
         <span className="text-[hsl(168_100%_48%)]">AI</span>
-        <span className="font-light">creates</span>
+        <span className="font-normal">creates</span>
         <span className="text-[hsl(168_100%_48%)]">AI</span>
       </span>
     </span>

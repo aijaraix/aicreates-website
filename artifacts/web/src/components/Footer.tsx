@@ -184,9 +184,12 @@ export function Footer() {
             <div>
               <Link href="/" className="inline-flex items-center gap-2.5 mb-3">
                 <LogoMark className="h-6 w-auto shrink-0" />
-                <span className="font-sans font-semibold tracking-tight text-white text-lg leading-none">
+                <span
+                  className="font-semibold uppercase tracking-[0.08em] text-white text-lg leading-none"
+                  style={{ fontFamily: "var(--app-font-wordmark)" }}
+                >
                   <span className="text-[#00F5D4]">AI</span>
-                  <span className="font-light">creates</span>
+                  <span className="font-normal">creates</span>
                   <span className="text-[#00F5D4]">AI</span>
                 </span>
               </Link>

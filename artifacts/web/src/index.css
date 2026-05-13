@@ -97,6 +97,7 @@
   --app-font-sans: 'Inter', system-ui, sans-serif;
   --app-font-serif: 'Space Grotesk', 'Inter', sans-serif;
   --app-font-mono: 'JetBrains Mono', Menlo, monospace;
+  --app-font-wordmark: 'Orbitron', 'Space Grotesk', system-ui, sans-serif;
   --radius: .5rem;
 
   --shadow-2xs: 0px 2px 0px 0px hsl(0 0% 0% / 0.1);
