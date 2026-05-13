@@ -101,3 +101,9 @@ id = "LG94lVEsatzpL1_gUWrVP"
 uri = "file://artifacts/web/src/assets/aica-wordmark.png"
 type = "image"
 title = "Wordmark from your logo"
+
+[[outputs]]
+id = "9JFnX8-sPRczg_IKxDb5c"
+uri = "file://artifacts/web/src/assets/_wm_hi_crop.png"
+type = "image"
+title = "High-res wordmark crop (preview)"
