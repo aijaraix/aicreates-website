@@ -4,15 +4,11 @@ export default function Footer() {
       className="bg-[#0A0A0A] relative border-t border-white/5 pt-16 pb-8 mt-24 overflow-hidden"
       data-testid="footer"
     >
-      {/* Giant wordmark - full width, faded */}
+      {/* Giant wordmark - full width, faded, with hero-style texture glowing from bottom */}
       <div className="relative w-full">
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background:
-              "radial-gradient(ellipse 80% 100% at 50% 100%, rgba(0,245,212,0.06), transparent 70%)",
-          }}
-        />
+        <div className="absolute inset-0 bg-grid bg-grid-fade-bottom pointer-events-none" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_100%,rgba(0,245,212,0.10),transparent_70%)] pointer-events-none" />
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/3 w-[900px] h-[900px] rounded-full bg-[radial-gradient(circle,rgba(0,245,212,0.06),transparent_60%)] blur-3xl pointer-events-none" />
         <a
           href="https://www.aicreates.ai"
           className="relative block w-full text-center leading-[0.85] font-semibold tracking-[-0.04em] select-none opacity-60 hover:opacity-80 transition-opacity"
