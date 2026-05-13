@@ -19,6 +19,8 @@ import {
 } from "lucide-react";
 import RoundsTable from "@/components/RoundsTable";
 import AllocationCalculator from "@/components/AllocationCalculator";
+import aicaUtilityLayerUrl from "@/assets/tokenomics/aica-utility-layer.png";
+import aicaTokenUtilityMapUrl from "@/assets/tokenomics/aica-token-utility-map.png";
 import VestingCalendar from "@/components/VestingCalendar";
 import { SectionLabel } from "@/components/brand";
 import SiteHeader from "@/components/SiteHeader";
@@ -772,6 +774,21 @@ export default function Home() {
           </p>
         </div>
 
+        {/* Visual: $AICA Utility Layer */}
+        <figure className="mt-10 rounded-2xl border border-white/10 bg-[#0A0A0A] overflow-hidden">
+          <img
+            src={aicaUtilityLayerUrl}
+            alt="$AICA Utility Layer diagram showing AI Credits, Compute Credits, Agent Runs, Marketplace, Enterprise Pools, Rewards & Staking, Developer Rewards, and Access Layer surrounding the $AICA token"
+            loading="lazy"
+            decoding="async"
+            className="w-full h-auto block"
+            data-testid="img-aica-utility-layer"
+          />
+          <figcaption className="px-5 py-3 text-xs uppercase tracking-[0.18em] text-white/40 border-t border-white/5">
+            $AICA Utility Layer - one token, eight surfaces of demand.
+          </figcaption>
+        </figure>
+
         {/* Supply + Philosophy */}
         <div className="mt-10 grid md:grid-cols-2 gap-5">
           <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-7">
@@ -1004,6 +1021,21 @@ export default function Home() {
             </table>
           </div>
         </div>
+
+        {/* Visual: $AICA Token Utility Map (whitepaper sheet) */}
+        <figure className="mt-8 rounded-2xl border border-white/10 bg-[#0A0A0A] overflow-hidden">
+          <img
+            src={aicaTokenUtilityMapUrl}
+            alt="$AICA Token Utility Map: GPU contributions, data rewards, skills development, workflow rewards, premium access, referral rewards, validator tiers, marketplace payments, compute reward pool, and ecosystem incentives"
+            loading="lazy"
+            decoding="async"
+            className="w-full h-auto block"
+            data-testid="img-aica-token-utility-map"
+          />
+          <figcaption className="px-5 py-3 text-xs uppercase tracking-[0.18em] text-white/40 border-t border-white/5">
+            $AICA is a utility and coordination token - not the product itself.
+          </figcaption>
+        </figure>
       </Section>
 
       {/* ----------------------------- ROADMAP ----------------------------- */}
