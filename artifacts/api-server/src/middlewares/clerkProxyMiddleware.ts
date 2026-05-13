@@ -58,12 +58,14 @@ export function clerkProxyMiddleware(): RequestHandler {
     return (_req, _res, next) => next();
   }
 
-  const secretKey = process.env.CLERK_SECRET_KEY;
-  if (!secretKey) {
-    return (_req, _res, next) => next();
-  }
+  // Diagnostic startup log: surface secret presence so deployment logs make
+  // it obvious if the secret is missing at boot.
+  // eslint-disable-next-line no-console
+  console.log(
+    `[clerk-proxy] startup: hasSecret=${Boolean(process.env.CLERK_SECRET_KEY)} nodeEnv=${process.env.NODE_ENV}`,
+  );
 
-  return createProxyMiddleware({
+  const proxy = createProxyMiddleware({
     target: CLERK_FAPI,
     changeOrigin: true,
     pathRewrite: (path: string) =>
@@ -75,7 +77,10 @@ export function clerkProxyMiddleware(): RequestHandler {
         const proxyUrl = `${protocol}://${host}${CLERK_PROXY_PATH}`;
 
         proxyReq.setHeader("Clerk-Proxy-Url", proxyUrl);
-        proxyReq.setHeader("Clerk-Secret-Key", secretKey);
+        const liveSecret = process.env.CLERK_SECRET_KEY;
+        if (liveSecret) {
+          proxyReq.setHeader("Clerk-Secret-Key", liveSecret);
+        }
 
         const xff = req.headers["x-forwarded-for"];
         const clientIp =
@@ -88,4 +93,20 @@ export function clerkProxyMiddleware(): RequestHandler {
       },
     },
   }) as RequestHandler;
+
+  // Resolve secret per-request so secrets that arrive after process start
+  // (or are exposed only in the deployment runtime) are picked up. If still
+  // missing, return a 503 with an actionable error rather than a silent 404
+  // that blanks the SPA.
+  return (req, res, next) => {
+    if (!process.env.CLERK_SECRET_KEY) {
+      res.status(503).json({
+        error: "clerk_proxy_unavailable",
+        detail:
+          "CLERK_SECRET_KEY is not set in this deployment. Add it to Replit Deployments → Secrets and republish.",
+      });
+      return;
+    }
+    proxy(req, res, next);
+  };
 }
