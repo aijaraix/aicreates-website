@@ -243,7 +243,7 @@ async function sendTransitionNotifications(
     .where(
       and(
         inArray(commitmentsTable.roundSlug, t.closed),
-        inArray(commitmentsTable.state, ["pending_saft", "pending_payment"]),
+        inArray(commitmentsTable.state, ["pending_saft", "pending_resign", "pending_payment"]),
       ),
     );
 

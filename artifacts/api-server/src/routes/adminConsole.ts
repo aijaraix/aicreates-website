@@ -10,7 +10,7 @@ import {
   investorProfilesTable,
   allocationApplicationsTable,
 } from "@workspace/db";
-import { and, desc, eq, gte, ilike, inArray, lte, or, sql } from "drizzle-orm";
+import { and, desc, eq, gte, ilike, inArray, isNull, lte, or, sql } from "drizzle-orm";
 import { logAdminAction } from "../lib/audit";
 import { getUncachableStripeClient } from "../lib/stripeClient";
 import { ROUNDS, ROUND_BY_SLUG, tokensForAmountCents } from "../lib/rounds";
@@ -32,7 +32,7 @@ router.get("/admin/overview", async (_req, res) => {
         COUNT(*) FILTER (WHERE state = 'funded' OR status = 'succeeded') AS funded_count,
         COUNT(*) FILTER (WHERE state = 'awaiting_wire') AS awaiting_wire_count,
         COUNT(*) FILTER (WHERE state = 'awaiting_crypto') AS awaiting_crypto_count,
-        COUNT(*) FILTER (WHERE state IN ('pending_saft','pending_payment')) AS pending_count,
+        COUNT(*) FILTER (WHERE state IN ('pending_saft','pending_resign','pending_payment')) AS pending_count,
         COUNT(*) FILTER (WHERE state = 'refunded' OR status = 'refunded') AS refunded_count,
         COUNT(DISTINCT user_id) FILTER (WHERE state = 'funded' OR status = 'succeeded') AS funded_investors,
         COALESCE(SUM(amount_cents) FILTER (WHERE state = 'funded' OR status = 'succeeded'), 0) AS funded_cents,
@@ -282,7 +282,13 @@ router.get("/admin/investors/:id", async (req, res) => {
           version: saftSubmissionsTable.version,
         })
         .from(saftSubmissionsTable)
-        .where(inArray(saftSubmissionsTable.commitmentId, commitmentIds))
+        .where(
+          and(
+            inArray(saftSubmissionsTable.commitmentId, commitmentIds),
+            isNull(saftSubmissionsTable.supersededAt),
+          ),
+        )
+        .orderBy(desc(saftSubmissionsTable.signedAt))
     : [];
 
   res.json({
@@ -699,7 +705,10 @@ router.get("/admin/commitments-search", async (req, res) => {
     .leftJoin(appUsersTable, eq(appUsersTable.id, commitmentsTable.userId))
     .leftJoin(
       saftSubmissionsTable,
-      eq(saftSubmissionsTable.commitmentId, commitmentsTable.id),
+      and(
+        eq(saftSubmissionsTable.commitmentId, commitmentsTable.id),
+        isNull(saftSubmissionsTable.supersededAt),
+      ),
     )
     .where(filters.length ? and(...filters) : undefined)
     .orderBy(desc(commitmentsTable.createdAt))

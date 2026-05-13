@@ -9,6 +9,7 @@ import { getRoundStatuses } from "./roundStatus";
  */
 export const RESERVING_STATES = [
   "pending_saft",
+  "pending_resign",
   "pending_payment",
   "awaiting_wire",
   "awaiting_crypto",

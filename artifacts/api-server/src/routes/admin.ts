@@ -7,7 +7,7 @@ import {
   commitmentsTable,
   saftSubmissionsTable,
 } from "@workspace/db";
-import { desc, eq, sql } from "drizzle-orm";
+import { and, desc, eq, isNull, sql } from "drizzle-orm";
 import { logAdminAction } from "../lib/audit";
 
 const router: IRouter = Router();
@@ -82,7 +82,10 @@ router.get("/admin/commitments", async (req, res) => {
     .leftJoin(appUsersTable, eq(appUsersTable.id, commitmentsTable.userId))
     .leftJoin(
       saftSubmissionsTable,
-      eq(saftSubmissionsTable.commitmentId, commitmentsTable.id),
+      and(
+        eq(saftSubmissionsTable.commitmentId, commitmentsTable.id),
+        isNull(saftSubmissionsTable.supersededAt),
+      ),
     )
     .orderBy(desc(commitmentsTable.createdAt))
     .limit(1000);
@@ -177,7 +180,13 @@ router.get("/admin/commitments/:id/saft-pdf", async (req, res) => {
   const rows = await db
     .select({ pdfBytes: saftSubmissionsTable.pdfBytes })
     .from(saftSubmissionsTable)
-    .where(eq(saftSubmissionsTable.commitmentId, id))
+    .where(
+      and(
+        eq(saftSubmissionsTable.commitmentId, id),
+        isNull(saftSubmissionsTable.supersededAt),
+      ),
+    )
+    .orderBy(desc(saftSubmissionsTable.signedAt))
     .limit(1);
   const sub = rows[0];
   if (!sub || !sub.pdfBytes) {
@@ -196,7 +205,7 @@ router.get("/admin/stats", async (_req, res) => {
   const result = await db.execute(sql`
     SELECT
       COUNT(*) FILTER (WHERE status = 'succeeded' OR status = 'funded') AS succeeded_count,
-      COUNT(*) FILTER (WHERE status IN ('pending', 'pending_saft', 'pending_payment')) AS pending_count,
+      COUNT(*) FILTER (WHERE status IN ('pending', 'pending_saft', 'pending_resign', 'pending_payment')) AS pending_count,
       COUNT(*) FILTER (WHERE status = 'awaiting_wire') AS awaiting_wire_count,
       COUNT(*) FILTER (WHERE status = 'awaiting_crypto') AS awaiting_crypto_count,
       COUNT(*) FILTER (WHERE status = 'refunded') AS refunded_count,

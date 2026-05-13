@@ -159,9 +159,19 @@ export class WebhookHandlers {
         refunded: "refunded",
         pending: existing.state ?? "pending_payment",
       };
+      // A pending_resign commitment is awaiting investor re-signature
+      // after an amend. Any Stripe event that arrives here is by
+      // definition tied to the PRIOR (now-detached) checkout, so
+      // ignore it entirely — never let it flip to funded/failed/
+      // refunded/etc. The amend route already cleared the prior
+      // session/PI linkage; this is the second line of defense.
+      if (existing.state === "pending_resign") {
+        return;
+      }
+      const nextState = stateMap[args.status] ?? args.status;
       const patch: Record<string, unknown> = {
         status: args.status,
-        state: stateMap[args.status] ?? args.status,
+        state: nextState,
         updatedAt: new Date(),
       };
       if (args.paymentIntentId && !existing.stripePaymentIntentId) {

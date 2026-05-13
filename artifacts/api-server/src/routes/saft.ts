@@ -7,7 +7,7 @@ import {
   commitmentAllocationsTable,
   investorProfilesTable,
 } from "@workspace/db";
-import { eq, and, asc } from "drizzle-orm";
+import { eq, and, asc, desc, isNull } from "drizzle-orm";
 import { renderSaftPdf, type SaftAllocationLine, type SaftProfileForPdf } from "../lib/saftPdf";
 import { ROUND_BY_SLUG, getRoundLabel } from "../lib/rounds";
 import { emailSaftSigned } from "../lib/email";
@@ -140,7 +140,13 @@ router.get("/saft/:commitId", requireAuth, async (req, res) => {
       version: saftSubmissionsTable.version,
     })
     .from(saftSubmissionsTable)
-    .where(eq(saftSubmissionsTable.commitmentId, commitment.id))
+    .where(
+      and(
+        eq(saftSubmissionsTable.commitmentId, commitment.id),
+        isNull(saftSubmissionsTable.supersededAt),
+      ),
+    )
+    .orderBy(desc(saftSubmissionsTable.signedAt))
     .limit(1);
   const allocations = await db
     .select()
@@ -263,6 +269,10 @@ router.post("/saft/:commitId", requireAuth, async (req, res) => {
       .json({ error: "Cannot re-sign a funded commitment" });
     return;
   }
+  // Defensive: any prior un-superseded SAFT for this commitment is
+  // marked superseded before we insert the new one. Normally amend
+  // already does this, but a stale row from before the amend feature
+  // existed would otherwise live alongside the new submission.
 
   const allocations = await loadAllocationsForCommitment(commitment.id, {
     roundSlug: commitment.roundSlug,
@@ -343,30 +353,25 @@ router.post("/saft/:commitId", requireAuth, async (req, res) => {
   await db.transaction(async (tx) => {
     const submissionKey = `saft/${commitment.id}.pdf`;
     await tx
-      .insert(saftSubmissionsTable)
-      .values({
-        commitmentId: commitment.id,
-        userId: req.appUser!.id,
-        status: "draft",
-        payload: safePayload,
-        signatureName,
-        signedAt,
-        signerIp,
-        signerUserAgent: ua,
-        pdfBytes,
-      })
-      .onConflictDoUpdate({
-        target: saftSubmissionsTable.commitmentId,
-        set: {
-          status: "draft",
-          payload: safePayload,
-          signatureName,
-          signedAt,
-          signerIp,
-          signerUserAgent: ua,
-          pdfBytes,
-        },
-      });
+      .update(saftSubmissionsTable)
+      .set({ status: "superseded", supersededAt: signedAt })
+      .where(
+        and(
+          eq(saftSubmissionsTable.commitmentId, commitment.id),
+          isNull(saftSubmissionsTable.supersededAt),
+        ),
+      );
+    await tx.insert(saftSubmissionsTable).values({
+      commitmentId: commitment.id,
+      userId: req.appUser!.id,
+      status: "draft",
+      payload: safePayload,
+      signatureName,
+      signedAt,
+      signerIp,
+      signerUserAgent: ua,
+      pdfBytes,
+    });
     await tx
       .update(commitmentsTable)
       .set({
@@ -520,8 +525,10 @@ router.get("/saft/:commitId/pdf", requireAuth, async (req, res) => {
       and(
         eq(saftSubmissionsTable.commitmentId, id),
         eq(commitmentsTable.userId, req.appUser!.id),
+        isNull(saftSubmissionsTable.supersededAt),
       ),
     )
+    .orderBy(desc(saftSubmissionsTable.signedAt))
     .limit(1);
   const sub = rows[0];
   if (!sub || !sub.pdfBytes) {

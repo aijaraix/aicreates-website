@@ -3,6 +3,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import PortalNav from "@/components/PortalNav";
+import { AmendDialog, isAmendable } from "@/components/AmendDialog";
 import PageHeader from "@/components/PageHeader";
 import { useInvestSeo } from "@/lib/useInvestSeo";
 import {
@@ -166,6 +167,7 @@ function StripeIdLink({
 const STATUS_FILTERS = [
   { label: "All", value: "" },
   { label: "Pending SAFT", value: "pending_saft" },
+  { label: "Pending re-sign", value: "pending_resign" },
   { label: "Pending payment", value: "pending_payment" },
   { label: "Awaiting wire", value: "awaiting_wire" },
   { label: "Awaiting crypto", value: "awaiting_crypto" },
@@ -1081,6 +1083,7 @@ function CommitmentsTab() {
   const [paymentFilter, setPaymentFilter] = useState("");
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [editing, setEditing] = useState<CommitmentRow | null>(null);
+  const [amending, setAmending] = useState<CommitmentRow | null>(null);
   const qParam = useDebounced(q, 300);
 
   const overview = useQuery({
@@ -1391,6 +1394,16 @@ function CommitmentsTab() {
                         >
                           <Pencil className="w-3 h-3" />
                         </button>
+                        {isAmendable(c.state || c.status) && (
+                          <button
+                            onClick={() => setAmending(c)}
+                            className="px-2 py-1 text-[10px] rounded-full border border-amber-300/40 text-amber-200 hover:bg-amber-300/10"
+                            data-testid={`button-amend-${c.id}`}
+                            title="Amend & request re-sign"
+                          >
+                            Amend
+                          </button>
+                        )}
                         {c.state === "awaiting_wire" && (
                           <button
                             onClick={() => {
@@ -1473,6 +1486,20 @@ function CommitmentsTab() {
             setEditing(null);
             qc.invalidateQueries({ queryKey: ["admin"] });
           }}
+        />
+      )}
+      {amending && (
+        <AmendDialog
+          open={true}
+          onClose={() => setAmending(null)}
+          commitment={{
+            id: amending.id,
+            amountCents: amending.amountCents,
+            roundSlug: amending.roundSlug,
+            displayName: amending.displayName,
+            email: amending.email,
+          }}
+          mode="admin"
         />
       )}
     </div>

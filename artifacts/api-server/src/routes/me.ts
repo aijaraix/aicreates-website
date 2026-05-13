@@ -7,7 +7,7 @@ import {
   saftSubmissionsTable,
   commitmentAllocationsTable,
 } from "@workspace/db";
-import { eq, desc, inArray, asc } from "drizzle-orm";
+import { eq, desc, inArray, asc, and, isNull } from "drizzle-orm";
 import { computeVestingSchedule } from "../lib/vesting";
 import { getRoundLabel, ROUND_BY_SLUG } from "../lib/rounds";
 
@@ -51,10 +51,20 @@ router.get("/me/allocations", requireAuth, async (req, res) => {
       payload: saftSubmissionsTable.payload,
     })
     .from(saftSubmissionsTable)
-    .where(eq(saftSubmissionsTable.userId, user.id));
-  const saftByCommitment = new Map(
-    saftRows.map((s) => [s.commitmentId, s] as const),
-  );
+    .where(
+      and(
+        eq(saftSubmissionsTable.userId, user.id),
+        isNull(saftSubmissionsTable.supersededAt),
+      ),
+    )
+    .orderBy(desc(saftSubmissionsTable.signedAt));
+  // saftRows is newest-first; first occurrence per commitment wins.
+  const saftByCommitment = new Map<string, (typeof saftRows)[number]>();
+  for (const s of saftRows) {
+    if (!saftByCommitment.has(s.commitmentId)) {
+      saftByCommitment.set(s.commitmentId, s);
+    }
+  }
 
   const ids = commitments.map((c) => c.id);
   const lineRows = ids.length

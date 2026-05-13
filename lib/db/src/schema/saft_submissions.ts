@@ -24,8 +24,7 @@ export const saftSubmissionsTable = pgTable("saft_submissions", {
   id: uuid("id").primaryKey().defaultRandom(),
   commitmentId: uuid("commitment_id")
     .notNull()
-    .references(() => commitmentsTable.id, { onDelete: "cascade" })
-    .unique(),
+    .references(() => commitmentsTable.id, { onDelete: "cascade" }),
   userId: text("user_id").notNull(),
   status: text("status").notNull().default("draft"),
   payload: jsonb("payload").notNull(),
@@ -37,6 +36,12 @@ export const saftSubmissionsTable = pgTable("saft_submissions", {
   signerUserAgent: text("signer_user_agent"),
   version: text("version").notNull().default("draft-2026-05"),
   pdfBytes: bytea("pdf_bytes"),
+  /**
+   * Set when this submission has been superseded by a later one (e.g.
+   * after the commitment amount or round was amended and a new SAFT was
+   * required). The most recent non-superseded row is the active SAFT.
+   */
+  supersededAt: timestamp("superseded_at", { withTimezone: true }),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
     .defaultNow(),

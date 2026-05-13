@@ -485,8 +485,17 @@ router.post("/checkout", requireAuth, async (req, res) => {
       res.status(400).json({ error: "Commitment is already funded" });
       return;
     }
-    if (c.state === "pending_saft" && !c.saftSignedAt) {
-      res.status(400).json({ error: "SAFT not signed" });
+    if (
+      (c.state === "pending_saft" || c.state === "pending_resign") &&
+      !c.saftSignedAt
+    ) {
+      res.status(400).json({
+        error:
+          c.state === "pending_resign"
+            ? "Please re-sign your updated SAFT before checkout."
+            : "SAFT not signed",
+        code: c.state === "pending_resign" ? "saft_resign_required" : "saft_unsigned",
+      });
       return;
     }
     // Hard gate: a commitment whose round has since closed (auto or

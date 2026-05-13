@@ -489,3 +489,50 @@ export async function emailRecommitNeeded(
   const text = `Your committed round just closed.\n\n${args.closedRoundLabel} is closed. ${args.newRoundLabel ? `${args.newRoundLabel} is now active${args.newRoundPriceLabel ? ` at ${args.newRoundPriceLabel}` : ""}.` : "A new round will be announced shortly."}\n\nRe-commit: ${args.portalUrl}\n`;
   await sendEmail({ to: args.to, subject, html, text });
 }
+
+// ---- SAFT amended -> investor must re-sign --------------------------------
+
+export interface SaftAmendedEmail {
+  to: string;
+  investorName: string;
+  commitmentId: string;
+  previousAmountCents: number;
+  newAmountCents: number;
+  previousRoundLabel: string;
+  newRoundLabel: string;
+  newTokens: number;
+  reason: string | null;
+  actorKind: "investor" | "admin";
+  portalUrl: string;
+}
+
+export async function emailSaftAmended(args: SaftAmendedEmail): Promise<void> {
+  const subject =
+    args.actorKind === "admin"
+      ? "Action required - your AICA commitment was updated, please re-sign"
+      : "Your AICA commitment was updated - please re-sign your SAFT";
+  const intro =
+    args.actorKind === "admin"
+      ? "An admin updated your commitment. Your previous SAFT has been superseded and a fresh signature is required before payment."
+      : "Your commitment was updated. Your previous SAFT has been superseded and a fresh signature is required before payment.";
+  const html = shell(
+    "Please re-sign your SAFT",
+    [
+      p(`Hi ${args.investorName},`),
+      p(intro),
+      `<table cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;margin:8px 0 20px 0;">${[
+        row("Commitment", args.commitmentId),
+        row("Previous amount", fmtUsd(args.previousAmountCents)),
+        row("New amount", fmtUsd(args.newAmountCents)),
+        row("Previous round", args.previousRoundLabel),
+        row("New round", args.newRoundLabel),
+        row("Tokens (new)", `${args.newTokens.toLocaleString()} AICA`),
+        ...(args.reason ? [row("Reason", args.reason)] : []),
+      ].join("")}</table>`,
+      `<p style="margin:0 0 16px 0;"><a href="${args.portalUrl}" style="display:inline-block;background:${BRAND_ACCENT};color:#0A0A0A;text-decoration:none;padding:12px 20px;border-radius:6px;font-weight:600;">Re-sign your SAFT</a></p>`,
+      p("Reply to this email if you have any questions."),
+    ].join(""),
+  );
+  const text = `Your AICA commitment was updated and your SAFT must be re-signed.\n\nCommitment: ${args.commitmentId}\nPrevious amount: ${fmtUsd(args.previousAmountCents)}\nNew amount: ${fmtUsd(args.newAmountCents)}\nPrevious round: ${args.previousRoundLabel}\nNew round: ${args.newRoundLabel}\nTokens (new): ${args.newTokens.toLocaleString()} AICA\n${args.reason ? `Reason: ${args.reason}\n` : ""}\nRe-sign: ${args.portalUrl}\n`;
+  await sendEmail({ to: args.to, subject, html, text });
+}

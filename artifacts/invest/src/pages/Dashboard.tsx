@@ -21,6 +21,7 @@ import { useInvestSeo } from "@/lib/useInvestSeo";
 import { StatTile } from "@/components/brand";
 import { buildIcs } from "@/lib/vesting";
 import { ROUNDS, formatVesting } from "@/data/rounds";
+import { AmendDialog, isAmendable } from "@/components/AmendDialog";
 
 interface VestingPoint {
   date: string;
@@ -205,15 +206,18 @@ function CountUnit({ n, label }: { n: number; label: string }) {
 
 function NextActionCard({ a }: { a: Allocation }) {
   const failed = a.state === "failed";
+  const [amendOpen, setAmendOpen] = useState(false);
   const labelByState: Record<string, string> = {
     pending_saft: "Sign your SAFT",
+    pending_resign: "Re-sign your updated SAFT",
     pending_payment: "Complete payment",
     awaiting_wire: "Waiting for your wire to land",
-    failed: "Payment failed — try again",
+    failed: "Payment failed - try again",
   };
   const headline = failed
     ? labelByState["failed"]
     : (labelByState[a.state] ?? "Next step");
+  const amendable = isAmendable(a.state);
   return (
     <div
       className={
@@ -258,13 +262,24 @@ function NextActionCard({ a }: { a: Allocation }) {
             </div>
           )}
         </div>
-        <div className="shrink-0">
-          {a.state === "pending_saft" ? (
+        <div className="shrink-0 flex items-center gap-2">
+          {amendable && (
+            <button
+              type="button"
+              onClick={() => setAmendOpen(true)}
+              className="text-xs px-3 h-9 rounded-full border border-white/10 hover:bg-white/[0.04]"
+              data-testid={`button-amend-${a.id}`}
+            >
+              Change amount or round
+            </button>
+          )}
+          {a.state === "pending_saft" || a.state === "pending_resign" ? (
             <Link
               href={`/saft/${a.id}`}
               className="text-sm inline-flex items-center px-4 h-9 rounded-full teal-btn"
             >
-              Sign SAFT <ArrowRight className="ml-2 w-4 h-4" />
+              {a.state === "pending_resign" ? "Re-sign SAFT" : "Sign SAFT"}{" "}
+              <ArrowRight className="ml-2 w-4 h-4" />
             </Link>
           ) : failed ? (
             <Link
@@ -290,6 +305,18 @@ function NextActionCard({ a }: { a: Allocation }) {
           )}
         </div>
       </div>
+      <AmendDialog
+        open={amendOpen}
+        onClose={() => setAmendOpen(false)}
+        commitment={{
+          id: a.id,
+          amountCents: a.amountCents,
+          roundSlug: a.roundSlug,
+          displayName: a.displayName,
+        }}
+        mode="investor"
+        invalidateKey={["me", "allocations"]}
+      />
     </div>
   );
 }
@@ -397,6 +424,7 @@ export default function Dashboard() {
   const pendingActions = allocations.filter(
     (a) =>
       a.state === "pending_saft" ||
+      a.state === "pending_resign" ||
       a.state === "pending_payment" ||
       a.state === "awaiting_wire" ||
       a.state === "failed",
