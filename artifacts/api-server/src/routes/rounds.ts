@@ -2,7 +2,7 @@ import { Router, type IRouter } from "express";
 import { db } from "@workspace/db";
 import { sql } from "drizzle-orm";
 import { getActiveRound, ROUNDS, ROUND_BY_SLUG } from "../lib/rounds";
-import { getActiveRoundSlug } from "../lib/roundStatus";
+import { getActiveRoundSlug, getRoundStatuses } from "../lib/roundStatus";
 
 const router: IRouter = Router();
 
@@ -44,8 +44,17 @@ router.get("/rounds/active", async (_req, res) => {
   });
 });
 
-router.get("/rounds", (_req, res) => {
-  res.json({ rounds: ROUNDS });
+router.get("/rounds", async (_req, res) => {
+  // Enrich the static catalog with the live server-side `isOpen` flag
+  // computed from `round_state`. The amend pickers use this so the
+  // options match what the server will actually accept (the static
+  // `open` flag in `lib/rounds.ts` can drift from real round state).
+  const map = await getRoundStatuses();
+  const rounds = ROUNDS.map((r) => ({
+    ...r,
+    isOpen: map.get(r.slug)?.status === "open",
+  }));
+  res.json({ rounds });
 });
 
 export default router;

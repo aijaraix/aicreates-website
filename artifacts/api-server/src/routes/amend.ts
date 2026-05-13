@@ -110,7 +110,6 @@ router.post("/commitments/:id/amend", requireAuth, async (req, res) => {
 
   // Self-serve amends do not trigger an email; the investor is already
   // looking at the portal and will be redirected to /saft/:id by the UI.
-  void portalOriginFor;
   res.json({ commitment: result.commitment });
 });
 

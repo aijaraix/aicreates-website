@@ -6,6 +6,7 @@ import {
   commitmentsTable,
   saftSubmissionsTable,
   commitmentAllocationsTable,
+  adminAuditLogTable,
 } from "@workspace/db";
 import { eq, desc, inArray, asc, and, isNull } from "drizzle-orm";
 import { computeVestingSchedule } from "../lib/vesting";
@@ -67,6 +68,35 @@ router.get("/me/allocations", requireAuth, async (req, res) => {
   }
 
   const ids = commitments.map((c) => c.id);
+  // Most recent amend audit per commitment so the dashboard can render
+  // an "action required" transparency card for pending_resign rows.
+  const amendRows = ids.length
+    ? await db
+        .select({
+          targetId: adminAuditLogTable.targetId,
+          actorEmail: adminAuditLogTable.actorEmail,
+          details: adminAuditLogTable.details,
+          createdAt: adminAuditLogTable.createdAt,
+        })
+        .from(adminAuditLogTable)
+        .where(
+          and(
+            eq(adminAuditLogTable.action, "amend_commitment"),
+            inArray(adminAuditLogTable.targetId, ids),
+          ),
+        )
+        .orderBy(desc(adminAuditLogTable.createdAt))
+    : [];
+  const lastAmendByCommitment = new Map<
+    string,
+    (typeof amendRows)[number]
+  >();
+  for (const a of amendRows) {
+    if (a.targetId && !lastAmendByCommitment.has(a.targetId)) {
+      lastAmendByCommitment.set(a.targetId, a);
+    }
+  }
+
   const lineRows = ids.length
     ? await db
         .select()
@@ -117,6 +147,21 @@ router.get("/me/allocations", requireAuth, async (req, res) => {
         pricePerTokenMillicents = Math.round((totalUsd * 10) / totalTok);
       }
     }
+    const lastAmend = lastAmendByCommitment.get(c.id);
+    const lastAmendDetails = (lastAmend?.details ?? null) as {
+      actorKind?: "investor" | "admin";
+      reason?: string | null;
+      previous?: {
+        amountCents?: number;
+        roundSlug?: string;
+        tokenAllocation?: number;
+      };
+      next?: {
+        amountCents?: number;
+        roundSlug?: string;
+        tokenAllocation?: number;
+      };
+    } | null;
     return {
       id: c.id,
       roundSlug: c.roundSlug,
@@ -145,6 +190,26 @@ router.get("/me/allocations", requireAuth, async (req, res) => {
       fundedAt: c.fundedAt ?? c.completedAt,
       createdAt: c.createdAt,
       isFunded,
+      lastAmend: lastAmend && lastAmendDetails
+        ? {
+            actorKind: lastAmendDetails.actorKind ?? "admin",
+            actorEmail: lastAmend.actorEmail,
+            reason: lastAmendDetails.reason ?? null,
+            createdAt: lastAmend.createdAt,
+            previousAmountCents:
+              lastAmendDetails.previous?.amountCents ?? null,
+            previousRoundSlug:
+              lastAmendDetails.previous?.roundSlug ?? null,
+            previousRoundLabel: lastAmendDetails.previous?.roundSlug
+              ? getRoundLabel(lastAmendDetails.previous.roundSlug)
+              : null,
+            newAmountCents: lastAmendDetails.next?.amountCents ?? null,
+            newRoundSlug: lastAmendDetails.next?.roundSlug ?? null,
+            newRoundLabel: lastAmendDetails.next?.roundSlug
+              ? getRoundLabel(lastAmendDetails.next.roundSlug)
+              : null,
+          }
+        : null,
       vesting: isFunded ? vesting : null,
       lines: lines.map((l) => ({
         roundSlug: l.roundSlug,

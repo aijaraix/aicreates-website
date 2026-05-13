@@ -1,7 +1,44 @@
 import { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useLocation } from "wouter";
 import { api } from "@/lib/api";
 import { ROUNDS } from "@/data/rounds";
+
+/**
+ * Minimal shape used by the picker. Both the client `ROUNDS` catalog
+ * and the server `/rounds` response satisfy it (server uses `label`
+ * + `isOpen`; client uses `name` + `open`). We coerce both into this
+ * shape via `coerceRound`.
+ */
+interface PickerRound {
+  slug: string;
+  display: string;
+  pricePerTokenMillicents: number;
+  vesting: { tgePercent: number; cliffMonths: number; vestingMonths: number };
+  isOpen: boolean;
+}
+
+interface ServerRound {
+  slug: string;
+  label?: string;
+  name?: string;
+  pricePerTokenMillicents: number;
+  vesting: { tgePercent: number; cliffMonths: number; vestingMonths: number };
+  isOpen?: boolean;
+  open?: boolean;
+}
+
+function coerceRound(r: ServerRound): PickerRound {
+  const dollarsPerToken = (r.pricePerTokenMillicents / 100_000).toFixed(3);
+  const display = r.label ?? r.name ?? r.slug;
+  return {
+    slug: r.slug,
+    display: `${display} - $${dollarsPerToken} per AICA`,
+    pricePerTokenMillicents: r.pricePerTokenMillicents,
+    vesting: r.vesting,
+    isOpen: r.isOpen ?? r.open ?? false,
+  };
+}
 
 const AMENDABLE_STATES = new Set([
   "pending_saft",
@@ -45,12 +82,23 @@ export function AmendDialog({
   invalidateKey,
 }: AmendDialogProps) {
   const qc = useQueryClient();
+  const [, navigate] = useLocation();
   const [amountUsd, setAmountUsd] = useState(
     String(Math.round(commitment.amountCents / 100)),
   );
   const [roundSlug, setRoundSlug] = useState(commitment.roundSlug);
   const [reason, setReason] = useState("");
   const [error, setError] = useState<string | null>(null);
+
+  // Server-driven round catalog: each round carries an `isOpen` flag
+  // computed from live round_state. Fall back to the static ROUNDS
+  // catalog while the request is in flight.
+  const roundsQ = useQuery({
+    queryKey: ["rounds", "open"],
+    queryFn: () => api<{ rounds: ServerRound[] }>("/rounds"),
+    enabled: open,
+    staleTime: 30_000,
+  });
 
   const mutation = useMutation({
     mutationFn: async () => {
@@ -76,6 +124,13 @@ export function AmendDialog({
       qc.invalidateQueries({ queryKey: ["admin"] });
       if (invalidateKey) qc.invalidateQueries({ queryKey: invalidateKey });
       onClose();
+      // Investor self-serve amends transition the commitment to
+      // pending_resign — route the user straight into the SAFT flow
+      // so re-signing is the obvious next step. Admin amends route
+      // back to the admin table.
+      if (mode === "investor") {
+        navigate(`/saft/${commitment.id}`);
+      }
     },
     onError: (e) => setError((e as Error).message),
   });
@@ -83,14 +138,14 @@ export function AmendDialog({
   if (!open) return null;
 
   const newCents = Math.round(Number(amountUsd) * 100) || 0;
-  const round = ROUNDS.find((r) => r.slug === roundSlug);
-  // Only currently-open rounds are valid amend targets. Always include
-  // the commitment's current round so an investor can keep their round
-  // even if it has just closed (the server will still reject closed
-  // rounds, this just keeps the picker honest).
-  const selectableRounds = ROUNDS.filter(
-    (r) => r.open || r.slug === commitment.roundSlug,
-  );
+  // Prefer the server-driven catalog; degrade to the static ROUNDS
+  // list (with its `open` flag) if the request hasn't returned yet.
+  const sourceRounds: ServerRound[] =
+    roundsQ.data?.rounds ?? (ROUNDS as unknown as ServerRound[]);
+  const selectableRounds: PickerRound[] = sourceRounds
+    .map(coerceRound)
+    .filter((r) => r.isOpen || r.slug === commitment.roundSlug);
+  const round = sourceRounds.find((r) => r.slug === roundSlug);
   const newTokens = round
     ? Math.floor((newCents * 1000) / round.pricePerTokenMillicents / 10)
     : 0;
@@ -123,11 +178,15 @@ export function AmendDialog({
             onChange={(e) => setRoundSlug(e.target.value)}
             data-testid="amend-round-select"
           >
-            {selectableRounds.map((r) => (
-              <option key={r.slug} value={r.slug}>
-                {r.name} - {r.pricePerToken}
-              </option>
-            ))}
+            {selectableRounds.map((r) => {
+              const tgePct = Math.round(r.vesting.tgePercent * 100);
+              return (
+                <option key={r.slug} value={r.slug}>
+                  {r.display} - TGE {tgePct}% / {r.vesting.cliffMonths}mo cliff
+                  / {r.vesting.vestingMonths}mo vest
+                </option>
+              );
+            })}
           </select>
         </label>
 

@@ -55,6 +55,18 @@ interface Allocation {
   walletChain: string | null;
   fundedAt: string | null;
   isFunded: boolean;
+  lastAmend: {
+    actorKind: "investor" | "admin";
+    actorEmail: string;
+    reason: string | null;
+    createdAt: string;
+    previousAmountCents: number | null;
+    previousRoundSlug: string | null;
+    previousRoundLabel: string | null;
+    newAmountCents: number | null;
+    newRoundSlug: string | null;
+    newRoundLabel: string | null;
+  } | null;
   vesting: {
     tgeDate: string;
     cliffDate: string;
@@ -259,6 +271,46 @@ function NextActionCard({ a }: { a: Allocation }) {
           {a.state === "awaiting_wire" && !failed && (
             <div className="mt-1 text-xs text-white/55">
               We'll mark this funded as soon as your wire is reconciled.
+            </div>
+          )}
+          {a.state === "pending_resign" && a.lastAmend && (
+            <div
+              className="mt-2 text-xs rounded-lg border border-amber-300/30 bg-amber-300/[0.05] px-3 py-2 space-y-1"
+              data-testid={`amend-transparency-${a.id}`}
+            >
+              <div className="text-amber-200/85 uppercase tracking-[0.14em] text-[10px]">
+                {a.lastAmend.actorKind === "admin"
+                  ? `Updated by admin (${a.lastAmend.actorEmail})`
+                  : "You updated this commitment"}
+              </div>
+              <div className="text-white/70">
+                {a.lastAmend.previousAmountCents != null && (
+                  <>
+                    {fmt(a.lastAmend.previousAmountCents)}
+                    {a.lastAmend.previousRoundLabel && (
+                      <span className="text-white/40">
+                        {" "}({a.lastAmend.previousRoundLabel})
+                      </span>
+                    )}{" "}
+                    →{" "}
+                  </>
+                )}
+                <span className="text-[#00F5D4]">
+                  {a.lastAmend.newAmountCents != null
+                    ? fmt(a.lastAmend.newAmountCents)
+                    : fmt(a.amountCents)}
+                </span>
+                {a.lastAmend.newRoundLabel && (
+                  <span className="text-white/40">
+                    {" "}({a.lastAmend.newRoundLabel})
+                  </span>
+                )}
+              </div>
+              {a.lastAmend.reason && (
+                <div className="text-white/55">
+                  Reason: {a.lastAmend.reason}
+                </div>
+              )}
             </div>
           )}
         </div>
