@@ -191,7 +191,7 @@ function ProductSpotlight() {
                 <Link href={slide.ctaHref}>
                   <Button
                     size="lg"
-                    className="rounded-full h-12 px-7 bg-white text-black hover:bg-white/90 group"
+                    className="rounded-full h-12 px-7 bg-[#00F5D4] text-black hover:bg-[#00F5D4]/90 font-medium group"
                     data-testid={`button-cta-${slide.id}`}
                   >
                     {slide.ctaText}{" "}
@@ -526,7 +526,7 @@ export default function Home() {
                   <Button
                     size="lg"
                     variant="outline"
-                    className="rounded-full h-12 px-7 border-white/15 bg-transparent text-white hover:bg-white/5"
+                    className="rounded-full h-12 px-7 border-white/15 bg-white/[0.02] text-white hover:bg-white/[0.06] hover:text-[#00F5D4]"
                   >
                     Download
                   </Button>
