@@ -15,6 +15,7 @@ import roundsRouter from "./rounds";
 import gatewayRouter from "./gateway";
 import profileRouter from "./profile";
 import availabilityRouter from "./availability";
+import chatRouter from "./chat";
 
 const router: IRouter = Router();
 
@@ -34,5 +35,6 @@ router.use(roundsRouter);
 router.use(gatewayRouter);
 router.use(profileRouter);
 router.use(availabilityRouter);
+router.use(chatRouter);
 
 export default router;

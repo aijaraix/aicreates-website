@@ -26,6 +26,10 @@ import InvestPicker from "@/pages/InvestPicker";
 import Saft from "@/pages/Saft";
 import Checkout from "@/pages/Checkout";
 import Admin from "@/pages/Admin";
+import AdminChat from "@/pages/AdminChat";
+import ChatWidget from "@/components/ChatWidget";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/lib/api";
 import Gateway from "@/pages/Gateway";
 import Documents from "@/pages/Documents";
 import Faq from "@/pages/Faq";
@@ -238,6 +242,19 @@ function Protected({ children }: { children: React.ReactNode }) {
   );
 }
 
+function ChatWidgetGate() {
+  const me = useQuery({
+    queryKey: ["me"],
+    queryFn: () => api<{ user: { role: string } }>("/me"),
+    staleTime: 60_000,
+  });
+  // Don't mount until we know the role -- otherwise admins briefly open
+  // an investor WS ticket during the first paint.
+  if (!me.data) return null;
+  if (me.data.user.role === "admin") return null;
+  return <ChatWidget />;
+}
+
 function ClerkQueryClientCacheInvalidator() {
   const { addListener } = useClerk();
   const qc = useQueryClient();
@@ -324,8 +341,16 @@ function ClerkProviderWithRoutes() {
               <Admin />
             </Protected>
           </Route>
+          <Route path="/admin/chat">
+            <Protected>
+              <AdminChat />
+            </Protected>
+          </Route>
           <Route component={NotFound} />
         </Switch>
+        <Show when="signed-in">
+          <ChatWidgetGate />
+        </Show>
       </QueryClientProvider>
     </ClerkProvider>
   );

@@ -420,6 +420,35 @@ export async function emailRoundAdvanced(
   await sendEmail({ to: args.to, subject, html, text });
 }
 
+// ---- Investor "you have a new chat message" notice ------------------------
+
+export interface NewChatMessageEmail {
+  to: string;
+  investorName: string;
+  preview: string;
+  dashboardUrl: string;
+}
+
+export async function emailNewChatMessage(
+  args: NewChatMessageEmail,
+): Promise<void> {
+  const subject = "You have a new message from the AICreatesAI team";
+  const html = shell(
+    "You have a new message",
+    [
+      p(`Hi ${args.investorName},`),
+      p(
+        `An admin from AICreatesAI just sent you a message in the investor portal:`,
+      ),
+      `<blockquote style="margin:0 0 16px 0;padding:12px 16px;border-left:2px solid ${BRAND_ACCENT};background:#1a1a1a;color:${BRAND_FG};font-style:italic;">${args.preview.replace(/[<>&]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;" })[c]!)}</blockquote>`,
+      `<p style="margin:0 0 16px 0;"><a href="${args.dashboardUrl}" style="display:inline-block;background:${BRAND_ACCENT};color:#0A0A0A;text-decoration:none;padding:12px 20px;border-radius:6px;font-weight:600;">Open chat</a></p>`,
+      p("Sign in to view the full conversation and reply."),
+    ].join(""),
+  );
+  const text = `You have a new message from the AICreatesAI team.\n\n"${args.preview}"\n\nOpen chat: ${args.dashboardUrl}\n`;
+  await sendEmail({ to: args.to, subject, html, text });
+}
+
 // ---- Investor "your round closed, re-commit" notice -----------------------
 
 export interface RecommitNeededEmail {

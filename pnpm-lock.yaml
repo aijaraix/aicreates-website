@@ -185,6 +185,9 @@ importers:
       '@workspace/db':
         specifier: workspace:*
         version: link:../../lib/db
+      cookie:
+        specifier: ^1.0.2
+        version: 1.0.2
       cookie-parser:
         specifier: ^1.4.7
         version: 1.4.7
@@ -221,6 +224,9 @@ importers:
       stripe-replit-sync:
         specifier: ^1.0.0
         version: 1.0.0(stripe@22.1.1(@types/node@25.3.5))
+      ws:
+        specifier: ^8.20.0
+        version: 8.20.0
       xlsx:
         specifier: ^0.18.5
         version: 0.18.5
@@ -228,6 +234,9 @@ importers:
         specifier: 'catalog:'
         version: 3.25.76
     devDependencies:
+      '@types/cookie':
+        specifier: ^1.0.0
+        version: 1.0.0
       '@types/cookie-parser':
         specifier: ^1.4.10
         version: 1.4.10(@types/express@5.0.6)
@@ -243,6 +252,9 @@ importers:
       '@types/node':
         specifier: 'catalog:'
         version: 25.3.5
+      '@types/ws':
+        specifier: ^8.18.1
+        version: 8.18.1
       esbuild:
         specifier: 0.27.3
         version: 0.27.3
@@ -1997,6 +2009,10 @@ packages:
     peerDependencies:
       '@types/express': '*'
 
+  '@types/cookie@1.0.0':
+    resolution: {integrity: sha512-mGFXbkDQJ6kAXByHS7QAggRXgols0mAdP4MuXgloGY1tXokvzaFFM4SMqWvf7AH0oafI7zlFJwoGWzmhDqTZ9w==}
+    deprecated: This is a stub types definition. cookie provides its own type definitions, so you do not need this installed.
+
   '@types/cors@2.8.19':
     resolution: {integrity: sha512-mFNylyeyqN93lfe/9CSxOGREz8cpzAhH+E93xJ4xWQf62V8sQ/24reV2nyzUWM6H6Xji+GGHpkbLe7pVoUEskg==}
 
@@ -2070,6 +2086,9 @@ packages:
 
   '@types/unist@3.0.3':
     resolution: {integrity: sha512-ko/gIFJRv177XgZsZcBwnqJN5x/Gien8qNOn0D5bQU/zAzVf9Zt3BlcUiLqhV9y4ARk0GbT3tnUiPNgnTXzc/Q==}
+
+  '@types/ws@8.18.1':
+    resolution: {integrity: sha512-ThVF6DCVhA8kUGy+aazFQ4kXQ7E1Ty7A3ypFOe0IcJV8O/M511G99AW24irKrW56Wt44yG9+ij8FaqoBGkuBXg==}
 
   '@vitejs/plugin-react@5.1.4':
     resolution: {integrity: sha512-VIcFLdRi/VYRU8OL/puL7QXMYafHmqOnwTZY50U1JPlCNj30PxCMx65c494b1K9be9hX83KVt0+gTEwTWLqToA==}
@@ -4986,6 +5005,10 @@ snapshots:
     dependencies:
       '@types/express': 5.0.6
 
+  '@types/cookie@1.0.0':
+    dependencies:
+      cookie: 1.0.2
+
   '@types/cors@2.8.19':
     dependencies:
       '@types/node': 25.3.5
@@ -5067,6 +5090,10 @@ snapshots:
       '@types/node': 25.3.5
 
   '@types/unist@3.0.3': {}
+
+  '@types/ws@8.18.1':
+    dependencies:
+      '@types/node': 25.3.5
 
   '@vitejs/plugin-react@5.1.4(vite@7.3.2(@types/node@25.3.5)(jiti@2.6.1)(lightningcss@1.31.1)(tsx@4.21.0)(yaml@2.8.2))':
     dependencies:

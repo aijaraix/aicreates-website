@@ -8,3 +8,5 @@ export * from "./admin_audit_log";
 export * from "./investor_profiles";
 export * from "./commitment_allocations";
 export * from "./round_state";
+export * from "./chat_threads";
+export * from "./chat_messages";

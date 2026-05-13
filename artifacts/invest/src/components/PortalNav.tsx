@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "wouter";
 import { useUser, useClerk } from "@clerk/react";
+import { useQuery } from "@tanstack/react-query";
 import { ChevronDown, FileText, LogOut, Menu, User as UserIcon, X } from "lucide-react";
 import SiteHeader, { type HeaderNavLink } from "@/components/SiteHeader";
+import { api } from "@/lib/api";
 
 const PRIMARY_LINKS = [
   { href: "/dashboard", label: "Dashboard" },
@@ -67,13 +69,23 @@ export default function PortalNav({ showAdmin }: { showAdmin?: boolean }) {
         rightSlot={
           <>
             {showAdmin && (
-              <Link
-                href="/admin"
-                className="hidden sm:inline-flex items-center justify-center rounded-full h-9 px-5 glass-btn text-sm font-medium"
-                data-testid="link-admin"
-              >
-                Admin
-              </Link>
+              <>
+                <AdminOnlinePill />
+                <Link
+                  href="/admin/chat"
+                  className="hidden sm:inline-flex items-center justify-center rounded-full h-9 px-5 glass-btn text-sm font-medium"
+                  data-testid="link-admin-chat"
+                >
+                  Chat
+                </Link>
+                <Link
+                  href="/admin"
+                  className="hidden sm:inline-flex items-center justify-center rounded-full h-9 px-5 glass-btn text-sm font-medium"
+                  data-testid="link-admin"
+                >
+                  Admin
+                </Link>
+              </>
             )}
             <UserMenu
               name={displayName}
@@ -131,6 +143,32 @@ export default function PortalNav({ showAdmin }: { showAdmin?: boolean }) {
         </div>
       )}
     </>
+  );
+}
+
+function AdminOnlinePill() {
+  const presence = useQuery({
+    queryKey: ["admin", "chat", "presence"],
+    queryFn: () =>
+      api<{ count: number; onlineInvestorIds: string[] }>(
+        "/admin/chat/presence",
+      ),
+    refetchInterval: 15_000,
+  });
+  const count = presence.data?.count ?? 0;
+  return (
+    <Link
+      href="/admin/chat"
+      className="hidden md:inline-flex items-center gap-2 h-9 px-3 rounded-full border border-[#00F5D4]/25 bg-[#00F5D4]/[0.06] text-xs text-white/85 hover:bg-[#00F5D4]/[0.12] transition"
+      data-testid="admin-presence-pill"
+      title="Investors currently online"
+    >
+      <span
+        className={`inline-block w-1.5 h-1.5 rounded-full ${count > 0 ? "bg-[#00F5D4] animate-pulse" : "bg-white/30"}`}
+      />
+      <span data-testid="admin-presence-count">{count}</span>
+      <span className="text-white/55">online</span>
+    </Link>
   );
 }
 
