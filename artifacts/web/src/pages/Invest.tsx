@@ -95,7 +95,7 @@ export default function Invest() {
               className="mt-10 flex flex-col sm:flex-row gap-3"
             >
               <a
-                href="https://invest.aicreates.ai/"
+                href={import.meta.env.PROD ? "https://invest.aicreates.ai/invest/" : "/invest/"}
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -208,7 +208,7 @@ export default function Invest() {
                 title: "View Investor Portal",
                 desc: "Long-scroll thesis, vesting calculator, and reserve-allocation flow.",
                 disabled: false,
-                href: "https://invest.aicreates.ai/" as string | undefined,
+                href: (import.meta.env.PROD ? "https://invest.aicreates.ai/invest/" : "/invest/") as string | undefined,
                 external: true,
                 cta: "Open the portal",
                 testId: "button-view-portal",
