@@ -160,9 +160,9 @@ router.post("/admin/rounds/:slug/open", async (req, res) => {
     return;
   }
   await setStatus(slug, "open", req.appUser!.email, "round_open");
-  // Run a transition sweep so a manual override is followed by the
-  // same auto-advance / next-round logic the periodic sweep applies.
-  await evaluateRoundTransitions({ reason: "admin" });
+  // Manual open is a true override: do NOT immediately re-evaluate,
+  // otherwise a sold-out / past-deadline round would be auto-closed
+  // again in the same request, defeating the override.
   res.json({ ok: true, rounds: await buildView() });
 });
 
@@ -187,7 +187,7 @@ router.post("/admin/rounds/:slug/reopen", async (req, res) => {
     return;
   }
   await setStatus(slug, "open", req.appUser!.email, "round_reopen");
-  await evaluateRoundTransitions({ reason: "admin" });
+  // Manual reopen is a true override (see /open above for rationale).
   res.json({ ok: true, rounds: await buildView() });
 });
 

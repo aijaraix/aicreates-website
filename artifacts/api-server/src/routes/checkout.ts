@@ -179,9 +179,17 @@ router.post("/commitments", requireAuth, async (req, res) => {
       // between the precheck and the insert cannot slip a commit into
       // a now-closed round.
       const txStatuses = await getRoundStatusesTx(tx);
+      const nowMs = Date.now();
       const txClosed = lines
         .map((l) => l.roundSlug)
-        .filter((s) => txStatuses.get(s)?.status !== "open");
+        .filter((s) => {
+          if (txStatuses.get(s)?.status !== "open") return true;
+          // Hard deadline gate: closes the race window between a
+          // just-expired round and the next periodic sweep tick.
+          const def = ROUND_BY_SLUG.get(s);
+          if (def?.deadline && Date.parse(def.deadline) <= nowMs) return true;
+          return false;
+        });
       if (txClosed.length > 0) {
         return {
           ok: false as const,
@@ -335,7 +343,11 @@ router.post("/commitments", requireAuth, async (req, res) => {
   const result = await db.transaction(async (tx) => {
     await lockRoundsForUpdate(tx, [round]);
     const txStatuses = await getRoundStatusesTx(tx);
-    if (txStatuses.get(round)?.status !== "open") {
+    const def = ROUND_BY_SLUG.get(round);
+    const deadlinePassed = def?.deadline
+      ? Date.parse(def.deadline) <= Date.now()
+      : false;
+    if (txStatuses.get(round)?.status !== "open" || deadlinePassed) {
       return {
         ok: false as const,
         kind: "closed" as const,
@@ -487,9 +499,13 @@ router.post("/checkout", requireAuth, async (req, res) => {
     const slugsToCheck =
       allocRows.length > 0 ? allocRows.map((a) => a.slug) : [c.roundSlug];
     const statuses = await getRoundStatuses();
-    const closedSlugs = slugsToCheck.filter(
-      (s) => statuses.get(s)?.status !== "open",
-    );
+    const nowMs = Date.now();
+    const closedSlugs = slugsToCheck.filter((s) => {
+      if (statuses.get(s)?.status !== "open") return true;
+      const def = ROUND_BY_SLUG.get(s);
+      if (def?.deadline && Date.parse(def.deadline) <= nowMs) return true;
+      return false;
+    });
     if (closedSlugs.length > 0) {
       res.status(409).json({
         error: `Round not open for commitments: ${closedSlugs.join(", ")}`,
