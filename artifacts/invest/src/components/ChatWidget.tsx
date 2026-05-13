@@ -57,7 +57,16 @@ export default function ChatWidget({ hidden }: { hidden?: boolean }) {
           prev.some((m) => m.id === msg.message.id) ? prev : [...prev, msg.message],
         );
         if (msg.message.senderRole === "admin") {
-          setUnread((u) => (open ? 0 : u + 1));
+          if (open) {
+            // Persist read state immediately so reload/reconnect
+            // doesn't resurrect the unread badge.
+            api(`/chat/messages/${msg.message.id}/read`, {
+              method: "POST",
+            }).catch(() => {});
+            setUnread(0);
+          } else {
+            setUnread((u) => u + 1);
+          }
         }
       }
     });

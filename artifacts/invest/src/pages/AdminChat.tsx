@@ -110,6 +110,17 @@ function ChatConsole() {
             [msg.investorUserId]: [...arr, msg.message],
           };
         });
+        // Persist read state immediately if the admin is currently
+        // viewing this investor's thread, so unread doesn't reappear
+        // after a reload.
+        if (
+          msg.message.senderRole === "investor" &&
+          msg.investorUserId === selectedInvestorId
+        ) {
+          api(`/chat/messages/${msg.message.id}/read`, {
+            method: "POST",
+          }).catch(() => {});
+        }
         let known = false;
         qc.setQueryData<ThreadListResp | undefined>(
           ["admin", "chat", "threads"],

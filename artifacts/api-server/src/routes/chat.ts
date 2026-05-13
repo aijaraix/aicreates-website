@@ -85,8 +85,7 @@ router.get("/chat/thread", requireAuth, async (req, res) => {
     .select()
     .from(chatMessagesTable)
     .where(eq(chatMessagesTable.threadId, thread.id))
-    .orderBy(chatMessagesTable.createdAt)
-    .limit(500);
+    .orderBy(chatMessagesTable.createdAt);
 
   // Mark counterparty messages as read on open.
   if (role === "admin") {
