@@ -190,14 +190,9 @@ export function Footer() {
                   <span className="text-[#00F5D4]">AI</span>
                 </span>
               </Link>
-              <div className="flex items-center gap-3 mb-5" aria-label="Automate. Innovate. Elevate.">
-                <span aria-hidden className="h-px w-6 bg-[#00F5D4]" />
-                <span className="font-mono text-[11px] uppercase tracking-[0.28em] text-white/70">
-                  Automate.{" "}
-                  <span className="text-[#00F5D4]">Innovate.</span> Elevate.
-                </span>
-                <span aria-hidden className="h-px w-6 bg-[#00F5D4]" />
-              </div>
+              <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-white/70 mb-5">
+                Automate. <span className="text-[#00F5D4]">Innovate.</span> Elevate.
+              </p>
               <p className="text-white/50 text-sm leading-relaxed max-w-sm mb-6">
                 Building the agentic intelligence layer for the next generation of companies, capital, and consumers.
               </p>
