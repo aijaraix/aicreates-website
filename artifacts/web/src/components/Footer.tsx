@@ -177,28 +177,34 @@ export function Footer() {
   return (
     <footer className="bg-[#0A0A0A] relative border-t border-white/5 pt-20 pb-10 mt-24">
       <div className="container mx-auto px-4 md:px-6">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-12 mb-12">
-          {/* Brand */}
-          <div className="md:col-span-5 lg:col-span-4">
-            <Link href="/" className="flex items-center gap-2.5 mb-5">
-              <span className="font-sans font-semibold tracking-tight text-white text-lg leading-none">
-                <span className="text-[#00F5D4]">AI</span>
-                <span className="font-light">creates</span>
-                <span className="text-[#00F5D4]">AI</span>
-              </span>
-            </Link>
-            <p className="text-white/50 text-sm leading-relaxed max-w-sm mb-6">
-              Building the agentic intelligence layer for the next generation of companies, capital, and consumers.
-            </p>
-            <a
-              href="https://x.com/theaicreatesai"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="AIcreatesAI on X"
-              className="inline-flex items-center gap-2 text-sm text-white/70 hover:text-[#00F5D4] transition-colors"
-            >
-              @theaicreatesai
-            </a>
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-12 mb-12 md:pb-12 md:border-b md:border-white/5">
+          {/* Brand + Newsletter (desktop only) */}
+          <div className="md:col-span-5 lg:col-span-4 flex flex-col gap-8">
+            <div>
+              <Link href="/" className="flex items-center gap-2.5 mb-5">
+                <span className="font-sans font-semibold tracking-tight text-white text-lg leading-none">
+                  <span className="text-[#00F5D4]">AI</span>
+                  <span className="font-light">creates</span>
+                  <span className="text-[#00F5D4]">AI</span>
+                </span>
+              </Link>
+              <p className="text-white/50 text-sm leading-relaxed max-w-sm mb-6">
+                Building the agentic intelligence layer for the next generation of companies, capital, and consumers.
+              </p>
+              <a
+                href="https://x.com/theaicreatesai"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="AIcreatesAI on X"
+                className="inline-flex items-center gap-2 text-sm text-white/70 hover:text-[#00F5D4] transition-colors"
+              >
+                @theaicreatesai
+              </a>
+            </div>
+            {/* Desktop: newsletter sits inside the brand column */}
+            <div className="hidden md:block">
+              <NewsletterSubscribe />
+            </div>
           </div>
 
           {/* Link columns */}
@@ -224,12 +230,12 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Newsletter sits below the brand + link columns, full-width */}
-        <div className="border-t border-white/5 pt-10 pb-10 mb-2">
+        {/* Mobile: newsletter band below the brand + link columns */}
+        <div className="md:hidden border-t border-white/5 pt-10 pb-10 mb-2">
           <NewsletterSubscribe />
         </div>
 
-        <div className="pt-6 border-t border-white/5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div className="pt-6 border-t border-white/5 md:border-t-0 md:pt-2 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <p className="text-white/30 text-xs tracking-wide">
             © 2026 AIcreatesAI. All rights reserved.
           </p>
