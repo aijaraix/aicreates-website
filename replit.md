@@ -162,10 +162,22 @@ Use Replit Deployments (autoscale) for `invest.aicreates.ai`. A single autoscale
 
 Every artifact must have a `[services.production]` block in its `.replit-artifact/artifact.toml`, even the `web` artifact. If you remove the production block from `web`, the Replit Publish dialog shows *"Could not find run command"* and blocks publish. See the inline comment in `artifacts/web/.replit-artifact/artifact.toml`.
 
-DNS at GoDaddy:
-- `invest.aicreates.ai` `CNAME` → the deployment's `*.replit.app` hostname (visible in the Publishing dialog).
-- `portal.aicreates.ai` `CNAME` → same `*.replit.app` so the host-based 301 redirect runs before Clerk and CORS.
-- Add both custom domains in Clerk's allowed origins.
+DNS at GoDaddy (Replit's "Connect your own domain" flow uses A + TXT verification, not CNAME):
+
+For each subdomain (`invest` and `portal`) the Replit Publishing → Domains → Connect your own domain dialog gives you exactly two records — copy them verbatim:
+
+- `A` `<subdomain>` → `34.111.179.208` (Replit's edge IP — same value for every subdomain on this deployment)
+- `TXT` `<subdomain>` → `replit-verify=<unique-token-per-subdomain>` (the dialog generates a different token for invest vs portal — paste each one as-is, then click **Link** in the dialog)
+
+Once each subdomain shows green/verified in Replit, click **Manage** on it. The "Authentication DNS setup required" panel surfaces three additional CNAMEs that Clerk needs for branded auth-email delivery from the custom domain. Add all three for each subdomain (six rows total):
+
+- `CNAME` `clkmail.<subdomain>` → `mail.<clerk-tenant>.clerk.services`
+- `CNAME` `clk._domainkey.<subdomain>` → `dkim1.<clerk-tenant>.clerk.services`
+- `CNAME` `clk2._domainkey.<subdomain>` → `dkim2.<clerk-tenant>.clerk.services`
+
+GoDaddy will pop up "Let's double check…" warning that the name field has the full FQDN — always pick the **first option** (the one that resolves at the literal hostname without the doubled domain).
+
+Allowed origins / custom domains in Clerk are auto-registered when each subdomain finishes verifying in Replit Publishing → Domains. There is no separate Clerk-side step for Replit-managed Clerk; everything is managed from the workspace **Auth pane**. If sign-in fails on a custom domain after verification, open the Auth pane and look for warning icons next to the affected provider — those flag missing OAuth-provider redirect URI updates (e.g. Google, X) that need to be made in the provider's own developer console using the published custom domain.
 
 Production env vars (set in Replit Deployments → Secrets):
 - `ADMIN_EMAILS` — comma-separated; every listed email is granted the `admin` role per-request (already in `[userenv.shared]`)

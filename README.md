@@ -32,13 +32,15 @@ The pnpm workspace is the source of truth. In multi-artifact pnpm projects, the 
 
 ## Local development (Replit)
 
-The Replit `Project` workflow starts three dev servers in parallel:
+Three dev servers run in parallel in Replit:
 
 | Workflow | Command | Port |
 | --- | --- | --- |
 | `artifacts/web: web` | `pnpm --filter @workspace/web run dev` | 22333 (proxied at `/`) |
-| `api-server` | `pnpm --filter @workspace/api-server run dev` | 8080 (proxied at `/api`) |
 | `artifacts/invest: web` | `PORT=25265 BASE_PATH=/invest/ pnpm --filter @workspace/invest run dev` | 25265 (proxied at `/invest/`) |
+| `artifacts/api-server: API Server` | `pnpm --filter @workspace/api-server run dev` | 8080 (proxied at `/api`) |
+
+The `Project` run button starts the two `web` workflows; the `artifacts/api-server: API Server` workflow is fully managed by its `.replit-artifact/artifact.toml` and is auto-started by the artifact system, so it does not appear in the `Project` parallel task list. Do not add a separate manually-defined `api-server` workflow in `.replit` — it will collide with the artifact-managed one on port 8080.
 
 Use `localhost:80/<path>` (not the raw service ports) so you go through the same path-based proxy your browser does.
 
@@ -90,7 +92,7 @@ git push github main
 - `api-server` (Node/Express process at the root) — handles `/api/*`, the Clerk proxy at `/api/__clerk`, the Stripe webhook, the legacy `portal.aicreates.ai` 301 redirect, etc.
 - `invest` (static SPA) — served at `/invest/*` with SPA rewrites to `index.html`.
 
-The `web` artifact is **deliberately excluded** from Replit Deployments (no `[services.production]` block in its `artifact.toml`) because the marketing site lives on GitHub Pages. Trying to publish all three artifacts to one autoscale deployment is what produces the *"Could not find run command"* warning in the Publish dialog — keeping web out of the production set keeps that warning gone.
+The `web` artifact is also published to this same Replit deployment as a static SPA at `/*` (a fallback). The canonical marketing site is GitHub Pages at https://www.aicreates.ai and DNS only points there — the `*.replit.app/` copy is unreachable via any custom domain. The fallback exists because every artifact must have a `[services.production]` block in its `.replit-artifact/artifact.toml` for Replit Publishing to accept the deployment. Removing the block from `web` produces *"Could not find run command"* in the Publish dialog and blocks publish entirely. See the inline comment in `artifacts/web/.replit-artifact/artifact.toml`.
 
 **One-time Replit setup:**
 
@@ -106,10 +108,20 @@ The `web` artifact is **deliberately excluded** from Replit Deployments (no `[se
    | Stripe vars | (managed by integration) | Don't set by hand. |
 
    `SESSION_SECRET` is also present as a Replit secret but is **not currently consumed by application code** (Clerk owns auth state); leave it alone unless you add session middleware later.
-4. **DNS at GoDaddy:**
-   - `invest.aicreates.ai` → `CNAME` → your `*.replit.app` deployment hostname (visible in the Publishing dialog).
-   - `portal.aicreates.ai` → `CNAME` → same `*.replit.app` (so the host-based 301 redirect runs).
-5. **Add both custom domains** in Clerk's allowed origins (otherwise sign-in breaks on the live domain).
+4. **DNS at GoDaddy** — Replit's "Connect your own domain" flow uses A + TXT verification, not CNAME. For each of `invest.aicreates.ai` and `portal.aicreates.ai`:
+
+   1. In Replit Publishing → Domains → **Connect your own domain**, enter the subdomain. The dialog reveals two records:
+      - `A` `<subdomain>` → `34.111.179.208`
+      - `TXT` `<subdomain>` → `replit-verify=<unique-token>` (different token per subdomain)
+   2. Add both rows in GoDaddy DNS, save, then click **Link** in the Replit dialog. Verification typically completes within 5-30 minutes.
+   3. After it shows green, click **Manage** on the subdomain in Replit. The "Authentication DNS setup required" panel exposes three more CNAMEs that Clerk needs for branded auth-email delivery from the custom domain. Add all three to GoDaddy:
+      - `CNAME` `clkmail.<subdomain>` → `mail.<clerk-tenant>.clerk.services`
+      - `CNAME` `clk._domainkey.<subdomain>` → `dkim1.<clerk-tenant>.clerk.services`
+      - `CNAME` `clk2._domainkey.<subdomain>` → `dkim2.<clerk-tenant>.clerk.services`
+
+   When GoDaddy pops up "Let's double check…" because the Name field has the full FQDN, always pick the **first option** (without the doubled domain). End state: each subdomain has 1 A row, 1 TXT row, and 3 CNAME rows in GoDaddy — six new rows per subdomain, twelve total for invest + portal.
+
+5. **Clerk allowed origins** — managed automatically. Replit-managed Clerk picks up each verified custom domain from the Publishing → Domains list and registers it as an allowed origin without a separate step. If sign-in still fails on a custom domain after verification, open the workspace **Auth pane** and look for warning icons next to your SSO providers — those flag OAuth provider redirect URIs (e.g. Google, X) that need to be added in the provider's own developer console.
 
 **To publish a new version of the portal:**
 
@@ -134,7 +146,7 @@ curl -s https://invest.aicreates.ai/api/healthz/ready | jq
 
 Expected: `{"status":"ok", checks: { database, clerk, stripe, email, ... }}` with HTTP 200. The route returns 503 if either critical check (`database`, `clerk`) fails. `stripe` and `email` are reported but non-critical — wire-only checkout still works without them.
 
-If publish ever fails with *"Could not find run command"*, the most common cause is that someone re-added a `[services.production]` block to `artifacts/web/.replit-artifact/artifact.toml`. Remove that block — see the inline comment in that file.
+If publish ever fails with *"Could not find run command"*, the most common cause is that someone removed the `[services.production]` block from one of the artifacts (most often `artifacts/web/.replit-artifact/artifact.toml`). Restore it — see the inline comment in that file.
 
 ---
 
