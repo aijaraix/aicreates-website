@@ -14,6 +14,10 @@ name = "web"
 paths = [ "/invest/" ]
 localPort = 25265
 
+[services.env]
+PORT = "25265"
+BASE_PATH = "/invest/"
+
 [services.development]
 run = "pnpm --filter @workspace/invest run dev"
 
