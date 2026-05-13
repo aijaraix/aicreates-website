@@ -1455,7 +1455,7 @@ function RoundsTab() {
     mutationFn: async (args: { slug: string; softClosePct: number }) =>
       api(`/admin/rounds/${args.slug}`, {
         method: "PATCH",
-        body: JSON.stringify({ softClosePct: args.softClosePct }),
+        body: { softClosePct: args.softClosePct },
       }),
     onSuccess: refresh,
   });
