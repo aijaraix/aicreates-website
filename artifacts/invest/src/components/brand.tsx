@@ -1,5 +1,6 @@
 import * as React from "react";
 import { LogoMark } from "./LogoMark";
+import wordmark from "@/assets/aica-wordmark.png";
 
 type Div = React.HTMLAttributes<HTMLDivElement>;
 
@@ -134,21 +135,19 @@ export function Wordmark({
    */
   withDot?: boolean;
 }) {
-  const cls = size === "sm" ? "text-base" : "text-lg";
-  const iconCls = size === "sm" ? "h-5 w-auto shrink-0" : "h-6 w-auto shrink-0";
+  const iconCls = size === "sm" ? "h-4 w-auto shrink-0" : "h-[19px] w-auto shrink-0";
+  const textCls = size === "sm" ? "h-[10px] w-auto" : "h-[13px] w-auto";
   return (
-    <span className="inline-flex items-center gap-2.5">
+    <span className="inline-flex items-center gap-2">
       {withDot && <LogoMark className={iconCls} />}
-      <span
-        className={cx(
-          "font-sans font-semibold tracking-tight text-white leading-none",
-          cls,
-        )}
-      >
-        <span className="text-[#00F5D4]">AI</span>
-        <span className="font-light">creates</span>
-        <span className="text-[#00F5D4]">AI</span>
-      </span>
+      <img
+        src={wordmark}
+        alt="AIcreatesAI"
+        draggable={false}
+        decoding="async"
+        loading="eager"
+        className={textCls}
+      />
     </span>
   );
 }
