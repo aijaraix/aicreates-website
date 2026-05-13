@@ -31,14 +31,8 @@ export default function Footer() {
 
       {/* Disclaimer - full width below wordmark */}
       <div className="container mx-auto px-4 md:px-6 pt-12 md:pt-16">
-        <p className="text-white/40 text-xs md:text-sm leading-relaxed text-center max-w-5xl mx-auto">
-          This page is for informational purposes only and does not constitute
-          an offer to sell or a solicitation to buy any securities or tokens.
-          AICA tokens, when issued, will be utility tokens for consumptive use
-          within the AIcreatesAI ecosystem and are subject to vesting and
-          jurisdictional restrictions. Early-stage technology and
-          cryptocurrency commitments involve significant risk and you may lose
-          all funds.
+        <p className="text-white/35 text-[10px] md:text-[11px] leading-snug text-center mx-auto max-w-[1400px]">
+          This page is for informational purposes only and does not constitute an offer to sell or a solicitation to buy any securities or tokens. AICA tokens, when issued, will be utility tokens for consumptive use within the AIcreatesAI ecosystem and are subject to vesting and jurisdictional restrictions. Early-stage technology and cryptocurrency commitments involve significant risk and you may lose all funds.
         </p>
 
         <div className="mt-10 pt-6 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-3">
