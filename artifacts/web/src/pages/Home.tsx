@@ -122,7 +122,7 @@ function ProductSpotlight() {
   const slide = SLIDES[active];
 
   return (
-    <section className="py-14 md:py-24 relative min-h-[100dvh] sm:min-h-0 flex items-center">
+    <section className="py-12 md:py-24 relative">
       <div className="container mx-auto px-4 md:px-6 w-full">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -141,7 +141,7 @@ function ProductSpotlight() {
         >
           <div
             aria-hidden
-            className="absolute inset-y-0 right-0 w-[78%] md:w-[68%] pointer-events-none opacity-[0.9] [mask-image:linear-gradient(to_left,black_30%,transparent_92%)]"
+            className="hidden md:block absolute inset-y-0 right-0 w-[55%] lg:w-[60%] pointer-events-none opacity-[0.85] [mask-image:linear-gradient(to_left,black_25%,transparent_98%)]"
             style={{
               backgroundImage: `url(${spotlightBgUrl})`,
               backgroundSize: "auto 110%",
@@ -150,9 +150,9 @@ function ProductSpotlight() {
             }}
           />
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(0,245,212,0.18),transparent_60%)] pointer-events-none" />
-          <div className="absolute inset-y-0 left-0 w-2/3 bg-gradient-to-r from-[#0A0A0A] via-[#0A0A0A]/90 to-transparent pointer-events-none" />
+          <div className="hidden md:block absolute inset-y-0 left-0 w-3/4 lg:w-2/3 bg-gradient-to-r from-[#0A0A0A] via-[#0A0A0A]/95 to-transparent pointer-events-none" />
 
-          <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-8 p-7 sm:p-10 md:p-14 lg:p-20 min-h-[560px] md:min-h-[620px] lg:min-h-[640px]">
+          <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-8 p-6 sm:p-10 md:p-14 lg:p-20 min-h-[440px] sm:min-h-[520px] md:min-h-[600px] lg:min-h-[640px]">
             <AnimatePresence mode="wait">
               <motion.div
                 key={`text-${slide.id}`}
@@ -163,14 +163,14 @@ function ProductSpotlight() {
                 className="max-w-xl"
               >
                 <SectionLabel>{slide.label}</SectionLabel>
-                <h2 className="mt-5 text-4xl sm:text-5xl md:text-7xl font-serif font-semibold text-white leading-[1.0] mb-4 tracking-tight">
+                <h2 className="mt-4 sm:mt-5 text-[34px] sm:text-5xl md:text-6xl lg:text-7xl font-serif font-semibold text-white leading-[1.02] mb-3 sm:mb-4 tracking-tight [text-shadow:0_2px_24px_rgba(0,0,0,0.7)]">
                   {slide.title}
                 </h2>
-                <p className="text-lg sm:text-xl text-white/80 leading-tight mb-5 font-light">
+                <p className="text-base sm:text-xl text-white/85 leading-snug mb-4 sm:mb-5 font-light [text-shadow:0_1px_14px_rgba(0,0,0,0.7)]">
                   {slide.subline}
                 </p>
-                <p className="text-sm sm:text-base text-white/55 leading-relaxed mb-3">{slide.body1}</p>
-                <p className="text-sm sm:text-base text-white/45 leading-relaxed mb-8">{slide.body2}</p>
+                <p className="text-sm sm:text-base text-white/65 leading-relaxed mb-3 [text-shadow:0_1px_10px_rgba(0,0,0,0.6)]">{slide.body1}</p>
+                <p className="text-sm sm:text-base text-white/55 leading-relaxed mb-7 sm:mb-8 [text-shadow:0_1px_10px_rgba(0,0,0,0.6)]">{slide.body2}</p>
                 <Link href={slide.ctaHref}>
                   <Button
                     size="lg"
@@ -236,13 +236,18 @@ export default function Home() {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_0%,rgba(0,245,212,0.10),transparent_70%)] pointer-events-none" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/3 w-[900px] h-[900px] rounded-full bg-[radial-gradient(circle,rgba(0,245,212,0.06),transparent_60%)] blur-3xl pointer-events-none" />
 
-        <div className="container mx-auto px-4 md:px-6 relative z-10">
-          <div className="max-w-5xl mx-auto text-center">
+        <div className="container mx-auto px-4 sm:px-6 relative z-10">
+          <div className="relative max-w-5xl mx-auto text-center">
+            {/* Dark legibility halo behind hero copy - lifts text off the video */}
+            <div
+              aria-hidden
+              className="absolute -inset-x-4 sm:-inset-x-10 -inset-y-10 sm:-inset-y-16 -z-10 bg-[radial-gradient(ellipse_70%_60%_at_50%_50%,rgba(10,10,10,0.85),rgba(10,10,10,0.55)_45%,transparent_75%)] blur-[2px]"
+            />
             <motion.div
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="flex justify-center mb-8"
+              className="flex justify-center mb-7 sm:mb-8"
             >
               <SectionLabel>Agentic Intelligence Layer</SectionLabel>
             </motion.div>
@@ -251,7 +256,7 @@ export default function Home() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.05 }}
-              className="text-[40px] sm:text-5xl md:text-7xl lg:text-[88px] font-serif font-semibold leading-[1.02] mb-6 text-gradient"
+              className="text-[36px] sm:text-5xl md:text-6xl lg:text-[88px] font-serif font-semibold leading-[1.04] sm:leading-[1.02] mb-5 sm:mb-6 text-gradient [text-shadow:0_2px_30px_rgba(0,0,0,0.7)]"
             >
               The operating layer for the agentic era.
             </motion.h1>
@@ -260,7 +265,7 @@ export default function Home() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.15 }}
-              className="text-base sm:text-lg md:text-xl text-white/60 max-w-2xl mx-auto leading-relaxed mb-8"
+              className="text-[15px] sm:text-lg md:text-xl text-white/75 max-w-2xl mx-auto leading-relaxed mb-7 sm:mb-8 [text-shadow:0_1px_16px_rgba(0,0,0,0.7)]"
             >
               AICreatesAi builds the intelligence infrastructure that companies, capital, and consumers will run on. One layer. Many products. Self-improving by design.
             </motion.p>
@@ -346,7 +351,7 @@ export default function Home() {
       </section>
 
       {/* ABOUT US */}
-      <section className="py-16 md:py-24 relative min-h-[100dvh] sm:min-h-0 flex items-center">
+      <section className="py-14 md:py-24 relative">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_50%_60%_at_50%_50%,rgba(0,245,212,0.05),transparent_70%)] pointer-events-none" />
         <div className="container mx-auto px-4 md:px-6 relative w-full">
           <div className="max-w-4xl mx-auto">
@@ -398,7 +403,7 @@ export default function Home() {
       </section>
 
       {/* MISSION */}
-      <section className="py-16 md:py-24 relative min-h-[100dvh] sm:min-h-0 flex items-center">
+      <section className="py-14 md:py-24 relative">
         <div className="container mx-auto px-4 md:px-6 w-full">
           <div className="max-w-4xl mx-auto">
             <SectionLabel>Our Mission</SectionLabel>

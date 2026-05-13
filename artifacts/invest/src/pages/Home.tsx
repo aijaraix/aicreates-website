@@ -155,15 +155,20 @@ export default function Home() {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_0%,rgba(0,245,212,0.10),transparent_70%)] pointer-events-none" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/3 w-[900px] h-[900px] rounded-full bg-[radial-gradient(circle,rgba(0,245,212,0.06),transparent_60%)] blur-3xl pointer-events-none" />
 
-        <div className="container mx-auto px-4 md:px-6 relative z-10">
-          <div className="max-w-5xl mx-auto text-center">
-            <div className="mb-8 flex justify-center">
+        <div className="container mx-auto px-4 sm:px-6 relative z-10">
+          <div className="relative max-w-5xl mx-auto text-center">
+            {/* Dark legibility halo behind hero copy - lifts text off the video */}
+            <div
+              aria-hidden
+              className="absolute -inset-x-4 sm:-inset-x-10 -inset-y-10 sm:-inset-y-16 -z-10 bg-[radial-gradient(ellipse_70%_60%_at_50%_50%,rgba(10,10,10,0.85),rgba(10,10,10,0.55)_45%,transparent_75%)] blur-[2px]"
+            />
+            <div className="mb-7 sm:mb-8 flex justify-center">
               <SectionLabel>AICA Strategic Seed Round - Now open</SectionLabel>
             </div>
-            <h1 className="text-[40px] sm:text-5xl md:text-7xl lg:text-[88px] font-serif font-semibold leading-[1.02] mb-6 text-gradient">
+            <h1 className="text-[36px] sm:text-5xl md:text-6xl lg:text-[88px] font-serif font-semibold leading-[1.04] sm:leading-[1.02] mb-5 sm:mb-6 text-gradient [text-shadow:0_2px_30px_rgba(0,0,0,0.7)]">
               The Agentic Intelligence Layer.
             </h1>
-            <p className="text-base sm:text-lg md:text-xl text-white/60 max-w-2xl mx-auto leading-relaxed mb-8">
+            <p className="text-[15px] sm:text-lg md:text-xl text-white/75 max-w-2xl mx-auto leading-relaxed mb-7 sm:mb-8 [text-shadow:0_1px_16px_rgba(0,0,0,0.7)]">
               Reserve your allocation in the AICA Strategic Seed - the first
               of five SAFT rounds in a ~$50M private sale to ship the Agentic
               Business Operating System and the Hybrid Compute Fabric powering
