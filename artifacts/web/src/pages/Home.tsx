@@ -247,13 +247,13 @@ export default function Home() {
   return (
     <div className="flex flex-col w-full">
       {/* HERO */}
-      <section className="relative min-h-[100svh] flex flex-col pt-20 pb-6 md:pt-28 md:pb-20 overflow-hidden">
+      <section className="relative min-h-[100svh] flex flex-col pt-20 pb-0 md:pt-28 md:pb-20 overflow-hidden">
         <HeroVideoReel clips={HERO_CLIPS} />
         <div className="absolute inset-0 bg-grid bg-grid-fade pointer-events-none" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_0%,rgba(0,245,212,0.10),transparent_70%)] pointer-events-none" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/3 w-[900px] h-[900px] rounded-full bg-[radial-gradient(circle,rgba(0,245,212,0.06),transparent_60%)] blur-3xl pointer-events-none" />
 
-        <div className="container mx-auto px-4 sm:px-6 relative z-10 flex-1 flex items-center">
+        <div className="container mx-auto px-4 sm:px-6 relative z-10 mt-2 sm:mt-0 sm:flex-1 sm:flex sm:items-center">
           <div className="relative max-w-5xl mx-auto text-center w-full">
             {/* Dark legibility halo behind hero copy - lifts text off the video */}
             <div
@@ -313,7 +313,7 @@ export default function Home() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 0.5 }}
-          className="container mx-auto px-4 sm:px-6 relative z-10 flex flex-col sm:flex-row flex-wrap items-center justify-center gap-x-6 gap-y-1.5 sm:gap-x-10 sm:gap-y-4 pt-4 pb-3 md:pt-10 md:pb-0 text-[10px] sm:text-xs uppercase tracking-[0.18em] sm:tracking-[0.2em] text-white/40"
+          className="container mx-auto px-4 sm:px-6 relative z-10 mt-auto flex flex-col sm:flex-row flex-wrap items-center justify-center gap-x-6 gap-y-1.5 sm:gap-x-10 sm:gap-y-4 pt-4 pb-[22svh] sm:pb-0 md:pt-10 text-[10px] sm:text-xs uppercase tracking-[0.18em] sm:tracking-[0.2em] text-white/40"
         >
           <span>Hybrid Compute Fabric</span>
           <span className="hidden md:inline w-1 h-1 rounded-full bg-white/20" />
