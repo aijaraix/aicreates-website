@@ -247,14 +247,14 @@ export default function Home() {
   return (
     <div className="flex flex-col w-full">
       {/* HERO */}
-      <section className="relative min-h-[100dvh] flex items-center pt-24 pb-16 md:pt-28 md:pb-20 overflow-hidden">
+      <section className="relative min-h-[100svh] flex flex-col pt-20 pb-6 md:pt-28 md:pb-20 overflow-hidden">
         <HeroVideoReel clips={HERO_CLIPS} />
         <div className="absolute inset-0 bg-grid bg-grid-fade pointer-events-none" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_0%,rgba(0,245,212,0.10),transparent_70%)] pointer-events-none" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/3 w-[900px] h-[900px] rounded-full bg-[radial-gradient(circle,rgba(0,245,212,0.06),transparent_60%)] blur-3xl pointer-events-none" />
 
-        <div className="container mx-auto px-4 sm:px-6 relative z-10">
-          <div className="relative max-w-5xl mx-auto text-center">
+        <div className="container mx-auto px-4 sm:px-6 relative z-10 flex-1 flex items-center">
+          <div className="relative max-w-5xl mx-auto text-center w-full">
             {/* Dark legibility halo behind hero copy - lifts text off the video */}
             <div
               aria-hidden
@@ -264,7 +264,7 @@ export default function Home() {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="flex justify-center mb-7 sm:mb-8"
+              className="flex justify-center mb-5 sm:mb-8"
             >
               <SectionLabel>Agentic Intelligence Layer</SectionLabel>
             </motion.div>
@@ -273,7 +273,7 @@ export default function Home() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.05 }}
-              className="text-[36px] sm:text-5xl md:text-6xl lg:text-[88px] font-serif font-bold leading-[1.04] sm:leading-[1.02] mb-5 sm:mb-6 text-white tracking-tight [text-shadow:0_2px_36px_rgba(0,245,212,0.18),0_2px_24px_rgba(0,0,0,0.75)]"
+              className="text-[40px] sm:text-5xl md:text-6xl lg:text-[88px] font-serif font-bold leading-[1.04] sm:leading-[1.02] mb-4 sm:mb-6 text-white tracking-tight [text-shadow:0_2px_36px_rgba(0,245,212,0.18),0_2px_24px_rgba(0,0,0,0.75)]"
             >
               The operating layer for the agentic era.
             </motion.h1>
@@ -282,7 +282,7 @@ export default function Home() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.15 }}
-              className="text-[15px] sm:text-lg md:text-xl text-white/75 max-w-2xl mx-auto leading-relaxed mb-7 sm:mb-8 [text-shadow:0_1px_16px_rgba(0,0,0,0.7)]"
+              className="text-[15px] sm:text-lg md:text-xl text-white/75 max-w-2xl mx-auto leading-relaxed mb-6 sm:mb-8 [text-shadow:0_1px_16px_rgba(0,0,0,0.7)]"
             >
               AICreatesAi builds the intelligence infrastructure that companies, capital, and consumers will run on. One layer. Many products. Self-improving by design.
             </motion.p>
@@ -305,20 +305,22 @@ export default function Home() {
               </Link>
             </motion.div>
 
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 1, delay: 0.5 }}
-              className="mt-14 md:mt-20 flex flex-wrap items-center justify-center gap-x-10 gap-y-4 text-xs uppercase tracking-[0.2em] text-white/35"
-            >
-              <span>Hybrid Compute Fabric</span>
-              <span className="hidden md:inline w-1 h-1 rounded-full bg-white/20" />
-              <span>Closed-Loop Quality Engine</span>
-              <span className="hidden md:inline w-1 h-1 rounded-full bg-white/20" />
-              <span>Self-Healing Workflows</span>
-            </motion.div>
           </div>
         </div>
+
+        {/* Trust trio pinned to the bottom of the hero so the entire viewport is used */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 0.5 }}
+          className="container mx-auto px-4 sm:px-6 relative z-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 sm:gap-x-10 sm:gap-y-4 pt-6 pb-2 md:pt-10 md:pb-0 text-[10px] sm:text-xs uppercase tracking-[0.18em] sm:tracking-[0.2em] text-white/40"
+        >
+          <span>Hybrid Compute Fabric</span>
+          <span className="hidden md:inline w-1 h-1 rounded-full bg-white/20" />
+          <span>Closed-Loop Quality Engine</span>
+          <span className="hidden md:inline w-1 h-1 rounded-full bg-white/20" />
+          <span>Self-Healing Workflows</span>
+        </motion.div>
       </section>
 
       {/* PRODUCT SPOTLIGHT (Eve OS / NeoBank carousel) */}
