@@ -142,6 +142,7 @@ export class WebhookHandlers {
       typeof md["commitment_id"] === "string"
         ? (md["commitment_id"] as string)
         : null;
+    let viaMetadataFallback = false;
     if (!existing && metadataCommitmentId) {
       existing = (
         await db
@@ -150,24 +151,54 @@ export class WebhookHandlers {
           .where(eq(commitmentsTable.id, metadataCommitmentId))
           .limit(1)
       )[0];
+      viaMetadataFallback = Boolean(existing);
     }
 
     if (existing) {
+      // Stale-event guard for amended commitments. The commitment may
+      // have been amended out from under this Stripe event:
+      //   1. `pending_resign` — investor hasn't re-signed yet; ignore.
+      //   2. The row already has a session/PI set that DOES NOT match
+      //      this event's IDs — the event is for a prior, detached
+      //      checkout. We hit this branch via the metadata fallback
+      //      after `amendCommitment` cleared the prior linkage and the
+      //      investor opened a new checkout (state moved through
+      //      `pending_resign` → `pending_payment` with NEW session/PI).
+      //      Mutating now would fund/fail at the OLD terms.
+      if (existing.state === "pending_resign") {
+        return;
+      }
+      if (viaMetadataFallback) {
+        const sessionMismatch =
+          existing.stripeCheckoutSessionId !== null &&
+          args.sessionId !== null &&
+          args.sessionId !== undefined &&
+          existing.stripeCheckoutSessionId !== args.sessionId;
+        const piMismatch =
+          existing.stripePaymentIntentId !== null &&
+          args.paymentIntentId !== null &&
+          args.paymentIntentId !== undefined &&
+          existing.stripePaymentIntentId !== args.paymentIntentId;
+        if (sessionMismatch || piMismatch) {
+          logger.warn(
+            {
+              commitmentId: existing.id,
+              eventSessionId: args.sessionId,
+              eventPaymentIntentId: args.paymentIntentId,
+              currentSessionId: existing.stripeCheckoutSessionId,
+              currentPaymentIntentId: existing.stripePaymentIntentId,
+            },
+            "Webhook ignored: stale Stripe event for amended commitment (metadata.commitment_id matched but session/PI does not)",
+          );
+          return;
+        }
+      }
       const stateMap: Record<string, string> = {
         succeeded: "funded",
         failed: "failed",
         refunded: "refunded",
         pending: existing.state ?? "pending_payment",
       };
-      // A pending_resign commitment is awaiting investor re-signature
-      // after an amend. Any Stripe event that arrives here is by
-      // definition tied to the PRIOR (now-detached) checkout, so
-      // ignore it entirely — never let it flip to funded/failed/
-      // refunded/etc. The amend route already cleared the prior
-      // session/PI linkage; this is the second line of defense.
-      if (existing.state === "pending_resign") {
-        return;
-      }
       const nextState = stateMap[args.status] ?? args.status;
       const patch: Record<string, unknown> = {
         status: args.status,
