@@ -98,6 +98,12 @@ export class WebhookHandlers {
     completedAt?: Date | null;
     refundedAt?: Date | null;
     metadata?: Stripe.Metadata | null;
+    failure?: {
+      reason: string | null;
+      code: string | null;
+      declineCode: string | null;
+      at: Date;
+    } | null;
   }): Promise<void> {
     const md = args.metadata ?? {};
     const tierSlug = (md["tier_slug"] as string | undefined) ?? null;
@@ -128,6 +134,23 @@ export class WebhookHandlers {
           .limit(1)
       )[0];
     }
+    // Fallback: payment_intent.payment_failed often arrives before we've
+    // persisted the PI on the commitment row, but checkout always writes
+    // metadata.commitment_id when it creates the session, so this resolves
+    // first-time declines reliably.
+    const metadataCommitmentId =
+      typeof md["commitment_id"] === "string"
+        ? (md["commitment_id"] as string)
+        : null;
+    if (!existing && metadataCommitmentId) {
+      existing = (
+        await db
+          .select()
+          .from(commitmentsTable)
+          .where(eq(commitmentsTable.id, metadataCommitmentId))
+          .limit(1)
+      )[0];
+    }
 
     if (existing) {
       const stateMap: Record<string, string> = {
@@ -150,6 +173,20 @@ export class WebhookHandlers {
       if (args.refundedAt) patch["refundedAt"] = args.refundedAt;
       if (args.status === "succeeded" && !existing.fundedAt) {
         patch["fundedAt"] = args.completedAt ?? new Date();
+      }
+      if (args.failure) {
+        patch["lastFailureReason"] = args.failure.reason;
+        patch["lastFailureCode"] = args.failure.code;
+        patch["lastFailureDeclineCode"] = args.failure.declineCode;
+        patch["lastFailureAt"] = args.failure.at;
+      }
+      // Clear stale failure metadata on a successful payment so the
+      // dashboard never shows "Payment failed" on a funded commitment.
+      if (args.status === "succeeded") {
+        patch["lastFailureReason"] = null;
+        patch["lastFailureCode"] = null;
+        patch["lastFailureDeclineCode"] = null;
+        patch["lastFailureAt"] = null;
       }
       await db
         .update(commitmentsTable)
@@ -292,10 +329,17 @@ export class WebhookHandlers {
       }
       case "payment_intent.payment_failed": {
         const pi = event.data.object as Stripe.PaymentIntent;
+        const lpe = pi.last_payment_error ?? null;
         await this.upsertCommitment({
           paymentIntentId: pi.id,
           status: "failed",
           metadata: pi.metadata ?? null,
+          failure: {
+            reason: lpe?.message ?? lpe?.type ?? null,
+            code: lpe?.code ?? null,
+            declineCode: lpe?.decline_code ?? null,
+            at: new Date(),
+          },
         });
         break;
       }

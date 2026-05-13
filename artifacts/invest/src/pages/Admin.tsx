@@ -103,10 +103,22 @@ interface Note {
   body: string;
   createdAt: string;
 }
+interface SaftSubmission {
+  id: string;
+  commitmentId: string;
+  status: string;
+  payload: Record<string, unknown> | null;
+  signatureName: string | null;
+  signedAt: string | null;
+  signerIp: string | null;
+  signerUserAgent: string | null;
+  version: number | null;
+}
 interface InvestorDetail {
   user: InvestorRow;
   profile: Record<string, unknown> | null;
   commitments: CommitmentRow[];
+  saftSubmissions: SaftSubmission[];
   notes: Note[];
   audit: AuditEntry[];
   applications: Array<{
@@ -115,6 +127,40 @@ interface InvestorDetail {
     intendedAmountCents: number | null;
     createdAt: string;
   }>;
+  stripeMode: "test" | "live" | "unknown";
+}
+
+function stripeDashboardUrl(
+  mode: "test" | "live" | "unknown",
+  kind: "customers" | "payments" | "checkout/sessions",
+  id: string,
+): string {
+  const prefix = mode === "live" ? "" : "test/";
+  return `https://dashboard.stripe.com/${prefix}${kind}/${id}`;
+}
+
+function StripeIdLink({
+  mode,
+  kind,
+  id,
+  testId,
+}: {
+  mode: "test" | "live" | "unknown";
+  kind: "customers" | "payments" | "checkout/sessions";
+  id: string;
+  testId?: string;
+}) {
+  return (
+    <a
+      href={stripeDashboardUrl(mode, kind, id)}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-flex items-center gap-1 text-[11px] text-[#00F5D4] hover:underline"
+      data-testid={testId}
+    >
+      <ExternalLink className="w-3 h-3" /> Stripe
+    </a>
+  );
 }
 
 const STATUS_FILTERS = [
@@ -721,27 +767,29 @@ function InvestorDrawer({
               )}
             </section>
 
+            <ValidationSummary detail={detail.data} />
+
             <section>
-              <h3 className="text-sm font-medium mb-2">
+              <h3 className="text-sm font-medium mb-2 flex items-center gap-2">
                 Commitments ({detail.data.commitments.length})
+                <span className="text-[10px] uppercase tracking-[0.14em] text-white/30">
+                  Stripe {detail.data.stripeMode}
+                </span>
               </h3>
               <div className="space-y-2">
-                {detail.data.commitments.map((c) => (
-                  <div
-                    key={c.id}
-                    className="rounded-xl border border-white/10 bg-black/20 p-3 text-sm"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="font-medium">{c.displayName}</div>
-                      <div className="font-medium">{fmt(c.amountCents)}</div>
-                    </div>
-                    <div className="text-xs text-white/50">
-                      {c.roundSlug} · {c.state} ·{" "}
-                      {c.tokenAllocation.toLocaleString()} AICA ·{" "}
-                      {fmtDate(c.createdAt)}
-                    </div>
-                  </div>
-                ))}
+                {detail.data.commitments.map((c) => {
+                  const saft = detail.data.saftSubmissions.find(
+                    (s) => s.commitmentId === c.id,
+                  );
+                  return (
+                    <CommitmentRowDrawer
+                      key={c.id}
+                      c={c}
+                      saft={saft ?? null}
+                      stripeMode={detail.data.stripeMode}
+                    />
+                  );
+                })}
                 {detail.data.commitments.length === 0 && (
                   <div className="text-xs text-white/40">No commitments.</div>
                 )}
@@ -826,6 +874,197 @@ function InvestorDrawer({
           </div>
         )}
       </div>
+    </div>
+  );
+}
+
+function ValidationSummary({ detail }: { detail: InvestorDetail }) {
+  const profile = (detail.profile ?? {}) as Record<string, unknown>;
+  const legalFirst = String(profile["legalFirstName"] ?? "").trim();
+  const legalLast = String(profile["legalLastName"] ?? "").trim();
+  const signatoryName = String(profile["signatoryName"] ?? "").trim();
+  const profileLegalName =
+    profile["kind"] === "business"
+      ? signatoryName
+      : `${legalFirst} ${legalLast}`.trim();
+  const clerkName = (detail.user.fullName ?? "").trim();
+
+  const hasProfile = detail.profile != null;
+  const nameMatches =
+    !!profileLegalName &&
+    !!clerkName &&
+    profileLegalName.toLowerCase() === clerkName.toLowerCase();
+  const wallet = String(profile["walletAddress"] ?? "").trim();
+  const hasWallet = wallet.length > 0;
+
+  const fundedOrInFlight = detail.commitments.filter((c) =>
+    ["funded", "awaiting_wire", "awaiting_crypto", "pending_payment"].includes(
+      c.state,
+    ),
+  );
+  const kycOk = fundedOrInFlight.every(
+    (c) => c.kycStatus && c.kycStatus !== "none",
+  );
+  const accreditationOk = fundedOrInFlight.every(
+    (c) => !!c.accreditationStatus,
+  );
+
+  const items: Array<{ label: string; ok: boolean; hint?: string }> = [
+    { label: "Profile saved", ok: hasProfile },
+    {
+      label: "Legal name matches Clerk",
+      ok: nameMatches,
+      hint: hasProfile
+        ? `${profileLegalName || "(blank)"} vs ${clerkName || "(blank)"}`
+        : "Profile not saved",
+    },
+    {
+      label: "Wallet declared",
+      ok: hasWallet,
+      hint: hasWallet ? `${wallet.slice(0, 6)}…${wallet.slice(-4)}` : undefined,
+    },
+    {
+      label: "KYC declared on all funded/in-flight",
+      ok: fundedOrInFlight.length === 0 || kycOk,
+    },
+    {
+      label: "Accreditation on all funded/in-flight",
+      ok: fundedOrInFlight.length === 0 || accreditationOk,
+    },
+  ];
+
+  return (
+    <section data-testid="validation-summary">
+      <h3 className="text-sm font-medium mb-2">Validation summary</h3>
+      <div className="rounded-xl border border-white/10 bg-black/30 p-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
+        {items.map((it) => (
+          <div
+            key={it.label}
+            className="flex items-start gap-2 text-xs"
+            data-testid={`validation-${it.label.toLowerCase().replace(/[^a-z]+/g, "-")}`}
+          >
+            <span
+              className={
+                "mt-0.5 inline-block w-2 h-2 rounded-full shrink-0 " +
+                (it.ok ? "bg-[#00F5D4]" : "bg-amber-300")
+              }
+            />
+            <div className="min-w-0">
+              <div className={it.ok ? "text-white/80" : "text-amber-200"}>
+                {it.label}
+              </div>
+              {it.hint && (
+                <div className="text-[10px] text-white/40 truncate">
+                  {it.hint}
+                </div>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function CommitmentRowDrawer({
+  c,
+  saft,
+  stripeMode,
+}: {
+  c: CommitmentRow;
+  saft: SaftSubmission | null;
+  stripeMode: "test" | "live" | "unknown";
+}) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div
+      className="rounded-xl border border-white/10 bg-black/20 p-3 text-sm"
+      data-testid={`drawer-commitment-${c.id}`}
+    >
+      <div className="flex items-center justify-between">
+        <div className="font-medium">{c.displayName}</div>
+        <div className="font-medium">{fmt(c.amountCents)}</div>
+      </div>
+      <div className="text-xs text-white/50">
+        {c.roundSlug} · {c.state} · {c.tokenAllocation.toLocaleString()} AICA ·{" "}
+        {fmtDate(c.createdAt)}
+      </div>
+      <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-white/55">
+        {c.stripeCustomerId && (
+          <span className="inline-flex items-center gap-1.5">
+            <span className="text-white/35">cus</span>
+            <span className="font-mono text-white/70">
+              {c.stripeCustomerId.slice(0, 14)}…
+            </span>
+            <StripeIdLink
+              mode={stripeMode}
+              kind="customers"
+              id={c.stripeCustomerId}
+              testId={`stripe-customer-${c.id}`}
+            />
+          </span>
+        )}
+        {c.stripePaymentIntentId && (
+          <span className="inline-flex items-center gap-1.5">
+            <span className="text-white/35">pi</span>
+            <span className="font-mono text-white/70">
+              {c.stripePaymentIntentId.slice(0, 14)}…
+            </span>
+            <StripeIdLink
+              mode={stripeMode}
+              kind="payments"
+              id={c.stripePaymentIntentId}
+              testId={`stripe-pi-${c.id}`}
+            />
+          </span>
+        )}
+        {c.stripeCheckoutSessionId && (
+          <span className="inline-flex items-center gap-1.5">
+            <span className="text-white/35">cs</span>
+            <span className="font-mono text-white/70">
+              {c.stripeCheckoutSessionId.slice(0, 14)}…
+            </span>
+            <StripeIdLink
+              mode={stripeMode}
+              kind="checkout/sessions"
+              id={c.stripeCheckoutSessionId}
+              testId={`stripe-cs-${c.id}`}
+            />
+          </span>
+        )}
+      </div>
+      {saft && (
+        <div className="mt-2 border-t border-white/5 pt-2">
+          <button
+            type="button"
+            onClick={() => setOpen((v) => !v)}
+            className="text-[11px] text-[#00F5D4]/85 hover:text-[#00F5D4]"
+            data-testid={`button-toggle-saft-${c.id}`}
+          >
+            {open ? "Hide SAFT submission" : "Show SAFT submission"} ·{" "}
+            {saft.signatureName ?? "(unsigned)"}{" "}
+            {saft.signedAt ? `· ${fmtDateTime(saft.signedAt)}` : ""}
+          </button>
+          {open && (
+            <pre
+              className="mt-2 text-[10px] text-white/70 bg-black/40 border border-white/10 rounded-lg p-2 overflow-x-auto max-h-72"
+              data-testid={`saft-payload-${c.id}`}
+            >
+              {JSON.stringify(
+                {
+                  status: saft.status,
+                  version: saft.version,
+                  signerIp: saft.signerIp,
+                  signerUserAgent: saft.signerUserAgent,
+                  payload: saft.payload,
+                },
+                null,
+                2,
+              )}
+            </pre>
+          )}
+        </div>
+      )}
     </div>
   );
 }

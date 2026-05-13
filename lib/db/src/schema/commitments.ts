@@ -49,6 +49,11 @@ export const commitmentsTable = pgTable(
     /** Self-declared accreditation category (e.g. income, net_worth, entity). */
     accreditationStatus: text("accreditation_status"),
     fundedAt: timestamp("funded_at", { withTimezone: true }),
+    /** Last Stripe payment_intent.payment_failed reason / code captured for UX. */
+    lastFailureReason: text("last_failure_reason"),
+    lastFailureCode: text("last_failure_code"),
+    lastFailureDeclineCode: text("last_failure_decline_code"),
+    lastFailureAt: timestamp("last_failure_at", { withTimezone: true }),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),

@@ -3,7 +3,16 @@ import { Link, useLocation } from "wouter";
 import { useUser } from "@clerk/react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
-import { ArrowRight, Calendar, Check, Download, FileText, Loader2, Wallet } from "lucide-react";
+import {
+  AlertTriangle,
+  ArrowRight,
+  Calendar,
+  Check,
+  Download,
+  FileText,
+  Loader2,
+  Wallet,
+} from "lucide-react";
 import ReleaseBar from "@/components/ReleaseBar";
 import PortalNav from "@/components/PortalNav";
 import PageHeader from "@/components/PageHeader";
@@ -35,6 +44,10 @@ interface Allocation {
   saftSignedAt: string | null;
   saftStatus: string | null;
   saftSignerName: string | null;
+  lastFailureReason: string | null;
+  lastFailureCode: string | null;
+  lastFailureDeclineCode: string | null;
+  lastFailureAt: string | null;
   kycStatus: string | null;
   accreditationStatus: string | null;
   walletAddress: string | null;
@@ -84,6 +97,201 @@ function fmtDate(v: string | null) {
     month: "short",
     day: "numeric",
   });
+}
+
+function useCountdown(targetIso: string | null): {
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
+  isPast: boolean;
+} {
+  const [, setTick] = useState(0);
+  useEffect(() => {
+    const t = setInterval(() => setTick((v) => v + 1), 1000);
+    return () => clearInterval(t);
+  }, []);
+  if (!targetIso) {
+    return { days: 0, hours: 0, minutes: 0, seconds: 0, isPast: true };
+  }
+  const diff = Date.parse(targetIso) - Date.now();
+  const isPast = diff <= 0;
+  const abs = Math.max(0, diff);
+  const days = Math.floor(abs / 86_400_000);
+  const hours = Math.floor((abs % 86_400_000) / 3_600_000);
+  const minutes = Math.floor((abs % 3_600_000) / 60_000);
+  const seconds = Math.floor((abs % 60_000) / 1000);
+  return { days, hours, minutes, seconds, isPast };
+}
+
+function TgeBanner({
+  allocation,
+  fundedCount,
+}: {
+  allocation: Allocation;
+  fundedCount: number;
+}) {
+  const tge = allocation.vesting?.tgeDate ?? null;
+  const cd = useCountdown(tge);
+  return (
+    <div
+      className="mb-8 rounded-2xl border border-[#00F5D4]/40 bg-[#00F5D4]/[0.06] p-5"
+      data-testid="banner-tge"
+    >
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <div className="text-xs uppercase tracking-[0.18em] text-[#00F5D4]">
+            Funded — waiting for TGE
+          </div>
+          <div className="mt-1 font-display text-lg">
+            {fundedCount} commitment{fundedCount === 1 ? "" : "s"} locked.
+            First unlock at TGE.
+          </div>
+          <div className="mt-1 text-xs text-white/55">
+            TGE target: {tge ? new Date(tge).toLocaleDateString() : "-"}
+          </div>
+        </div>
+        <div className="flex items-center gap-3 text-center">
+          {cd.isPast ? (
+            <div className="text-sm text-[#00F5D4]" data-testid="tge-live">
+              Unlocking now
+            </div>
+          ) : (
+            <>
+              <CountUnit n={cd.days} label="d" />
+              <CountUnit n={cd.hours} label="h" />
+              <CountUnit n={cd.minutes} label="m" />
+              <CountUnit n={cd.seconds} label="s" />
+            </>
+          )}
+        </div>
+      </div>
+      <div className="mt-4 flex flex-wrap gap-2">
+        <button
+          type="button"
+          onClick={() => downloadIcs(allocation)}
+          className="inline-flex items-center gap-1.5 px-4 h-9 rounded-full glass-btn text-sm"
+          data-testid="button-tge-ics"
+        >
+          <Download className="w-3.5 h-3.5" /> Add to calendar (.ics)
+        </button>
+        {googleCalendarUrls(allocation).length > 0 && (
+          <button
+            type="button"
+            onClick={() => openAllGoogleCalendarEvents(allocation)}
+            className="inline-flex items-center gap-1.5 px-4 h-9 rounded-full glass-btn text-sm"
+            data-testid="button-tge-gcal"
+          >
+            <Calendar className="w-3.5 h-3.5" /> Add to Google Calendar
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function CountUnit({ n, label }: { n: number; label: string }) {
+  return (
+    <div className="min-w-[44px]">
+      <div className="font-display text-2xl tabular-nums text-[#00F5D4]">
+        {String(n).padStart(2, "0")}
+      </div>
+      <div className="text-[10px] uppercase tracking-[0.16em] text-white/40">
+        {label}
+      </div>
+    </div>
+  );
+}
+
+function NextActionCard({ a }: { a: Allocation }) {
+  const failed = a.state === "failed";
+  const labelByState: Record<string, string> = {
+    pending_saft: "Sign your SAFT",
+    pending_payment: "Complete payment",
+    awaiting_wire: "Waiting for your wire to land",
+    failed: "Payment failed — try again",
+  };
+  const headline = failed
+    ? labelByState["failed"]
+    : (labelByState[a.state] ?? "Next step");
+  return (
+    <div
+      className={
+        "rounded-xl border p-3 " +
+        (failed
+          ? "border-red-400/40 bg-red-500/[0.06]"
+          : "border-white/10 bg-black/20")
+      }
+      data-testid={`next-action-${a.state}-${a.id}`}
+    >
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div className="min-w-0">
+          <div
+            className={
+              "text-xs uppercase tracking-[0.16em] " +
+              (failed ? "text-red-300" : "text-amber-300")
+            }
+          >
+            {headline}
+          </div>
+          <div className="mt-1 text-sm">
+            <span className="font-medium">{a.displayName}</span>
+            <span className="text-white/50 ml-2">{fmt(a.amountCents)}</span>
+          </div>
+          {failed && a.lastFailureReason && (
+            <div className="mt-1 text-xs text-red-200/80 flex items-start gap-1.5">
+              <AlertTriangle className="w-3.5 h-3.5 mt-0.5 shrink-0" />
+              <span>
+                {a.lastFailureReason}
+                {a.lastFailureDeclineCode && (
+                  <span className="text-white/40">
+                    {" "}
+                    (code: {a.lastFailureDeclineCode})
+                  </span>
+                )}
+              </span>
+            </div>
+          )}
+          {a.state === "awaiting_wire" && !failed && (
+            <div className="mt-1 text-xs text-white/55">
+              We'll mark this funded as soon as your wire is reconciled.
+            </div>
+          )}
+        </div>
+        <div className="shrink-0">
+          {a.state === "pending_saft" ? (
+            <Link
+              href={`/saft/${a.id}`}
+              className="text-sm inline-flex items-center px-4 h-9 rounded-full teal-btn"
+            >
+              Sign SAFT <ArrowRight className="ml-2 w-4 h-4" />
+            </Link>
+          ) : failed ? (
+            <Link
+              href={`/checkout/${a.id}?failed=1`}
+              className="text-sm inline-flex items-center px-4 h-9 rounded-full teal-btn"
+            >
+              Retry payment <ArrowRight className="ml-2 w-4 h-4" />
+            </Link>
+          ) : a.state === "pending_payment" ? (
+            <Link
+              href={`/checkout/${a.id}`}
+              className="text-sm inline-flex items-center px-4 h-9 rounded-full teal-btn"
+            >
+              Complete payment <ArrowRight className="ml-2 w-4 h-4" />
+            </Link>
+          ) : (
+            <Link
+              href={`/checkout/${a.id}`}
+              className="text-sm text-amber-200/80 underline"
+            >
+              View wire instructions
+            </Link>
+          )}
+        </div>
+      </div>
+    </div>
+  );
 }
 
 function downloadIcs(a: Allocation) {
@@ -182,12 +390,26 @@ export default function Dashboard() {
     .filter((p) => Date.parse(p.date) > Date.now())
     .sort((a, b) => Date.parse(a.date) - Date.parse(b.date))[0];
 
+  // State-driven only. We never key off lastFailureAt because failure
+  // fields aren't always cleared on later success (some Stripe paths only
+  // emit checkout.session.completed) — so a funded row could otherwise
+  // re-appear as "Payment failed". `failed` is the explicit failed state.
   const pendingActions = allocations.filter(
     (a) =>
       a.state === "pending_saft" ||
       a.state === "pending_payment" ||
-      a.state === "awaiting_wire",
+      a.state === "awaiting_wire" ||
+      a.state === "failed",
   );
+
+  // Earliest TGE among funded commitments — drives the "Funded — waiting for
+  // TGE" banner with countdown + calendar exports.
+  const earliestTge = funded
+    .map((a) => a.vesting?.tgeDate)
+    .filter((d): d is string => !!d)
+    .sort()[0] ?? null;
+  const tgeBannerAllocation =
+    funded.find((a) => a.vesting?.tgeDate === earliestTge) ?? null;
 
   return (
     <div className="min-h-[100dvh] bg-[#0A0A0A] text-white">
@@ -216,46 +438,20 @@ export default function Dashboard() {
           initialAddress={meQuery.data?.user.solanaWalletAddress ?? null}
         />
 
+        {tgeBannerAllocation && tgeBannerAllocation.vesting && (
+          <TgeBanner
+            allocation={tgeBannerAllocation}
+            fundedCount={funded.length}
+          />
+        )}
+
         {pendingActions.length > 0 && (
-          <div className="rounded-2xl border border-amber-400/30 bg-amber-400/5 p-5 mb-8 space-y-2">
+          <div className="rounded-2xl border border-amber-400/30 bg-amber-400/5 p-5 mb-8 space-y-3">
             <div className="text-xs uppercase tracking-[0.18em] text-amber-300">
-              Pending actions
+              Next action
             </div>
             {pendingActions.map((a) => (
-              <div
-                key={a.id}
-                className="flex flex-wrap items-center justify-between gap-3"
-                data-testid={`pending-${a.state}-${a.id}`}
-              >
-                <div className="text-sm">
-                  <span className="font-medium">{a.displayName}</span>
-                  <span className="text-white/50 ml-2">
-                    {fmt(a.amountCents)}
-                  </span>
-                </div>
-                {a.state === "pending_saft" ? (
-                  <Link
-                    href={`/saft/${a.id}`}
-                    className="text-sm inline-flex items-center px-4 h-9 rounded-full teal-btn"
-                  >
-                    Sign SAFT <ArrowRight className="ml-2 w-4 h-4" />
-                  </Link>
-                ) : a.state === "pending_payment" ? (
-                  <Link
-                    href={`/checkout/${a.id}`}
-                    className="text-sm inline-flex items-center px-4 h-9 rounded-full teal-btn"
-                  >
-                    Complete payment <ArrowRight className="ml-2 w-4 h-4" />
-                  </Link>
-                ) : (
-                  <Link
-                    href={`/checkout/${a.id}`}
-                    className="text-sm text-amber-200/80 underline"
-                  >
-                    View wire instructions
-                  </Link>
-                )}
-              </div>
+              <NextActionCard key={a.id} a={a} />
             ))}
           </div>
         )}

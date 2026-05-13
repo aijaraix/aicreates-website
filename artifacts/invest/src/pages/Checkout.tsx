@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link, useParams } from "wouter";
+import { useEffect, useState } from "react";
+import { Link, useParams, useLocation } from "wouter";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import PortalNav from "@/components/PortalNav";
@@ -14,6 +14,7 @@ import {
   CheckCircle2,
   Download,
   ImageIcon,
+  AlertTriangle,
 } from "lucide-react";
 import {
   WIRE_INSTRUCTIONS,
@@ -31,6 +32,10 @@ interface SaftResponse {
     status: string;
     paymentMethod: string | null;
     saftSignedAt: string | null;
+    lastFailureReason?: string | null;
+    lastFailureCode?: string | null;
+    lastFailureDeclineCode?: string | null;
+    lastFailureAt?: string | null;
   };
 }
 
@@ -76,9 +81,27 @@ export default function Checkout() {
   });
   const params = useParams<{ commitId: string }>();
   const commitId = params.commitId!;
+  const [, setLocation] = useLocation();
   const [method, setMethod] = useState<Method>("fiat");
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const [manualConfirmed, setManualConfirmed] = useState<"wire" | null>(null);
+
+  // Read ?canceled=1 / ?failed=1 once, surface a friendly banner, then
+  // strip the query so a refresh doesn't re-show it.
+  const [returnFlag, setReturnFlag] = useState<"canceled" | "failed" | null>(
+    null,
+  );
+  useEffect(() => {
+    const sp = new URLSearchParams(window.location.search);
+    if (sp.get("failed")) setReturnFlag("failed");
+    else if (sp.get("canceled")) setReturnFlag("canceled");
+    if (sp.has("failed") || sp.has("canceled")) {
+      sp.delete("failed");
+      sp.delete("canceled");
+      const q = sp.toString();
+      setLocation(`/checkout/${commitId}${q ? `?${q}` : ""}`, { replace: true });
+    }
+  }, [commitId, setLocation]);
 
   const { data, isLoading } = useQuery({
     queryKey: ["saft", commitId],
@@ -164,6 +187,64 @@ export default function Checkout() {
       />
 
       <main className="mx-auto max-w-3xl px-6 py-10 md:py-12">
+        {(returnFlag || c.lastFailureAt) && !manualConfirmed && (
+          <div
+            className="mb-6 rounded-2xl border border-amber-400/40 bg-amber-400/[0.06] p-5"
+            data-testid="banner-checkout-return"
+          >
+            <div className="flex items-start gap-3">
+              <AlertTriangle className="w-5 h-5 text-amber-300 mt-0.5 shrink-0" />
+              <div className="flex-1 min-w-0">
+                <div className="font-medium text-amber-100">
+                  {returnFlag === "canceled" && !c.lastFailureAt
+                    ? "Payment was canceled."
+                    : "Payment didn't go through."}
+                </div>
+                <p className="mt-1 text-sm text-white/70">
+                  {c.lastFailureReason
+                    ? c.lastFailureReason
+                    : returnFlag === "failed"
+                      ? "Your card was declined or the payment couldn't be completed. No charge was made."
+                      : "You returned without completing payment. No charge was made."}
+                  {c.lastFailureDeclineCode && (
+                    <span className="ml-1 text-white/45">
+                      (code: {c.lastFailureDeclineCode})
+                    </span>
+                  )}
+                </p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setMethod("fiat");
+                      setReturnFlag(null);
+                      // Re-open Stripe Checkout immediately. mutationFn navigates
+                      // to res.url on success, so the investor lands straight on
+                      // the hosted card form without an extra click.
+                      checkout.mutate();
+                    }}
+                    disabled={checkout.isPending}
+                    className="inline-flex items-center gap-1.5 px-4 h-9 rounded-full teal-btn text-sm disabled:opacity-60"
+                    data-testid="button-retry-card"
+                  >
+                    {checkout.isPending ? (
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    ) : (
+                      "Try a different card"
+                    )}
+                  </button>
+                  <Link
+                    href={`/invest?commit=${commitId}`}
+                    className="inline-flex items-center gap-1.5 px-4 h-9 rounded-full glass-btn text-sm"
+                    data-testid="link-change-amount"
+                  >
+                    Change amount or payment method
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
         {manualConfirmed ? (
           <div
             className="brand-card brand-hairline-teal p-6"

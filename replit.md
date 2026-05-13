@@ -100,7 +100,9 @@ A full investor experience at `artifacts/invest`, intended to deploy to **https:
 - Payments: Stripe Checkout (card / ACH / crypto) plus a wire-transfer flow that skips Stripe and is manually confirmed by an admin.
 - Stripe data is mirrored locally via `stripe-replit-sync` (schema `stripe.*` in Postgres).
 - App-side users are stored in `app_users` (`lib/db/src/schema/app_users.ts`).
-- Portal pages: `/` (long-scroll deck + thesis), `/sign-in`, `/sign-up`, `/invest` (tier picker + custom amount $1k–$10M with bonus token tiers at $5k/$25k), `/saft/:commitId` (6-step SAFT e-sign flow that renders + persists a PDF), `/checkout/:commitId` (4 payment methods including wire instructions), `/dashboard` (vesting calendar with .ics export), `/admin` (commitments table with state filter, mark-wire-received, refund, CSV export).
+- Portal pages: `/` (long-scroll deck + thesis), `/sign-in`, `/sign-up`, `/invest` (tier picker + custom amount $1k–$10M with bonus token tiers at $5k/$25k), `/saft/:commitId` (6-step SAFT e-sign flow that renders + persists a PDF), `/checkout/:commitId` (4 payment methods including wire instructions; reads `?canceled=1` / `?failed=1` from Stripe return URLs and surfaces a friendly retry banner with the last-known decline reason), `/dashboard` (per-state next-action cards, "Funded — waiting for TGE" countdown banner with .ics + Google Calendar buttons, vesting timeline), `/admin` (commitments table with state filter, mark-wire-received, refund, CSV export).
+- Role-based landing: signed-in users hitting `/` are routed by `SignedInLanding` in `App.tsx` — admins go to `/admin`, everyone else to `/dashboard`. Role is read from `/api/me`.
+- Investor drawer (`/admin` → row → Open) shows: profile JSON, a **Validation summary** tile (profile saved, legal name vs Clerk name match, wallet declared, KYC + accreditation declared on funded/in-flight commitments), per-commitment Stripe deep-links (cus / pi / cs) that route to `dashboard.stripe.com/test/...` or `dashboard.stripe.com/...` based on the api-server's detected `stripeMode` (live when `STRIPE_SECRET_KEY` starts with `sk_live_`, else test), and a collapsible per-commitment SAFT submission JSON (status, version, signer IP/UA, full payload).
 
 ### Investor flow
 
@@ -112,7 +114,7 @@ A full investor experience at `artifacts/invest`, intended to deploy to **https:
 
 ### Schema additions
 
-- `commitments` extended: `state`, `roundSlug`, `customAmountCents`, `paymentMethod`, `saftSignedAt`, `saftPdfKey`, `fundedAt`. `stripeCheckoutSessionId` is now nullable (wire flow has no session).
+- `commitments` extended: `state`, `roundSlug`, `customAmountCents`, `paymentMethod`, `saftSignedAt`, `saftPdfKey`, `fundedAt`, plus `lastFailureReason` / `lastFailureCode` / `lastFailureDeclineCode` / `lastFailureAt` (persisted from `payment_intent.payment_failed.last_payment_error` so the dashboard + checkout return-banner can show the customer-readable reason). `stripeCheckoutSessionId` is now nullable (wire flow has no session).
 - `saft_submissions` (new): captured payload, signature metadata, IP/UA, and the rendered PDF bytes. PDF is intentionally stored in the DB as `bytea` (single source of truth, simple backups). Migrate to object storage if SAFTs grow large.
 - `data_center_requests` (new): captures inquiries from the data-center request form on the long-scroll home page.
 
@@ -144,6 +146,14 @@ Templates and where they fire:
 
 Set `PUBLIC_PORTAL_ORIGIN` (e.g. `https://invest.aicreates.ai`) so dashboard links in webhook-fired emails point at the live host instead of the dev preview origin.
 
+### Stripe live-mode verification log
+
+> **Operator-only — the agent cannot perform this verification.** Live verification requires (a) a Stripe **live** secret key, which only an operator with Stripe Dashboard access can issue and add to Replit Deployments → Secrets, (b) a real consumer card billed against live infrastructure (Stripe blocks test cards in live mode), and (c) the live webhook endpoint registered against the deployed `https://invest.aicreates.ai/api/stripe/webhook`. The Replit Agent cannot create or possess live Stripe keys, cannot run a real card, and cannot register live webhooks; it can only ship the code paths and the verification checklist below. An operator must complete the checklist and append a dated row to this table.
+
+| Date (YYYY-MM-DD) | Outcome | Verified by | Notes |
+| --- | --- | --- | --- |
+| (pending operator) | (pending) | (pending) | Replace this row once the "Going live with Stripe" checklist below is fully completed against the live deployment. |
+
 ### Going live with Stripe
 
 `artifacts/api-server/src/lib/stripeClient.ts` already supports two key sources: it prefers operator-supplied `STRIPE_SECRET_KEY` + `STRIPE_WEBHOOK_SECRET` env secrets when running in a Replit deployment, and otherwise falls back to the dev Stripe connector. To switch to live mode in production:
@@ -151,6 +161,11 @@ Set `PUBLIC_PORTAL_ORIGIN` (e.g. `https://invest.aicreates.ai`) so dashboard lin
 1. In Stripe Dashboard, generate a live secret key. Add it as `STRIPE_SECRET_KEY` in Replit Deployments → Secrets.
 2. Register the production webhook endpoint at `https://invest.aicreates.ai/api/stripe/webhook` for events: `checkout.session.completed`, `payment_intent.succeeded`, `payment_intent.payment_failed`, `charge.refunded`, `charge.dispute.created`. Add the webhook signing secret as `STRIPE_WEBHOOK_SECRET`.
 3. In Stripe Dashboard → Settings → Payment methods, enable ACH Direct Debit, Apple Pay, and Google Pay. Apple Pay / Google Pay require no extra integration work because the portal uses Stripe Checkout (hosted page), not Stripe Elements — wallet buttons appear automatically when "card" is enabled and the customer's device supports them. ACH is selected explicitly via `paymentMethod: "ach"` in `POST /api/checkout`.
+4. **Verify live mode end-to-end (operator-only — cannot be automated from inside the app):**
+   - In Replit Deployments, confirm `STRIPE_SECRET_KEY` starts with `sk_live_`. The api-server's `/api/me` and `/api/admin/investors/:id` responses now include `stripeMode: "live" | "test" | "unknown"` derived from this prefix; the admin drawer surfaces it next to "Stripe ___" in the Commitments header.
+   - Make a $1 live commitment from a personal account (not the test cards). Confirm: Stripe Dashboard shows the payment under **live**, the webhook event reaches `https://invest.aicreates.ai/api/stripe/webhook` with a 200, the commitment state advances to `funded`, the dashboard renders the TGE countdown banner, and `payment_received` email lands in the customer inbox.
+   - Trigger a deliberate decline (Stripe live test card not applicable in live; instead use a real card with insufficient funds or a Visa under a $0.50 floor) and confirm `/checkout/:commitId?failed=1` shows the Stripe-supplied decline reason and the next-action card on `/dashboard` shows the same.
+   - In the admin drawer, click each Stripe deep-link and confirm it lands on `dashboard.stripe.com/{customers,payments,checkout/sessions}/...` (no `test/` prefix) with the correct record loaded.
 
 ### Production deploy
 

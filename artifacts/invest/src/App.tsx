@@ -18,8 +18,10 @@ import {
 import {
   QueryClient,
   QueryClientProvider,
+  useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
+import { api } from "@/lib/api";
 import Home from "@/pages/Home";
 import Dashboard from "@/pages/Dashboard";
 import InvestPicker from "@/pages/InvestPicker";
@@ -218,11 +220,32 @@ function SignUpPage() {
   );
 }
 
+function SignedInLanding() {
+  // Role-based landing: admins go to /admin, everyone else to /dashboard.
+  const me = useQuery({
+    queryKey: ["me"],
+    queryFn: () => api<{ user: { role: string } }>("/me"),
+    staleTime: 60_000,
+  });
+  if (me.isLoading) {
+    return (
+      <div
+        className="min-h-[100dvh] bg-[#0A0A0A] text-white/50 flex items-center justify-center"
+        data-testid="landing-loading"
+      >
+        Loading…
+      </div>
+    );
+  }
+  if (me.data?.user.role === "admin") return <Redirect to="/admin" />;
+  return <Redirect to="/dashboard" />;
+}
+
 function HomeRedirect() {
   return (
     <>
       <Show when="signed-in">
-        <Redirect to="/dashboard" />
+        <SignedInLanding />
       </Show>
       <Show when="signed-out">
         <Home />

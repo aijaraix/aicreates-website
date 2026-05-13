@@ -121,7 +121,17 @@ The `web` artifact is also published to this same Replit deployment as a static 
 
    When GoDaddy pops up "Let's double check…" because the Name field has the full FQDN, always pick the **first option** (without the doubled domain). End state: each subdomain has 1 A row, 1 TXT row, and 3 CNAME rows in GoDaddy — six new rows per subdomain, twelve total for invest + portal.
 
-5. **Clerk allowed origins** — managed automatically. Replit-managed Clerk picks up each verified custom domain from the Publishing → Domains list and registers it as an allowed origin without a separate step. If sign-in still fails on a custom domain after verification, open the workspace **Auth pane** and look for warning icons next to your SSO providers — those flag OAuth provider redirect URIs (e.g. Google, X) that need to be added in the provider's own developer console.
+5. **Switch Stripe to live mode (operator-only verification).** The api-server's `stripeClient.ts` prefers operator-supplied `STRIPE_SECRET_KEY` + `STRIPE_WEBHOOK_SECRET` env secrets in production and falls back to the dev Stripe connector otherwise.
+
+   1. In Stripe Dashboard, generate a live secret key. Add it as `STRIPE_SECRET_KEY` in Replit Deployments → Secrets.
+   2. Register the production webhook at `https://invest.aicreates.ai/api/stripe/webhook` for `checkout.session.completed`, `payment_intent.succeeded`, `payment_intent.payment_failed`, `charge.refunded`, `charge.dispute.created`. Add the webhook signing secret as `STRIPE_WEBHOOK_SECRET`.
+   3. In Stripe Dashboard → Settings → Payment methods, enable ACH Direct Debit, Apple Pay, and Google Pay. Wallet buttons appear automatically because the portal uses Stripe Checkout (hosted page).
+   4. **End-to-end live verification (cannot be automated from inside the app).** The api-server's `/api/me` and `/api/admin/investors/:id` now return `stripeMode: "live" | "test" | "unknown"` derived from the `sk_live_` / `sk_test_` prefix, and the admin investor drawer displays it next to "Stripe ___" in the Commitments header. With that visible:
+      - Run a real $1 commitment from a personal account. Confirm the payment shows under **live** in Stripe Dashboard, the webhook hits `https://invest.aicreates.ai/api/stripe/webhook` with a 200, the commitment advances to `funded`, and `/dashboard` renders the "Funded — waiting for TGE" countdown banner.
+      - Trigger a deliberate decline (real card with insufficient funds, or any Stripe error path live cards expose). Confirm `/checkout/:commitId?failed=1` shows the customer-readable decline reason and the same reason renders on the next-action card on `/dashboard`. The decline reason is persisted to `commitments.last_failure_reason` from `payment_intent.payment_failed.last_payment_error`.
+      - In the admin drawer, click each Stripe deep-link beside `cus` / `pi` / `cs` and confirm it opens `dashboard.stripe.com/{customers,payments,checkout/sessions}/...` (no `test/` prefix in live mode) on the right record.
+
+6. **Clerk allowed origins** — managed automatically. Replit-managed Clerk picks up each verified custom domain from the Publishing → Domains list and registers it as an allowed origin without a separate step. If sign-in still fails on a custom domain after verification, open the workspace **Auth pane** and look for warning icons next to your SSO providers — those flag OAuth provider redirect URIs (e.g. Google, X) that need to be added in the provider's own developer console.
 
 **To publish a new version of the portal:**
 

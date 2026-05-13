@@ -13,6 +13,16 @@ import { getRoundLabel, ROUND_BY_SLUG } from "../lib/rounds";
 
 const router: IRouter = Router();
 
+function detectStripeMode(): "test" | "live" | "unknown" {
+  const k =
+    process.env["STRIPE_SECRET_KEY"] ??
+    process.env["STRIPE_API_KEY"] ??
+    "";
+  if (k.startsWith("sk_live_")) return "live";
+  if (k.startsWith("sk_test_")) return "test";
+  return "unknown";
+}
+
 router.get("/me", requireAuth, async (req, res) => {
   const user = req.appUser!;
   const commitments = await db
@@ -21,7 +31,7 @@ router.get("/me", requireAuth, async (req, res) => {
     .where(eq(commitmentsTable.userId, user.id))
     .orderBy(desc(commitmentsTable.createdAt))
     .limit(100);
-  res.json({ user, commitments });
+  res.json({ user, commitments, stripeMode: detectStripeMode() });
 });
 
 router.get("/me/allocations", requireAuth, async (req, res) => {
@@ -111,6 +121,10 @@ router.get("/me/allocations", requireAuth, async (req, res) => {
       saftSignedAt: c.saftSignedAt ?? saft?.signedAt ?? null,
       saftStatus: saft?.status ?? null,
       saftSignerName: saft?.signatureName ?? null,
+      lastFailureReason: c.lastFailureReason ?? null,
+      lastFailureCode: c.lastFailureCode ?? null,
+      lastFailureDeclineCode: c.lastFailureDeclineCode ?? null,
+      lastFailureAt: c.lastFailureAt ?? null,
       kycStatus: c.kycStatus,
       accreditationStatus: c.accreditationStatus,
       walletAddress: c.walletAddress,

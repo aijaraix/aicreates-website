@@ -267,15 +267,45 @@ router.get("/admin/investors/:id", async (req, res) => {
     .where(eq(allocationApplicationsTable.userId, id))
     .orderBy(desc(allocationApplicationsTable.createdAt));
 
+  const commitmentIds = commitments.map((c) => c.id);
+  const saftRows = commitmentIds.length
+    ? await db
+        .select({
+          id: saftSubmissionsTable.id,
+          commitmentId: saftSubmissionsTable.commitmentId,
+          status: saftSubmissionsTable.status,
+          payload: saftSubmissionsTable.payload,
+          signatureName: saftSubmissionsTable.signatureName,
+          signedAt: saftSubmissionsTable.signedAt,
+          signerIp: saftSubmissionsTable.signerIp,
+          signerUserAgent: saftSubmissionsTable.signerUserAgent,
+          version: saftSubmissionsTable.version,
+        })
+        .from(saftSubmissionsTable)
+        .where(inArray(saftSubmissionsTable.commitmentId, commitmentIds))
+    : [];
+
   res.json({
     user,
     profile: profileRows[0] ?? null,
     commitments,
+    saftSubmissions: saftRows,
     notes,
     audit,
     applications: apps,
+    stripeMode: detectStripeMode(),
   });
 });
+
+function detectStripeMode(): "test" | "live" | "unknown" {
+  const k =
+    process.env["STRIPE_SECRET_KEY"] ??
+    process.env["STRIPE_API_KEY"] ??
+    "";
+  if (k.startsWith("sk_live_")) return "live";
+  if (k.startsWith("sk_test_")) return "test";
+  return "unknown";
+}
 
 /* ---------------------------------------------------------------- *
  * 5. Update investor (role)
