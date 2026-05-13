@@ -177,16 +177,31 @@ router.get("/admin/commitments/:id/saft-pdf", async (req, res) => {
     res.status(400).json({ error: "id required" });
     return;
   }
-  const rows = await db
-    .select({ pdfBytes: saftSubmissionsTable.pdfBytes })
-    .from(saftSubmissionsTable)
-    .where(
-      and(
+  // Admin can request a specific SAFT version via ?submissionId=. With
+  // no submissionId we serve the latest active SAFT for the commitment;
+  // when none exists (e.g. amended → pending_resign), fall back to the
+  // most recent superseded one so admins can still pull historical PDFs.
+  const submissionId =
+    typeof req.query["submissionId"] === "string"
+      ? req.query["submissionId"]
+      : null;
+  const whereClause = submissionId
+    ? and(
         eq(saftSubmissionsTable.commitmentId, id),
-        isNull(saftSubmissionsTable.supersededAt),
-      ),
+        eq(saftSubmissionsTable.id, submissionId),
+      )
+    : eq(saftSubmissionsTable.commitmentId, id);
+  const rows = await db
+    .select({
+      pdfBytes: saftSubmissionsTable.pdfBytes,
+      supersededAt: saftSubmissionsTable.supersededAt,
+    })
+    .from(saftSubmissionsTable)
+    .where(whereClause)
+    .orderBy(
+      sql`(${saftSubmissionsTable.supersededAt} IS NULL) DESC`,
+      desc(saftSubmissionsTable.signedAt),
     )
-    .orderBy(desc(saftSubmissionsTable.signedAt))
     .limit(1);
   const sub = rows[0];
   if (!sub || !sub.pdfBytes) {

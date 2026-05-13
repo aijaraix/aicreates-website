@@ -84,6 +84,13 @@ export function AmendDialog({
 
   const newCents = Math.round(Number(amountUsd) * 100) || 0;
   const round = ROUNDS.find((r) => r.slug === roundSlug);
+  // Only currently-open rounds are valid amend targets. Always include
+  // the commitment's current round so an investor can keep their round
+  // even if it has just closed (the server will still reject closed
+  // rounds, this just keeps the picker honest).
+  const selectableRounds = ROUNDS.filter(
+    (r) => r.open || r.slug === commitment.roundSlug,
+  );
   const newTokens = round
     ? Math.floor((newCents * 1000) / round.pricePerTokenMillicents / 10)
     : 0;
@@ -116,7 +123,7 @@ export function AmendDialog({
             onChange={(e) => setRoundSlug(e.target.value)}
             data-testid="amend-round-select"
           >
-            {ROUNDS.map((r) => (
+            {selectableRounds.map((r) => (
               <option key={r.slug} value={r.slug}>
                 {r.name} - {r.pricePerToken}
               </option>

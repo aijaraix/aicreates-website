@@ -282,12 +282,10 @@ router.get("/admin/investors/:id", async (req, res) => {
           version: saftSubmissionsTable.version,
         })
         .from(saftSubmissionsTable)
-        .where(
-          and(
-            inArray(saftSubmissionsTable.commitmentId, commitmentIds),
-            isNull(saftSubmissionsTable.supersededAt),
-          ),
-        )
+        // Admin drawer shows full SAFT history per commitment (active +
+        // superseded). The UI labels each row by `status` and offers a
+        // per-version PDF link via `?submissionId=<id>`.
+        .where(inArray(saftSubmissionsTable.commitmentId, commitmentIds))
         .orderBy(desc(saftSubmissionsTable.signedAt))
     : [];
 

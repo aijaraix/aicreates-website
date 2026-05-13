@@ -108,20 +108,9 @@ router.post("/commitments/:id/amend", requireAuth, async (req, res) => {
     return;
   }
 
-  await notifyInvestor({
-    to: req.appUser!.email,
-    investorName: req.appUser!.fullName ?? req.appUser!.email,
-    commitmentId: id,
-    previousAmountCents: c.amountCents,
-    newAmountCents: result.commitment.amountCents,
-    previousRoundSlug: c.roundSlug,
-    newRoundSlug: result.commitment.roundSlug,
-    newTokens: result.commitment.tokenAllocation,
-    reason: typeof body.reason === "string" ? body.reason : null,
-    actorKind: "investor",
-    portalUrl: `${portalOriginFor(req)}/invest/saft/${id}`,
-  });
-
+  // Self-serve amends do not trigger an email; the investor is already
+  // looking at the portal and will be redirected to /saft/:id by the UI.
+  void portalOriginFor;
   res.json({ commitment: result.commitment });
 });
 

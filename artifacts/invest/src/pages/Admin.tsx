@@ -780,14 +780,14 @@ function InvestorDrawer({
               </h3>
               <div className="space-y-2">
                 {detail.data.commitments.map((c) => {
-                  const saft = detail.data.saftSubmissions.find(
+                  const saftHistory = detail.data.saftSubmissions.filter(
                     (s) => s.commitmentId === c.id,
                   );
                   return (
                     <CommitmentRowDrawer
                       key={c.id}
                       c={c}
-                      saft={saft ?? null}
+                      saftHistory={saftHistory}
                       stripeMode={detail.data.stripeMode}
                     />
                   );
@@ -970,14 +970,14 @@ function ValidationSummary({ detail }: { detail: InvestorDetail }) {
 
 function CommitmentRowDrawer({
   c,
-  saft,
+  saftHistory,
   stripeMode,
 }: {
   c: CommitmentRow;
-  saft: SaftSubmission | null;
+  saftHistory: SaftSubmission[];
   stripeMode: "test" | "live" | "unknown";
 }) {
-  const [open, setOpen] = useState(false);
+  const [openId, setOpenId] = useState<string | null>(null);
   return (
     <div
       className="rounded-xl border border-white/10 bg-black/20 p-3 text-sm"
@@ -1035,36 +1035,63 @@ function CommitmentRowDrawer({
           </span>
         )}
       </div>
-      {saft && (
-        <div className="mt-2 border-t border-white/5 pt-2">
-          <button
-            type="button"
-            onClick={() => setOpen((v) => !v)}
-            className="text-[11px] text-[#00F5D4]/85 hover:text-[#00F5D4]"
-            data-testid={`button-toggle-saft-${c.id}`}
-          >
-            {open ? "Hide SAFT submission" : "Show SAFT submission"} ·{" "}
-            {saft.signatureName ?? "(unsigned)"}{" "}
-            {saft.signedAt ? `· ${fmtDateTime(saft.signedAt)}` : ""}
-          </button>
-          {open && (
-            <pre
-              className="mt-2 text-[10px] text-white/70 bg-black/40 border border-white/10 rounded-lg p-2 overflow-x-auto max-h-72"
-              data-testid={`saft-payload-${c.id}`}
-            >
-              {JSON.stringify(
-                {
-                  status: saft.status,
-                  version: saft.version,
-                  signerIp: saft.signerIp,
-                  signerUserAgent: saft.signerUserAgent,
-                  payload: saft.payload,
-                },
-                null,
-                2,
-              )}
-            </pre>
-          )}
+      {saftHistory.length > 0 && (
+        <div className="mt-2 border-t border-white/5 pt-2 space-y-1">
+          <div className="text-[10px] uppercase tracking-[0.14em] text-white/35">
+            SAFT submissions ({saftHistory.length})
+          </div>
+          {saftHistory.map((s, idx) => {
+            const isOpen = openId === s.id;
+            const isActive = s.status !== "superseded";
+            return (
+              <div key={s.id} className="text-[11px]">
+                <button
+                  type="button"
+                  onClick={() => setOpenId(isOpen ? null : s.id)}
+                  className="text-[#00F5D4]/85 hover:text-[#00F5D4] text-left"
+                  data-testid={`button-toggle-saft-${c.id}-${idx}`}
+                >
+                  v{s.version} ·{" "}
+                  <span
+                    className={
+                      isActive ? "text-[#00F5D4]" : "text-amber-300/85"
+                    }
+                  >
+                    {s.status}
+                  </span>{" "}
+                  · {s.signatureName ?? "(unsigned)"}{" "}
+                  {s.signedAt ? `· ${fmtDateTime(s.signedAt)}` : ""}
+                </button>{" "}
+                <a
+                  href={`/api/admin/commitments/${c.id}/saft-pdf?submissionId=${s.id}`}
+                  target="_blank"
+                  rel="noopener"
+                  className="text-white/55 hover:text-white underline-offset-2 hover:underline"
+                  data-testid={`link-saft-pdf-${c.id}-${idx}`}
+                >
+                  PDF
+                </a>
+                {isOpen && (
+                  <pre
+                    className="mt-1 text-[10px] text-white/70 bg-black/40 border border-white/10 rounded-lg p-2 overflow-x-auto max-h-72"
+                    data-testid={`saft-payload-${c.id}-${idx}`}
+                  >
+                    {JSON.stringify(
+                      {
+                        status: s.status,
+                        version: s.version,
+                        signerIp: s.signerIp,
+                        signerUserAgent: s.signerUserAgent,
+                        payload: s.payload,
+                      },
+                      null,
+                      2,
+                    )}
+                  </pre>
+                )}
+              </div>
+            );
+          })}
         </div>
       )}
     </div>
