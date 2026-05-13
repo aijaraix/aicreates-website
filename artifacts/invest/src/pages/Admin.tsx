@@ -232,10 +232,27 @@ export default function Admin() {
  * Overview tab
  * =================================================================== */
 
+interface AdminsResp {
+  emails: string[];
+  users: Array<{
+    id: string;
+    email: string;
+    fullName: string | null;
+    role: string;
+    lastLoginAt: string | null;
+    loginCount: number;
+    createdAt: string;
+  }>;
+}
+
 function OverviewTab() {
   const overview = useQuery({
     queryKey: ["admin", "overview"],
     queryFn: () => api<OverviewResp>("/admin/overview"),
+  });
+  const admins = useQuery({
+    queryKey: ["admin", "admins"],
+    queryFn: () => api<AdminsResp>("/admin/admins"),
   });
   if (overview.isLoading) return <SkeletonBlock />;
   if (!overview.data) return <div className="text-white/50">No data.</div>;
@@ -326,6 +343,68 @@ function OverviewTab() {
             </tbody>
           </table>
         </div>
+      </section>
+
+      <section
+        className="brand-card overflow-hidden"
+        data-testid="admin-emails-panel"
+      >
+        <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between">
+          <div>
+            <h2 className="font-medium">Operators (ADMIN_EMAILS)</h2>
+            <p className="text-xs text-white/45 mt-0.5">
+              Source of truth: <code className="text-[#00F5D4]">ADMIN_EMAILS</code> env var. Re-checked on every admin
+              request — add or remove an email and access updates on the next call.
+            </p>
+          </div>
+          <span className="text-xs text-white/50">
+            {admins.data?.emails.length ?? 0} configured
+          </span>
+        </div>
+        {admins.isLoading ? (
+          <div className="px-6 py-4 text-white/50 text-sm">Loading…</div>
+        ) : !admins.data || admins.data.emails.length === 0 ? (
+          <div className="px-6 py-4 text-white/50 text-sm">
+            No <code>ADMIN_EMAILS</code> configured. Set the env var in Replit
+            Deployments → Secrets to grant admin access.
+          </div>
+        ) : (
+          <ul className="divide-y divide-white/5">
+            {admins.data.emails.map((email) => {
+              const u = admins.data!.users.find(
+                (x) => x.email.toLowerCase() === email.toLowerCase(),
+              );
+              return (
+                <li
+                  key={email}
+                  className="px-6 py-3 flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 text-sm"
+                  data-testid={`row-admin-${email}`}
+                >
+                  <span className="font-mono text-white/85 sm:w-72 truncate">
+                    {email}
+                  </span>
+                  <span className="text-xs text-white/55 sm:w-48 truncate">
+                    {u?.fullName ?? "—"}
+                  </span>
+                  <span
+                    className={`px-2 py-0.5 rounded-full text-[10px] uppercase tracking-wider w-fit ${
+                      u
+                        ? "bg-[#00F5D4]/15 text-[#00F5D4]"
+                        : "bg-white/5 text-white/45"
+                    }`}
+                  >
+                    {u ? "Active" : "Not signed in yet"}
+                  </span>
+                  <span className="text-xs text-white/45 sm:ml-auto">
+                    {u?.lastLoginAt
+                      ? `Last seen ${fmtDate(u.lastLoginAt)}`
+                      : "—"}
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
+        )}
       </section>
 
       <section className="brand-card overflow-hidden">

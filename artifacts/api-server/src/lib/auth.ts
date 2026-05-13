@@ -13,6 +13,7 @@ declare module "express-serve-static-core" {
       fullName: string | null;
       role: string;
       stripeCustomerId: string | null;
+      solanaWalletAddress: string | null;
     };
   }
 }
@@ -124,6 +125,7 @@ export async function requireAuth(
       fullName: row.fullName,
       role: row.role,
       stripeCustomerId: row.stripeCustomerId,
+      solanaWalletAddress: row.solanaWalletAddress ?? null,
     };
     next();
   } catch (err) {

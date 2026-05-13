@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "wouter";
 import { useUser } from "@clerk/react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
-import { ArrowRight, Calendar, Download, FileText } from "lucide-react";
+import { ArrowRight, Calendar, Check, Download, FileText, Loader2, Wallet } from "lucide-react";
 import VestingCalendar from "@/components/VestingCalendar";
 import PortalNav from "@/components/PortalNav";
 import PageHeader from "@/components/PageHeader";
@@ -144,7 +144,13 @@ export default function Dashboard() {
   }, [setLocation]);
   const meQuery = useQuery({
     queryKey: ["me"],
-    queryFn: () => api<{ user: { role: string } }>("/me"),
+    queryFn: () =>
+      api<{
+        user: {
+          role: string;
+          solanaWalletAddress?: string | null;
+        };
+      }>("/me"),
   });
   const isAdmin = meQuery.data?.user.role === "admin";
   const { data, isLoading, error } = useQuery({
@@ -191,6 +197,10 @@ export default function Dashboard() {
             {paidToast}
           </div>
         )}
+        <DistributionWalletCard
+          initialAddress={meQuery.data?.user.solanaWalletAddress ?? null}
+        />
+
         {pendingActions.length > 0 && (
           <div className="rounded-2xl border border-amber-400/30 bg-amber-400/5 p-5 mb-8 space-y-2">
             <div className="text-xs uppercase tracking-[0.18em] text-amber-300">
@@ -704,5 +714,131 @@ function Mini({ label, value }: { label: string; value: string }) {
       </div>
       <div className="mt-1 text-sm">{value}</div>
     </div>
+  );
+}
+
+const SOLANA_ADDR_RE = /^[1-9A-HJ-NP-Za-km-z]{32,44}$/;
+
+function DistributionWalletCard({
+  initialAddress,
+}: {
+  initialAddress: string | null;
+}) {
+  const qc = useQueryClient();
+  const [value, setValue] = useState(initialAddress ?? "");
+  const [savedFlash, setSavedFlash] = useState(false);
+  const [localErr, setLocalErr] = useState<string | null>(null);
+
+  useEffect(() => {
+    setValue(initialAddress ?? "");
+  }, [initialAddress]);
+
+  const mut = useMutation({
+    mutationFn: (addr: string) =>
+      api<{ user: { solanaWalletAddress: string | null } }>("/me/wallet", {
+        method: "PUT",
+        body: { solanaWalletAddress: addr },
+      }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["me"] });
+      setSavedFlash(true);
+      setLocalErr(null);
+      setTimeout(() => setSavedFlash(false), 2200);
+    },
+    onError: (e) => setLocalErr((e as Error).message),
+  });
+
+  const trimmed = value.trim();
+  const isValid = trimmed.length === 0 || SOLANA_ADDR_RE.test(trimmed);
+  const dirty = trimmed !== (initialAddress ?? "");
+  const isUpdate = Boolean(initialAddress) && dirty;
+
+  function onSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!isValid) {
+      setLocalErr(
+        "Invalid Solana address. Expected a base58 string of 32-44 characters.",
+      );
+      return;
+    }
+    setLocalErr(null);
+    mut.mutate(trimmed);
+  }
+
+  return (
+    <section
+      className="brand-card p-5 md:p-6 mb-8"
+      data-testid="card-distribution-wallet"
+    >
+      <div className="flex items-start gap-3">
+        <div className="hidden sm:flex w-10 h-10 rounded-xl border border-[#00F5D4]/30 bg-[#00F5D4]/10 items-center justify-center text-[#00F5D4] shrink-0">
+          <Wallet className="w-5 h-5" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="text-xs uppercase tracking-[0.18em] text-white/40">
+            Distribution wallet
+          </div>
+          <div className="mt-1 font-display text-lg font-semibold tracking-tight">
+            Solana address for token unlocks
+          </div>
+          <p className="mt-1 text-sm text-white/55">
+            Where AICA tokens will be sent at TGE and on every monthly vesting
+            unlock. You can update this any time before TGE.
+          </p>
+          <form
+            onSubmit={onSubmit}
+            className="mt-4 flex flex-col sm:flex-row gap-2"
+          >
+            <input
+              type="text"
+              autoComplete="off"
+              spellCheck={false}
+              placeholder="e.g. 7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU"
+              value={value}
+              onChange={(e) => {
+                setValue(e.target.value);
+                setLocalErr(null);
+              }}
+              className={`flex-1 min-w-0 rounded-xl bg-black/40 border px-3 py-2.5 text-sm font-mono text-white placeholder:text-white/30 focus:outline-none focus:ring-1 ${
+                isValid
+                  ? "border-white/15 focus:border-[#00F5D4]/60 focus:ring-[#00F5D4]/40"
+                  : "border-red-400/50 focus:border-red-400 focus:ring-red-400/40"
+              }`}
+              data-testid="input-solana-wallet"
+            />
+            <button
+              type="submit"
+              disabled={mut.isPending || !dirty || !isValid}
+              className="inline-flex items-center justify-center gap-2 px-5 h-11 rounded-full teal-btn text-sm disabled:opacity-40 disabled:cursor-not-allowed"
+              data-testid="button-save-wallet"
+            >
+              {mut.isPending ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" /> Saving
+                </>
+              ) : savedFlash ? (
+                <>
+                  <Check className="w-4 h-4" /> Saved
+                </>
+              ) : (
+                <>{isUpdate ? "Update" : "Save"}</>
+              )}
+            </button>
+          </form>
+          {localErr ? (
+            <div
+              className="mt-2 text-xs text-red-300"
+              data-testid="text-wallet-error"
+            >
+              {localErr}
+            </div>
+          ) : initialAddress && !dirty ? (
+            <div className="mt-2 text-xs text-white/45">
+              Saved. Update any time before TGE.
+            </div>
+          ) : null}
+        </div>
+      </div>
+    </section>
   );
 }

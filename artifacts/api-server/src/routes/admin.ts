@@ -1,5 +1,5 @@
 import { Router, type IRouter } from "express";
-import { requireAuth, requireAdmin } from "../lib/auth";
+import { requireAuth, requireAdmin, adminEmails } from "../lib/auth";
 import { getUncachableStripeClient } from "../lib/stripeClient";
 import {
   db,
@@ -13,6 +13,28 @@ import { logAdminAction } from "../lib/audit";
 const router: IRouter = Router();
 
 router.use("/admin", requireAuth, requireAdmin);
+
+router.get("/admin/admins", async (_req, res) => {
+  const emails = adminEmails();
+  if (emails.length === 0) {
+    res.json({ emails: [], users: [] });
+    return;
+  }
+  const lower = sql`LOWER(${appUsersTable.email})`;
+  const users = await db
+    .select({
+      id: appUsersTable.id,
+      email: appUsersTable.email,
+      fullName: appUsersTable.fullName,
+      role: appUsersTable.role,
+      lastLoginAt: appUsersTable.lastLoginAt,
+      loginCount: appUsersTable.loginCount,
+      createdAt: appUsersTable.createdAt,
+    })
+    .from(appUsersTable)
+    .where(sql`${lower} = ANY(${emails})`);
+  res.json({ emails, users });
+});
 
 router.get("/admin/users", async (_req, res) => {
   const users = await db

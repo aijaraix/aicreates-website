@@ -190,12 +190,12 @@ function UserMenu({
             </div>
           </div>
           <Link
-            href="/profile"
+            href="/dashboard"
             className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-white/80 hover:text-white hover:bg-white/[0.04]"
             onClick={() => setOpen(false)}
             data-testid="user-menu-profile"
           >
-            <UserIcon className="w-3.5 h-3.5" /> Profile
+            <UserIcon className="w-3.5 h-3.5" /> Dashboard
           </Link>
           <button
             type="button"

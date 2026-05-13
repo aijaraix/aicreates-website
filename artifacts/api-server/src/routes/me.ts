@@ -121,4 +121,36 @@ router.patch("/me", requireAuth, async (req, res) => {
   res.json({ user: updated[0] });
 });
 
+// Loose Solana base58 address validation: 32-44 chars, no 0/O/I/l.
+const SOLANA_RE = /^[1-9A-HJ-NP-Za-km-z]{32,44}$/;
+
+router.put("/me/wallet", requireAuth, async (req, res) => {
+  const { solanaWalletAddress } = (req.body ?? {}) as {
+    solanaWalletAddress?: string | null;
+  };
+  let value: string | null = null;
+  if (typeof solanaWalletAddress === "string") {
+    const trimmed = solanaWalletAddress.trim();
+    if (trimmed.length > 0) {
+      if (!SOLANA_RE.test(trimmed)) {
+        res.status(400).json({
+          error:
+            "Invalid Solana address. Expected a base58 string of 32-44 characters.",
+        });
+        return;
+      }
+      value = trimmed;
+    }
+  } else if (solanaWalletAddress !== null && solanaWalletAddress !== undefined) {
+    res.status(400).json({ error: "solanaWalletAddress must be a string" });
+    return;
+  }
+  const updated = await db
+    .update(appUsersTable)
+    .set({ solanaWalletAddress: value, updatedAt: new Date() })
+    .where(eq(appUsersTable.id, req.appUser!.id))
+    .returning();
+  res.json({ user: updated[0] });
+});
+
 export default router;

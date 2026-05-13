@@ -6,6 +6,8 @@ export const appUsersTable = pgTable("app_users", {
   fullName: text("full_name"),
   role: text("role").notNull().default("investor"),
   stripeCustomerId: text("stripe_customer_id"),
+  /** Default Solana distribution wallet for token unlocks. */
+  solanaWalletAddress: text("solana_wallet_address"),
   /** Sessions counted at requireAuth, debounced to once per 30 minutes. */
   loginCount: integer("login_count").notNull().default(0),
   lastLoginAt: timestamp("last_login_at", { withTimezone: true }),
