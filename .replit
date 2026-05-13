@@ -80,3 +80,4 @@ ADMIN_EMAILS = "Sholom@aicreates.ai,  chris@aicreates.ai"
 
 [userenv.production]
 VITE_CLERK_PROXY_URL = "/api/__clerk"
+NODE_ENV = "production"
