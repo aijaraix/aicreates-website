@@ -111,8 +111,19 @@ export default function HeroVideoReel({
     return () => document.removeEventListener("visibilitychange", onVis);
   }, [active, armed, reduceMotion]);
 
-  if (reduceMotion || clips.length === 0) {
+  if (clips.length === 0) {
     return null;
+  }
+
+  if (reduceMotion) {
+    return (
+      <div
+        aria-hidden
+        className={`absolute inset-0 overflow-hidden pointer-events-none ${className ?? ""}`}
+      >
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_55%_at_50%_45%,rgba(0,245,212,0.10),transparent_70%),linear-gradient(180deg,#0A0A0A_0%,#0E1414_50%,#0A0A0A_100%)]" />
+      </div>
+    );
   }
 
   return (
@@ -131,6 +142,7 @@ export default function HeroVideoReel({
             src={src}
             poster={poster}
             muted
+            autoPlay
             playsInline
             // eslint-disable-next-line react/no-unknown-property
             disablePictureInPicture
