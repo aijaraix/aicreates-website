@@ -465,6 +465,27 @@ router.post("/checkout", requireAuth, async (req, res) => {
       res.status(400).json({ error: "SAFT not signed" });
       return;
     }
+    // Hard gate: a commitment whose round has since closed (auto or
+    // admin override) cannot be funded. Investor must recommit on an
+    // open round. Multi-round commitments check every allocation slug.
+    const allocRows = await db
+      .select({ slug: commitmentAllocationsTable.roundSlug })
+      .from(commitmentAllocationsTable)
+      .where(eq(commitmentAllocationsTable.commitmentId, c.id));
+    const slugsToCheck =
+      allocRows.length > 0 ? allocRows.map((a) => a.slug) : [c.roundSlug];
+    const statuses = await getRoundStatuses();
+    const closedSlugs = slugsToCheck.filter(
+      (s) => statuses.get(s)?.status !== "open",
+    );
+    if (closedSlugs.length > 0) {
+      res.status(409).json({
+        error: `Round not open for commitments: ${closedSlugs.join(", ")}`,
+        code: "round_not_open",
+        closedRounds: closedSlugs,
+      });
+      return;
+    }
     amountCents = c.amountCents;
     displayName = c.displayName;
     tierSlug = c.tierSlug;
