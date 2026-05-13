@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "wouter";
 import { useUser, useClerk } from "@clerk/react";
-import { ChevronDown, LogOut, Menu, User as UserIcon, X } from "lucide-react";
+import { ChevronDown, FileText, LogOut, Menu, User as UserIcon, X } from "lucide-react";
 import SiteHeader, { type HeaderNavLink } from "@/components/SiteHeader";
 
 const PRIMARY_LINKS = [
@@ -196,6 +196,14 @@ function UserMenu({
             data-testid="user-menu-profile"
           >
             <UserIcon className="w-3.5 h-3.5" /> Dashboard
+          </Link>
+          <Link
+            href="/documents"
+            className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-white/80 hover:text-white hover:bg-white/[0.04]"
+            onClick={() => setOpen(false)}
+            data-testid="user-menu-documents"
+          >
+            <FileText className="w-3.5 h-3.5" /> My Documents
           </Link>
           <button
             type="button"
