@@ -1,4 +1,5 @@
 import * as React from "react";
+import { LogoMark } from "./LogoMark";
 
 type Div = React.HTMLAttributes<HTMLDivElement>;
 
@@ -127,14 +128,17 @@ export function Wordmark({
   withDot = true,
 }: {
   size?: "sm" | "md";
+  /**
+   * Kept for backwards-compatibility. The historic teal dot has been replaced
+   * by the AIcreatesAI icon mark; pass `withDot={false}` to omit the icon.
+   */
   withDot?: boolean;
 }) {
   const cls = size === "sm" ? "text-base" : "text-lg";
+  const iconCls = size === "sm" ? "h-5 w-auto shrink-0" : "h-6 w-auto shrink-0";
   return (
     <span className="inline-flex items-center gap-2.5">
-      {withDot && (
-        <span className="relative w-2.5 h-2.5 rounded-full bg-[#00F5D4] shadow-[0_0_12px_rgba(0,245,212,0.7)]" />
-      )}
+      {withDot && <LogoMark className={iconCls} title="AIcreatesAI" />}
       <span
         className={cx(
           "font-sans font-semibold tracking-tight text-white leading-none",
