@@ -93,6 +93,27 @@ const clerkAppearance = {
   },
 };
 
+function AuthBackButton() {
+  const [, setLocation] = useLocation();
+  const onClick = () => {
+    if (typeof window !== "undefined" && window.history.length > 1) {
+      window.history.back();
+    } else {
+      setLocation("/");
+    }
+  };
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="inline-flex items-center justify-center gap-1.5 rounded-full h-9 px-5 glass-btn text-sm font-medium"
+      data-testid="link-auth-back"
+    >
+      <span aria-hidden>←</span> Back
+    </button>
+  );
+}
+
 function AuthShell({
   eyebrow,
   title,
@@ -118,15 +139,7 @@ function AuthShell({
         homeHref="https://www.aicreates.ai"
         homeExternal
         homeTestId="link-auth-home"
-        rightSlot={
-          <a
-            href="https://www.aicreates.ai"
-            className="inline-flex items-center justify-center gap-1.5 rounded-full h-9 px-5 glass-btn text-sm font-medium"
-            data-testid="link-auth-back"
-          >
-            <span aria-hidden>←</span> Back
-          </a>
-        }
+        rightSlot={<AuthBackButton />}
       />
       <main className="px-4 pt-4 pb-16 md:pt-10 flex flex-col items-center">
         <div className="max-w-md w-full text-center mb-8">
