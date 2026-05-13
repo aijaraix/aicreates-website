@@ -1124,7 +1124,7 @@ function CommitmentsTab() {
                     <td className="px-3 py-3">
                       {c.saftSignedAt ? (
                         <a
-                          href={`/api/saft/${c.id}/pdf`}
+                          href={`/api/admin/commitments/${c.id}/saft-pdf`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="text-[#00F5D4] text-[11px] hover:underline"

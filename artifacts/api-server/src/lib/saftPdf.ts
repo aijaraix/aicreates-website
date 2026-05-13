@@ -1,4 +1,4 @@
-import { PDFDocument, StandardFonts, rgb, degrees, type PDFPage, type PDFFont } from "pdf-lib";
+import { PDFDocument, StandardFonts, rgb, type PDFPage, type PDFFont } from "pdf-lib";
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -26,6 +26,10 @@ async function loadTemplate(): Promise<Buffer | null> {
   return null;
 }
 
+export const COMPANY_EIN = "39-2333854";
+export const COMPANY_NAME = "AIcreatesAI Inc.";
+export const COMPANY_ADDRESS = "8310 Byron Avenue, Miami Beach, Florida 33141";
+
 export interface SaftAllocationLine {
   roundSlug: string;
   roundLabel: string;
@@ -44,12 +48,10 @@ export interface SaftProfileForPdf {
   region: string;
   postalCode: string;
   country: string;
-  // individual
   legalFirstName?: string | null;
   legalLastName?: string | null;
   dateOfBirth?: string | null;
   taxIdLast4?: string | null;
-  // business
   legalEntityName?: string | null;
   entityType?: string | null;
   jurisdictionOfFormation?: string | null;
@@ -74,46 +76,89 @@ export interface SaftRenderInput {
 
 const PAGE = { w: 612, h: 792, left: 56, right: 556 };
 
+function investorLegalName(p: SaftProfileForPdf): string {
+  if (p.kind === "business") {
+    return (p.legalEntityName ?? "").trim() || "(unspecified entity)";
+  }
+  return `${p.legalFirstName ?? ""} ${p.legalLastName ?? ""}`
+    .trim()
+    .replace(/\s+/g, " ") || "(unspecified)";
+}
+
+function investorAddress(p: SaftProfileForPdf): string {
+  return [
+    p.addressLine1,
+    p.addressLine2,
+    `${p.city}, ${p.region} ${p.postalCode}`,
+    p.country,
+  ]
+    .filter((s) => !!s && String(s).trim().length > 0)
+    .join(", ");
+}
+
+function fmtUsd(cents: number): string {
+  return `$${(cents / 100).toLocaleString("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })}`;
+}
+
+function fmtTokenPriceMillicents(mc: number): string {
+  // millicents → USD with up to 4 decimals
+  return `$${(mc / 1000).toLocaleString("en-US", {
+    minimumFractionDigits: 3,
+    maximumFractionDigits: 4,
+  })}`;
+}
+
+function fmtDate(iso: string): string {
+  try {
+    const d = new Date(iso);
+    return d.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  } catch {
+    return iso;
+  }
+}
+
 function drawHeader(page: PDFPage, helv: PDFFont, helvBold: PDFFont) {
   const ink = rgb(0.07, 0.07, 0.07);
   const dim = rgb(0.4, 0.4, 0.4);
   const accent = rgb(0, 0.58, 0.51);
-  let y = 740;
-  page.drawText("AICreatesAI", {
+  let y = 750;
+  page.drawText("AIcreatesAI Inc.", {
     x: PAGE.left,
     y,
-    size: 18,
+    size: 16,
     font: helvBold,
     color: ink,
   });
-  page.drawText("AICA Private Sale - Draft SAFT", {
-    x: PAGE.left + 110,
-    y,
-    size: 12,
+  page.drawText("Simple Agreement for Future Tokens", {
+    x: PAGE.left + 130,
+    y: y + 1,
+    size: 10,
     font: helv,
     color: dim,
   });
-  y -= 24;
-  page.drawText("DRAFT FOR COUNSEL REVIEW - NOT FINAL", {
+  y -= 18;
+  page.drawText("$AICA Private Placement - Execution Cover Sheet", {
     x: PAGE.left,
     y,
     size: 10,
     font: helvBold,
     color: accent,
   });
-  return y - 20;
-}
-
-function drawWatermark(page: PDFPage, helvBold: PDFFont) {
-  page.drawText("DRAFT", {
-    x: 110,
-    y: 280,
-    size: 140,
-    font: helvBold,
-    color: rgb(0.85, 0.85, 0.85),
-    rotate: degrees(-30),
-    opacity: 0.25,
+  y -= 8;
+  page.drawLine({
+    start: { x: PAGE.left, y },
+    end: { x: PAGE.right, y },
+    thickness: 0.6,
+    color: rgb(0, 0.58, 0.51),
   });
+  return y - 22;
 }
 
 function drawKv(
@@ -123,9 +168,11 @@ function drawKv(
   label: string,
   value: string,
   y: number,
+  opts?: { valueAccent?: boolean },
 ) {
   const ink = rgb(0.07, 0.07, 0.07);
   const dim = rgb(0.4, 0.4, 0.4);
+  const accent = rgb(0, 0.58, 0.51);
   page.drawText(label, {
     x: PAGE.left,
     y,
@@ -133,21 +180,25 @@ function drawKv(
     font: helvBold,
     color: dim,
   });
-  page.drawText(String(value).slice(0, 78), {
-    x: PAGE.left + 130,
+  page.drawText(String(value).slice(0, 86), {
+    x: PAGE.left + 165,
     y,
     size: 10,
     font: helv,
-    color: ink,
+    color: opts?.valueAccent ? accent : ink,
   });
 }
 
 /**
- * Renders the dynamic SAFT cover-sheet (one or two pages, depending
- * on overflow) in front of the source SAFT PDF. The cover captures:
- * investor identity (auto-filled from investor_profiles), per-round
- * allocation table, payment + accreditation, acknowledgments and the
- * typed signature with IP/timestamp.
+ * Renders an execution-ready SAFT. Builds a populated cover sheet
+ * (capturing every {{...}} field referenced in the source template) +
+ * acknowledgments + typed signature, then attaches the unmodified
+ * source SAFT body. The cover sheet is the executed instrument; the
+ * body is the boilerplate template it incorporates by reference.
+ *
+ * The cover surfaces, in order: investor legal name, investor email,
+ * investor address, purchase amount, round name, token price, token
+ * allocation, execution date, wallet address, company EIN.
  */
 export async function renderSaftPdf(input: SaftRenderInput): Promise<Buffer> {
   const template = await loadTemplate();
@@ -163,23 +214,43 @@ export async function renderSaftPdf(input: SaftRenderInput): Promise<Buffer> {
   const dim = rgb(0.4, 0.4, 0.4);
   const accent = rgb(0, 0.58, 0.51);
 
-  // Pre-build all the lines we need to draw on the cover. We'll
-  // measure as we go and overflow to a second cover page if needed.
+  // Insert cover at the very front.
   const cover1 = doc.insertPage(0, [PAGE.w, PAGE.h]);
   let y = drawHeader(cover1, helv, helvBold);
   let page: PDFPage = cover1;
 
   function ensure(roomNeeded: number) {
     if (y - roomNeeded < 60) {
-      // overflow — insert a second cover page right after the first
       const next = doc.insertPage(1, [PAGE.w, PAGE.h]);
       y = drawHeader(next, helv, helvBold);
       page = next;
     }
   }
 
-  // ----- Investor block -----
-  page.drawText("Investor", {
+  // --- Aggregate primary fields ---
+  const investorName = investorLegalName(input.profile);
+  const investorAddr = investorAddress(input.profile);
+  const totalCents = input.allocations.reduce((s, a) => s + a.usdCents, 0);
+  const totalTokens = input.allocations.reduce((s, a) => s + a.tokens, 0);
+  // Pick the dominant round label (first allocation; if multiple, list).
+  const roundName =
+    input.allocations.length === 0
+      ? "(unspecified round)"
+      : input.allocations.length === 1
+        ? input.allocations[0]!.roundLabel
+        : input.allocations
+            .map((a) => a.roundLabel)
+            .join(" + ");
+  // Blended price = totalCents / totalTokens (in USD). For single-line
+  // allocation this matches the round price exactly; for multi-line we
+  // expose the blended price.
+  const blendedPriceMillicents =
+    totalTokens > 0
+      ? Math.round((totalCents * 10) / totalTokens)
+      : input.allocations[0]?.pricePerTokenMillicents ?? 0;
+
+  // ----- Section: Parties -----
+  page.drawText("Parties", {
     x: PAGE.left,
     y,
     size: 11,
@@ -187,40 +258,32 @@ export async function renderSaftPdf(input: SaftRenderInput): Promise<Buffer> {
     color: ink,
   });
   y -= 16;
-  const p = input.profile;
-  if (p.kind === "individual") {
-    const fullName = `${p.legalFirstName ?? ""} ${p.legalLastName ?? ""}`.trim();
-    drawKv(page, helv, helvBold, "Investor type", "Individual", y); y -= 14;
-    drawKv(page, helv, helvBold, "Legal name", fullName || "(unspecified)", y); y -= 14;
-    drawKv(page, helv, helvBold, "Date of birth", p.dateOfBirth || "-", y); y -= 14;
-    if (p.taxIdLast4) {
-      drawKv(page, helv, helvBold, "SSN/TIN (last 4)", `***-**-${p.taxIdLast4}`, y);
+  drawKv(page, helv, helvBold, "Company", COMPANY_NAME, y); y -= 14;
+  drawKv(page, helv, helvBold, "Company address", COMPANY_ADDRESS, y); y -= 14;
+  drawKv(page, helv, helvBold, "Company EIN", COMPANY_EIN, y); y -= 14;
+  drawKv(page, helv, helvBold, "Investor legal name", investorName, y); y -= 14;
+  drawKv(page, helv, helvBold, "Investor email", input.profile.email, y); y -= 14;
+  drawKv(page, helv, helvBold, "Investor address", investorAddr, y); y -= 14;
+  if (input.profile.kind === "business") {
+    if (input.profile.signatoryName) {
+      drawKv(
+        page,
+        helv,
+        helvBold,
+        "Authorized signer",
+        `${input.profile.signatoryName}${
+          input.profile.signatoryTitle ? `, ${input.profile.signatoryTitle}` : ""
+        }`,
+        y,
+      );
       y -= 14;
     }
-  } else {
-    drawKv(page, helv, helvBold, "Investor type", "Business / Entity", y); y -= 14;
-    drawKv(page, helv, helvBold, "Entity name", p.legalEntityName || "(unspecified)", y); y -= 14;
-    drawKv(page, helv, helvBold, "Entity type", p.entityType || "-", y); y -= 14;
-    drawKv(page, helv, helvBold, "Formed in", p.jurisdictionOfFormation || "-", y); y -= 14;
-    if (p.einLast4) {
-      drawKv(page, helv, helvBold, "EIN (last 4)", `**-***${p.einLast4}`, y);
-      y -= 14;
-    }
-    drawKv(page, helv, helvBold, "Authorized signer", p.signatoryName || "(unspecified)", y); y -= 14;
-    drawKv(page, helv, helvBold, "Signer title", p.signatoryTitle || "-", y); y -= 14;
   }
-  drawKv(page, helv, helvBold, "Email", p.email, y); y -= 14;
-  if (p.phone) { drawKv(page, helv, helvBold, "Phone", p.phone, y); y -= 14; }
-  const addr = [p.addressLine1, p.addressLine2, `${p.city}, ${p.region} ${p.postalCode}`, p.country]
-    .filter(Boolean)
-    .join("  ·  ");
-  drawKv(page, helv, helvBold, "Address", addr, y); y -= 18;
+  y -= 8;
 
-  drawKv(page, helv, helvBold, "Commitment ID", input.commitmentId, y); y -= 18;
-
-  // ----- Allocation table -----
-  ensure(60 + 16 * (input.allocations.length + 2));
-  page.drawText("Allocation", {
+  // ----- Section: Subscription -----
+  ensure(120);
+  page.drawText("Subscription", {
     x: PAGE.left,
     y,
     size: 11,
@@ -228,104 +291,107 @@ export async function renderSaftPdf(input: SaftRenderInput): Promise<Buffer> {
     color: ink,
   });
   y -= 16;
-
-  const colX = {
-    round: PAGE.left,
-    tokens: PAGE.left + 200,
-    price: PAGE.left + 290,
-    usd: PAGE.left + 360,
-    tge: PAGE.left + 425,
-    cliff: PAGE.left + 470,
-    vest: PAGE.left + 510,
-  };
-  const headerRow = [
-    ["Round", colX.round],
-    ["Tokens", colX.tokens],
-    ["Price", colX.price],
-    ["USD", colX.usd],
-    ["TGE", colX.tge],
-    ["Cliff", colX.cliff],
-    ["Vest", colX.vest],
-  ] as const;
-  for (const [label, x] of headerRow) {
-    page.drawText(label, { x, y, size: 8, font: helvBold, color: dim });
-  }
-  y -= 12;
-  page.drawLine({
-    start: { x: PAGE.left, y: y + 6 },
-    end: { x: PAGE.right, y: y + 6 },
-    thickness: 0.5,
-    color: rgb(0.8, 0.8, 0.8),
+  drawKv(page, helv, helvBold, "Purchase amount", fmtUsd(totalCents), y, {
+    valueAccent: true,
   });
-
-  let totalTokens = 0;
-  let totalCents = 0;
-  for (const a of input.allocations) {
-    ensure(20);
-    const usdPerToken = `$${(a.pricePerTokenMillicents / 1000).toFixed(3)}`;
-    const usd = `$${(a.usdCents / 100).toLocaleString("en-US")}`;
-    const cells: Array<[string, number]> = [
-      [a.roundLabel, colX.round],
-      [a.tokens.toLocaleString("en-US"), colX.tokens],
-      [usdPerToken, colX.price],
-      [usd, colX.usd],
-      ["25%", colX.tge],
-      ["6mo", colX.cliff],
-      ["24mo", colX.vest],
-    ];
-    for (const [text, x] of cells) {
-      page.drawText(text.slice(0, 26), { x, y, size: 9, font: helv, color: ink });
-    }
-    totalTokens += a.tokens;
-    totalCents += a.usdCents;
-    y -= 14;
-  }
-  ensure(20);
-  page.drawLine({
-    start: { x: PAGE.left, y: y + 8 },
-    end: { x: PAGE.right, y: y + 8 },
-    thickness: 0.5,
-    color: rgb(0.8, 0.8, 0.8),
-  });
-  page.drawText("Total", { x: colX.round, y, size: 9, font: helvBold, color: ink });
-  page.drawText(totalTokens.toLocaleString("en-US"), {
-    x: colX.tokens,
-    y,
-    size: 9,
-    font: helvBold,
-    color: ink,
-  });
-  page.drawText(`$${(totalCents / 100).toLocaleString("en-US")}`, {
-    x: colX.usd,
-    y,
-    size: 9,
-    font: helvBold,
-    color: accent,
-  });
-  y -= 22;
-
-  // ----- Payment + accreditation -----
-  ensure(60);
-  drawKv(page, helv, helvBold, "Payment method", input.paymentMethod, y); y -= 14;
-  drawKv(page, helv, helvBold, "Accreditation", input.accreditationCategory, y); y -= 14;
+  y -= 14;
+  drawKv(page, helv, helvBold, "Round", roundName, y); y -= 14;
   drawKv(
     page,
     helv,
     helvBold,
-    "Wallet (optional)",
+    "Token price",
+    `${fmtTokenPriceMillicents(blendedPriceMillicents)} per $AICA`,
+    y,
+  );
+  y -= 14;
+  drawKv(
+    page,
+    helv,
+    helvBold,
+    "Estimated token allocation",
+    `${totalTokens.toLocaleString("en-US")} $AICA`,
+    y,
+    { valueAccent: true },
+  );
+  y -= 14;
+  drawKv(page, helv, helvBold, "Execution date", fmtDate(input.signedAt), y);
+  y -= 14;
+  drawKv(
+    page,
+    helv,
+    helvBold,
+    "Investor wallet address",
     input.walletAddress
       ? `${input.walletAddress}${input.walletChain ? ` (${input.walletChain})` : ""}`
       : "(to be provided pre-TGE)",
     y,
   );
-  y -= 22;
+  y -= 14;
+  drawKv(page, helv, helvBold, "Payment method", input.paymentMethod, y); y -= 14;
+  drawKv(page, helv, helvBold, "Accreditation", input.accreditationCategory, y);
+  y -= 18;
 
-  // ----- Acknowledgments -----
+  // ----- Section: Allocation breakdown (when multi-line) -----
+  if (input.allocations.length > 1) {
+    ensure(40 + 14 * (input.allocations.length + 2));
+    page.drawText("Allocation breakdown", {
+      x: PAGE.left,
+      y,
+      size: 11,
+      font: helvBold,
+      color: ink,
+    });
+    y -= 16;
+    const colX = {
+      round: PAGE.left,
+      tokens: PAGE.left + 220,
+      price: PAGE.left + 320,
+      usd: PAGE.left + 420,
+    };
+    for (const [label, x] of [
+      ["Round", colX.round],
+      ["Tokens", colX.tokens],
+      ["Price", colX.price],
+      ["USD", colX.usd],
+    ] as const) {
+      page.drawText(label, { x, y, size: 8, font: helvBold, color: dim });
+    }
+    y -= 12;
+    page.drawLine({
+      start: { x: PAGE.left, y: y + 6 },
+      end: { x: PAGE.right, y: y + 6 },
+      thickness: 0.4,
+      color: rgb(0.8, 0.8, 0.8),
+    });
+    for (const a of input.allocations) {
+      ensure(20);
+      const cells: Array<[string, number]> = [
+        [a.roundLabel, colX.round],
+        [a.tokens.toLocaleString("en-US"), colX.tokens],
+        [fmtTokenPriceMillicents(a.pricePerTokenMillicents), colX.price],
+        [fmtUsd(a.usdCents), colX.usd],
+      ];
+      for (const [text, x] of cells) {
+        page.drawText(text.slice(0, 32), {
+          x,
+          y,
+          size: 9,
+          font: helv,
+          color: ink,
+        });
+      }
+      y -= 14;
+    }
+    y -= 8;
+  }
+
+  // ----- Section: Acknowledgments -----
   ensure(20 + input.acknowledgments.length * 12);
-  page.drawText("Acknowledged:", {
+  page.drawText("Acknowledged by Investor", {
     x: PAGE.left,
     y,
-    size: 10,
+    size: 11,
     font: helvBold,
     color: ink,
   });
@@ -342,25 +408,47 @@ export async function renderSaftPdf(input: SaftRenderInput): Promise<Buffer> {
     y -= 12;
   }
 
-  // ----- Signature -----
-  ensure(50);
+  // ----- Section: Signature -----
+  ensure(70);
   y -= 6;
-  page.drawText("Typed signature:", {
+  page.drawText("Signature", {
     x: PAGE.left,
     y,
-    size: 10,
+    size: 11,
     font: helvBold,
     color: ink,
   });
+  y -= 18;
+  page.drawText("/s/", {
+    x: PAGE.left,
+    y,
+    size: 12,
+    font: helv,
+    color: dim,
+  });
   page.drawText(input.signatureName, {
-    x: PAGE.left + 110,
+    x: PAGE.left + 24,
     y: y - 2,
     size: 16,
     font: helvBold,
     color: accent,
   });
-  y -= 22;
-  page.drawText(`Signed ${input.signedAt}`, {
+  y -= 18;
+  page.drawLine({
+    start: { x: PAGE.left, y: y + 4 },
+    end: { x: PAGE.left + 320, y: y + 4 },
+    thickness: 0.5,
+    color: rgb(0.7, 0.7, 0.7),
+  });
+  page.drawText(`Investor: ${investorName}`, {
+    x: PAGE.left,
+    y,
+    size: 9,
+    font: helv,
+    color: ink,
+  });
+  y -= 14;
+  page.drawText(`Signed: ${fmtDate(input.signedAt)} (${input.signedAt})`, {
     x: PAGE.left,
     y,
     size: 8,
@@ -368,18 +456,34 @@ export async function renderSaftPdf(input: SaftRenderInput): Promise<Buffer> {
     color: dim,
   });
   if (input.signerIp) {
+    y -= 12;
     page.drawText(`Signer IP: ${input.signerIp}`, {
-      x: PAGE.left + 200,
+      x: PAGE.left,
       y,
       size: 8,
       font: mono,
       color: dim,
     });
   }
+  y -= 12;
+  page.drawText(`Commitment ID: ${input.commitmentId}`, {
+    x: PAGE.left,
+    y,
+    size: 8,
+    font: mono,
+    color: dim,
+  });
 
-  // Watermark on every cover page we produced (page 1, optionally page 2).
-  drawWatermark(cover1, helvBold);
-  if (page !== cover1) drawWatermark(page, helvBold);
+  // Footer note: cover-sheet values govern the bracketed placeholders
+  // that appear in the body of the SAFT below.
+  page.drawText(
+    "The values on this Execution Cover Sheet populate and govern the corresponding",
+    { x: PAGE.left, y: 70, size: 8, font: helv, color: dim },
+  );
+  page.drawText(
+    "{{placeholder}} fields in the body of the SAFT that follows.",
+    { x: PAGE.left, y: 60, size: 8, font: helv, color: dim },
+  );
 
   return Buffer.from(await doc.save());
 }

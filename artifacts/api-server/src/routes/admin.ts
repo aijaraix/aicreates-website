@@ -168,6 +168,30 @@ router.get("/admin/commitments", async (req, res) => {
   res.json({ commitments: rows });
 });
 
+router.get("/admin/commitments/:id/saft-pdf", async (req, res) => {
+  const id = req.params["id"];
+  if (!id) {
+    res.status(400).json({ error: "id required" });
+    return;
+  }
+  const rows = await db
+    .select({ pdfBytes: saftSubmissionsTable.pdfBytes })
+    .from(saftSubmissionsTable)
+    .where(eq(saftSubmissionsTable.commitmentId, id))
+    .limit(1);
+  const sub = rows[0];
+  if (!sub || !sub.pdfBytes) {
+    res.status(404).json({ error: "Not found" });
+    return;
+  }
+  res.setHeader("Content-Type", "application/pdf");
+  res.setHeader(
+    "Content-Disposition",
+    `inline; filename="aica-saft-${id}.pdf"`,
+  );
+  res.send(sub.pdfBytes);
+});
+
 router.get("/admin/stats", async (_req, res) => {
   const result = await db.execute(sql`
     SELECT
