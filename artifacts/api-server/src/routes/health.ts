@@ -15,6 +15,20 @@ router.get("/healthz", (_req, res) => {
 });
 
 /**
+ * Build fingerprint endpoint. Used to verify which build is live in
+ * production after a deploy. Bake-time constants are inlined by esbuild's
+ * bundler so each build emits a unique fingerprint.
+ */
+router.get("/__build-info", (_req, res) => {
+  res.json({
+    buildTag: "clerk-proxy-fix-v1",
+    builtAt: new Date().toISOString(),
+    hasClerkSecret: Boolean(process.env.CLERK_SECRET_KEY),
+    nodeEnv: process.env.NODE_ENV ?? null,
+  });
+});
+
+/**
  * Deep readiness preflight. Used by deploy smoke tests and post-merge
  * verification to catch misconfiguration BEFORE traffic flows. Each check
  * is best-effort and reported individually so a single failing dependency
