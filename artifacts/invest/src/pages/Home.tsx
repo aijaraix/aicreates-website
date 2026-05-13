@@ -165,8 +165,8 @@ export default function Home() {
             <div className="mb-7 sm:mb-8 flex justify-center">
               <SectionLabel>AICA Strategic Seed Round - Now open</SectionLabel>
             </div>
-            <h1 className="text-[36px] sm:text-5xl md:text-6xl lg:text-[88px] font-serif font-semibold leading-[1.04] sm:leading-[1.02] mb-5 sm:mb-6 text-gradient [text-shadow:0_2px_30px_rgba(0,0,0,0.7)]">
-              The Agentic Intelligence Layer.
+            <h1 className="text-[36px] sm:text-5xl md:text-6xl lg:text-[88px] font-serif font-bold leading-[1.04] sm:leading-[1.02] mb-5 sm:mb-6 text-white tracking-tight [text-shadow:0_2px_36px_rgba(0,245,212,0.18),0_2px_24px_rgba(0,0,0,0.75)]">
+              The <span className="text-[#00F5D4]">Agentic</span> Intelligence Layer.
             </h1>
             <p className="text-[15px] sm:text-lg md:text-xl text-white/75 max-w-2xl mx-auto leading-relaxed mb-7 sm:mb-8 [text-shadow:0_1px_16px_rgba(0,0,0,0.7)]">
               Reserve your allocation in the AICA Strategic Seed - the first

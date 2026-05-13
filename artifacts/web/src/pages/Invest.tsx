@@ -77,17 +77,17 @@ export default function Invest() {
         <div className="container mx-auto px-4 md:px-6 relative z-10 w-full">
           <div className="max-w-5xl">
             <motion.div {...fadeIn(0)}>
-              <SectionLabel>Invest</SectionLabel>
+              <SectionLabel>Opportunity</SectionLabel>
             </motion.div>
             <motion.h1
               {...fadeUp(0.05)}
-              className="mt-6 text-[40px] sm:text-5xl md:text-7xl lg:text-[88px] font-serif font-semibold leading-[1.02] text-gradient tracking-tight"
+              className="mt-6 text-[40px] sm:text-5xl md:text-7xl lg:text-[88px] font-serif font-bold leading-[1.02] text-white tracking-tight [text-shadow:0_2px_30px_rgba(0,245,212,0.25),0_2px_24px_rgba(0,0,0,0.6)]"
             >
-              Invest in the Future of Intelligent Business.
+              The Opportunity in the <span className="text-[#00F5D4]">Agentic Era</span>.
             </motion.h1>
             <motion.p
               {...fadeUp(0.15)}
-              className="mt-7 text-lg sm:text-xl md:text-2xl text-white/70 max-w-3xl leading-relaxed font-light"
+              className="mt-7 text-lg sm:text-xl md:text-2xl text-white/80 max-w-3xl leading-relaxed font-light"
             >
               Join us in building the operating system for the agentic era.
             </motion.p>
@@ -106,7 +106,7 @@ export default function Invest() {
                   className="rounded-full h-12 px-7 bg-[#00F5D4] text-black hover:bg-[#00F5D4]/90 font-medium"
                   data-testid="button-reserve-allocation"
                 >
-                  Reserve Your Allocation <ArrowRight className="ml-2 w-4 h-4" />
+                  Reserve Allocation <ArrowRight className="ml-2 w-4 h-4" />
                 </Button>
               </a>
               <a
@@ -166,7 +166,7 @@ export default function Invest() {
                 </h2>
                 <div className="mt-7 space-y-5 text-white/65 text-base sm:text-lg leading-relaxed">
                   <p>
-                    As part of our $50M raise, we are investing heavily in high-performance computing. Our initial system is a $3.5 million high-end GPU cluster designed for advanced model training, inference, and continuous improvement of our proprietary AI systems.
+                    As part of our $50M raise, we are deploying heavily into high-performance computing. Our initial system is a $3.5 million high-end GPU cluster designed for advanced model training, inference, and continuous improvement of our proprietary AI systems.
                   </p>
                   <p>
                     This infrastructure forms the backbone of our self-improving intelligence layer and gives us a significant technical advantage from day one.
@@ -336,9 +336,9 @@ export default function Invest() {
       <section className="py-14 md:py-24 relative">
         <div className="container mx-auto px-4 md:px-6">
           <div className="max-w-3xl mb-12">
-            <SectionLabel>Why Invest</SectionLabel>
+            <SectionLabel>Why Now</SectionLabel>
             <h2 className="mt-5 text-3xl sm:text-4xl md:text-5xl font-serif font-semibold text-gradient leading-[1.05]">
-              Why invest in AICreatesAi?
+              Why the AICreatesAi opportunity?
             </h2>
             <p className="mt-5 text-base sm:text-lg text-white/55 leading-relaxed">
               A category-defining bet on the layer that companies, capital, and consumers will run on.

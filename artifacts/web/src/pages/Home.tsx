@@ -256,9 +256,9 @@ export default function Home() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.05 }}
-              className="text-[36px] sm:text-5xl md:text-6xl lg:text-[88px] font-serif font-semibold leading-[1.04] sm:leading-[1.02] mb-5 sm:mb-6 text-gradient [text-shadow:0_2px_30px_rgba(0,0,0,0.7)]"
+              className="text-[36px] sm:text-5xl md:text-6xl lg:text-[88px] font-serif font-bold leading-[1.04] sm:leading-[1.02] mb-5 sm:mb-6 text-white tracking-tight [text-shadow:0_2px_36px_rgba(0,245,212,0.18),0_2px_24px_rgba(0,0,0,0.75)]"
             >
-              The operating layer for the agentic era.
+              The operating layer for the <span className="text-[#00F5D4]">agentic era</span>.
             </motion.h1>
 
             <motion.p

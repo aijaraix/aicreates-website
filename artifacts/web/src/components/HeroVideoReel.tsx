@@ -21,7 +21,7 @@ export default function HeroVideoReel({
   delayMs = 3500,
   clipDurationMs = 6500,
   fadeMs = 1500,
-  opacity = 0.45,
+  opacity = 0.7,
   className,
 }: HeroVideoReelProps) {
   const [armed, setArmed] = useState(false);
@@ -151,13 +151,13 @@ export default function HeroVideoReel({
             style={{
               opacity: armed && active === i ? opacity : 0,
               transition: `opacity ${fadeMs}ms ease-in-out`,
-              filter: "brightness(1.1)",
+              filter: "brightness(1.35) contrast(1.05) saturate(1.1)",
             }}
           />
         );
       })}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#0A0A0A]/75 via-[#0A0A0A]/55 to-[#0A0A0A]/90" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_60%_at_50%_50%,transparent,rgba(10,10,10,0.65))]" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#0A0A0A]/55 via-[#0A0A0A]/30 to-[#0A0A0A]/75" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_60%_at_50%_50%,transparent,rgba(10,10,10,0.45))]" />
     </div>
   );
 }

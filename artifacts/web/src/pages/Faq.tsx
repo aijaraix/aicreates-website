@@ -102,10 +102,10 @@ const GROUPS: Group[] = [
     ],
   },
   {
-    title: "Investing",
+    title: "Opportunity",
     items: [
       {
-        q: "How can I invest?",
+        q: "How can I participate in the opportunity?",
         a: "Reach out via the contact form selecting Investor, or visit the investor portal to begin the allocation process.",
       },
       {
@@ -159,7 +159,7 @@ export default function Faq() {
   useSeo({
     title: "FAQ - questions, answered",
     description:
-      "Common questions on AIcreatesAI, the platform, the $AICA token, and investing - all in one place.",
+      "Common questions on AIcreatesAI, the platform, the $AICA token, and the opportunity - all in one place.",
     path: "/faq",
   });
   return (
@@ -187,7 +187,7 @@ export default function Faq() {
               transition={{ duration: 0.7, delay: 0.15 }}
               className="mt-6 text-lg md:text-xl text-white/60 max-w-2xl leading-relaxed"
             >
-              The most common questions we get on the company, the platform, the token, and investing.
+              The most common questions we get on the company, the platform, the token, and the opportunity.
             </motion.p>
           </div>
         </div>
