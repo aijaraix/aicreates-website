@@ -10,6 +10,7 @@ import PageHeader from "@/components/PageHeader";
 import StatusTimeline from "@/components/StatusTimeline";
 import { StatTile } from "@/components/brand";
 import { buildIcs } from "@/lib/vesting";
+import { ROUNDS } from "@/data/rounds";
 
 interface VestingPoint {
   date: string;
@@ -266,6 +267,8 @@ export default function Dashboard() {
           />
         </div>
 
+        <TokenRoundsSection />
+
         <div className="flex items-center justify-between mb-4">
           <h2 className="font-display text-xl font-semibold tracking-tight">
             Commitments
@@ -492,6 +495,115 @@ export default function Dashboard() {
         )}
       </main>
     </div>
+  );
+}
+
+function TokenRoundsSection() {
+  const current = ROUNDS.find((r) => r.open);
+  return (
+    <section className="mb-10" data-testid="section-token-rounds">
+      <div className="flex flex-wrap items-end justify-between gap-3 mb-4">
+        <div>
+          <div className="text-xs uppercase tracking-[0.18em] text-[#00F5D4]">
+            Token rounds
+          </div>
+          <h2 className="font-display text-xl font-semibold tracking-tight mt-1">
+            AICA SAFT schedule
+          </h2>
+        </div>
+        {current && (
+          <div className="text-xs text-white/55">
+            Current round:{" "}
+            <span className="text-white/85 font-medium">{current.name}</span>{" "}
+            · <span className="text-[#00F5D4]">{current.pricePerToken}</span>
+          </div>
+        )}
+      </div>
+
+      <div className="brand-card overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead className="bg-white/[0.03] text-[10px] uppercase tracking-[0.16em] text-white/45">
+              <tr>
+                <th className="text-left px-4 py-3 font-medium">Round</th>
+                <th className="text-right px-4 py-3 font-medium">Price</th>
+                <th className="text-right px-4 py-3 font-medium hidden sm:table-cell">
+                  Tokens
+                </th>
+                <th className="text-right px-4 py-3 font-medium hidden md:table-cell">
+                  Raise
+                </th>
+                <th className="text-right px-4 py-3 font-medium hidden lg:table-cell">
+                  FDV
+                </th>
+                <th className="text-center px-4 py-3 font-medium">Status</th>
+                <th className="text-right px-4 py-3 font-medium">Action</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-white/5">
+              {ROUNDS.map((r) => (
+                <tr
+                  key={r.slug}
+                  className={r.open ? "bg-[#00F5D4]/[0.04]" : ""}
+                  data-testid={`round-row-${r.slug}`}
+                >
+                  <td className="px-4 py-3.5">
+                    <div className="font-medium text-white/90">{r.name}</div>
+                    <div className="text-[11px] text-white/45 mt-0.5">
+                      {r.supplyPct} of supply
+                    </div>
+                  </td>
+                  <td className="px-4 py-3.5 text-right tabular-nums text-[#00F5D4] font-medium">
+                    {r.pricePerToken.replace(" per AICA", "")}
+                  </td>
+                  <td className="px-4 py-3.5 text-right tabular-nums text-white/75 hidden sm:table-cell">
+                    {r.tokens}
+                  </td>
+                  <td className="px-4 py-3.5 text-right tabular-nums text-white/75 hidden md:table-cell">
+                    {r.totalRaise}
+                  </td>
+                  <td className="px-4 py-3.5 text-right tabular-nums text-white/55 hidden lg:table-cell">
+                    {r.fdv}
+                  </td>
+                  <td className="px-4 py-3.5 text-center">
+                    {r.open ? (
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] uppercase tracking-[0.14em] bg-[#00F5D4]/15 text-[#00F5D4] border border-[#00F5D4]/40">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#00F5D4] animate-pulse" />
+                        Open
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] uppercase tracking-[0.14em] text-white/45 border border-white/10">
+                        Upcoming
+                      </span>
+                    )}
+                  </td>
+                  <td className="px-4 py-3.5 text-right">
+                    {r.open ? (
+                      <Link
+                        href={`/invest?round=${r.slug}`}
+                        className="inline-flex items-center justify-center h-8 px-4 rounded-full teal-btn text-xs"
+                        data-testid={`button-commit-${r.slug}`}
+                      >
+                        Commit
+                      </Link>
+                    ) : (
+                      <button
+                        type="button"
+                        disabled
+                        className="inline-flex items-center justify-center h-8 px-4 rounded-full glass-btn text-xs opacity-40 cursor-not-allowed"
+                        data-testid={`button-commit-${r.slug}`}
+                      >
+                        Coming soon
+                      </button>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
   );
 }
 

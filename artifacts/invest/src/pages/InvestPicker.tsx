@@ -113,6 +113,34 @@ export default function InvestPicker() {
     });
   }, [rounds]);
 
+  // Honor `?round=<slug>` from the dashboard Commit buttons by pre-filling
+  // that round at the minimum allowed amount. One-shot per slug.
+  const [prefillSlug, setPrefillSlug] = useState<string | null>(null);
+  useEffect(() => {
+    const sp = new URLSearchParams(window.location.search);
+    const slug = sp.get("round");
+    if (slug) setPrefillSlug(slug);
+  }, []);
+  useEffect(() => {
+    if (!prefillSlug || rounds.length === 0) return;
+    const round = rounds.find((r) => r.slug === prefillSlug);
+    if (!round || !round.open) {
+      setPrefillSlug(null);
+      return;
+    }
+    setByRoundLine((prev) => {
+      const existing = prev[round.slug];
+      if (existing && existing.usdCents > 0) return prev;
+      const tokens = tokensFromUsdCents(MIN_USD * 100, round.pricePerTokenMillicents);
+      const usdCents = usdCentsFromTokens(tokens, round.pricePerTokenMillicents);
+      return {
+        ...prev,
+        [round.slug]: { roundSlug: round.slug, tokens, usdCents },
+      };
+    });
+    setPrefillSlug(null);
+  }, [prefillSlug, rounds]);
+
   const cart: CartLine[] = rounds
     .map((r) => byRoundLine[r.slug])
     .filter((l): l is CartLine => Boolean(l));

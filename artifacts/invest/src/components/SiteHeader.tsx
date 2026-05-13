@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "wouter";
+import { ChevronDown } from "lucide-react";
 import { Wordmark } from "@/components/brand";
 
 export type HeaderNavLink = {
@@ -8,6 +9,8 @@ export type HeaderNavLink = {
   active?: boolean;
   external?: boolean;
   testId?: string;
+  /** If set, renders as a dropdown menu instead of a direct link. */
+  children?: Array<Omit<HeaderNavLink, "children">>;
 };
 
 export type HeaderCta = {
@@ -80,6 +83,9 @@ export default function SiteHeader({
           {navLinks.length > 0 && (
             <nav className="hidden md:flex items-center gap-1 text-sm">
               {navLinks.map((l) => {
+                if (l.children && l.children.length > 0) {
+                  return <NavDropdown key={l.label} link={l} />;
+                }
                 const cls = `px-3.5 py-1.5 rounded-full transition ${
                   l.active
                     ? "text-white bg-white/[0.06]"
@@ -145,5 +151,85 @@ export default function SiteHeader({
         </div>
       </div>
     </header>
+  );
+}
+
+function NavDropdown({ link }: { link: HeaderNavLink }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!open) return;
+    const onDoc = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+    const onEsc = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("mousedown", onDoc);
+    document.addEventListener("keydown", onEsc);
+    return () => {
+      document.removeEventListener("mousedown", onDoc);
+      document.removeEventListener("keydown", onEsc);
+    };
+  }, [open]);
+  const triggerCls = `inline-flex items-center gap-1 px-3.5 py-1.5 rounded-full transition ${
+    link.active
+      ? "text-white bg-white/[0.06]"
+      : "text-white/65 hover:text-white hover:bg-white/[0.04]"
+  }`;
+  return (
+    <div ref={ref} className="relative">
+      <button
+        type="button"
+        className={triggerCls}
+        onClick={() => setOpen((v) => !v)}
+        aria-haspopup="menu"
+        aria-expanded={open}
+        data-testid={link.testId}
+      >
+        {link.label}
+        <ChevronDown className={`w-3.5 h-3.5 transition ${open ? "rotate-180" : ""}`} />
+      </button>
+      {open && (
+        <div
+          role="menu"
+          className="absolute left-0 top-full mt-2 min-w-[180px] rounded-xl border border-white/10 bg-[#0A0A0A]/95 backdrop-blur-xl p-1.5 shadow-2xl shadow-black/50 z-50"
+        >
+          {link.children!.map((c) => {
+            const itemCls = `block px-3 py-2 rounded-lg text-sm transition ${
+              c.active
+                ? "text-white bg-white/[0.06]"
+                : "text-white/75 hover:text-white hover:bg-white/[0.04]"
+            }`;
+            if (c.external) {
+              return (
+                <a
+                  key={c.href + c.label}
+                  href={c.href}
+                  className={itemCls}
+                  data-testid={c.testId}
+                  onClick={() => setOpen(false)}
+                >
+                  {c.label}
+                </a>
+              );
+            }
+            return (
+              <Link
+                key={c.href + c.label}
+                href={c.href}
+                className={itemCls}
+                data-testid={c.testId}
+                onClick={() => setOpen(false)}
+              >
+                {c.label}
+              </Link>
+            );
+          })}
+        </div>
+      )}
+    </div>
   );
 }
