@@ -9,7 +9,7 @@ It is developed inside Replit, version-controlled on GitHub, and serves two prod
 | Marketing site | https://www.aicreates.ai | **GitHub Pages** | Static React site for the brand, products, litepaper, tokenomics, contact form |
 | Investor portal | https://invest.aicreates.ai | **Replit Deployments (Autoscale)** | Investor sign-up, SAFT signing, Stripe checkout, vesting dashboard, admin tools |
 
-> **Heads-up:** The legacy `https://portal.aicreates.ai` subdomain is permanently retired. The api-server includes a host-based 301 redirect that sends any request whose `Host` is `portal.aicreates.ai` to `https://invest.aicreates.ai`. Leave the `portal` `CNAME` pointed at the same Replit deployment so the redirect runs.
+> **Heads-up:** The legacy `https://portal.aicreates.ai` subdomain is permanently retired. The api-server includes a host-based 301 redirect that sends any request whose `Host` is `portal.aicreates.ai` to `https://invest.aicreates.ai`. Keep the `portal` subdomain linked to the same Replit deployment (via the A + TXT records described in the [DNS at GoDaddy](#deployment-2-investor-portal--replit-deployments) section below) so the redirect runs.
 
 ---
 
