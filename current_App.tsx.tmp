@@ -105,7 +105,7 @@ function AuthShell({
   children: React.ReactNode;
 }) {
   return (
-    <div className="relative isolate min-h-[100dvh] text-white overflow-hidden">
+    <div className="relative isolate min-h-[100dvh] bg-[#0A0A0A] text-white overflow-hidden">
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 bg-grid-fade -z-10"
@@ -117,16 +117,27 @@ function AuthShell({
       <SiteHeader
         homeHref="https://www.aicreates.ai"
         homeExternal
-        homeTestId="link-auth-home"
-        rightSlot={
-          <a
-            href="https://www.aicreates.ai"
-            className="inline-flex items-center justify-center gap-1.5 rounded-full h-9 px-5 glass-btn text-sm font-medium"
-            data-testid="link-auth-back"
-          >
-            <span aria-hidden>←</span> Back
-          </a>
-        }
+        navLinks={[
+          { href: "https://www.aicreates.ai/eve-os", label: "Products", external: true, testId: "nav-products" },
+          { href: "https://www.aicreates.ai/business", label: "Solutions", external: true, testId: "nav-solutions" },
+          { href: "https://www.aicreates.ai/litepaper", label: "Resources", external: true, testId: "nav-resources" },
+          { href: "https://www.aicreates.ai/about", label: "Company", external: true, testId: "nav-company" },
+        ]}
+        ctas={[
+          {
+            href: "https://www.aicreates.ai/litepaper",
+            label: "Litepaper",
+            variant: "outline",
+            external: true,
+            testId: "link-portal-litepaper",
+          },
+          {
+            href: "/sign-up",
+            label: "Reserve allocation",
+            variant: "primary",
+            testId: "link-portal-signup",
+          },
+        ]}
       />
       <main className="px-4 pt-4 pb-16 md:pt-10 flex flex-col items-center">
         <div className="max-w-md w-full text-center mb-8">

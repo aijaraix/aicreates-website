@@ -17,11 +17,12 @@ interface Allocation {
 
 const STATIC_DOCS = [
   {
-    title: "Whitepaper (coming soon)",
+    title: "Whitepaper",
     blurb:
-      "Long-form positioning of the agentic intelligence layer, hybrid compute fabric, Eve OS, tokenomics, and roadmap. Downloadable PDF will be linked here on release.",
-    cta: "Coming soon",
-    disabled: true,
+      "Long-form positioning of the agentic intelligence layer, hybrid compute fabric, Eve OS, tokenomics, and roadmap. Includes a downloadable PDF.",
+    href: "https://www.aicreates.ai/litepaper",
+    cta: "Open the whitepaper",
+    external: true,
   },
   {
     title: "Investor overview",
@@ -34,7 +35,7 @@ const STATIC_DOCS = [
   {
     title: "Round terms summary",
     blurb:
-      "All five private-sale rounds - Strategic Seed through Community / Launchpad - with token price, allocation, raise target, FDV, and per-round vesting. Cross-references the tokenomics published on aicreates.ai. Toggle the dashboard schedule to the Vesting view for the full per-tranche breakdown.",
+      "All five SAFT rounds - Strategic Seed through Community / Launchpad - with pricing, tokens, raise, FDV, and per-round vesting. Toggle the dashboard schedule to the Vesting view for full details.",
     href: "/dashboard",
     cta: "Open dashboard",
     internal: true,
@@ -42,15 +43,29 @@ const STATIC_DOCS = [
   {
     title: "Sample SAFT",
     blurb:
-      "Reference overview of the AIcreatesAI SAFT - identity, accreditation, payment terms, risk, and wallet mapping. Your signed copy is generated when you complete the SAFT flow and appears in 'Your signed SAFTs' above.",
+      "Reference overview of the AIcreatesAI SAFT - identity, accreditation, payment terms, risk, and wallet mapping. Your signed copy is generated when you complete the SAFT flow.",
     href: "/faq#saft",
     cta: "Read SAFT overview",
     internal: true,
   },
   {
+    title: "One-pager (coming soon)",
+    blurb:
+      "Single-page round summary - terms, raise, use of proceeds, and team. Sharable with co-investors.",
+    cta: "Coming soon",
+    disabled: true,
+  },
+  {
+    title: "Pitch deck (coming soon)",
+    blurb:
+      "Investor deck covering market, product, GPU cluster plan, and model. Available shortly after counsel review.",
+    cta: "Coming soon",
+    disabled: true,
+  },
+  {
     title: "Risk factors",
     blurb:
-      "Early-stage company, token, and regulatory risk disclosures - aligned with the AIcreatesAI litepaper risk section and mirrored in the SAFT acknowledgments you sign at commitment time. Read in full before funding.",
+      "Standard early-stage and token-specific risk disclosures, mirrored from the SAFT acknowledgments.",
     href: "/faq#risk",
     cta: "Read risk factors",
     internal: true,
@@ -81,41 +96,6 @@ export default function Documents() {
       />
       <main className="mx-auto max-w-5xl px-6 py-10 md:py-12">
         <section className="mb-12">
-          <h2 className="text-xs uppercase tracking-[0.18em] text-white/40 mb-4">
-            Your signed SAFTs
-          </h2>
-          {signed.length === 0 ? (
-            <div className="brand-card p-6 text-white/50 text-sm">
-              No signed SAFTs yet. Once you reserve a tier and complete
-              the SAFT flow, your signed copies will appear here.
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {signed.map((a) => (
-                <a
-                  key={a.id}
-                  href={`/api/saft/${a.id}/pdf`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="brand-card flex items-center justify-between px-5 py-4 transition hover:border-[#00F5D4]/40"
-                  data-testid={`signed-saft-${a.id}`}
-                >
-                  <div>
-                    <div className="font-medium">{a.displayName}</div>
-                    <div className="text-xs text-white/50">
-                      Signed {new Date(a.saftSignedAt!).toLocaleDateString()}
-                    </div>
-                  </div>
-                  <span className="inline-flex items-center gap-2 text-[#00F5D4] text-sm">
-                    <Download className="w-4 h-4" /> Download PDF
-                  </span>
-                </a>
-              ))}
-            </div>
-          )}
-        </section>
-
-        <section>
           <h2 className="text-xs uppercase tracking-[0.18em] text-white/40 mb-4">
             Round materials
           </h2>
@@ -160,6 +140,41 @@ export default function Documents() {
               </div>
             ))}
           </div>
+        </section>
+
+        <section>
+          <h2 className="text-xs uppercase tracking-[0.18em] text-white/40 mb-4">
+            Your signed SAFTs
+          </h2>
+          {signed.length === 0 ? (
+            <div className="brand-card p-6 text-white/50 text-sm">
+              No signed SAFTs yet. Once you reserve a tier and complete
+              the SAFT flow, your signed copies will appear here.
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {signed.map((a) => (
+                <a
+                  key={a.id}
+                  href={`/api/saft/${a.id}/pdf`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="brand-card flex items-center justify-between px-5 py-4 transition hover:border-[#00F5D4]/40"
+                  data-testid={`signed-saft-${a.id}`}
+                >
+                  <div>
+                    <div className="font-medium">{a.displayName}</div>
+                    <div className="text-xs text-white/50">
+                      Signed {new Date(a.saftSignedAt!).toLocaleDateString()}
+                    </div>
+                  </div>
+                  <span className="inline-flex items-center gap-2 text-[#00F5D4] text-sm">
+                    <Download className="w-4 h-4" /> Download PDF
+                  </span>
+                </a>
+              ))}
+            </div>
+          )}
         </section>
       </main>
     </div>

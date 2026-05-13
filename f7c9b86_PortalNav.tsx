@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "wouter";
 import { useUser, useClerk } from "@clerk/react";
-import { ChevronDown, FileText, LogOut, Menu, User as UserIcon, X } from "lucide-react";
+import { ChevronDown, LogOut, Menu, User as UserIcon, X } from "lucide-react";
 import SiteHeader, { type HeaderNavLink } from "@/components/SiteHeader";
 
 const PRIMARY_LINKS = [
@@ -12,8 +12,6 @@ const INFO_LINKS = [
   { href: "/documents", label: "Documents" },
   { href: "/faq", label: "FAQ" },
 ];
-
-const MAIN_SITE_URL = "https://www.aicreates.ai";
 
 export default function PortalNav({ showAdmin }: { showAdmin?: boolean }) {
   const { user } = useUser();
@@ -51,18 +49,13 @@ export default function PortalNav({ showAdmin }: { showAdmin?: boolean }) {
         testId: `nav-link-${l.href.slice(1)}`,
       })),
     },
-    {
-      href: MAIN_SITE_URL,
-      label: "Main site",
-      external: true,
-      testId: "nav-link-main-site",
-    },
   ];
 
   const email = user?.primaryEmailAddress?.emailAddress ?? "";
   const displayName =
-    user?.firstName ||
+    [user?.firstName, user?.lastName].filter(Boolean).join(" ") ||
     user?.username ||
+    user?.fullName ||
     (email ? email.split("@")[0] : "Account");
 
   return (
@@ -116,13 +109,6 @@ export default function PortalNav({ showAdmin }: { showAdmin?: boolean }) {
                 {l.label}
               </Link>
             ))}
-            <a
-              href={MAIN_SITE_URL}
-              className="px-3 py-2.5 rounded-xl text-sm text-white/70 hover:bg-white/[0.04]"
-              data-testid="mobile-nav-link-main-site"
-            >
-              Main site
-            </a>
             {showAdmin && (
               <Link
                 href="/admin"
@@ -205,20 +191,12 @@ function UserMenu({
             </div>
           </div>
           <Link
-            href="/dashboard"
+            href="/profile"
             className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-white/80 hover:text-white hover:bg-white/[0.04]"
             onClick={() => setOpen(false)}
             data-testid="user-menu-profile"
           >
-            <UserIcon className="w-3.5 h-3.5" /> Dashboard
-          </Link>
-          <Link
-            href="/documents"
-            className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-white/80 hover:text-white hover:bg-white/[0.04]"
-            onClick={() => setOpen(false)}
-            data-testid="user-menu-documents"
-          >
-            <FileText className="w-3.5 h-3.5" /> My Documents
+            <UserIcon className="w-3.5 h-3.5" /> Profile
           </Link>
           <button
             type="button"
