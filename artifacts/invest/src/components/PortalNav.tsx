@@ -13,8 +13,6 @@ const INFO_LINKS = [
   { href: "/faq", label: "FAQ" },
 ];
 
-const MAIN_SITE_URL = "https://www.aicreates.ai";
-
 export default function PortalNav({ showAdmin }: { showAdmin?: boolean }) {
   const { user } = useUser();
   const { signOut } = useClerk();
@@ -51,12 +49,6 @@ export default function PortalNav({ showAdmin }: { showAdmin?: boolean }) {
         testId: `nav-link-${l.href.slice(1)}`,
       })),
     },
-    {
-      href: MAIN_SITE_URL,
-      label: "Main site",
-      external: true,
-      testId: "nav-link-main-site",
-    },
   ];
 
   const email = user?.primaryEmailAddress?.emailAddress ?? "";
@@ -68,7 +60,8 @@ export default function PortalNav({ showAdmin }: { showAdmin?: boolean }) {
   return (
     <>
       <SiteHeader
-        homeHref="/dashboard"
+        homeHref="https://www.aicreates.ai"
+        homeExternal
         homeTestId="link-portal-home"
         sticky
         navLinks={navLinks}
@@ -116,13 +109,6 @@ export default function PortalNav({ showAdmin }: { showAdmin?: boolean }) {
                 {l.label}
               </Link>
             ))}
-            <a
-              href={MAIN_SITE_URL}
-              className="px-3 py-2.5 rounded-xl text-sm text-white/70 hover:bg-white/[0.04]"
-              data-testid="mobile-nav-link-main-site"
-            >
-              Main site
-            </a>
             {showAdmin && (
               <Link
                 href="/admin"
