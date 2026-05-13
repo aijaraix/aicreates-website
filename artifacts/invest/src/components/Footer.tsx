@@ -1,3 +1,5 @@
+import wordmark from "@/assets/aica-wordmark.png";
+
 export default function Footer() {
   return (
     <footer
@@ -5,20 +7,16 @@ export default function Footer() {
       data-testid="footer"
     >
       {/* Giant wordmark - full width, faded. Texture/glow lives on the page background. */}
-      <div className="relative w-full">
-        <div
-          className="relative block w-full text-center leading-[0.85] font-semibold tracking-[-0.04em] select-none opacity-85"
-          style={{
-            fontFamily: "Space Grotesk, system-ui, sans-serif",
-            fontSize: "clamp(64px, 18vw, 320px)",
-          }}
+      <div className="relative w-full px-4 md:px-8">
+        <img
+          src={wordmark}
+          alt="AIcreatesAI"
+          draggable={false}
+          decoding="async"
+          loading="lazy"
+          className="block w-full max-w-[1800px] h-auto mx-auto select-none opacity-90"
           data-testid="footer-wordmark"
-          aria-label="AIcreatesAI"
-        >
-          <span className="text-[#00F5D4]">AI</span>
-          <span className="text-white/85 font-light">creates</span>
-          <span className="text-[#00F5D4]">AI</span>
-        </div>
+        />
       </div>
 
       {/* Disclaimer - full width below wordmark */}
