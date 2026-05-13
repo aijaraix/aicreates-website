@@ -6,11 +6,9 @@ import SiteHeader, { type HeaderNavLink } from "@/components/SiteHeader";
 
 const PRIMARY_LINKS = [
   { href: "/dashboard", label: "Dashboard" },
-  { href: "/invest", label: "Invest" },
 ];
 
-const ACCOUNT_LINKS = [
-  { href: "/profile", label: "Profile" },
+const INFO_LINKS = [
   { href: "/documents", label: "Documents" },
   { href: "/faq", label: "FAQ" },
 ];
@@ -30,7 +28,7 @@ export default function PortalNav({ showAdmin }: { showAdmin?: boolean }) {
       ? location === "/dashboard"
       : location.startsWith(href);
 
-  const accountActive = ACCOUNT_LINKS.some((l) => isActive(l.href));
+  const infoActive = INFO_LINKS.some((l) => isActive(l.href));
 
   const navLinks: HeaderNavLink[] = [
     ...PRIMARY_LINKS.map((l) => ({
@@ -40,11 +38,11 @@ export default function PortalNav({ showAdmin }: { showAdmin?: boolean }) {
       testId: `nav-link-${l.href.slice(1)}`,
     })),
     {
-      href: "#account",
-      label: "Account",
-      active: accountActive,
-      testId: "nav-link-account",
-      children: ACCOUNT_LINKS.map((l) => ({
+      href: "#info",
+      label: "Info",
+      active: infoActive,
+      testId: "nav-link-info",
+      children: INFO_LINKS.map((l) => ({
         href: l.href,
         label: l.label,
         active: isActive(l.href),
@@ -54,6 +52,11 @@ export default function PortalNav({ showAdmin }: { showAdmin?: boolean }) {
   ];
 
   const email = user?.primaryEmailAddress?.emailAddress ?? "";
+  const displayName =
+    [user?.firstName, user?.lastName].filter(Boolean).join(" ") ||
+    user?.username ||
+    user?.fullName ||
+    (email ? email.split("@")[0] : "Account");
 
   return (
     <>
@@ -73,7 +76,11 @@ export default function PortalNav({ showAdmin }: { showAdmin?: boolean }) {
                 Admin
               </Link>
             )}
-            <UserMenu email={email} onSignOut={() => signOut({ redirectUrl: window.location.origin })} />
+            <UserMenu
+              name={displayName}
+              email={email}
+              onSignOut={() => signOut({ redirectUrl: window.location.origin })}
+            />
             <button
               onClick={() => setOpen((v) => !v)}
               className="md:hidden inline-flex items-center justify-center h-9 w-9 rounded-full glass-btn"
@@ -89,7 +96,7 @@ export default function PortalNav({ showAdmin }: { showAdmin?: boolean }) {
       {open && (
         <div className="md:hidden border-t border-white/10 bg-[#0A0A0A]/90 backdrop-blur-xl sticky top-[64px] z-30">
           <div className="px-6 py-4 flex flex-col gap-1">
-            {[...PRIMARY_LINKS, ...ACCOUNT_LINKS].map((l) => (
+            {[...PRIMARY_LINKS, ...INFO_LINKS].map((l) => (
               <Link
                 key={l.href}
                 href={l.href}
@@ -129,9 +136,11 @@ export default function PortalNav({ showAdmin }: { showAdmin?: boolean }) {
 }
 
 function UserMenu({
+  name,
   email,
   onSignOut,
 }: {
+  name: string;
   email: string;
   onSignOut: () => void;
 }) {
@@ -154,21 +163,19 @@ function UserMenu({
       document.removeEventListener("keydown", onEsc);
     };
   }, [open]);
-  const initial = (email[0] ?? "?").toUpperCase();
   return (
     <div ref={ref} className="relative hidden md:block">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="inline-flex items-center gap-2 h-9 pl-1.5 pr-3 rounded-full glass-btn text-sm font-medium"
+        className="inline-flex items-center gap-2 h-9 px-4 rounded-full glass-btn text-sm font-medium max-w-[220px]"
         aria-haspopup="menu"
         aria-expanded={open}
         data-testid="button-user-menu"
       >
-        <span className="inline-flex items-center justify-center h-6 w-6 rounded-full bg-[#00F5D4]/15 border border-[#00F5D4]/40 text-[#00F5D4] text-[11px] font-semibold">
-          {initial}
-        </span>
-        <ChevronDown className={`w-3.5 h-3.5 transition ${open ? "rotate-180" : ""}`} />
+        <UserIcon className="w-3.5 h-3.5 text-[#00F5D4] shrink-0" />
+        <span className="truncate">{name}</span>
+        <ChevronDown className={`w-3.5 h-3.5 shrink-0 transition ${open ? "rotate-180" : ""}`} />
       </button>
       {open && (
         <div

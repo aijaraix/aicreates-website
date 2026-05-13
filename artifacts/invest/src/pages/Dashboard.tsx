@@ -271,15 +271,8 @@ export default function Dashboard() {
 
         <div className="flex items-center justify-between mb-4">
           <h2 className="font-display text-xl font-semibold tracking-tight">
-            Commitments
+            My Commitments
           </h2>
-          <Link
-            href="/invest"
-            className="brand-cta"
-            data-testid="link-make-commitment"
-          >
-            New commitment <ArrowRight className="ml-2 w-4 h-4" />
-          </Link>
         </div>
 
         {isLoading ? (
