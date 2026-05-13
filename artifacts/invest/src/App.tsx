@@ -30,8 +30,6 @@ import Checkout from "@/pages/Checkout";
 import Admin from "@/pages/Admin";
 import AdminChat from "@/pages/AdminChat";
 import ChatWidget from "@/components/ChatWidget";
-import { useQuery } from "@tanstack/react-query";
-import { api } from "@/lib/api";
 import Gateway from "@/pages/Gateway";
 import Documents from "@/pages/Documents";
 import Faq from "@/pages/Faq";
@@ -50,21 +48,10 @@ const clerkPubKey = publishableKeyFromHost(
   window.location.hostname,
   import.meta.env.VITE_CLERK_PUBLISHABLE_KEY,
 );
-function resolveClerkProxyUrl(): string | undefined {
-  if (!import.meta.env.PROD) return undefined;
-  const raw = import.meta.env.VITE_CLERK_PROXY_URL;
-  if (!raw) return undefined;
-  // Clerk requires an absolute URL. The env var is typically set as a
-  // path (e.g. "/api/__clerk") so it works across multiple custom
-  // domains; resolve it against the current origin at runtime.
-  if (/^https?:\/\//i.test(raw)) return raw;
-  try {
-    return new URL(raw, window.location.origin).toString();
-  } catch {
-    return undefined;
-  }
-}
-const clerkProxyUrl = resolveClerkProxyUrl();
+// In dev this env var is empty; Replit Deployments injects
+// VITE_CLERK_PROXY_URL=/api/__clerk at publish time so the production
+// build talks to the api-server's Clerk proxy (which is a no-op in dev).
+const clerkProxyUrl = import.meta.env.VITE_CLERK_PROXY_URL || undefined;
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
 
 function stripBase(p: string): string {
