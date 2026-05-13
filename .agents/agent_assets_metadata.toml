@@ -88,4 +88,10 @@ title = "Cropped icon (preview)"
 id = "CU14RVQL2jouyYf1_jt55"
 uri = "file://artifacts/web/src/assets/aica-logo-mark.png"
 type = "image"
-title = "Final icon (transparent bg, trimmed)"
+title = "Final icon (recolored to #00F5D4, full width)"
+
+[[outputs]]
+id = "dsDyanguTXYgye5APwe7h"
+uri = "file://artifacts/web/src/assets/_wide_crop.png"
+type = "image"
+title = "Wider crop preview"
