@@ -9,8 +9,25 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import DeckCarousel from "@/components/DeckCarousel";
+import HeroVideoReel from "@/components/HeroVideoReel";
 import spotlightBgUrl from "@/assets/spotlight-bg.png";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+
+const HERO_VIDEO_BASE = import.meta.env.BASE_URL;
+const HERO_CLIPS = [
+  {
+    desktop: `${HERO_VIDEO_BASE}videos/hero_server_room.mp4`,
+    mobile: `${HERO_VIDEO_BASE}videos/hero_server_room.mobile.mp4`,
+  },
+  {
+    desktop: `${HERO_VIDEO_BASE}videos/hero_gpu_tower.mp4`,
+    mobile: `${HERO_VIDEO_BASE}videos/hero_gpu_tower.mobile.mp4`,
+  },
+  {
+    desktop: `${HERO_VIDEO_BASE}videos/hero_facility_dusk.mp4`,
+    mobile: `${HERO_VIDEO_BASE}videos/hero_facility_dusk.mobile.mp4`,
+  },
+];
 import {
   ArrowRight,
   ArrowUpRight,
@@ -214,6 +231,7 @@ export default function Home() {
     <div className="flex flex-col w-full">
       {/* HERO */}
       <section className="relative min-h-[100dvh] flex items-center pt-24 pb-16 md:pt-28 md:pb-20 overflow-hidden">
+        <HeroVideoReel clips={HERO_CLIPS} />
         <div className="absolute inset-0 bg-grid bg-grid-fade pointer-events-none" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_0%,rgba(0,245,212,0.10),transparent_70%)] pointer-events-none" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/3 w-[900px] h-[900px] rounded-full bg-[radial-gradient(circle,rgba(0,245,212,0.06),transparent_60%)] blur-3xl pointer-events-none" />
