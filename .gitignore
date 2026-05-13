@@ -35,4 +35,7 @@ pnpm-debug.log*
 .upm/
 .breakpoints
 attached_assets/
-.replit-artifact/
+
+# NOTE: do NOT ignore .replit-artifact/ — Replit Publish reads
+# artifact.toml from the committed git tree. If these files aren't
+# committed, the Publish dialog shows "Could not find run command".

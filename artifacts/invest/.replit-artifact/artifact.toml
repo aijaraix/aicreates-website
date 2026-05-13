@@ -1,0 +1,27 @@
+kind = "web"
+previewPath = "/invest/"
+title = "AICreatesAi Invest"
+version = "1.0.0"
+id = "artifacts/portal"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/invest/" ]
+localPort = 25265
+
+[services.development]
+run = "pnpm --filter @workspace/invest run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/invest", "run", "build" ]
+publicDir = "artifacts/invest/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
