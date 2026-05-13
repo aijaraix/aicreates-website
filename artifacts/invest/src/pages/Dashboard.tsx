@@ -306,8 +306,17 @@ export default function Dashboard() {
               >
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
-                    <div className="text-xs uppercase tracking-[0.18em] text-white/40">
-                      {a.roundSlug}
+                    <div className="text-xs uppercase tracking-[0.18em] text-white/40 flex items-center gap-2">
+                      <span>{a.roundSlug}</span>
+                      {a.state === "awaiting_wire" && (
+                        <span
+                          className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] uppercase tracking-[0.14em] bg-amber-400/15 text-amber-300 border border-amber-400/40 normal-case tracking-normal"
+                          data-testid={`pill-awaiting-wire-${a.id}`}
+                        >
+                          <span className="w-1.5 h-1.5 rounded-full bg-amber-300 animate-pulse" />
+                          Pending - waiting admin confirmation
+                        </span>
+                      )}
                     </div>
                     <div className="font-display text-xl font-semibold tracking-tight mt-1">
                       {a.displayName}

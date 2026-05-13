@@ -127,20 +127,19 @@ export const WALLET_CHAINS = [
   { value: "other", label: "Other", hint: "Specify in note" },
 ] as const;
 
+// Kept in sync with the Checkout picker (Task #72): crypto removed until
+// Stripe Crypto activates; card + ACH collapsed under a single "Fiat" pill
+// (Stripe Checkout itself lets the customer pick the rail on the hosted
+// page).
 export const PAYMENT_METHODS = [
   {
-    value: "card",
-    label: "Card",
-    blurb: "Fastest. Recommended under $5,000.",
+    value: "fiat",
+    label: "Fiat (card or ACH)",
+    blurb: "Pay by card, Apple Pay, Google Pay, or US bank transfer (ACH). Pick the rail at checkout.",
   },
   {
     value: "wire",
-    label: "Wire transfer",
-    blurb: "Recommended for $25,000+. Bank instructions on confirmation.",
-  },
-  {
-    value: "crypto",
-    label: "Crypto (BTC / ETH / SOL / USDC / USDT)",
-    blurb: "Send to our escrow address. Marked funded on-chain by an admin.",
+    label: "Bank Transfer (wire)",
+    blurb: "Recommended for $25,000+. Real Bank of America wire instructions shown at checkout.",
   },
 ] as const;

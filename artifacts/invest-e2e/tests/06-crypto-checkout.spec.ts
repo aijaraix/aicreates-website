@@ -15,6 +15,11 @@ interface AdminCommitmentsResponse {
 }
 
 test.describe("crypto checkout + admin confirm", () => {
+  // Crypto removed from the public checkout picker (Task #72) until Stripe
+  // Crypto is activated. Server-side `paymentMethod === "crypto"` branch +
+  // admin confirm-crypto remain for legacy rows. Re-enable this test when
+  // the picker option returns.
+  test.skip(true, "Crypto checkout removed from picker (Task #72)");
   test.skip(
     !ADMIN_EMAIL,
     "ADMIN_EMAILS env var must include at least one address",

@@ -30,6 +30,11 @@ async function loadAsset(name: string): Promise<Buffer | null> {
   return null;
 }
 
+// Drift warning: the static PDF/PNG must be regenerated whenever
+// `lib/wireInstructions.ts WIRE_INSTRUCTIONS` (or its invest-side mirror in
+// `data/rounds.ts`) changes, otherwise downloads will diverge from the
+// on-screen and emailed copies. Tracked separately as a follow-up.
+
 /** Commitment states for which the investor still needs the wire details. */
 const ELIGIBLE_STATES = new Set([
   "pending_payment",

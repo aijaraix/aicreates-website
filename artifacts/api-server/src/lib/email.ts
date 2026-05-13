@@ -250,11 +250,18 @@ export interface WireInstructionsEmail {
   amountCents: number;
   tokens: number;
   bank: {
+    beneficiary: string;
+    beneficiaryAddress: string;
     bankName: string;
-    accountName: string;
+    bankBranch: string;
     accountNumber: string;
     routingNumber: string;
-    swift?: string;
+    achRouting: string;
+    swift: string;
+    swiftForeign: string;
+    intermediaryUS: string;
+    intermediaryForeign: string;
+    memo: string;
     reference: string;
   };
 }
@@ -263,30 +270,38 @@ export async function emailWireInstructions(
   args: WireInstructionsEmail,
 ): Promise<void> {
   const subject = `Wire instructions - ${fmtUsd(args.amountCents)} commitment ${args.commitmentId.slice(0, 8)}`;
+  const b = args.bank;
   const html = shell(
     "Wire transfer instructions",
     [
       p(`Hi ${args.investorName},`),
       p(
-        `Please wire <strong>${fmtUsd(args.amountCents)}</strong> using the details below. Use the reference exactly so we can match your wire to your commitment automatically.`,
+        `Please wire <strong>${fmtUsd(args.amountCents)}</strong> using the Bank of America details below. Use the reference exactly so we can match your wire to your commitment.`,
       ),
       `<table cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;margin:8px 0 20px 0;">${[
-        row("Bank", args.bank.bankName),
-        row("Account name", args.bank.accountName),
-        row("Account #", args.bank.accountNumber),
-        row("Routing #", args.bank.routingNumber),
-        ...(args.bank.swift ? [row("SWIFT", args.bank.swift)] : []),
-        row("Reference", args.bank.reference),
+        row("Beneficiary", b.beneficiary),
+        row("Beneficiary address", b.beneficiaryAddress),
+        row("Bank", b.bankName),
+        row("Bank branch", b.bankBranch),
+        row("Account #", b.accountNumber),
+        row("Wire routing", b.routingNumber),
+        row("ACH routing", b.achRouting),
+        row("SWIFT (USD)", b.swift),
+        row("SWIFT (foreign currency)", b.swiftForeign),
+        row("Intermediary (USD)", b.intermediaryUS),
+        row("Intermediary (foreign)", b.intermediaryForeign),
+        row("Reference / memo", b.reference),
+        row("Memo guidance", b.memo),
         row("Amount", fmtUsd(args.amountCents)),
         row("Commitment", args.commitmentId),
         row("Tokens", `${args.tokens.toLocaleString()} AICA`),
       ].join("")}</table>`,
       p(
-        `Wires typically settle in 1-2 business days. We'll email you again once funds are received and your commitment is marked funded.`,
+        `Wires typically settle in 1-3 business days. Your dashboard will show <em>Pending - waiting admin confirmation</em> until we confirm receipt, at which point the commitment flips to Confirmed and your vesting schedule activates.`,
       ),
     ].join(""),
   );
-  const text = `Wire transfer instructions.\n\nBank: ${args.bank.bankName}\nAccount name: ${args.bank.accountName}\nAccount #: ${args.bank.accountNumber}\nRouting #: ${args.bank.routingNumber}\n${args.bank.swift ? `SWIFT: ${args.bank.swift}\n` : ""}Reference: ${args.bank.reference}\n\nAmount: ${fmtUsd(args.amountCents)}\nCommitment: ${args.commitmentId}\nTokens: ${args.tokens.toLocaleString()} AICA\n\nWires typically settle in 1-2 business days.\n`;
+  const text = `Wire transfer instructions.\n\nBeneficiary: ${b.beneficiary}\nBeneficiary address: ${b.beneficiaryAddress}\nBank: ${b.bankName}\nBank branch: ${b.bankBranch}\nAccount #: ${b.accountNumber}\nWire routing: ${b.routingNumber}\nACH routing: ${b.achRouting}\nSWIFT (USD): ${b.swift}\nSWIFT (foreign currency): ${b.swiftForeign}\nIntermediary (USD): ${b.intermediaryUS}\nIntermediary (foreign): ${b.intermediaryForeign}\nReference / memo: ${b.reference}\nMemo guidance: ${b.memo}\n\nAmount: ${fmtUsd(args.amountCents)}\nCommitment: ${args.commitmentId}\nTokens: ${args.tokens.toLocaleString()} AICA\n\nWires typically settle in 1-3 business days. Your dashboard will show "Pending - waiting admin confirmation" until we confirm receipt.\n`;
   await sendEmail({ to: args.to, subject, html, text });
 }
 

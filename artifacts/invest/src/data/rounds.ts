@@ -157,6 +157,7 @@ export const WIRE_INSTRUCTIONS = {
   intermediaryUS: "Bank of America, N.A. - 222 Broadway, New York, NY 10038",
   intermediaryForeign: "Bank of America, N.A. - 555 California St, San Francisco, CA 94104",
   reference: "Use your Commitment ID as the wire reference",
+  memo: "Commitment ID + investor name",
 };
 
 /**

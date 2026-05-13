@@ -54,7 +54,7 @@ interface SaftResponse {
 interface FormState {
   walletAddress: string;
   walletChain: string;
-  paymentMethod: "card" | "ach" | "wire" | "crypto" | "";
+  paymentMethod: "fiat" | "card" | "ach" | "wire" | "crypto" | "";
   accreditationCategory: string;
   investmentExperience: string;
   relationshipToCompany: string;

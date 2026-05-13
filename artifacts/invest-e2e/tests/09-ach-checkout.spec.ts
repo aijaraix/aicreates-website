@@ -83,7 +83,9 @@ test.describe("Stripe-hosted ACH (us_bank_account) checkout", () => {
 
     await page.goto(`/invest/checkout/${c.id}`);
     await expect(page.getByTestId("checkout-method-picker")).toBeVisible();
-    await page.getByTestId("radio-method-ach").click();
+    // Card + ACH are collapsed under a single "Fiat" picker pill; Stripe
+    // Checkout itself lets the customer pick the rail on the hosted page.
+    await page.getByTestId("radio-method-fiat").click();
     await page.getByTestId("button-checkout-pay").click();
 
     // Stripe-hosted Checkout page (us_bank_account only).

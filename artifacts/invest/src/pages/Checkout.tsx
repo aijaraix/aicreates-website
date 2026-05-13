@@ -7,7 +7,6 @@ import PageHeader from "@/components/PageHeader";
 import {
   ArrowRight,
   CreditCard,
-  Bitcoin,
   Building2,
   Loader2,
   Copy,
@@ -17,7 +16,6 @@ import {
 } from "lucide-react";
 import {
   WIRE_INSTRUCTIONS,
-  CRYPTO_INSTRUCTIONS,
   wireInstructionsPdfUrl,
   wireInstructionsImageUrl,
 } from "@/data/rounds";
@@ -35,7 +33,7 @@ interface SaftResponse {
   };
 }
 
-type Method = "card" | "ach" | "wire" | "crypto";
+type Method = "fiat" | "wire";
 
 const METHODS: Array<{
   value: Method;
@@ -45,25 +43,18 @@ const METHODS: Array<{
   recommendedAtCents: number;
 }> = [
   {
-    value: "card",
-    label: "Card",
-    blurb: "Fastest. Settles instantly.",
+    value: "fiat",
+    label: "Fiat (card or ACH)",
+    blurb: "Pay by card, Apple Pay, Google Pay, or US bank transfer (ACH). Pick the rail on the next screen.",
     Icon: CreditCard,
     recommendedAtCents: 0,
   },
   {
     value: "wire",
-    label: "Wire transfer",
-    blurb: "Recommended for $25,000+. Bank instructions on confirmation.",
+    label: "Bank Transfer (wire)",
+    blurb: "Recommended for $25,000+. Real Bank of America wire instructions shown below.",
     Icon: Building2,
     recommendedAtCents: 2_500_000,
-  },
-  {
-    value: "crypto",
-    label: "Crypto (BTC / ETH / SOL / USDC / USDT)",
-    blurb: "Send to our escrow address. Marked funded on-chain by an admin.",
-    Icon: Bitcoin,
-    recommendedAtCents: 0,
   },
 ];
 
@@ -78,11 +69,9 @@ function fmt(cents: number) {
 export default function Checkout() {
   const params = useParams<{ commitId: string }>();
   const commitId = params.commitId!;
-  const [method, setMethod] = useState<Method>("card");
-  const [copied, setCopied] = useState(false);
-  const [manualConfirmed, setManualConfirmed] = useState<
-    "wire" | "crypto" | null
-  >(null);
+  const [method, setMethod] = useState<Method>("fiat");
+  const [copiedKey, setCopiedKey] = useState<string | null>(null);
+  const [manualConfirmed, setManualConfirmed] = useState<"wire" | null>(null);
 
   const { data, isLoading } = useQuery({
     queryKey: ["saft", commitId],
@@ -96,7 +85,7 @@ export default function Checkout() {
 
   const checkout = useMutation({
     mutationFn: () =>
-      api<{ url?: string; wire?: boolean; crypto?: boolean }>("/checkout", {
+      api<{ url?: string; wire?: boolean }>("/checkout", {
         body: { commitmentId: commitId, paymentMethod: method },
       }),
     onSuccess: (res) => {
@@ -104,8 +93,6 @@ export default function Checkout() {
         window.location.href = res.url;
       } else if (res.wire) {
         setManualConfirmed("wire");
-      } else if (res.crypto) {
-        setManualConfirmed("crypto");
       }
     },
     onError: (err) => alert(`Checkout failed: ${(err as Error).message}`),
@@ -143,10 +130,10 @@ export default function Checkout() {
     .reverse()
     .find((m) => c.amountCents >= m.recommendedAtCents)!;
 
-  const onCopy = async (v: string) => {
+  const onCopy = async (key: string, v: string) => {
     await navigator.clipboard.writeText(v);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1200);
+    setCopiedKey(key);
+    setTimeout(() => setCopiedKey((k) => (k === key ? null : k)), 1200);
   };
 
   return (
@@ -177,14 +164,10 @@ export default function Checkout() {
           >
             <CheckCircle2 className="w-8 h-8 text-[#00F5D4]" />
             <div className="mt-4 text-xl font-semibold">
-              {manualConfirmed === "wire"
-                ? "Wire commitment recorded."
-                : "Crypto commitment recorded."}
+              Wire commitment recorded - waiting admin confirmation.
             </div>
             <p className="mt-2 text-white/60 text-sm">
-              {manualConfirmed === "wire"
-                ? "Use your Commitment ID as the wire reference. Your dashboard will move to \"Funded\" once we confirm receipt."
-                : "Send to the escrow address you copied (matching asset and network). Your dashboard will move to \"Funded\" once on-chain confirmations are finalized."}
+              Use your Commitment ID as the wire reference. Your dashboard will show "Pending - waiting admin confirmation" until an admin confirms the funds have arrived (typically 1-3 business days), at which point the row flips to Confirmed and your vesting schedule activates.
             </p>
             <Link href="/dashboard" className="brand-cta-outline mt-6">
               Back to dashboard
@@ -222,79 +205,15 @@ export default function Checkout() {
                       )}
                     </div>
                     <div className="text-xs text-white/50 mt-1">{m.blurb}</div>
+                    {m.value === "wire" && (
+                      <div className="text-[11px] text-white/40 mt-1.5 italic">
+                        Bank transfers require manual verification. Allocation is reserved while we wait for the wire to clear (1-3 business days).
+                      </div>
+                    )}
                   </div>
                 </label>
               );
             })}
-
-            {method === "crypto" && (
-              <div
-                className="brand-card p-5 mt-4"
-                data-testid="crypto-instructions"
-              >
-                <div className="text-xs uppercase tracking-[0.18em] text-white/40 mb-3">
-                  Crypto escrow addresses
-                </div>
-                <p className="text-xs text-white/60 mb-4">
-                  Pick the asset and network you want to send. Each address is
-                  for one specific (asset, network) pair only - sending the
-                  wrong asset or to the wrong network will be lost.
-                </p>
-                <div className="space-y-3">
-                  {CRYPTO_INSTRUCTIONS.escrows.map((esc) => (
-                    <div
-                      key={`${esc.asset}-${esc.network}`}
-                      className="rounded-lg border border-white/10 bg-black/30 p-3"
-                      data-testid={`escrow-${esc.asset}-${esc.network}`}
-                    >
-                      <div className="flex items-center justify-between gap-3 mb-2">
-                        <div>
-                          <span className="font-medium text-white">
-                            {esc.asset}
-                          </span>
-                          <span className="text-white/50 ml-2 text-xs">
-                            on {esc.network}
-                          </span>
-                        </div>
-                        <button
-                          onClick={() => onCopy(esc.address)}
-                          className="px-2 py-1 text-[11px] rounded border border-white/10 hover:bg-white/[0.04] inline-flex items-center gap-1"
-                          data-testid={`copy-${esc.asset}-${esc.network}`}
-                        >
-                          <Copy className="w-3 h-3" />
-                          Copy
-                        </button>
-                      </div>
-                      <div className="font-mono text-[#00F5D4] text-xs break-all">
-                        {esc.address}
-                      </div>
-                      <div className="text-[11px] text-white/40 mt-2">
-                        {esc.warning}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <div className="mt-4 pt-4 border-t border-white/5">
-                  <dt className="text-[11px] uppercase tracking-[0.14em] text-white/40">
-                    Memo / reference (use this exact value)
-                  </dt>
-                  <dd className="mt-1 inline-flex items-center gap-2 rounded-lg border border-white/10 bg-black/30 px-3 py-2 font-mono text-[#00F5D4]">
-                    {c.id}
-                    <button
-                      onClick={() => onCopy(c.id)}
-                      className="ml-2 px-2 py-0.5 text-xs rounded border border-white/10 hover:bg-white/[0.04]"
-                    >
-                      {copied ? "Copied" : <Copy className="w-3 h-3" />}
-                    </button>
-                  </dd>
-                </div>
-                <p className="mt-3 text-[11px] text-white/40">
-                  After you confirm, an admin will match the on-chain
-                  transaction to your commitment and mark it funded. Questions:{" "}
-                  {CRYPTO_INSTRUCTIONS.contact}.
-                </p>
-              </div>
-            )}
 
             {method === "wire" && (
               <div
@@ -334,26 +253,38 @@ export default function Checkout() {
                     "Intermediary (USD)": WIRE_INSTRUCTIONS.intermediaryUS,
                     "Intermediary (foreign)": WIRE_INSTRUCTIONS.intermediaryForeign,
                   }).map(([k, v]) => (
-                    <div key={k}>
-                      <dt className="text-[11px] uppercase tracking-[0.14em] text-white/40">
-                        {k}
+                    <div key={k} className="group">
+                      <dt className="text-[11px] uppercase tracking-[0.14em] text-white/40 flex items-center justify-between">
+                        <span>{k}</span>
+                        <button
+                          type="button"
+                          onClick={() => onCopy(k, v)}
+                          className="opacity-0 group-hover:opacity-100 transition px-1.5 py-0.5 text-[10px] rounded border border-white/10 hover:bg-white/[0.06] inline-flex items-center gap-1"
+                          data-testid={`copy-wire-${k.replace(/[^a-z0-9]+/gi, "-").toLowerCase()}`}
+                        >
+                          {copiedKey === k ? "Copied" : <Copy className="w-3 h-3" />}
+                        </button>
                       </dt>
-                      <dd className="font-mono text-white/80">{v}</dd>
+                      <dd className="font-mono text-white/80 break-all">{v}</dd>
                     </div>
                   ))}
                   <div className="sm:col-span-2">
                     <dt className="text-[11px] uppercase tracking-[0.14em] text-white/40">
-                      Reference (use this exact value)
+                      Reference / memo (use this exact value)
                     </dt>
-                    <dd className="mt-1 inline-flex items-center gap-2 rounded-lg border border-white/10 bg-black/30 px-3 py-2 font-mono text-[#00F5D4]">
+                    <dd className="mt-1 inline-flex items-center gap-2 rounded-lg border border-[#00F5D4]/30 bg-[#00F5D4]/5 px-3 py-2 font-mono text-[#00F5D4]">
                       {c.id}
                       <button
-                        onClick={() => onCopy(c.id)}
+                        onClick={() => onCopy("ref", c.id)}
                         className="ml-2 px-2 py-0.5 text-xs rounded border border-white/10 hover:bg-white/[0.04]"
+                        data-testid="copy-wire-reference"
                       >
-                        {copied ? "Copied" : <Copy className="w-3 h-3" />}
+                        {copiedKey === "ref" ? "Copied" : <Copy className="w-3 h-3" />}
                       </button>
                     </dd>
+                    <div className="mt-1 text-[11px] text-white/45">
+                      Memo guidance: {WIRE_INSTRUCTIONS.memo}.
+                    </div>
                   </div>
                 </dl>
                 <div className="mt-5 flex flex-wrap gap-2">
@@ -393,15 +324,11 @@ export default function Checkout() {
                 </>
               ) : method === "wire" ? (
                 <>
-                  Confirm wire commitment <ArrowRight className="ml-2 w-4 h-4" />
-                </>
-              ) : method === "crypto" ? (
-                <>
-                  Confirm crypto commitment <ArrowRight className="ml-2 w-4 h-4" />
+                  I&apos;ve sent the wire - confirm payment <ArrowRight className="ml-2 w-4 h-4" />
                 </>
               ) : (
                 <>
-                  Pay {fmt(c.amountCents)} via {METHODS.find((m) => m.value === method)?.label}
+                  Pay {fmt(c.amountCents)} - Card or ACH
                   <ArrowRight className="ml-2 w-4 h-4" />
                 </>
               )}

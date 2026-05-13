@@ -4,6 +4,7 @@ import { getUncachableStripeClient } from "../lib/stripeClient";
 import { TIER_BY_SLUG, getAllowedBillingCountries } from "../lib/tiers";
 import { notifyTeam } from "../lib/notify";
 import { emailWireInstructions } from "../lib/email";
+import { WIRE_INSTRUCTIONS } from "../lib/wireInstructions";
 import {
   ROUND_BY_SLUG,
   getActiveRound,
@@ -307,7 +308,13 @@ router.post("/commitments", requireAuth, async (req, res) => {
 
 interface CheckoutBody {
   commitmentId?: string;
-  paymentMethod?: "card" | "ach" | "crypto" | "wire";
+  /**
+   * "fiat" is the new collapsed picker option that lets Stripe Checkout offer
+   * card + ACH on the same hosted page. "card" / "ach" are kept for backward
+   * compat. "crypto" is no longer in the public picker but the server branch
+   * stays for legacy admin confirm-crypto rows.
+   */
+  paymentMethod?: "fiat" | "card" | "ach" | "crypto" | "wire";
   /** Legacy: pre-Phase-C single-shot tier picker. */
   tierSlug?: string;
 }
@@ -338,8 +345,18 @@ router.post("/checkout", requireAuth, async (req, res) => {
   let tierSlug: string;
   let tokenAllocation: number;
   let roundSlug: string;
-  let paymentMethod: "card" | "ach" | "crypto" | "wire" =
-    body.paymentMethod ?? "card";
+  let paymentMethod: "fiat" | "card" | "ach" | "crypto" | "wire" =
+    body.paymentMethod ?? "fiat";
+
+  // Crypto was removed from the public picker in Task #72 (Stripe Crypto
+  // pending). The legacy `awaiting_crypto` admin-confirm path remains for
+  // pre-existing rows, but new commitments cannot be created via crypto.
+  if (paymentMethod === "crypto") {
+    res.status(400).json({
+      error: "Crypto checkout is temporarily unavailable. Please choose Fiat (card or ACH) or Bank Transfer.",
+    });
+    return;
+  }
 
   if (commitmentId) {
     const rows = await db
@@ -403,9 +420,9 @@ router.post("/checkout", requireAuth, async (req, res) => {
         amountCents,
       },
     });
-    // Investor-facing wire instructions email. Bank details are sourced
-    // from env so we never commit them; they fall back to placeholder
-    // strings (which the email body labels as such) if not configured.
+    // Investor-facing wire instructions email. Bank details are the real
+    // Bank of America values, hardcoded in WIRE_INSTRUCTIONS - no env vars,
+    // no placeholders.
     void emailWireInstructions({
       to: user.email,
       investorName: user.fullName ?? user.email,
@@ -413,46 +430,17 @@ router.post("/checkout", requireAuth, async (req, res) => {
       amountCents,
       tokens: tokenAllocation,
       bank: {
-        bankName: process.env["WIRE_BANK_NAME"] ?? "(see portal /checkout for live details)",
-        accountName:
-          process.env["WIRE_ACCOUNT_NAME"] ?? "AICreatesAI Inc.",
-        accountNumber:
-          process.env["WIRE_ACCOUNT_NUMBER"] ?? "(see portal)",
-        routingNumber:
-          process.env["WIRE_ROUTING_NUMBER"] ?? "(see portal)",
-        swift: process.env["WIRE_SWIFT"] ?? undefined,
-        reference: `AICA-${commitmentId!.slice(0, 8).toUpperCase()}`,
+        ...WIRE_INSTRUCTIONS,
+        reference: commitmentId!,
       },
     });
     res.json({ wire: true, commitmentId });
     return;
   }
 
-  // Crypto path (manual escrow).
-  if (paymentMethod === "crypto") {
-    await db
-      .update(commitmentsTable)
-      .set({
-        state: "awaiting_crypto",
-        status: "awaiting_crypto",
-        paymentMethod,
-        updatedAt: new Date(),
-      })
-      .where(eq(commitmentsTable.id, commitmentId!));
-    await notifyTeam({
-      subject: `[AICA] Crypto commitment awaiting funds: $${(amountCents / 100).toLocaleString()} from ${user.email}`,
-      message: `${user.fullName ?? user.email} committed via crypto.\n\nCommitment: ${commitmentId}\nAmount: $${(amountCents / 100).toLocaleString()}\nDisplay: ${displayName}\nRound: ${roundSlug}\nTokens: ${tokenAllocation.toLocaleString()} AICA\n\nInvestor was shown all six escrow addresses (BTC / ETH / SOL / USDC-Base / USDC-Ethereum / USDT-Ethereum) on the checkout page. Watch the corresponding wallets for an inbound transaction matching this amount, then mark received in /invest/admin once on-chain confirmations are finalized.`,
-      payload: {
-        kind: "crypto",
-        commitmentId,
-        userId: user.id,
-        email: user.email,
-        amountCents,
-      },
-    });
-    res.json({ crypto: true, commitmentId });
-    return;
-  }
+  // Crypto path was removed in Task #72: new commitments cannot select
+  // crypto (rejected with 400 above). The legacy `awaiting_crypto` state +
+  // admin confirm-crypto endpoint remain for any pre-existing rows.
 
   let stripe;
   try {
@@ -484,8 +472,15 @@ router.post("/checkout", requireAuth, async (req, res) => {
     (req.headers["origin"] as string | undefined) ??
     `${req.protocol}://${req.get("host")}`;
 
+  // "fiat" collapses card + ACH onto Stripe Checkout's hosted page so the
+  // customer picks the rail there. "card" / "ach" remain explicit for any
+  // older client that still posts them.
   const methodTypes: Array<"card" | "us_bank_account"> =
-    paymentMethod === "ach" ? ["us_bank_account"] : ["card"];
+    paymentMethod === "ach"
+      ? ["us_bank_account"]
+      : paymentMethod === "fiat"
+        ? ["card", "us_bank_account"]
+        : ["card"];
 
   const sessionParams: Parameters<typeof stripe.checkout.sessions.create>[0] = {
     customer: customerId,
