@@ -4,7 +4,7 @@ import {
   commitmentsTable,
   appUsersTable,
 } from "@workspace/db";
-import { and, eq, inArray, ne, sql } from "drizzle-orm";
+import { and, eq, inArray, sql } from "drizzle-orm";
 import { ROUNDS, ROUND_BY_SLUG } from "./rounds";
 import { reservedByRound, lockRoundsForUpdate } from "./availability";
 import { logger } from "./logger";
@@ -165,7 +165,6 @@ export async function evaluateRoundTransitions(
       if (result.closed.includes(r.slug)) return false;
       return stateMap.get(r.slug)?.status === "open";
     });
-    void ne;
     if (!stillOpen) {
       for (const round of ROUNDS) {
         const state = stateMap.get(round.slug);

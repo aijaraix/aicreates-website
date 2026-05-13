@@ -1577,12 +1577,12 @@ function RoundCard(props: {
         <div className="flex items-center gap-2">
           <input
             type="number"
-            min={1}
+            min={0}
             max={100}
             value={pct}
             onChange={(e) =>
               setPct(
-                Math.max(1, Math.min(100, Number(e.target.value) || 0)),
+                Math.max(0, Math.min(100, Number(e.target.value) || 0)),
               )
             }
             className="brand-input !h-9 !text-sm w-24"

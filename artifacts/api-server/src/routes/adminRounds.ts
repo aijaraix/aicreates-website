@@ -1,6 +1,6 @@
 import { Router, type IRouter } from "express";
 import { requireAuth, requireAdmin } from "../lib/auth";
-import { db, roundStateTable, commitmentsTable } from "@workspace/db";
+import { db, roundStateTable } from "@workspace/db";
 import { and, eq, ne, sql } from "drizzle-orm";
 import { ROUNDS, ROUND_BY_SLUG } from "../lib/rounds";
 import { getAvailability, lockRoundsForUpdate } from "../lib/availability";
@@ -160,6 +160,9 @@ router.post("/admin/rounds/:slug/open", async (req, res) => {
     return;
   }
   await setStatus(slug, "open", req.appUser!.email, "round_open");
+  // Run a transition sweep so a manual override is followed by the
+  // same auto-advance / next-round logic the periodic sweep applies.
+  await evaluateRoundTransitions({ reason: "admin" });
   res.json({ ok: true, rounds: await buildView() });
 });
 
@@ -170,6 +173,10 @@ router.post("/admin/rounds/:slug/close", async (req, res) => {
     return;
   }
   await setStatus(slug, "closed", req.appUser!.email, "round_close");
+  // Closing the active round must immediately promote the next
+  // upcoming round so the system never sits with zero open rounds
+  // unintentionally after an admin action.
+  await evaluateRoundTransitions({ reason: "admin" });
   res.json({ ok: true, rounds: await buildView() });
 });
 
@@ -180,6 +187,7 @@ router.post("/admin/rounds/:slug/reopen", async (req, res) => {
     return;
   }
   await setStatus(slug, "open", req.appUser!.email, "round_reopen");
+  await evaluateRoundTransitions({ reason: "admin" });
   res.json({ ok: true, rounds: await buildView() });
 });
 
@@ -194,7 +202,7 @@ router.patch("/admin/rounds/:slug", async (req, res) => {
     res.status(400).json({ error: "softClosePct required" });
     return;
   }
-  const pct = Math.max(1, Math.min(100, Math.round(body.softClosePct)));
+  const pct = Math.max(0, Math.min(100, Math.round(body.softClosePct)));
   await db
     .insert(roundStateTable)
     .values({ slug, softClosePct: pct })
@@ -225,9 +233,5 @@ router.post("/admin/rounds/evaluate", async (req, res) => {
   });
   res.json({ ok: true, result, rounds: await buildView() });
 });
-
-// Helper to silence unused import warning when commitmentsTable is not used.
-void commitmentsTable;
-void eq;
 
 export default router;
