@@ -291,15 +291,15 @@ export default function Home() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.25 }}
-              className="flex flex-col sm:flex-row gap-3 justify-center"
+              className="flex flex-row gap-2 sm:gap-3 justify-center"
             >
               <Link href="/eve-os">
-                <Button size="lg" className="rounded-full h-12 px-7 teal-btn">
-                  Explore Eve OS <ArrowRight className="ml-2 w-4 h-4" />
+                <Button size="lg" className="rounded-full h-11 sm:h-12 px-4 sm:px-7 teal-btn text-sm sm:text-base">
+                  Explore Eve OS <ArrowRight className="ml-1.5 sm:ml-2 w-4 h-4" />
                 </Button>
               </Link>
               <Link href="/contact">
-                <Button size="lg" variant="outline" className="rounded-full h-12 px-7 glass-btn">
+                <Button size="lg" variant="outline" className="rounded-full h-11 sm:h-12 px-4 sm:px-7 glass-btn text-sm sm:text-base">
                   Engage with us
                 </Button>
               </Link>
@@ -313,7 +313,7 @@ export default function Home() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 0.5 }}
-          className="container mx-auto px-4 sm:px-6 relative z-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 sm:gap-x-10 sm:gap-y-4 pt-6 pb-2 md:pt-10 md:pb-0 text-[10px] sm:text-xs uppercase tracking-[0.18em] sm:tracking-[0.2em] text-white/40"
+          className="container mx-auto px-4 sm:px-6 relative z-10 flex flex-col sm:flex-row flex-wrap items-center justify-center gap-x-6 gap-y-1.5 sm:gap-x-10 sm:gap-y-4 pt-4 pb-3 md:pt-10 md:pb-0 text-[10px] sm:text-xs uppercase tracking-[0.18em] sm:tracking-[0.2em] text-white/40"
         >
           <span>Hybrid Compute Fabric</span>
           <span className="hidden md:inline w-1 h-1 rounded-full bg-white/20" />
