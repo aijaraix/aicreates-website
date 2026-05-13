@@ -13,6 +13,7 @@ import {
 import { lockRoundsForUpdate, validateCapacity } from "../lib/availability";
 import {
   evaluateRoundTransitions,
+  getActiveRoundSlug,
   getRoundStatuses,
   getRoundStatusesTx,
 } from "../lib/roundStatus";
@@ -256,7 +257,18 @@ router.post("/commitments", requireAuth, async (req, res) => {
   }
 
   // ---- Legacy single-round path ----
-  const round = body.roundSlug ?? getActiveRound().slug;
+  // DB-driven default: when no roundSlug is supplied, target the
+  // currently-open round. If nothing is open, reject — the picker
+  // should not be allowing legacy single-round commits in that case.
+  const dbActive = await getActiveRoundSlug();
+  const round = body.roundSlug ?? dbActive ?? "";
+  if (!round) {
+    res.status(409).json({
+      error: "No round is currently open for commitments",
+      code: "no_open_round",
+    });
+    return;
+  }
   if (!ROUND_BY_SLUG.has(round)) {
     res.status(400).json({ error: "Unknown round" });
     return;
