@@ -58,10 +58,11 @@ export default function NeoBank() {
               className="mt-10 flex flex-col sm:flex-row gap-3"
             >
               <Button
+                type="button"
                 size="lg"
-                disabled
                 aria-disabled="true"
-                className="rounded-full h-12 px-7 teal-btn cursor-not-allowed opacity-60"
+                onClick={(e) => e.preventDefault()}
+                className="rounded-full h-12 px-7 teal-btn"
               >
                 Coming soon
               </Button>
@@ -224,10 +225,11 @@ export default function NeoBank() {
                 </p>
               </div>
               <Button
+                type="button"
                 size="lg"
-                disabled
                 aria-disabled="true"
-                className="rounded-full h-12 px-8 teal-btn whitespace-nowrap cursor-not-allowed opacity-60"
+                onClick={(e) => e.preventDefault()}
+                className="rounded-full h-12 px-8 teal-btn whitespace-nowrap"
               >
                 Coming soon
               </Button>
