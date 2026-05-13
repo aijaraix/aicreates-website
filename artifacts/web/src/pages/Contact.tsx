@@ -245,7 +245,7 @@ export default function Contact() {
                     <Button
                       type="submit"
                       disabled={submitting}
-                      className="w-full rounded-full bg-[#00F5D4] text-black hover:bg-[#00F5D4]/90 h-12 text-sm font-medium disabled:opacity-70"
+                      className="w-full rounded-full teal-btn h-12 text-sm disabled:opacity-70"
                     >
                       {submitting ? (
                         <><Loader2 className="mr-2 w-4 h-4 animate-spin" /> Sending</>

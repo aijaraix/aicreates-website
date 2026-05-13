@@ -146,7 +146,7 @@ export function Navigation() {
               rel="noopener noreferrer"
             >
               <Button
-                className="rounded-full h-9 px-5 bg-[#00F5D4] text-black hover:bg-[#00F5D4]/90 text-sm font-medium"
+                className="rounded-full h-9 px-5 teal-btn text-sm"
                 data-testid="button-nav-portal"
               >
                 Portal
@@ -209,7 +209,7 @@ export function Navigation() {
                     onClick={() => setOpen(false)}
                   >
                     <Button
-                      className="w-full rounded-full h-11 bg-[#00F5D4] text-black hover:bg-[#00F5D4]/90 font-medium"
+                      className="w-full rounded-full h-11 teal-btn"
                       data-testid="button-mobile-nav-portal"
                     >
                       Portal

@@ -166,7 +166,7 @@ export default function Roadmap() {
                 The litepaper covers the full positioning, architecture, tokenomics, and roadmap.
               </p>
               <Link href="/litepaper">
-                <Button size="lg" className="rounded-full h-12 px-8 bg-[#00F5D4] text-black hover:bg-[#00F5D4]/90 font-medium">
+                <Button size="lg" className="rounded-full h-12 px-8 teal-btn">
                   Read the litepaper <ArrowRight className="ml-2 w-4 h-4" />
                 </Button>
               </Link>

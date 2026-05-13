@@ -74,7 +74,7 @@ export default function EveOS() {
               className="mt-10 flex flex-col sm:flex-row gap-3"
             >
               <Link href="/contact?interest=Eve%20OS%20Waitlist">
-                <Button size="lg" className="rounded-full h-12 px-7 bg-[#00F5D4] text-black hover:bg-[#00F5D4]/90 font-medium">
+                <Button size="lg" className="rounded-full h-12 px-7 teal-btn">
                   Join the Waitlist <ArrowRight className="ml-2 w-4 h-4" />
                 </Button>
               </Link>
@@ -371,7 +371,7 @@ export default function EveOS() {
                 Join the Waitlist to be among the first to experience Eve OS.
               </p>
               <Link href="/contact?interest=Eve%20OS%20Waitlist">
-                <Button size="lg" className="rounded-full h-12 px-8 bg-[#00F5D4] text-black hover:bg-[#00F5D4]/90 font-medium">
+                <Button size="lg" className="rounded-full h-12 px-8 teal-btn">
                   Join the Waitlist <ArrowRight className="ml-2 w-4 h-4" />
                 </Button>
               </Link>

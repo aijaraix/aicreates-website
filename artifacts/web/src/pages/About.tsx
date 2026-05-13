@@ -156,7 +156,7 @@ export default function About() {
               className="mt-10 flex flex-col sm:flex-row gap-3"
             >
               <Link href="/eve-os">
-                <Button size="lg" className="rounded-full h-12 px-7 bg-[#00F5D4] text-black hover:bg-[#00F5D4]/90 font-medium">
+                <Button size="lg" className="rounded-full h-12 px-7 teal-btn">
                   See it as Eve OS <ArrowRight className="ml-2 w-4 h-4" />
                 </Button>
               </Link>
@@ -336,7 +336,7 @@ export default function About() {
                 </p>
               </div>
               <Link href="/contact">
-                <Button size="lg" className="rounded-full h-12 px-8 bg-[#00F5D4] text-black hover:bg-[#00F5D4]/90 font-medium whitespace-nowrap">
+                <Button size="lg" className="rounded-full h-12 px-8 teal-btn whitespace-nowrap">
                   Engage with us <ArrowRight className="ml-2 w-4 h-4" />
                 </Button>
               </Link>

@@ -287,7 +287,7 @@ export default function Press() {
                 Email <a href="mailto:sholom@aicreates.ai" className="text-white hover:text-[#00F5D4]">sholom@aicreates.ai</a> or use the contact form.
               </p>
               <Link href="/contact?interest=Press">
-                <Button size="lg" className="rounded-full h-12 px-8 bg-[#00F5D4] text-black hover:bg-[#00F5D4]/90 font-medium">
+                <Button size="lg" className="rounded-full h-12 px-8 teal-btn">
                   Contact press <ArrowRight className="ml-2 w-4 h-4" />
                 </Button>
               </Link>

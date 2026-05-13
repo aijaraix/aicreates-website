@@ -103,7 +103,7 @@ export default function Invest() {
               >
                 <Button
                   size="lg"
-                  className="rounded-full h-12 px-7 bg-[#00F5D4] text-black hover:bg-[#00F5D4]/90 font-medium"
+                  className="rounded-full h-12 px-7 teal-btn"
                   data-testid="button-reserve-allocation"
                 >
                   Reserve Allocation <ArrowRight className="ml-2 w-4 h-4" />
@@ -399,7 +399,7 @@ export default function Invest() {
                 <Button
                   size="lg"
                   onClick={() => setDeckOpen(true)}
-                  className="rounded-full h-12 px-8 bg-[#00F5D4] text-black hover:bg-[#00F5D4]/90 font-medium"
+                  className="rounded-full h-12 px-8 teal-btn"
                   data-testid="button-view-whitepaper"
                 >
                   View Whitepaper <ArrowRight className="ml-2 w-4 h-4" />

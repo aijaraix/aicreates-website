@@ -16,7 +16,7 @@ export default function NotFound() {
           The page you are looking for does not exist or has moved.
         </p>
         <Link href="/">
-          <Button size="lg" className="rounded-full h-12 px-7 bg-[#00F5D4] text-black hover:bg-[#00F5D4]/90 font-medium">
+          <Button size="lg" className="rounded-full h-12 px-7 teal-btn">
             Back to home <ArrowRight className="ml-2 w-4 h-4" />
           </Button>
         </Link>

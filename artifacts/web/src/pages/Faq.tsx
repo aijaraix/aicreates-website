@@ -216,7 +216,7 @@ export default function Faq() {
                 Reach out and we will route you to the right person.
               </p>
               <Link href="/contact">
-                <Button size="lg" className="rounded-full h-12 px-8 bg-[#00F5D4] text-black hover:bg-[#00F5D4]/90 font-medium">
+                <Button size="lg" className="rounded-full h-12 px-8 teal-btn">
                   Get in touch <ArrowRight className="ml-2 w-4 h-4" />
                 </Button>
               </Link>

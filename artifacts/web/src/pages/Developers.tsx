@@ -62,7 +62,7 @@ export default function Developers() {
               className="mt-10 flex flex-col sm:flex-row gap-3"
             >
               <Link href="/contact?interest=Developer%20Waitlist">
-                <Button size="lg" className="rounded-full h-12 px-7 bg-[#00F5D4] text-black hover:bg-[#00F5D4]/90 font-medium">
+                <Button size="lg" className="rounded-full h-12 px-7 teal-btn">
                   Join the developer waitlist <ArrowRight className="ml-2 w-4 h-4" />
                 </Button>
               </Link>
@@ -186,7 +186,7 @@ export default function Developers() {
                 </p>
               </div>
               <Link href="/contact?interest=Developer%20Waitlist">
-                <Button size="lg" className="rounded-full h-12 px-8 bg-[#00F5D4] text-black hover:bg-[#00F5D4]/90 font-medium whitespace-nowrap">
+                <Button size="lg" className="rounded-full h-12 px-8 teal-btn whitespace-nowrap">
                   Join the waitlist <ArrowRight className="ml-2 w-4 h-4" />
                 </Button>
               </Link>
