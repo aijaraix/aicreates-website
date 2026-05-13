@@ -152,7 +152,7 @@ function ProductSpotlight() {
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(0,245,212,0.18),transparent_60%)] pointer-events-none" />
           <div className="hidden md:block absolute inset-y-0 left-0 w-3/4 lg:w-2/3 bg-gradient-to-r from-[#0A0A0A] via-[#0A0A0A]/95 to-transparent pointer-events-none" />
 
-          <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-8 p-6 sm:p-10 md:p-12 lg:p-16">
+          <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-8 p-6 sm:p-10 md:p-12 lg:p-16 min-h-[460px] sm:min-h-[500px] md:min-h-[540px] lg:min-h-[560px]">
             <AnimatePresence mode="wait">
               <motion.div
                 key={`text-${slide.id}`}
