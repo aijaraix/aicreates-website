@@ -108,8 +108,8 @@ const SLIDES: Slide[] = [
     ctaHref: "/neobank",
     pills: ["Treasury", "Payments", "Credit", "Yield", "Compliance", "Identity"],
     bgImage: neobankSpotlightUrl,
-    bgSize: "contain",
-    bgPosition: "right center",
+    bgSize: "auto 140%",
+    bgPosition: "30% center",
   },
 ];
 
