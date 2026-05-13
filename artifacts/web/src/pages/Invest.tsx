@@ -403,6 +403,20 @@ export default function Invest() {
                   View Whitepaper <ArrowRight className="ml-2 w-4 h-4" />
                 </Button>
                 <a
+                  href={`${import.meta.env.BASE_URL}whitepaper-deck.pdf`}
+                  download="AIcreatesAI Whitepaper Deck.pdf"
+                  rel="noopener noreferrer"
+                  data-testid="button-download-presentation"
+                >
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="rounded-full h-12 px-7 glass-btn"
+                  >
+                    <Download className="mr-2 w-4 h-4" /> Download the Presentation
+                  </Button>
+                </a>
+                <a
                   href={`${import.meta.env.BASE_URL}litepaper.pdf`}
                   download="AiCreatesAi Whitepaper.pdf"
                   rel="noopener noreferrer"
@@ -413,7 +427,7 @@ export default function Invest() {
                     variant="outline"
                     className="rounded-full h-12 px-7 glass-btn"
                   >
-                    Download
+                    Download Litepaper
                   </Button>
                 </a>
               </div>

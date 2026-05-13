@@ -17,6 +17,7 @@ import {
   Database,
   Boxes,
 } from "lucide-react";
+import DeckCarousel from "@/components/DeckCarousel";
 import RoundsTable from "@/components/RoundsTable";
 import AllocationCalculator from "@/components/AllocationCalculator";
 import aicaUtilityLayerUrl from "@/assets/tokenomics/aica-utility-layer.png";
@@ -1036,6 +1037,46 @@ export default function Home() {
             $AICA is a utility and coordination token - not the product itself.
           </figcaption>
         </figure>
+      </Section>
+
+      {/* ----------------------------- VISUAL WHITEPAPER DECK ----------------------------- */}
+      <Section
+        id="visual-whitepaper"
+        eyebrow="Visual Whitepaper"
+        title={<>The full <span className="text-[#00F5D4]">investor deck</span>, page by page.</>}
+      >
+        <p className="text-white/70 text-base md:text-lg leading-relaxed max-w-3xl">
+          Step through the entire AIcreatesAI whitepaper deck right here. Use the arrows or swipe on mobile, open it fullscreen for a presentation view, or download the PDF to share offline.
+        </p>
+        <div className="mt-8">
+          <DeckCarousel
+            basePath={`${import.meta.env.BASE_URL}deck`}
+            manifestUrl={`${import.meta.env.BASE_URL}deck/manifest.json`}
+            title="AIcreatesAI Whitepaper Deck"
+            subline="Swipe through the deck, open it fullscreen, or download the PDF."
+            testIdPrefix="deck-portal"
+          />
+        </div>
+        <div className="mt-6 flex flex-wrap gap-3">
+          <a
+            href={`${import.meta.env.BASE_URL}whitepaper-deck.pdf`}
+            download="AIcreatesAI Whitepaper Deck.pdf"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center h-12 px-7 rounded-full bg-[#00F5D4] text-black font-medium hover:bg-[#00F5D4]/90 transition-colors"
+            data-testid="link-download-presentation"
+          >
+            <Download className="mr-2 w-4 h-4" /> Download the Presentation
+          </a>
+          <a
+            href={`${import.meta.env.BASE_URL}litepaper.pdf`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center h-12 px-7 rounded-full glass-btn"
+            data-testid="link-download-litepaper-deck-section"
+          >
+            <Download className="mr-2 w-4 h-4" /> Download Litepaper
+          </a>
+        </div>
       </Section>
 
       {/* ----------------------------- ROADMAP ----------------------------- */}
