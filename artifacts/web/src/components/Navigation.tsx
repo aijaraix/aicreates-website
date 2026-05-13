@@ -40,7 +40,7 @@ function Wordmark({ size = "md" }: { size?: "sm" | "md" }) {
   const iconCls = size === "sm" ? "h-5 w-auto shrink-0" : "h-6 w-auto shrink-0";
   return (
     <span className="inline-flex items-center gap-2">
-      <LogoMark className={iconCls} title="AIcreatesAI" />
+      <LogoMark className={iconCls} />
       <span className={`font-sans font-semibold tracking-tight text-white ${cls} leading-none`}>
         <span className="text-[hsl(168_100%_48%)]">AI</span>
         <span className="font-light">creates</span>

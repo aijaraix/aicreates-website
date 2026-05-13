@@ -1,5 +1,4 @@
 uploads = []
-outputs = []
 
 [[generated]]
 id = "BLptG0Pz6Fm-ZeijE8g3u"
@@ -78,3 +77,15 @@ id = "pqmWwgHgufEJp5q-gQ6Y4"
 uri = "file://artifacts/web/src/assets/eve-portrait.png"
 type = "image"
 title = "eve russian woman portrait"
+
+[[outputs]]
+id = "i4GFkxREwYurptq6LJ199"
+uri = "file://artifacts/web/src/assets/_logo_raw_crop.png"
+type = "image"
+title = "Cropped icon (preview)"
+
+[[outputs]]
+id = "CU14RVQL2jouyYf1_jt55"
+uri = "file://artifacts/web/src/assets/aica-logo-mark.png"
+type = "image"
+title = "Final icon (transparent bg, trimmed)"

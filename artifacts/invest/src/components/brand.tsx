@@ -138,7 +138,7 @@ export function Wordmark({
   const iconCls = size === "sm" ? "h-5 w-auto shrink-0" : "h-6 w-auto shrink-0";
   return (
     <span className="inline-flex items-center gap-2.5">
-      {withDot && <LogoMark className={iconCls} title="AIcreatesAI" />}
+      {withDot && <LogoMark className={iconCls} />}
       <span
         className={cx(
           "font-sans font-semibold tracking-tight text-white leading-none",
