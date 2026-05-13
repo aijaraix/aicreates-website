@@ -38,11 +38,15 @@ const GROUPS: FaqGroup[] = [
       },
       {
         q: "Which round is open right now?",
-        a: "Strategic Seed is the only round currently open. Investors can reserve allocation today at $0.010 per AICA with tiered bonuses at $5k and $25k. Subsequent rounds open later in sequence as Strategic Seed fills.",
+        a: "Strategic Seed is the only round currently open. Investors can reserve allocation today at $0.010 per AICA with tiered bonuses at $5k (+10%) and $25k (+20%). Subsequent rounds open later in sequence as Strategic Seed fills.",
       },
       {
         q: "When does the round close?",
         a: "Strategic Seed closes on hitting its $5M hard cap or December 31, 2026, whichever is earlier. Closing dates can move forward only - never backward.",
+      },
+      {
+        q: "How is the $50M raise being deployed?",
+        a: "The $50M raise underwrites the agentic intelligence layer, Eve OS, and the hybrid compute fabric. The first $3.5M anchors a high-end GPU cluster for proprietary model training and inference; the balance funds engineering, go-to-market, ecosystem, and a strategic reserve.",
       },
       {
         q: "What is the minimum / maximum?",
@@ -59,7 +63,11 @@ const GROUPS: FaqGroup[] = [
       },
       {
         q: "What is the vesting schedule?",
-        a: "Default schedule: 25% at TGE, 6-month cliff, then linear monthly over 24 months. Final terms are subject to counsel review.",
+        a: "Vesting is per round - earlier rounds carry longer lockups, later rounds vest faster. Strategic Seed: 10% at TGE, 12-month cliff, 24-month linear. Private Round 1: 15% at TGE, 9-month cliff, 24-month linear. Private Round 2: 20% at TGE, 6-month cliff, 24-month linear. Infrastructure / Strategic: 25% at TGE, 6-month cliff, 18-month linear. Community / Launchpad: 30% at TGE, 3-month cliff, 12-month linear. Toggle the SAFT schedule on your dashboard to compare. Final terms are subject to counsel review.",
+      },
+      {
+        q: "Why does vesting differ by round?",
+        a: "Earlier rounds price in more risk and longer time to liquidity, so they carry deeper discounts and longer lockups. Later rounds price closer to TGE and unlock more aggressively. Across all rounds, vesting begins at TGE; after each round's cliff, the linear portion unlocks in equal monthly installments to your mapped wallet.",
       },
       {
         q: "Are tokens locked or transferable?",
@@ -72,7 +80,7 @@ const GROUPS: FaqGroup[] = [
     items: [
       {
         q: "What payment methods do you accept?",
-        a: "Card via Stripe Checkout (recommended under $25k), wire transfer (recommended for $25k+), and crypto (BTC, ETH, SOL, USDC on Base or Ethereum, or USDT on Ethereum) via escrow addresses shown directly on the checkout page.",
+        a: "Card via Stripe Checkout (Apple Pay and Google Pay supported automatically; recommended under $25k), wire transfer (recommended for $25k+, with full bank details and a downloadable PDF on checkout), and crypto via real on-chain escrows: BTC (Bitcoin), ETH (Ethereum), SOL (Solana), USDC (Base or Ethereum), and USDT (Ethereum). Each escrow accepts only one asset on one network - sending the wrong combination will be lost.",
       },
       {
         q: "How does KYC work?",
@@ -101,6 +109,10 @@ const GROUPS: FaqGroup[] = [
         q: "How do I claim my tokens at TGE?",
         a: "After TGE, vested tokens are distributed to the wallet address mapped on your SAFT (or one you provide later). You will receive a claim notification by email when each unlock becomes available; tokens may be auto-distributed or claimable from a portal page depending on the launch chain.",
         anchor: "claim",
+      },
+      {
+        q: "Where can I see my vesting calendar?",
+        a: "Your dashboard shows a per-commitment vesting calendar based on the round you funded into and computes upcoming unlocks. You can also export the full schedule as an .ics calendar file. Switch the SAFT schedule on the dashboard to the Vesting view to compare round-level terms side by side.",
       },
     ],
   },

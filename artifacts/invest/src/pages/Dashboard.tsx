@@ -10,7 +10,7 @@ import PageHeader from "@/components/PageHeader";
 import StatusTimeline from "@/components/StatusTimeline";
 import { StatTile } from "@/components/brand";
 import { buildIcs } from "@/lib/vesting";
-import { ROUNDS } from "@/data/rounds";
+import { ROUNDS, formatVesting } from "@/data/rounds";
 
 interface VestingPoint {
   date: string;
@@ -493,6 +493,7 @@ export default function Dashboard() {
 
 function TokenRoundsSection() {
   const current = ROUNDS.find((r) => r.open);
+  const [view, setView] = useState<"terms" | "vesting">("terms");
   return (
     <section className="mb-10" data-testid="section-token-rounds">
       <div className="flex flex-wrap items-end justify-between gap-3 mb-4">
@@ -504,97 +505,201 @@ function TokenRoundsSection() {
             AICA SAFT schedule
           </h2>
         </div>
-        {current && (
-          <div className="text-xs text-white/55">
-            Current round:{" "}
-            <span className="text-white/85 font-medium">{current.name}</span>{" "}
-            · <span className="text-[#00F5D4]">{current.pricePerToken}</span>
+        <div className="flex items-center gap-3">
+          {current && (
+            <div className="text-xs text-white/55 hidden md:block">
+              Current round:{" "}
+              <span className="text-white/85 font-medium">{current.name}</span>{" "}
+              · <span className="text-[#00F5D4]">{current.pricePerToken}</span>
+            </div>
+          )}
+          <div
+            className="inline-flex items-center p-1 rounded-full border border-white/10 bg-white/[0.02]"
+            role="tablist"
+            aria-label="Schedule view"
+          >
+            <button
+              type="button"
+              role="tab"
+              aria-selected={view === "terms"}
+              onClick={() => setView("terms")}
+              className={`px-3 h-7 rounded-full text-[11px] uppercase tracking-[0.14em] transition ${
+                view === "terms"
+                  ? "bg-[#00F5D4]/15 text-[#00F5D4] border border-[#00F5D4]/40"
+                  : "text-white/55 hover:text-white/80"
+              }`}
+              data-testid="toggle-terms"
+            >
+              Round terms
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={view === "vesting"}
+              onClick={() => setView("vesting")}
+              className={`px-3 h-7 rounded-full text-[11px] uppercase tracking-[0.14em] transition ${
+                view === "vesting"
+                  ? "bg-[#00F5D4]/15 text-[#00F5D4] border border-[#00F5D4]/40"
+                  : "text-white/55 hover:text-white/80"
+              }`}
+              data-testid="toggle-vesting"
+            >
+              Vesting
+            </button>
           </div>
-        )}
+        </div>
       </div>
 
       <div className="brand-card overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead className="bg-white/[0.03] text-[10px] uppercase tracking-[0.16em] text-white/45">
-              <tr>
-                <th className="text-left px-4 py-3 font-medium">Round</th>
-                <th className="text-right px-4 py-3 font-medium">Price</th>
-                <th className="text-right px-4 py-3 font-medium hidden sm:table-cell">
-                  Tokens
-                </th>
-                <th className="text-right px-4 py-3 font-medium hidden md:table-cell">
-                  Raise
-                </th>
-                <th className="text-right px-4 py-3 font-medium hidden lg:table-cell">
-                  FDV
-                </th>
-                <th className="text-center px-4 py-3 font-medium">Status</th>
-                <th className="text-right px-4 py-3 font-medium">Action</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-white/5">
-              {ROUNDS.map((r) => (
-                <tr
-                  key={r.slug}
-                  className={r.open ? "bg-[#00F5D4]/[0.04]" : ""}
-                  data-testid={`round-row-${r.slug}`}
-                >
-                  <td className="px-4 py-3.5">
-                    <div className="font-medium text-white/90">{r.name}</div>
-                    <div className="text-[11px] text-white/45 mt-0.5">
-                      {r.supplyPct} of supply
-                    </div>
-                  </td>
-                  <td className="px-4 py-3.5 text-right tabular-nums text-[#00F5D4] font-medium">
-                    {r.pricePerToken.replace(" per AICA", "")}
-                  </td>
-                  <td className="px-4 py-3.5 text-right tabular-nums text-white/75 hidden sm:table-cell">
-                    {r.tokens}
-                  </td>
-                  <td className="px-4 py-3.5 text-right tabular-nums text-white/75 hidden md:table-cell">
-                    {r.totalRaise}
-                  </td>
-                  <td className="px-4 py-3.5 text-right tabular-nums text-white/55 hidden lg:table-cell">
-                    {r.fdv}
-                  </td>
-                  <td className="px-4 py-3.5 text-center">
-                    {r.open ? (
-                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] uppercase tracking-[0.14em] bg-[#00F5D4]/15 text-[#00F5D4] border border-[#00F5D4]/40">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#00F5D4] animate-pulse" />
-                        Open
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] uppercase tracking-[0.14em] text-white/45 border border-white/10">
-                        Upcoming
-                      </span>
-                    )}
-                  </td>
-                  <td className="px-4 py-3.5 text-right">
-                    {r.open ? (
-                      <Link
-                        href={`/invest?round=${r.slug}`}
-                        className="inline-flex items-center justify-center h-8 px-4 rounded-full teal-btn text-xs"
-                        data-testid={`button-commit-${r.slug}`}
-                      >
-                        Commit
-                      </Link>
-                    ) : (
-                      <button
-                        type="button"
-                        disabled
-                        className="inline-flex items-center justify-center h-8 px-4 rounded-full glass-btn text-xs opacity-40 cursor-not-allowed"
-                        data-testid={`button-commit-${r.slug}`}
-                      >
-                        Coming soon
-                      </button>
-                    )}
-                  </td>
+          {view === "terms" ? (
+            <table className="w-full text-sm">
+              <thead className="bg-white/[0.03] text-[10px] uppercase tracking-[0.16em] text-white/45">
+                <tr>
+                  <th className="text-left px-4 py-3 font-medium">Round</th>
+                  <th className="text-right px-4 py-3 font-medium">Price</th>
+                  <th className="text-right px-4 py-3 font-medium hidden sm:table-cell">
+                    Tokens
+                  </th>
+                  <th className="text-right px-4 py-3 font-medium hidden md:table-cell">
+                    Raise
+                  </th>
+                  <th className="text-right px-4 py-3 font-medium hidden lg:table-cell">
+                    FDV
+                  </th>
+                  <th className="text-center px-4 py-3 font-medium">Status</th>
+                  <th className="text-right px-4 py-3 font-medium">Action</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-white/5">
+                {ROUNDS.map((r) => (
+                  <tr
+                    key={r.slug}
+                    className={r.open ? "bg-[#00F5D4]/[0.04]" : ""}
+                    data-testid={`round-row-${r.slug}`}
+                  >
+                    <td className="px-4 py-3.5">
+                      <div className="font-medium text-white/90">{r.name}</div>
+                      <div className="text-[11px] text-white/45 mt-0.5">
+                        {r.supplyPct} of supply
+                      </div>
+                    </td>
+                    <td className="px-4 py-3.5 text-right tabular-nums text-[#00F5D4] font-medium">
+                      {r.pricePerToken.replace(" per AICA", "")}
+                    </td>
+                    <td className="px-4 py-3.5 text-right tabular-nums text-white/75 hidden sm:table-cell">
+                      {r.tokens}
+                    </td>
+                    <td className="px-4 py-3.5 text-right tabular-nums text-white/75 hidden md:table-cell">
+                      {r.totalRaise}
+                    </td>
+                    <td className="px-4 py-3.5 text-right tabular-nums text-white/55 hidden lg:table-cell">
+                      {r.fdv}
+                    </td>
+                    <td className="px-4 py-3.5 text-center">
+                      {r.open ? (
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] uppercase tracking-[0.14em] bg-[#00F5D4]/15 text-[#00F5D4] border border-[#00F5D4]/40">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#00F5D4] animate-pulse" />
+                          Open
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] uppercase tracking-[0.14em] text-white/45 border border-white/10">
+                          Upcoming
+                        </span>
+                      )}
+                    </td>
+                    <td className="px-4 py-3.5 text-right">
+                      {r.open ? (
+                        <Link
+                          href={`/invest?round=${r.slug}`}
+                          className="inline-flex items-center justify-center h-8 px-4 rounded-full teal-btn text-xs"
+                          data-testid={`button-commit-${r.slug}`}
+                        >
+                          Commit
+                        </Link>
+                      ) : (
+                        <button
+                          type="button"
+                          disabled
+                          className="inline-flex items-center justify-center h-8 px-4 rounded-full glass-btn text-xs opacity-40 cursor-not-allowed"
+                          data-testid={`button-commit-${r.slug}`}
+                        >
+                          Coming soon
+                        </button>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <table className="w-full text-sm">
+              <thead className="bg-white/[0.03] text-[10px] uppercase tracking-[0.16em] text-white/45">
+                <tr>
+                  <th className="text-left px-4 py-3 font-medium">Round</th>
+                  <th className="text-right px-4 py-3 font-medium">TGE unlock</th>
+                  <th className="text-right px-4 py-3 font-medium">Cliff</th>
+                  <th className="text-right px-4 py-3 font-medium">Linear vest</th>
+                  <th className="text-right px-4 py-3 font-medium hidden md:table-cell">
+                    Total duration
+                  </th>
+                  <th className="text-center px-4 py-3 font-medium">Status</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/5">
+                {ROUNDS.map((r) => {
+                  const v = formatVesting(r.vesting);
+                  const total = r.vesting.cliffMonths + r.vesting.vestingMonths;
+                  return (
+                    <tr
+                      key={r.slug}
+                      className={r.open ? "bg-[#00F5D4]/[0.04]" : ""}
+                      data-testid={`vest-row-${r.slug}`}
+                    >
+                      <td className="px-4 py-3.5">
+                        <div className="font-medium text-white/90">{r.name}</div>
+                        <div className="text-[11px] text-white/45 mt-0.5">
+                          {r.pricePerToken.replace(" per AICA", "")} · {r.tokens}
+                        </div>
+                      </td>
+                      <td className="px-4 py-3.5 text-right tabular-nums text-[#00F5D4] font-medium">
+                        {v.tge}
+                      </td>
+                      <td className="px-4 py-3.5 text-right tabular-nums text-white/75">
+                        {v.cliff}
+                      </td>
+                      <td className="px-4 py-3.5 text-right tabular-nums text-white/75">
+                        {v.linear}
+                      </td>
+                      <td className="px-4 py-3.5 text-right tabular-nums text-white/55 hidden md:table-cell">
+                        {total} months
+                      </td>
+                      <td className="px-4 py-3.5 text-center">
+                        {r.open ? (
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] uppercase tracking-[0.14em] bg-[#00F5D4]/15 text-[#00F5D4] border border-[#00F5D4]/40">
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#00F5D4] animate-pulse" />
+                            Open
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] uppercase tracking-[0.14em] text-white/45 border border-white/10">
+                            Upcoming
+                          </span>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          )}
         </div>
+        {view === "vesting" && (
+          <div className="px-4 py-3 text-[11px] text-white/45 border-t border-white/5">
+            Vesting begins at TGE. After the round's cliff, the linear portion
+            unlocks in equal monthly installments. Final terms subject to
+            counsel review and may be adjusted in the SAFT.
+          </div>
+        )}
       </div>
     </section>
   );

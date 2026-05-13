@@ -19,6 +19,15 @@ export interface RoundDef {
   /** Fully diluted valuation at this round's price. */
   fdv: string;
   open: boolean;
+  /**
+   * Per-round vesting parameters. Earlier rounds carry longer lockups;
+   * later rounds vest faster. Final terms are subject to counsel review.
+   */
+  vesting: {
+    tgePercent: number;
+    cliffMonths: number;
+    vestingMonths: number;
+  };
 }
 
 export const ROUNDS: RoundDef[] = [
@@ -32,6 +41,7 @@ export const ROUNDS: RoundDef[] = [
     supplyPct: "5.00%",
     fdv: "$100M",
     open: true,
+    vesting: { tgePercent: 0.1, cliffMonths: 12, vestingMonths: 24 },
   },
   {
     slug: "private-1",
@@ -43,6 +53,7 @@ export const ROUNDS: RoundDef[] = [
     supplyPct: "8.00%",
     fdv: "$150M",
     open: false,
+    vesting: { tgePercent: 0.15, cliffMonths: 9, vestingMonths: 24 },
   },
   {
     slug: "private-2",
@@ -54,6 +65,7 @@ export const ROUNDS: RoundDef[] = [
     supplyPct: "9.00%",
     fdv: "$200M",
     open: false,
+    vesting: { tgePercent: 0.2, cliffMonths: 6, vestingMonths: 24 },
   },
   {
     slug: "infrastructure",
@@ -65,6 +77,7 @@ export const ROUNDS: RoundDef[] = [
     supplyPct: "3.85%",
     fdv: "$260M",
     open: false,
+    vesting: { tgePercent: 0.25, cliffMonths: 6, vestingMonths: 18 },
   },
   {
     slug: "community-launchpad",
@@ -76,8 +89,22 @@ export const ROUNDS: RoundDef[] = [
     supplyPct: "1.47%",
     fdv: "$340M",
     open: false,
+    vesting: { tgePercent: 0.3, cliffMonths: 3, vestingMonths: 12 },
   },
 ];
+
+/** Display helper - "10% / 12mo / 24mo". */
+export function formatVesting(v: RoundDef["vesting"]): {
+  tge: string;
+  cliff: string;
+  linear: string;
+  summary: string;
+} {
+  const tge = `${Math.round(v.tgePercent * 100)}% at TGE`;
+  const cliff = `${v.cliffMonths}-month cliff`;
+  const linear = `${v.vestingMonths}-month linear`;
+  return { tge, cliff, linear, summary: `${tge} · ${cliff} · ${linear}` };
+}
 
 export const ROUND_BY_SLUG: Map<string, RoundDef> = new Map(
   ROUNDS.map((r) => [r.slug, r]),

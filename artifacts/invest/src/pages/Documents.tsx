@@ -17,19 +17,36 @@ interface Allocation {
 
 const STATIC_DOCS = [
   {
-    title: "Litepaper",
+    title: "Whitepaper",
     blurb:
-      "Long-form positioning of the agentic intelligence layer, hybrid compute fabric, and Eve OS.",
+      "Long-form positioning of the agentic intelligence layer, hybrid compute fabric, Eve OS, tokenomics, and roadmap. Includes a downloadable PDF.",
     href: "https://www.aicreates.ai/litepaper",
-    cta: "Read on aicreates.ai",
+    cta: "Open the whitepaper",
     external: true,
   },
   {
-    title: "Whitepaper (coming soon)",
+    title: "Investor overview",
     blurb:
-      "Full technical whitepaper covering architecture, token mechanics, and economic model. Available after counsel review.",
-    cta: "Coming soon",
-    disabled: true,
+      "The public investor page on aicreates.ai - $50M raise, $3.5M GPU cluster, why-invest pillars, and the materials index.",
+    href: "https://www.aicreates.ai/invest",
+    cta: "View on aicreates.ai",
+    external: true,
+  },
+  {
+    title: "Round terms summary",
+    blurb:
+      "All five SAFT rounds - Strategic Seed through Community / Launchpad - with pricing, tokens, raise, FDV, and per-round vesting. Toggle the dashboard schedule to the Vesting view for full details.",
+    href: "/dashboard",
+    cta: "Open dashboard",
+    internal: true,
+  },
+  {
+    title: "Sample SAFT",
+    blurb:
+      "Reference overview of the AIcreatesAI SAFT - identity, accreditation, payment terms, risk, and wallet mapping. Your signed copy is generated when you complete the SAFT flow.",
+    href: "/faq#saft",
+    cta: "Read SAFT overview",
+    internal: true,
   },
   {
     title: "One-pager (coming soon)",
@@ -37,22 +54,6 @@ const STATIC_DOCS = [
       "Single-page round summary - terms, raise, use of proceeds, and team. Sharable with co-investors.",
     cta: "Coming soon",
     disabled: true,
-  },
-  {
-    title: "Sample SAFT",
-    blurb:
-      "Reference copy of the AIcreatesAI SAFT. Your signed copy will be generated when you complete the SAFT flow on a commitment.",
-    href: "/faq#saft",
-    cta: "Read SAFT overview",
-    internal: true,
-  },
-  {
-    title: "Round terms summary",
-    blurb:
-      "AICA private-sale rounds - SAFT round schedule, tier table, pricing, target raise, deadline, and payment options.",
-    href: "https://www.aicreates.ai/invest",
-    cta: "View terms",
-    external: true,
   },
   {
     title: "Pitch deck (coming soon)",
@@ -91,7 +92,7 @@ export default function Documents() {
       <PageHeader
         eyebrow="Resources"
         title={<>Documents.</>}
-        subtitle="Everything you need to evaluate, sign, and fund your AICA Strategic Seed Round commitment - plus your signed SAFTs."
+        subtitle="Everything you need to evaluate, sign, and fund your AICA SAFT commitment - across all five private-sale rounds - plus your signed SAFTs."
       />
       <main className="mx-auto max-w-5xl px-6 py-10 md:py-12">
         <section className="mb-12">
