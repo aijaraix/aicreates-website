@@ -44,9 +44,21 @@ const clerkPubKey = publishableKeyFromHost(
   window.location.hostname,
   import.meta.env.VITE_CLERK_PUBLISHABLE_KEY,
 );
-const clerkProxyUrl = import.meta.env.PROD
-  ? import.meta.env.VITE_CLERK_PROXY_URL
-  : undefined;
+function resolveClerkProxyUrl(): string | undefined {
+  if (!import.meta.env.PROD) return undefined;
+  const raw = import.meta.env.VITE_CLERK_PROXY_URL;
+  if (!raw) return undefined;
+  // Clerk requires an absolute URL. The env var is typically set as a
+  // path (e.g. "/api/__clerk") so it works across multiple custom
+  // domains; resolve it against the current origin at runtime.
+  if (/^https?:\/\//i.test(raw)) return raw;
+  try {
+    return new URL(raw, window.location.origin).toString();
+  } catch {
+    return undefined;
+  }
+}
+const clerkProxyUrl = resolveClerkProxyUrl();
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
 
 function stripBase(p: string): string {
