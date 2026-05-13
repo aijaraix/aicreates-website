@@ -7,7 +7,7 @@ export default function Footer() {
       {/* Giant wordmark - full width, faded. Texture/glow lives on the page background. */}
       <div className="relative w-full">
         <div
-          className="relative block w-full text-center leading-[0.85] font-semibold tracking-[-0.04em] select-none opacity-60"
+          className="relative block w-full text-center leading-[0.85] font-semibold tracking-[-0.04em] select-none opacity-85"
           style={{
             fontFamily: "Space Grotesk, system-ui, sans-serif",
             fontSize: "clamp(64px, 18vw, 320px)",
