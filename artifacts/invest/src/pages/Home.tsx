@@ -574,52 +574,251 @@ export default function Home() {
         </div>
       </Section>
 
-      {/* ----------------------------- TOKENOMICS ----------------------------- */}
+      {/* ----------------------------- TOKENOMICS / TOKEN UTILITY ----------------------------- */}
       <Section
         id="tokenomics"
-        eyebrow="Tokenomics"
-        title={<>10B AICA - utility for the entire <span className="text-[#00F5D4]">layer</span>.</>}
+        eyebrow="$AICA Token Utility"
+        title={<>The economic engine of the <span className="text-[#00F5D4]">layer</span>.</>}
       >
+        <div className="space-y-6 text-white/75 text-base md:text-lg leading-relaxed">
+          <p>
+            The $AICA token is the economic engine of the AIcreatesAI ecosystem. It is designed to reward real contributions, drive high-quality participation, and create a sustainable, usage-driven economy.
+          </p>
+          <p>
+            While core platform revenue comes from stablecoin and fiat subscriptions, the $AICA token serves as the primary mechanism to incentivize network growth, improve intelligence quality, and align long-term participants with the success of the platform.
+          </p>
+        </div>
+
+        {/* Supply + Philosophy */}
+        <div className="mt-10 grid md:grid-cols-2 gap-5">
+          <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-7">
+            <div className="text-xs uppercase tracking-[0.18em] text-white/40 mb-3">Total supply</div>
+            <div className="text-4xl font-semibold" style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}>
+              10,000,000,000 <span className="text-[#00F5D4] text-2xl">AICA</span>
+            </div>
+            <p className="mt-4 text-sm text-white/65 leading-relaxed">
+              Fixed supply. 22.5% allocated to the private sale across 5 SAFT rounds ($50M raise, ~$230M FDV blended). All private-round tokens subject to vesting (25% at TGE, 6-month cliff, then linear over 24 months).
+            </p>
+          </div>
+          <div className="rounded-2xl border border-[#00F5D4]/25 bg-[#00F5D4]/[0.04] p-7">
+            <div className="text-xs uppercase tracking-[0.18em] text-[#00F5D4] mb-3">Core philosophy</div>
+            <p className="text-white/80 text-base leading-relaxed">
+              Every token earned or spent should either improve the network (through meaningful contributions) or enhance user experience (through access and utility). The token economy is built around a closed-loop "recycle" model where platform revenue and fees continuously fund rewards for active contributors.
+            </p>
+          </div>
+        </div>
+      </Section>
+
+      {/* ----------------------------- CORE INCENTIVES ----------------------------- */}
+      <Section
+        id="core-incentives"
+        eyebrow="Core Incentives"
+        title={<>Three primary ways to <span className="text-[#00F5D4]">earn</span>.</>}
+      >
+        <div className="rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden">
+          {[
+            {
+              category: "GPU Contributions (Validators)",
+              what: "Run the desktop client in Validator Mode or dedicated nodes.",
+              how: "See detailed breakdown below.",
+              why: "Powers the decentralized compute layer.",
+            },
+            {
+              category: "Data Supplying",
+              what: "Share high-quality business or synthetic data (opt-in).",
+              how: "Earn based on data quality, volume, and usefulness to model improvement.",
+              why: "Fuels the self-improving intelligence flywheel.",
+            },
+            {
+              category: "Skills Development",
+              what: "Create, submit, and get approved skills on the Marketplace.",
+              how: "Earn royalties on usage plus creation bonuses and performance rewards.",
+              why: "Builds a rich, community-driven skills ecosystem.",
+            },
+          ].map((row, idx) => (
+            <div key={row.category} className={`p-6 md:p-7 grid md:grid-cols-12 gap-4 md:gap-6 ${idx > 0 ? "border-t border-white/5" : ""}`}>
+              <div className="md:col-span-3">
+                <div className="text-base font-semibold text-white" style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}>{row.category}</div>
+              </div>
+              <div className="md:col-span-3 text-sm text-white/70 leading-relaxed">
+                <div className="text-[10px] uppercase tracking-[0.18em] text-white/40 mb-1">What participants do</div>
+                {row.what}
+              </div>
+              <div className="md:col-span-3 text-sm text-white/70 leading-relaxed">
+                <div className="text-[10px] uppercase tracking-[0.18em] text-white/40 mb-1">How rewards work</div>
+                {row.how}
+              </div>
+              <div className="md:col-span-3 text-sm text-[#00F5D4]/90 leading-relaxed">
+                <div className="text-[10px] uppercase tracking-[0.18em] text-[#00F5D4]/70 mb-1">Why it matters</div>
+                {row.why}
+              </div>
+            </div>
+          ))}
+        </div>
+      </Section>
+
+      {/* ----------------------------- VALIDATOR REWARDS ----------------------------- */}
+      <Section
+        id="validator-rewards"
+        eyebrow="Validator Rewards"
+        title={<>The backbone of decentralized <span className="text-[#00F5D4]">compute</span>.</>}
+      >
+        <p className="text-white/65 text-base md:text-lg leading-relaxed mb-8 max-w-3xl">
+          Validators are the backbone of our decentralized compute network. We operate a two-tier system designed to reward both casual participants and serious operators.
+        </p>
         <div className="grid md:grid-cols-2 gap-5">
           <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-7">
-            <div className="text-sm uppercase tracking-[0.18em] text-white/40 mb-3">
-              Supply
+            <div className="flex items-start justify-between mb-5">
+              <div className="w-11 h-11 rounded-lg bg-[#00F5D4]/10 border border-[#00F5D4]/20 flex items-center justify-center">
+                <Cpu className="w-5 h-5 text-[#00F5D4]" strokeWidth={1.5} />
+              </div>
+              <span className="px-2.5 py-0.5 rounded-full text-[10px] uppercase tracking-[0.14em] bg-white/10 text-white/60">Tier 1</span>
             </div>
-            <div
-              className="text-4xl font-semibold"
-              style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}
-            >
-              10,000,000,000{" "}
-              <span className="text-[#00F5D4] text-2xl">AICA</span>
-            </div>
-            <ul className="mt-5 space-y-2 text-sm text-white/70">
-              <li>- 22.5% Private Sale - 2.25B AICA across 5 SAFT rounds, $50M raise ($0.010 → $0.034 per AICA, ~$230M FDV)</li>
-              <li>- 75% Reserved per whitepaper across ecosystem rewards, team and advisors, treasury, and public sale</li>
-              <li>- All private-round tokens subject to appropriate vesting</li>
-            </ul>
+            <h3 className="text-2xl font-serif font-semibold text-white mb-1">Retail Validators</h3>
+            <p className="text-white/55 text-sm mb-5">Easy entry point. Run in the background when idle. Ideal for side income and broad user acquisition.</p>
+            <dl className="space-y-3 text-sm border-t border-white/5 pt-5">
+              {[
+                ["Target", "Everyday users"],
+                ["Hardware", "Consumer GPUs (via desktop app)"],
+                ["Staking", "Not required"],
+                ["Reward level", "Steady baseline"],
+              ].map(([k, v]) => (
+                <div key={k} className="grid grid-cols-[120px_1fr] gap-3">
+                  <dt className="text-[10px] uppercase tracking-[0.18em] text-white/40 pt-0.5">{k}</dt>
+                  <dd className="text-white/80">{v}</dd>
+                </div>
+              ))}
+            </dl>
           </div>
-          <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-7">
-            <div className="text-sm uppercase tracking-[0.18em] text-white/40 mb-3">
-              Utility
+          <div className="rounded-2xl border border-[#00F5D4]/30 bg-gradient-to-b from-[#00F5D4]/[0.04] to-transparent p-7">
+            <div className="flex items-start justify-between mb-5">
+              <div className="w-11 h-11 rounded-lg bg-[#00F5D4]/15 border border-[#00F5D4]/30 flex items-center justify-center">
+                <Boxes className="w-5 h-5 text-[#00F5D4]" strokeWidth={1.5} />
+              </div>
+              <span className="px-2.5 py-0.5 rounded-full text-[10px] uppercase tracking-[0.14em] bg-[#00F5D4]/15 text-[#00F5D4]">Tier 2 - 2.5x to 4x</span>
             </div>
-            <ul className="space-y-3 text-sm text-white/70">
-              <li>
-                <span className="text-[#00F5D4]">Subscription discounts</span>{" "}
-                across the agentic intelligence layer.
-              </li>
-              <li>
-                <span className="text-[#00F5D4]">Compute network participation</span>{" "}
-                - GPU and infrastructure contributors earn rewards.
-              </li>
-              <li>
-                <span className="text-[#00F5D4]">Contributor rewards</span> for
-                data, models, and ecosystem builders.
-              </li>
-              <li>
-                <span className="text-[#00F5D4]">Closed-Loop Quality Engine</span>{" "}
-                participation and NeoBank fee discounts.
-              </li>
-            </ul>
+            <h3 className="text-2xl font-serif font-semibold text-white mb-1">Large / Professional Validators</h3>
+            <p className="text-white/55 text-sm mb-5">Dedicated hardware with staking commitment. Receive priority task routing and higher reward multipliers.</p>
+            <dl className="space-y-3 text-sm border-t border-white/5 pt-5">
+              {[
+                ["Target", "Serious operators & companies"],
+                ["Hardware", "High-end GPUs (Blackwell, H100, A100+)"],
+                ["Staking", "Yes (minimum required)"],
+                ["Reward level", "Significantly higher (2.5x to 4x multiplier)"],
+              ].map(([k, v]) => (
+                <div key={k} className="grid grid-cols-[120px_1fr] gap-3">
+                  <dt className="text-[10px] uppercase tracking-[0.18em] text-white/40 pt-0.5">{k}</dt>
+                  <dd className="text-white/80">{v}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </div>
+        <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.02] p-6 md:p-8">
+          <div className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/40 mb-3">How validator rewards work</div>
+          <p className="text-white/70 text-base leading-relaxed">
+            Rewards are distributed from the Community & Rewards pool. Base rewards are calculated on effective VRAM hours contributed, uptime, and task success rate. Large / Professional Validators receive a multiplier due to higher reliability and staking commitment. Top performers in both tiers receive additional performance bonuses.
+          </p>
+        </div>
+      </Section>
+
+      {/* ----------------------------- ADDITIONAL INCENTIVES ----------------------------- */}
+      <Section
+        id="additional-incentives"
+        eyebrow="Additional Incentives"
+        title={<>Rewarded for everything that improves the <span className="text-[#00F5D4]">system</span>.</>}
+      >
+        <div className="grid gap-4">
+          {[
+            {
+              name: "Workflow & Outcome Rewards",
+              desc: "Bonus $AICA for workflows that deliver measurable business results - successful marketing campaigns with strong ROI, closed deals, accurate financial reports.",
+              benefit: "Encourages real-world, high-value usage.",
+            },
+            {
+              name: "High-Quality Feedback & Evaluation",
+              desc: "Users earn $AICA by providing detailed feedback on outputs - accuracy ratings, usefulness scores, business value assessment, error corrections, and improvement suggestions. Rewards scale with depth, consistency, and measurable impact on model improvement.",
+              benefit: "Directly strengthens the closed-loop quality system and continuously improves Eve OS.",
+            },
+            {
+              name: "Validator Performance Tiers",
+              desc: "Extra bonus rewards for validators (both Retail and Large) with exceptional uptime, low latency, or high task success rates.",
+              benefit: "Improves overall network reliability and quality.",
+            },
+            {
+              name: "Premium Feature Access",
+              desc: "Use $AICA to unlock advanced swarms, higher usage limits, priority compute, or exclusive skills.",
+              benefit: "Creates ongoing demand for the token.",
+            },
+            {
+              name: "Referral & Growth Rewards",
+              desc: "Earn $AICA for successfully referring active users or new validators.",
+              benefit: "Accelerates network growth.",
+            },
+          ].map((row) => (
+            <div key={row.name} className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 md:p-7 grid md:grid-cols-12 gap-5">
+              <div className="md:col-span-3">
+                <div className="text-base md:text-lg font-semibold text-white" style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}>{row.name}</div>
+              </div>
+              <div className="md:col-span-6 text-white/70 text-sm md:text-base leading-relaxed">{row.desc}</div>
+              <div className="md:col-span-3">
+                <div className="text-[10px] uppercase tracking-[0.18em] text-[#00F5D4]/70 mb-1">Benefit</div>
+                <div className="text-[#00F5D4]/90 text-sm leading-relaxed">{row.benefit}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </Section>
+
+      {/* ----------------------------- RECYCLE MODEL ----------------------------- */}
+      <Section
+        id="recycle-model"
+        eyebrow="Recycle Model"
+        title={<>A closed-loop, self-sustaining <span className="text-[#00F5D4]">economy</span>.</>}
+      >
+        <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 md:p-8 space-y-4 text-white/70 text-base leading-relaxed">
+          <p>A portion of stablecoin subscription revenue is used to buy $AICA and seed the Compute Reward Pool.</p>
+          <p>All $AICA earned by the platform - marketplace fees, transaction fees, slashing, discount redemptions - flows back into the same pool.</p>
+          <p>Rewards are distributed to validators, data providers, skill creators, high-quality feedback providers, and users who achieve strong business outcomes.</p>
+          <p className="text-[#00F5D4]/90 font-medium">The result: platform usage continuously fuels token demand, and token rewards continuously fuel platform contribution.</p>
+        </div>
+      </Section>
+
+      {/* ----------------------------- UTILITY SUMMARY ----------------------------- */}
+      <Section
+        id="utility-summary"
+        eyebrow="Summary"
+        title={<>Final $AICA token utility <span className="text-[#00F5D4]">summary</span>.</>}
+      >
+        <div className="rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm" data-testid="table-utility-summary">
+              <thead className="text-xs uppercase tracking-[0.14em] text-white/40">
+                <tr>
+                  <th className="text-left px-6 py-4 font-medium">Utility type</th>
+                  <th className="text-left px-6 py-4 font-medium">Primary beneficiaries</th>
+                  <th className="text-left px-6 py-4 font-medium">Key purpose</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  { type: "Compute Rewards (Validators)", who: "Retail + Large/Professional Validators", purpose: "Decentralized compute power" },
+                  { type: "Data Rewards", who: "Data providers", purpose: "Model improvement flywheel" },
+                  { type: "Skills Marketplace", who: "Skill creators & users", purpose: "Community-driven capabilities" },
+                  { type: "Workflow & Outcome Rewards", who: "Active users", purpose: "Real business impact" },
+                  { type: "High-Quality Feedback", who: "All users", purpose: "Continuous system improvement" },
+                  { type: "Premium Feature Access", who: "Active users", purpose: "Token demand & utility" },
+                  { type: "Referral & Growth Rewards", who: "Community", purpose: "Network growth" },
+                  { type: "Validator Performance Bonuses", who: "Top-performing validators", purpose: "Network quality & reliability" },
+                ].map((row) => (
+                  <tr key={row.type} className="border-t border-white/5">
+                    <td className="px-6 py-4 font-semibold text-white whitespace-nowrap" style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}>{row.type}</td>
+                    <td className="px-6 py-4 text-white/70">{row.who}</td>
+                    <td className="px-6 py-4 text-[#00F5D4]/85">{row.purpose}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       </Section>

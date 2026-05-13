@@ -287,60 +287,6 @@ function BlockRenderer({ block }: { block: Block }) {
   );
 }
 
-function SaftRoundTable() {
-  const rows = [
-    { name: "Strategic Seed", price: "$0.010", tokens: "500,000,000", raise: "$5,000,000", fdv: "$100M", supplyPct: "5.00%", open: true },
-    { name: "Private Round 1", price: "$0.015", tokens: "800,000,000", raise: "$12,000,000", fdv: "$150M", supplyPct: "8.00%", open: false },
-    { name: "Private Round 2", price: "$0.020", tokens: "900,000,000", raise: "$18,000,000", fdv: "$200M", supplyPct: "9.00%", open: false },
-    { name: "Infrastructure / Strategic", price: "$0.026", tokens: "384,615,385", raise: "$10,000,000", fdv: "$260M", supplyPct: "3.85%", open: false },
-    { name: "Community / Launchpad", price: "$0.034", tokens: "147,058,824", raise: "$5,000,000", fdv: "$340M", supplyPct: "1.47%", open: false },
-  ];
-  return (
-    <div className="my-8 rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden">
-      <div className="px-6 py-5 border-b border-white/5">
-        <div className="text-xs uppercase tracking-[0.18em] text-white/40">
-          Private SAFT round schedule
-        </div>
-        <div className="mt-1 text-lg font-semibold text-white" style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}>
-          2,250,000,000 AICA - 22.5% of supply - $50M raise - ~$230M FDV
-        </div>
-      </div>
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm" data-testid="table-saft-rounds">
-          <thead className="text-xs uppercase tracking-[0.14em] text-white/40">
-            <tr>
-              <th className="text-left px-6 py-3 font-medium">Round</th>
-              <th className="text-left px-6 py-3 font-medium">Target Raise</th>
-              <th className="text-left px-6 py-3 font-medium">Price</th>
-              <th className="text-left px-6 py-3 font-medium">Tokens Sold</th>
-              <th className="text-left px-6 py-3 font-medium">% Supply</th>
-              <th className="text-left px-6 py-3 font-medium">FDV</th>
-              <th className="text-left px-6 py-3 font-medium">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((r) => (
-              <tr key={r.name} className="border-t border-white/5">
-                <td className="px-6 py-3 font-medium text-white" style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}>{r.name}</td>
-                <td className="px-6 py-3 text-white/80">{r.raise}</td>
-                <td className="px-6 py-3 text-white/80">{r.price}</td>
-                <td className="px-6 py-3 text-white/60">{r.tokens}</td>
-                <td className="px-6 py-3 text-white/60">{r.supplyPct}</td>
-                <td className="px-6 py-3 text-white/80">{r.fdv}</td>
-                <td className="px-6 py-3">
-                  <span className={`px-2.5 py-0.5 rounded-full text-xs ${r.open ? "bg-[#00F5D4]/15 text-[#00F5D4]" : "bg-white/10 text-white/60"}`}>
-                    {r.open ? "Open" : "Upcoming"}
-                  </span>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-}
-
 function TokenomicsCoin() {
   return (
     <div className="relative my-8 rounded-3xl border border-white/10 bg-gradient-to-b from-[#0E0E0E] to-[#0A0A0A] overflow-hidden">
@@ -454,7 +400,6 @@ export default function Litepaper() {
                     {s.id === "tokenomics" && (
                       <>
                         <TokenomicsCoin />
-                        <SaftRoundTable />
                       </>
                     )}
                     <div className="space-y-5">
@@ -473,7 +418,7 @@ export default function Litepaper() {
                       Disclaimer
                     </div>
                     <p className="text-white/50 text-sm leading-relaxed">
-                      This page is for informational purposes only and does not constitute an offer to sell or a solicitation to buy any securities or tokens. The AICA private sale is structured as five sequential SAFT rounds priced from $0.010 to $0.034 per AICA, totaling 2,250,000,000 AICA (22.5% of the 10,000,000,000 fixed supply) for a $50M raise targeting ~$230M FDV. SAFT terms are draft pending counsel review. AICA tokens, when issued, will be utility tokens for consumptive use within the AIcreatesAI ecosystem and are subject to vesting and jurisdictional restrictions. Early-stage technology and cryptocurrency commitments involve significant risk and you may lose all funds.
+                      This page is for informational purposes only and does not constitute an offer to sell or a solicitation to buy any securities or tokens. AICA tokens, when issued, will be utility tokens for consumptive use within the AIcreatesAI ecosystem and are subject to vesting and jurisdictional restrictions. Early-stage technology and cryptocurrency commitments involve significant risk and you may lose all funds. Detailed private-sale terms are available to accredited investors via the investor portal.
                     </p>
                   </div>
                 </div>

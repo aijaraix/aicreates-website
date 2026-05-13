@@ -76,16 +76,12 @@ const GROUPS: Group[] = [
         a: "Total supply is fixed at 10,000,000,000 $AICA.",
       },
       {
-        q: "How much of the supply is being sold in the private sale?",
-        a: "22.5% (2,250,000,000 $AICA) is allocated to the private sale across five SAFT rounds for a $50M target raise (~$230M FDV). Pricing ladders from $0.010 (Strategic Seed) to $0.034 (Community / Launchpad).",
-      },
-      {
-        q: "What are the five SAFT rounds?",
-        a: "Strategic Seed - $0.010 per AICA, 500M tokens, $5M, $100M FDV (open now). Private Round 1 - $0.015, 800M, $12M, $150M FDV. Private Round 2 - $0.020, 900M, $18M, $200M FDV. Infrastructure / Strategic - $0.026, 384,615,385, $10M, $260M FDV. Community / Launchpad - $0.034, 147,058,824, $5M, $340M FDV. Aggregate: 2,250,000,000 AICA = 22.5% of the 10,000,000,000 fixed supply, $50M target raise, ~$230M FDV.",
+        q: "How is the private sale structured?",
+        a: "A portion of the fixed supply is allocated to a private sale across multiple SAFT rounds. Pricing, allocations, and round schedule are available to accredited investors via the investor portal at invest.aicreates.ai.",
       },
       {
         q: "Which round is open right now?",
-        a: "Strategic Seed is the only round currently open. Investors can reserve allocation today at $0.010 per AICA with tiered bonuses at $5k (+10%) and $25k (+20%). Subsequent rounds open later in sequence as Strategic Seed fills.",
+        a: "The Strategic Seed Round is currently open to accredited investors. Reserve your allocation, view pricing, and access SAFT documents on the investor portal at invest.aicreates.ai.",
       },
       {
         q: "What does the GPU cluster do?",

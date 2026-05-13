@@ -1,4 +1,3 @@
-import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { ArrowRight, Cpu, Server, Recycle } from "lucide-react";
@@ -402,100 +401,25 @@ export default function Token() {
       </section>
 
       {/* PARAMETERS */}
-      <section className="py-14 md:py-20 relative">
+      <section id="parameters" className="py-14 md:py-20 relative border-t border-white/5">
         <div className="container mx-auto px-4 md:px-6">
           <div className="max-w-3xl mb-10">
-            <SectionLabel>Parameters</SectionLabel>
+            <SectionLabel>Supply</SectionLabel>
             <h2 className="mt-6 text-4xl md:text-5xl font-serif font-semibold text-gradient leading-[1.05]">
               Fixed supply. Aligned incentives.
             </h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {[
-              { k: "10,000,000,000", v: "Total supply" },
-              { k: "22.5%", v: "Private sale (2.25B AICA)" },
-              { k: "$50M", v: "Total private-sale raise" },
+              { k: "10,000,000,000", v: "Total fixed supply (AICA)" },
+              { k: "Closed-loop", v: "Recycle reward economy" },
+              { k: "Vested", v: "All private allocations" },
             ].map((s) => (
               <div key={s.v} className="rounded-2xl border border-white/10 bg-white/[0.02] p-7 hover:border-[#00F5D4]/30 transition-colors">
                 <div className="text-2xl md:text-3xl font-serif font-semibold text-[#00F5D4] tracking-tight">{s.k}</div>
                 <div className="mt-2 text-xs uppercase tracking-[0.18em] text-white/45">{s.v}</div>
               </div>
             ))}
-          </div>
-
-          {/* SAFT round schedule */}
-          <div className="mt-8 rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden">
-            <div className="px-6 py-5 border-b border-white/5">
-              <div className="text-xs uppercase tracking-[0.18em] text-white/40">
-                Private SAFT round schedule
-              </div>
-              <div className="mt-1 text-lg font-semibold text-white" style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}>
-                Five rounds, $0.010 → $0.034 per AICA, targeting ~$230M FDV
-              </div>
-            </div>
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm" data-testid="table-saft-rounds">
-                <thead className="text-xs uppercase tracking-[0.14em] text-white/40">
-                  <tr>
-                    <th className="text-left px-6 py-3 font-medium">Round</th>
-                    <th className="text-left px-6 py-3 font-medium">Target Raise</th>
-                    <th className="text-left px-6 py-3 font-medium">Price</th>
-                    <th className="text-left px-6 py-3 font-medium">Tokens Sold</th>
-                    <th className="text-left px-6 py-3 font-medium">% Supply</th>
-                    <th className="text-left px-6 py-3 font-medium">FDV</th>
-                    <th className="text-left px-6 py-3 font-medium">Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {[
-                    { name: "Strategic Seed", price: "$0.010", tokens: "500,000,000", raise: "$5,000,000", fdv: "$100M", supplyPct: "5.00%", open: true },
-                    { name: "Private Round 1", price: "$0.015", tokens: "800,000,000", raise: "$12,000,000", fdv: "$150M", supplyPct: "8.00%", open: false },
-                    { name: "Private Round 2", price: "$0.020", tokens: "900,000,000", raise: "$18,000,000", fdv: "$200M", supplyPct: "9.00%", open: false },
-                    { name: "Infrastructure / Strategic", price: "$0.026", tokens: "384,615,385", raise: "$10,000,000", fdv: "$260M", supplyPct: "3.85%", open: false },
-                    { name: "Community / Launchpad", price: "$0.034", tokens: "147,058,824", raise: "$5,000,000", fdv: "$340M", supplyPct: "1.47%", open: false },
-                  ].map((r) => (
-                    <tr key={r.name} className="border-t border-white/5">
-                      <td className="px-6 py-3 font-medium text-white" style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}>{r.name}</td>
-                      <td className="px-6 py-3 text-white/80">{r.raise}</td>
-                      <td className="px-6 py-3 text-white/80">{r.price}</td>
-                      <td className="px-6 py-3 text-white/60">{r.tokens}</td>
-                      <td className="px-6 py-3 text-white/60">{r.supplyPct}</td>
-                      <td className="px-6 py-3 text-white/80">{r.fdv}</td>
-                      <td className="px-6 py-3">
-                        <span className={`px-2.5 py-0.5 rounded-full text-xs ${r.open ? "bg-[#00F5D4]/15 text-[#00F5D4]" : "bg-white/10 text-white/60"}`}>
-                          {r.open ? "Open" : "Upcoming"}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          {/* Key principles */}
-          <div className="mt-8 rounded-2xl border border-white/10 bg-white/[0.02] p-6 md:p-8">
-            <div className="text-xs uppercase tracking-[0.18em] text-white/40 mb-4">
-              Key token principles
-            </div>
-            <ul className="space-y-3 text-white/70 text-sm md:text-base leading-relaxed">
-              <li className="flex items-start gap-3">
-                <span className="mt-2.5 w-1.5 h-1.5 rounded-full bg-[#00F5D4] shrink-0 shadow-[0_0_6px_rgba(0,245,212,0.6)]" />
-                <span>Core platform revenue is initially driven by subscriptions to ensure operational stability; token utility is integrated where it earns its place.</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="mt-2.5 w-1.5 h-1.5 rounded-full bg-[#00F5D4] shrink-0 shadow-[0_0_6px_rgba(0,245,212,0.6)]" />
-                <span>Utility includes subscription discounts, compute network participation, and contributor rewards (GPU, data, ecosystem).</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="mt-2.5 w-1.5 h-1.5 rounded-full bg-[#00F5D4] shrink-0 shadow-[0_0_6px_rgba(0,245,212,0.6)]" />
-                <span>All tokens sold in private rounds are subject to appropriate vesting schedules.</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="mt-2.5 w-1.5 h-1.5 rounded-full bg-[#00F5D4] shrink-0 shadow-[0_0_6px_rgba(0,245,212,0.6)]" />
-                <span>A sustainable economic model designed around real usage, long-term alignment, and ecosystem health.</span>
-              </li>
-            </ul>
           </div>
         </div>
       </section>
@@ -506,7 +430,7 @@ export default function Token() {
           <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 md:p-8">
             <div className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/40 mb-3">Disclaimer</div>
             <p className="text-white/50 text-sm leading-relaxed">
-              This page is for informational purposes only and does not constitute an offer to sell or a solicitation to buy any securities or tokens. The AICA private sale is structured as five sequential SAFT rounds priced from $0.010 to $0.034 per AICA, totaling 2,250,000,000 AICA (22.5% of the 10,000,000,000 fixed supply) for a $50M raise targeting ~$230M FDV. SAFT terms are draft pending counsel review. AICA tokens, when issued, will be utility tokens for consumptive use within the AIcreatesAI ecosystem and are subject to vesting and jurisdictional restrictions. Early-stage technology and cryptocurrency commitments involve significant risk and you may lose all funds.
+              This page is for informational purposes only and does not constitute an offer to sell or a solicitation to buy any securities or tokens. AICA tokens, when issued, will be utility tokens for consumptive use within the AIcreatesAI ecosystem and are subject to vesting and jurisdictional restrictions. Early-stage technology and cryptocurrency commitments involve significant risk and you may lose all funds. Detailed private-sale terms are available to accredited investors via the investor portal.
             </p>
           </div>
         </div>
@@ -520,17 +444,17 @@ export default function Token() {
             <div className="relative grid grid-cols-1 md:grid-cols-[1fr_auto] gap-8 items-center">
               <div>
                 <h2 className="text-3xl md:text-5xl font-serif font-semibold text-gradient leading-[1.05] mb-4">
-                  Read the full tokenomics.
+                  Accredited investor?
                 </h2>
                 <p className="text-lg text-white/55 max-w-xl">
-                  The litepaper contains the complete positioning, architecture, and token model.
+                  The investor portal contains the complete private-sale terms, round schedule, and SAFT documents.
                 </p>
               </div>
-              <Link href="/litepaper#tokenomics">
-                <Button size="lg" className="rounded-full h-12 px-8 bg-[#00F5D4] text-black hover:bg-[#00F5D4]/90 font-medium whitespace-nowrap">
-                  Read the litepaper <ArrowRight className="ml-2 w-4 h-4" />
+              <a href="https://invest.aicreates.ai" target="_blank" rel="noopener noreferrer">
+                <Button size="lg" className="rounded-full h-12 px-8 bg-[#00F5D4] text-black hover:bg-[#00F5D4]/90 font-medium whitespace-nowrap" data-testid="link-investor-portal">
+                  Open investor portal <ArrowRight className="ml-2 w-4 h-4" />
                 </Button>
-              </Link>
+              </a>
             </div>
           </div>
         </div>

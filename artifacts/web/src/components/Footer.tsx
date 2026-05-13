@@ -166,7 +166,7 @@ function NewsletterSubscribe() {
           </form>
         )}
         <p className="text-white/40 text-xs leading-relaxed mt-3">
-          Product updates, raise milestones, and the occasional manifesto. No spam, unsubscribe any time.
+          Product updates, ecosystem milestones, and the occasional manifesto. No spam, unsubscribe any time.
         </p>
       </div>
     </div>
