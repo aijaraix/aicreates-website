@@ -221,7 +221,7 @@ export default function NeoBank() {
                   Capital that thinks for itself.
                 </h2>
                 <p className="text-lg text-white/55 max-w-xl">
-                  Our NeoBank
+                  Our NeoBank is in active development. Stay tuned, we will share more soon.
                 </p>
               </div>
               <Button
