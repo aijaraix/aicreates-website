@@ -194,7 +194,7 @@ export function Footer() {
                   className="h-4 w-auto"
                 />
               </Link>
-              <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-white/70 mb-5">
+              <p className="font-mono text-[9px] sm:text-[10px] uppercase tracking-[0.22em] text-white/70 mb-5 whitespace-nowrap">
                 Automate. <span className="text-[#00F5D4]">Innovate.</span> Elevate.
               </p>
               <p className="text-white/50 text-sm leading-relaxed max-w-sm mb-6">
