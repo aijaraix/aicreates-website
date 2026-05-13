@@ -372,7 +372,7 @@ export default function Token() {
           <div className="max-w-3xl mb-10">
             <SectionLabel>Summary</SectionLabel>
             <h2 className="mt-6 text-3xl md:text-5xl font-serif font-semibold text-gradient leading-[1.05]">
-              Final $AICA token utility summary.
+              $AICA token utility summary.
             </h2>
           </div>
           <div className="rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden">

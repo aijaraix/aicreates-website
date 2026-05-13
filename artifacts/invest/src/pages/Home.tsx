@@ -788,7 +788,7 @@ export default function Home() {
       <Section
         id="utility-summary"
         eyebrow="Summary"
-        title={<>Final $AICA token utility <span className="text-[#00F5D4]">summary</span>.</>}
+        title={<>$AICA token utility <span className="text-[#00F5D4]">summary</span>.</>}
       >
         <div className="rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden">
           <div className="overflow-x-auto">
