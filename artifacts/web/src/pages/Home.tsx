@@ -11,6 +11,7 @@ import {
 import DeckCarousel from "@/components/DeckCarousel";
 import HeroVideoReel from "@/components/HeroVideoReel";
 import spotlightBgUrl from "@/assets/spotlight-bg.png";
+import eveOsSpotlightUrl from "@/assets/eve-os-spotlight.png";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 
 const HERO_VIDEO_BASE = import.meta.env.BASE_URL;
@@ -72,6 +73,9 @@ type Slide = {
   ctaText: string;
   ctaHref: string;
   pills: string[];
+  bgImage: string;
+  bgSize: string;
+  bgPosition: string;
 };
 
 const SLIDES: Slide[] = [
@@ -87,6 +91,9 @@ const SLIDES: Slide[] = [
     ctaText: "Explore Eve OS",
     ctaHref: "/eve-os",
     pills: ["Marketing", "Sales", "Finance", "Legal", "Operations", "Development"],
+    bgImage: eveOsSpotlightUrl,
+    bgSize: "contain",
+    bgPosition: "right center",
   },
   {
     id: "neobank",
@@ -100,6 +107,9 @@ const SLIDES: Slide[] = [
     ctaText: "Inside NeoBank",
     ctaHref: "/neobank",
     pills: ["Treasury", "Payments", "Credit", "Yield", "Compliance", "Identity"],
+    bgImage: spotlightBgUrl,
+    bgSize: "auto 110%",
+    bgPosition: "right center",
   },
 ];
 
@@ -139,16 +149,23 @@ function ProductSpotlight() {
             }
           }}
         >
-          <div
-            aria-hidden
-            className="hidden md:block absolute inset-y-0 right-0 w-[55%] lg:w-[60%] pointer-events-none opacity-[0.85] [mask-image:linear-gradient(to_left,black_25%,transparent_98%)]"
-            style={{
-              backgroundImage: `url(${spotlightBgUrl})`,
-              backgroundSize: "auto 110%",
-              backgroundPosition: "right center",
-              backgroundRepeat: "no-repeat",
-            }}
-          />
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={`bg-${slide.id}`}
+              aria-hidden
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.9 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5 }}
+              className="hidden md:block absolute inset-y-0 right-0 w-[55%] lg:w-[60%] pointer-events-none [mask-image:linear-gradient(to_left,black_25%,transparent_98%)]"
+              style={{
+                backgroundImage: `url(${slide.bgImage})`,
+                backgroundSize: slide.bgSize,
+                backgroundPosition: slide.bgPosition,
+                backgroundRepeat: "no-repeat",
+              }}
+            />
+          </AnimatePresence>
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(0,245,212,0.18),transparent_60%)] pointer-events-none" />
           <div className="hidden md:block absolute inset-y-0 left-0 w-3/4 lg:w-2/3 bg-gradient-to-r from-[#0A0A0A] via-[#0A0A0A]/95 to-transparent pointer-events-none" />
 
