@@ -53,9 +53,8 @@ export default function PortalNav({ showAdmin }: { showAdmin?: boolean }) {
 
   const email = user?.primaryEmailAddress?.emailAddress ?? "";
   const displayName =
-    [user?.firstName, user?.lastName].filter(Boolean).join(" ") ||
+    user?.firstName ||
     user?.username ||
-    user?.fullName ||
     (email ? email.split("@")[0] : "Account");
 
   return (
