@@ -798,7 +798,7 @@ export default function Home() {
               10,000,000,000 <span className="text-[#00F5D4] text-2xl">AICA</span>
             </div>
             <p className="mt-4 text-sm text-white/65 leading-relaxed">
-              Fixed supply. 22.5% allocated to the private sale across 5 SAFT rounds ($50M raise, ~$230M FDV blended). All private-round tokens subject to vesting (25% at TGE, 6-month cliff, then linear over 24 months).
+              Fixed supply. 22.50% allocated to the private sale across 5 SAFT rounds ($50M raise, ~$230M FDV blended). All private-round tokens subject to vesting (25% at TGE, 6-month cliff, then linear over 24 months).
             </p>
           </div>
           <div className="rounded-2xl border border-[#00F5D4]/25 bg-[#00F5D4]/[0.04] p-7">
