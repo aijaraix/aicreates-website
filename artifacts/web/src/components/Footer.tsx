@@ -34,7 +34,7 @@ const COLUMNS: { heading: string; links: { name: string; href: string }[] }[] = 
       { name: "About", href: "/about" },
       { name: "Contact", href: "/contact" },
       { name: "Token", href: "/token" },
-      { name: "Opportunity", href: "/invest" },
+      { name: "Opportunity", href: "/opportunity" },
       { name: "Privacy", href: "/privacy" },
       { name: "Terms", href: "/terms" },
     ],

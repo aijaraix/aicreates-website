@@ -69,7 +69,8 @@ function Router() {
         <Route path="/eve-os" component={() => <PageTransition><EveOS /></PageTransition>} />
         <Route path="/neobank" component={() => <PageTransition><NeoBank /></PageTransition>} />
         <Route path="/litepaper" component={() => <PageTransition><Litepaper /></PageTransition>} />
-        <Route path="/invest" component={() => <PageTransition><Invest /></PageTransition>} />
+        <Route path="/opportunity" component={() => <PageTransition><Invest /></PageTransition>} />
+        <Route path="/invest" component={() => { const [, navigate] = useLocation(); useEffect(() => { navigate("/opportunity", { replace: true }); }, [navigate]); return null; }} />
         <Route path="/contact" component={() => <PageTransition><Contact /></PageTransition>} />
         <Route path="/privacy" component={() => <PageTransition><Privacy /></PageTransition>} />
         <Route path="/terms" component={() => <PageTransition><Terms /></PageTransition>} />

@@ -49,7 +49,7 @@ export default function Invest() {
     title: "Invest - Back the Agentic Intelligence Layer",
     description:
       "Reserve your allocation in the AICA private sale. $50M strategic raise, $3.5M initial GPU cluster, fixed-supply token, and the full investor portal.",
-    path: "/invest",
+    path: "/opportunity",
   });
   const [deckOpen, setDeckOpen] = useState(false);
   const reduce = useReducedMotion();

@@ -33,7 +33,7 @@ const COMPANY_LINKS = [
   { name: "About", path: "/about", desc: "Platform, agents, and Company in a Box" },
   { name: "Contact", path: "/contact", desc: "Get in touch with the team" },
   { name: "Token", path: "/token", desc: "$AICA - the native asset of the layer" },
-  { name: "Opportunity", path: "/invest", desc: "Investor opportunity and materials" },
+  { name: "Opportunity", path: "/opportunity", desc: "Investor opportunity and materials" },
 ];
 
 function Wordmark({ size = "md" }: { size?: "sm" | "md" }) {

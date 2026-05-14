@@ -58,7 +58,7 @@ const AUDIENCES = [
     tag: "For Investors",
     title: "Back the agentic intelligence layer.",
     desc: "Long-term defensibility through data, product, and proprietary models.",
-    href: "/invest",
+    href: "/opportunity",
     cta: "Investor materials",
   },
 ];
