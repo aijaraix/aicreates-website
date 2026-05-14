@@ -20,8 +20,6 @@ import {
 import DeckCarousel from "@/components/DeckCarousel";
 import RoundsTable from "@/components/RoundsTable";
 import AllocationCalculator from "@/components/AllocationCalculator";
-import aicaUtilityLayerUrl from "@/assets/tokenomics/aica-utility-layer.png";
-import aicaTokenUtilityMapUrl from "@/assets/tokenomics/aica-token-utility-map.png";
 import VestingCalendar from "@/components/VestingCalendar";
 import { SectionLabel } from "@/components/brand";
 import SiteHeader from "@/components/SiteHeader";
@@ -201,7 +199,7 @@ export default function Home() {
                 className="inline-flex items-center justify-center h-12 px-7 rounded-full glass-btn"
                 data-testid="link-hero-litepaper"
               >
-                <Download className="mr-2 w-4 h-4" /> Download Litepaper
+                <Download className="mr-2 w-4 h-4" /> Download Whitepaper
               </a>
             </div>
             <p className="mt-6 text-xs text-white/40 max-w-xl mx-auto">
@@ -775,20 +773,46 @@ export default function Home() {
           </p>
         </div>
 
-        {/* Visual: $AICA Utility Layer */}
-        <figure className="mt-10 rounded-2xl border border-white/10 bg-[#0A0A0A] overflow-hidden">
-          <img
-            src={aicaUtilityLayerUrl}
-            alt="$AICA Utility Layer diagram showing AI Credits, Compute Credits, Agent Runs, Marketplace, Enterprise Pools, Rewards & Staking, Developer Rewards, and Access Layer surrounding the $AICA token"
-            loading="lazy"
-            decoding="async"
-            className="w-full h-auto block"
-            data-testid="img-aica-utility-layer"
-          />
-          <figcaption className="px-5 py-3 text-xs uppercase tracking-[0.18em] text-white/40 border-t border-white/5">
-            $AICA Utility Layer - one token, eight surfaces of demand.
-          </figcaption>
-        </figure>
+        {/* Visual: $AICA Utility Layer (simplified grid) */}
+        <div className="mt-10 rounded-2xl border border-white/10 bg-[#0A0A0A] overflow-hidden" data-testid="aica-utility-layer">
+          <div className="px-6 py-5 border-b border-white/5 flex items-center justify-between flex-wrap gap-3">
+            <div>
+              <div className="text-xs uppercase tracking-[0.18em] text-[#00F5D4]">$AICA Utility Layer</div>
+              <div className="mt-1 text-white/70 text-sm">One token, eight surfaces of demand.</div>
+            </div>
+            <div className="text-[10px] font-mono uppercase tracking-[0.18em] text-white/40">$AICA at the center</div>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-white/5">
+            {[
+              { t: "AI Credits", d: "Fuel AI models, inference, and intelligence." },
+              { t: "Compute Credits", d: "Power decentralized compute and real workloads." },
+              { t: "Agent Runs", d: "Execute agents and automations at scale." },
+              { t: "Marketplace", d: "Discover, integrate, and transact across the ecosystem." },
+              { t: "Enterprise Pools", d: "Shared capacity and governed enterprise allocations." },
+              { t: "Rewards & Staking", d: "Stake $AICA and earn ecosystem and network rewards." },
+              { t: "Developer Rewards", d: "Incentivize builders and contributors who grow the network." },
+              { t: "Access Layer", d: "Secure identity, permissions, and seamless access." },
+            ].map((cell) => (
+              <div key={cell.t} className="bg-[#0A0A0A] p-5">
+                <div className="text-sm font-semibold text-white" style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}>{cell.t}</div>
+                <div className="mt-1.5 text-xs text-white/55 leading-relaxed">{cell.d}</div>
+              </div>
+            ))}
+          </div>
+          <div className="px-6 py-4 border-t border-white/5 grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[
+              { t: "Access", d: "Seamless and secure entry." },
+              { t: "Usage", d: "Consume, build, and compute." },
+              { t: "Rewards", d: "Earn, stake, and compete." },
+              { t: "Coordination", d: "Align incentives and outcomes." },
+            ].map((p) => (
+              <div key={p.t}>
+                <div className="text-[10px] uppercase tracking-[0.18em] text-[#00F5D4]">{p.t}</div>
+                <div className="mt-1 text-xs text-white/55">{p.d}</div>
+              </div>
+            ))}
+          </div>
+        </div>
 
         {/* Supply + Philosophy */}
         <div className="mt-10 grid md:grid-cols-2 gap-5">
@@ -1023,61 +1047,86 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Visual: $AICA Token Utility Map (whitepaper sheet) */}
-        <figure className="mt-8 rounded-2xl border border-white/10 bg-[#0A0A0A] overflow-hidden">
-          <img
-            src={aicaTokenUtilityMapUrl}
-            alt="$AICA Token Utility Map: GPU contributions, data rewards, skills development, workflow rewards, premium access, referral rewards, validator tiers, marketplace payments, compute reward pool, and ecosystem incentives"
-            loading="lazy"
-            decoding="async"
-            className="w-full h-auto block"
-            data-testid="img-aica-token-utility-map"
-          />
-          <figcaption className="px-5 py-3 text-xs uppercase tracking-[0.18em] text-white/40 border-t border-white/5">
+        {/* Visual: $AICA Token Utility Map (simplified) */}
+        <div className="mt-8 rounded-2xl border border-white/10 bg-[#0A0A0A] overflow-hidden" data-testid="aica-token-utility-map">
+          <div className="px-6 py-5 border-b border-white/5 flex items-center justify-between flex-wrap gap-3">
+            <div>
+              <div className="text-xs uppercase tracking-[0.18em] text-[#00F5D4]">$AICA Token Utility Map</div>
+              <div className="mt-1 text-white/70 text-sm">Ten ways the network earns, spends, and recycles $AICA.</div>
+            </div>
+            <div className="text-[10px] font-mono uppercase tracking-[0.18em] text-white/40">Utility & coordination token</div>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-px bg-white/5">
+            {[
+              { n: "01", t: "GPU Contributions", d: "Incentivize compute providers who add GPU capacity." },
+              { n: "02", t: "Data Rewards", d: "Reward high-quality data that improves intelligence." },
+              { n: "03", t: "Skills Development", d: "Earn through learning, certifying, and building." },
+              { n: "04", t: "Workflow Rewards", d: "Earn for executing and contributing to workflows." },
+              { n: "05", t: "Premium Access", d: "Unlock advanced agents and exclusive features." },
+              { n: "06", t: "Referral Rewards", d: "Earn by inviting and growing the ecosystem." },
+              { n: "07", t: "Validator Tiers", d: "Stake to validate and earn on reliability." },
+              { n: "08", t: "Marketplace Payments", d: "Pay for agents, tools, data, and services." },
+              { n: "09", t: "Compute Reward Pool", d: "A share of fees flows back to compute contributors." },
+              { n: "10", t: "Ecosystem Incentives", d: "Strategic incentives for partners and programs." },
+            ].map((cell) => (
+              <div key={cell.n} className="bg-[#0A0A0A] p-5">
+                <div className="text-[10px] font-mono text-[#00F5D4]/80 tracking-[0.16em]">{cell.n}</div>
+                <div className="mt-1 text-sm font-semibold text-white" style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}>{cell.t}</div>
+                <div className="mt-1 text-xs text-white/55 leading-relaxed">{cell.d}</div>
+              </div>
+            ))}
+          </div>
+          <div className="px-6 py-3 border-t border-white/5 text-xs uppercase tracking-[0.18em] text-white/40">
             $AICA is a utility and coordination token - not the product itself.
-          </figcaption>
-        </figure>
+          </div>
+        </div>
       </Section>
 
-      {/* ----------------------------- VISUAL WHITEPAPER DECK ----------------------------- */}
-      <Section
-        id="visual-whitepaper"
-        eyebrow="Visual Whitepaper"
-        title={<>The full <span className="text-[#00F5D4]">investor deck</span>, page by page.</>}
-      >
-        <p className="text-white/70 text-base md:text-lg leading-relaxed max-w-3xl">
-          Step through the entire AIcreatesAI whitepaper deck right here. Use the arrows or swipe on mobile, open it fullscreen for a presentation view, or download the PDF to share offline.
-        </p>
-        <div className="mt-8">
-          <DeckCarousel
-            basePath={`${import.meta.env.BASE_URL}deck`}
-            manifestUrl={`${import.meta.env.BASE_URL}deck/manifest.json`}
-            title="AIcreatesAI Whitepaper Deck"
-            subline="Swipe through the deck, open it fullscreen, or download the PDF."
-            testIdPrefix="deck-portal"
-          />
+      {/* ----------------------------- PITCH DECK CTA ----------------------------- */}
+      <section id="visual-whitepaper" className="py-14 md:py-20 relative">
+        <div className="container mx-auto px-4 md:px-6 w-full">
+          <div className="relative max-w-5xl mx-auto rounded-3xl border border-white/10 bg-gradient-to-b from-[#0E0E0E] to-[#0A0A0A] p-10 sm:p-12 md:p-20 overflow-hidden text-center">
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,245,212,0.10),transparent_70%)] pointer-events-none" />
+            <div className="absolute inset-x-0 top-0 h-px divider-line" />
+            <div className="relative">
+              <div className="text-xs uppercase tracking-[0.18em] text-[#00F5D4] mb-4">Pitch Deck</div>
+              <h2 className="text-3xl sm:text-4xl md:text-6xl font-semibold leading-[1.05]" style={{ fontFamily: "Space Grotesk, system-ui, sans-serif" }}>
+                The full <span className="text-[#00F5D4]">pitch deck</span>, page by page.
+              </h2>
+              <p className="mt-5 text-base sm:text-lg text-white/65 leading-relaxed max-w-2xl mx-auto">
+                Step through the entire AIcreatesAI pitch deck slide by slide, or download the full whitepaper for offline review.
+              </p>
+              <div className="mt-8 flex flex-wrap gap-3 justify-center">
+                <a
+                  href="#pitch-deck-viewer"
+                  className="inline-flex items-center justify-center h-12 px-8 rounded-full teal-btn"
+                  data-testid="button-view-pitch-deck-cta"
+                >
+                  View Pitch Deck <ArrowRight className="ml-2 w-4 h-4" />
+                </a>
+                <a
+                  href={`${import.meta.env.BASE_URL}litepaper.pdf`}
+                  download="AIcreatesAI Whitepaper.pdf"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center h-12 px-7 rounded-full glass-btn"
+                  data-testid="link-download-whitepaper-deck-section"
+                >
+                  <Download className="mr-2 w-4 h-4" /> Download Whitepaper
+                </a>
+              </div>
+            </div>
+          </div>
+          <div id="pitch-deck-viewer" className="mt-10">
+            <DeckCarousel
+              basePath={`${import.meta.env.BASE_URL}deck`}
+              manifestUrl={`${import.meta.env.BASE_URL}deck/manifest.json`}
+              title="AIcreatesAI Pitch Deck"
+              subline="Swipe through the deck, open it fullscreen, or download the PDF."
+              testIdPrefix="deck-portal"
+            />
+          </div>
         </div>
-        <div className="mt-6 flex flex-wrap gap-3">
-          <a
-            href={`${import.meta.env.BASE_URL}whitepaper-deck.pdf`}
-            download="AIcreatesAI Whitepaper Deck.pdf"
-            rel="noopener noreferrer"
-            className="inline-flex items-center justify-center h-12 px-7 rounded-full bg-[#00F5D4] text-black font-medium hover:bg-[#00F5D4]/90 transition-colors"
-            data-testid="link-download-presentation"
-          >
-            <Download className="mr-2 w-4 h-4" /> Download the Presentation
-          </a>
-          <a
-            href={`${import.meta.env.BASE_URL}litepaper.pdf`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center justify-center h-12 px-7 rounded-full glass-btn"
-            data-testid="link-download-litepaper-deck-section"
-          >
-            <Download className="mr-2 w-4 h-4" /> Download Litepaper
-          </a>
-        </div>
-      </Section>
+      </section>
 
       {/* ----------------------------- ROADMAP ----------------------------- */}
       <Section

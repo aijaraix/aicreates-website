@@ -197,7 +197,7 @@ export default function Invest() {
               Learn more about our vision.
             </h2>
             <p className="mt-5 text-base sm:text-lg text-white/55 leading-relaxed">
-              Read the full thesis or download the whitepaper for offline review.
+              Read the long-form litepaper, step through the pitch deck, or download the full whitepaper.
             </p>
           </div>
 
@@ -205,23 +205,33 @@ export default function Invest() {
             {[
               {
                 icon: FileText,
-                title: "View Investor Portal",
-                desc: "Long-scroll thesis, vesting calculator, and reserve-allocation flow.",
-                disabled: false,
-                href: (import.meta.env.PROD ? "https://invest.aicreates.ai/invest/" : "/invest/") as string | undefined,
-                external: true,
-                cta: "Open the portal",
-                testId: "button-view-portal",
-              },
-              {
-                icon: BookOpen,
-                title: "View the Whitepaper",
-                desc: "Step through the visual whitepaper, with the full PDF available to download from the viewer.",
+                title: "View Litepaper",
+                desc: "Long-form thesis: positioning, architecture, and the agentic intelligence layer in plain language.",
                 disabled: false,
                 href: "/litepaper" as string | undefined,
                 external: false,
+                cta: "Open the litepaper",
+                testId: "button-view-litepaper-card",
+              },
+              {
+                icon: BookOpen,
+                title: "View Pitch Deck",
+                desc: "Step through the visual deck slide by slide, with the full PDF available to download from the viewer.",
+                disabled: false,
+                onClick: () => setDeckOpen(true),
                 cta: "Open the viewer",
-                testId: "button-view-whitepaper-card",
+                testId: "button-view-pitch-deck-card",
+              },
+              {
+                icon: Download,
+                title: "Download Whitepaper",
+                desc: "Full technical whitepaper as a PDF. Architecture, token economics, and roadmap in one document.",
+                disabled: false,
+                href: `${import.meta.env.BASE_URL}litepaper.pdf` as string | undefined,
+                download: "AIcreatesAI Whitepaper.pdf",
+                external: true,
+                cta: "Download PDF",
+                testId: "button-download-whitepaper-card",
               },
             ].map((card) => (
               <motion.div
@@ -244,6 +254,29 @@ export default function Invest() {
                     <span>{card.cta}</span>
                     <span className="text-[10px] font-mono uppercase tracking-[0.18em] text-white/35">Soon</span>
                   </Button>
+                ) : "onClick" in card && card.onClick ? (
+                  <Button
+                    variant="outline"
+                    onClick={card.onClick}
+                    className="w-full rounded-full h-10 px-5 glass-btn group"
+                    data-testid={card.testId}
+                  >
+                    {card.cta} <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                  </Button>
+                ) : "download" in card && card.download ? (
+                  <a
+                    href={card.href!}
+                    download={card.download}
+                    rel="noopener noreferrer"
+                  >
+                    <Button
+                      variant="outline"
+                      className="w-full rounded-full h-10 px-5 glass-btn group"
+                      data-testid={card.testId}
+                    >
+                      {card.cta} <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                    </Button>
+                  </a>
                 ) : card.external ? (
                   <a
                     href={card.href!}
@@ -391,43 +424,20 @@ export default function Invest() {
                 The agentic era is not waiting.
               </motion.h2>
               <p className="mt-5 text-base sm:text-lg text-white/65 leading-relaxed max-w-2xl mx-auto">
-                The full thesis, architecture, and economic engine of the agentic intelligence layer - laid out in one document.
+                Step into the portal to review your opportunity in full - thesis, architecture, vesting calendar, and live round status, all in one place.
               </p>
               <div className="mt-8 flex flex-wrap gap-3 justify-center">
-                <Button
-                  size="lg"
-                  onClick={() => setDeckOpen(true)}
-                  className="rounded-full h-12 px-8 teal-btn"
-                  data-testid="button-view-whitepaper"
-                >
-                  View Whitepaper <ArrowRight className="ml-2 w-4 h-4" />
-                </Button>
                 <a
-                  href={`${import.meta.env.BASE_URL}whitepaper-deck.pdf`}
-                  download="AIcreatesAI Whitepaper Deck.pdf"
+                  href={import.meta.env.PROD ? "https://invest.aicreates.ai/" : "/invest/"}
+                  target="_blank"
                   rel="noopener noreferrer"
-                  data-testid="button-download-presentation"
+                  data-testid="button-open-portal-cta"
                 >
                   <Button
                     size="lg"
-                    variant="outline"
-                    className="rounded-full h-12 px-7 glass-btn"
+                    className="rounded-full h-12 px-8 teal-btn"
                   >
-                    <Download className="mr-2 w-4 h-4" /> Download the Presentation
-                  </Button>
-                </a>
-                <a
-                  href={`${import.meta.env.BASE_URL}litepaper.pdf`}
-                  download="AiCreatesAi Whitepaper.pdf"
-                  rel="noopener noreferrer"
-                  data-testid="button-download-litepaper"
-                >
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="rounded-full h-12 px-7 glass-btn"
-                  >
-                    Download Litepaper
+                    Open the Portal <ArrowRight className="ml-2 w-4 h-4" />
                   </Button>
                 </a>
               </div>

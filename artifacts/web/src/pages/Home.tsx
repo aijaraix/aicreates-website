@@ -507,29 +507,20 @@ export default function Home() {
                 The agentic era is not waiting.
               </motion.h2>
               <p className="mt-5 text-base sm:text-lg text-white/65 leading-relaxed max-w-2xl mx-auto">
-                The full thesis, architecture, and economic engine of the agentic intelligence layer - laid out in one document.
+                Step into the portal to review your opportunity in full - thesis, architecture, vesting calendar, and live round status, all in one place.
               </p>
               <div className="mt-8 flex flex-wrap gap-3 justify-center">
-                <Button
-                  size="lg"
-                  onClick={() => setDeckOpen(true)}
-                  className="rounded-full h-12 px-8 teal-btn"
-                  data-testid="button-view-whitepaper"
-                >
-                  View Whitepaper <ArrowRight className="ml-2 w-4 h-4" />
-                </Button>
                 <a
-                  href={`${import.meta.env.BASE_URL}litepaper.pdf`}
-                  download="AiCreatesAi Whitepaper.pdf"
+                  href={import.meta.env.PROD ? "https://invest.aicreates.ai/" : "/invest/"}
+                  target="_blank"
                   rel="noopener noreferrer"
-                  data-testid="button-download-litepaper"
+                  data-testid="button-open-portal-cta"
                 >
                   <Button
                     size="lg"
-                    variant="outline"
-                    className="rounded-full h-12 px-7 glass-btn"
+                    className="rounded-full h-12 px-8 teal-btn"
                   >
-                    Download
+                    Open the Portal <ArrowRight className="ml-2 w-4 h-4" />
                   </Button>
                 </a>
               </div>

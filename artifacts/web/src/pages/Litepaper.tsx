@@ -369,10 +369,10 @@ export default function Litepaper() {
                 size="lg"
                 onClick={() => setDeckOpen(true)}
                 className="rounded-full h-12 px-7 teal-btn"
-                data-testid="button-view-whitepaper"
+                data-testid="button-view-pitch-deck"
               >
                 <BookOpen className="mr-2 w-4 h-4" />
-                View Whitepaper
+                View Pitch Deck
               </Button>
               <Link href="/contact">
                 <Button size="lg" variant="outline" className="rounded-full h-12 px-7 glass-btn" data-testid="button-get-in-touch-hero">
@@ -489,10 +489,10 @@ export default function Litepaper() {
                   variant="outline"
                   onClick={() => setDeckOpen(true)}
                   className="rounded-full h-12 px-8 glass-btn"
-                  data-testid="button-view-whitepaper-final"
+                  data-testid="button-view-pitch-deck-final"
                 >
                   <BookOpen className="mr-2 w-4 h-4" />
-                  View Whitepaper
+                  View Pitch Deck
                 </Button>
               </div>
             </div>
