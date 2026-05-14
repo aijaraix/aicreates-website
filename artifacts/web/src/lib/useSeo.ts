@@ -2,8 +2,8 @@ import { useEffect } from "react";
 
 const SITE = "AIcreatesAI";
 const ORIGIN = "https://www.aicreates.ai";
-const DEFAULT_OG = `${ORIGIN}/og-cover.jpg`;
-const DEFAULT_OG_SQUARE = `${ORIGIN}/og-square.jpg`;
+const DEFAULT_OG = `${ORIGIN}/social/og-default.png`;
+const DEFAULT_OG_SQUARE = `${ORIGIN}/social/og-square.png`;
 const DEFAULT_OG_ALT = "AIcreatesAI - The Agentic Intelligence Layer";
 
 function setMeta(selector: string, attr: "name" | "property", key: string, content: string) {
@@ -50,17 +50,18 @@ function setAllOgImages(coverUrl: string, squareUrl: string, alt: string) {
     el.setAttribute("content", content);
     document.head.appendChild(el);
   };
+  const typeFor = (u: string) => (/\.jpe?g(\?|$)/i.test(u) ? "image/jpeg" : "image/png");
   append("og:image", coverUrl);
   append("og:image:secure_url", coverUrl);
-  append("og:image:type", "image/jpeg");
+  append("og:image:type", typeFor(coverUrl));
   append("og:image:width", "1200");
   append("og:image:height", "630");
   append("og:image:alt", alt);
   append("og:image", squareUrl);
   append("og:image:secure_url", squareUrl);
-  append("og:image:type", "image/jpeg");
-  append("og:image:width", "600");
-  append("og:image:height", "600");
+  append("og:image:type", typeFor(squareUrl));
+  append("og:image:width", "1200");
+  append("og:image:height", "1200");
   append("og:image:alt", alt);
 }
 
