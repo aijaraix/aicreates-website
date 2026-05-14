@@ -10,3 +10,4 @@ export * from "./commitment_allocations";
 export * from "./round_state";
 export * from "./chat_threads";
 export * from "./chat_messages";
+export * from "./genesis";

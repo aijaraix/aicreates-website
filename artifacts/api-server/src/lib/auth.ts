@@ -1,7 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
 import { getAuth, clerkClient } from "@clerk/express";
-import { db, appUsersTable } from "@workspace/db";
-import { eq, sql } from "drizzle-orm";
+import { db, appUsersTable, genesisReferrersTable } from "@workspace/db";
+import { and, eq, sql } from "drizzle-orm";
 
 const LOGIN_DEBOUNCE_MS = 30 * 60 * 1000; // 30 min
 
@@ -64,7 +64,22 @@ export async function requireAuth(
           .filter(Boolean)
           .join(" ")
           .trim() || null;
-      const desiredRole = isEmailAdmin(email) ? "admin" : "investor";
+      // If a /genesis/request-access intake row was created for this
+      // email, migrate it onto the real Clerk userId on first sign-in
+      // so the referrer record is durably attached to the live user.
+      const pendingStubId = `pending:genesis:${email.toLowerCase()}`;
+      const stubReferrer = email
+        ? await db
+            .select()
+            .from(genesisReferrersTable)
+            .where(eq(genesisReferrersTable.userId, pendingStubId))
+            .limit(1)
+        : [];
+      const desiredRole = isEmailAdmin(email)
+        ? "admin"
+        : stubReferrer[0]?.status === "approved"
+          ? "referrer"
+          : "investor";
 
       const inserted = await db
         .insert(appUsersTable)
@@ -80,11 +95,30 @@ export async function requireAuth(
             .where(eq(appUsersTable.id, userId))
             .limit(1)
         )[0];
+
+      if (stubReferrer[0]) {
+        await db
+          .update(genesisReferrersTable)
+          .set({ userId, updatedAt: new Date() })
+          .where(eq(genesisReferrersTable.id, stubReferrer[0].id));
+        await db
+          .delete(appUsersTable)
+          .where(eq(appUsersTable.id, pendingStubId));
+      }
     } else {
       // Reconcile role with the env allow-list every request: promote when
       // added to the list, DEMOTE when removed. The DB role is cosmetic;
       // requireAdmin re-checks the live allow-list as the source of truth.
-      const desiredRole = isEmailAdmin(row.email) ? "admin" : "investor";
+      // Preserve the `referrer` role: it is granted by the Genesis admin
+      // tooling and must not be demoted back to `investor` here.
+      let desiredRole: string;
+      if (isEmailAdmin(row.email)) {
+        desiredRole = "admin";
+      } else if (row.role === "referrer") {
+        desiredRole = "referrer";
+      } else {
+        desiredRole = "investor";
+      }
       if (row.role !== desiredRole) {
         const updated = await db
           .update(appUsersTable)

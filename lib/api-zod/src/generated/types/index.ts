@@ -6,4 +6,12 @@
  * OpenAPI spec version: 0.1.0
  */
 
+export * from "./genesisAccessRequest";
+export * from "./genesisLeadCreate";
+export * from "./genesisLeadCreated";
+export * from "./genesisLeadCreateInterestType";
+export * from "./genesisLeadCreateUtm";
+export * from "./genesisPublicFlags";
+export * from "./genesisReferrerSummary";
+export * from "./genesisReferrerSummaryReferrer";
 export * from "./healthStatus";

@@ -10,6 +10,10 @@ const PRIMARY_LINKS = [
   { href: "/dashboard", label: "Dashboard" },
 ];
 
+interface MeResp {
+  user?: { role?: string };
+}
+
 const INFO_LINKS = [
   { href: "/documents", label: "Documents" },
   { href: "/faq", label: "FAQ" },
@@ -20,6 +24,13 @@ export default function PortalNav({ showAdmin }: { showAdmin?: boolean }) {
   const { signOut } = useClerk();
   const [location] = useLocation();
   const [open, setOpen] = useState(false);
+  const me = useQuery({
+    queryKey: ["me"],
+    queryFn: () => api<MeResp>("/me"),
+    staleTime: 60_000,
+  });
+  const isReferrer =
+    me.data?.user?.role === "referrer" || me.data?.user?.role === "admin";
 
   useEffect(() => {
     setOpen(false);
@@ -39,6 +50,16 @@ export default function PortalNav({ showAdmin }: { showAdmin?: boolean }) {
       active: isActive(l.href),
       testId: `nav-link-${l.href.slice(1)}`,
     })),
+    ...(isReferrer
+      ? [
+          {
+            href: "/genesis/dashboard",
+            label: "Genesis",
+            active: location.startsWith("/genesis"),
+            testId: "nav-link-genesis",
+          },
+        ]
+      : []),
     {
       href: "#info",
       label: "Info",

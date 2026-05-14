@@ -267,6 +267,9 @@ export default function Admin() {
             <TabsTrigger value="audit" data-testid="tab-audit">
               Audit
             </TabsTrigger>
+            <TabsTrigger value="genesis" data-testid="tab-genesis">
+              Genesis
+            </TabsTrigger>
           </TabsList>
           <TabsContent value="overview">
             <OverviewTab />
@@ -282,6 +285,9 @@ export default function Admin() {
           </TabsContent>
           <TabsContent value="audit">
             <AuditTab />
+          </TabsContent>
+          <TabsContent value="genesis">
+            <GenesisAdminTab />
           </TabsContent>
         </Tabs>
       </main>
@@ -2240,4 +2246,899 @@ function useDebounced<T>(value: T, ms: number): T {
     return () => clearTimeout(t);
   }, [value, ms]);
   return v;
+}
+
+/* ============================================================ *
+ * Genesis admin tab
+ * ============================================================ */
+
+interface GenesisOverview {
+  referrers: { total?: number; approved?: number; pending?: number };
+  leads: { total?: number; investor_leads?: number; customer_leads?: number; qualified_count?: number };
+  points: { pending_points?: number; approved_points?: number; token_reserved?: number };
+  fraud: { open_flags?: number };
+  pool: { total: number; reserved: number; remaining: number };
+  flags: { privateMode: boolean; publicReferralMode: boolean };
+}
+interface GenesisReferrer {
+  id: string;
+  referralCode: string;
+  tier: string;
+  status: string;
+  multiplierBp: number;
+  compensationType: string;
+  email: string | null;
+  fullName: string | null;
+  displayName: string | null;
+  adminNotes: string | null;
+  createdAt: string;
+}
+interface GenesisLead {
+  id: string;
+  referrerId: string | null;
+  name: string;
+  email: string;
+  interestType: string;
+  status: string;
+  submissionChannel: string;
+  notes: string | null;
+  adminNotes: string | null;
+  estimatedInvestmentRange: string | null;
+  referralCode: string | null;
+  referrerEmail: string | null;
+  createdAt: string;
+}
+interface GenesisLedgerRow {
+  id: string;
+  referrerId: string | null;
+  leadId: string | null;
+  actionKey: string;
+  bonusLabel: string | null;
+  pointsPending: number;
+  pointsApproved: number;
+  tokenEquivalent: number;
+  status: string;
+  approverEmail: string | null;
+  approvedAt: string | null;
+  rejectedReason: string | null;
+  notes: string | null;
+  createdAt: string;
+  referralCode: string | null;
+  referrerEmail: string | null;
+}
+interface GenesisRule {
+  id: string;
+  actionKey: string;
+  label: string;
+  points: number;
+  awardMode: string;
+  enabled: boolean;
+  notes: string | null;
+}
+
+function GenesisAdminTab() {
+  const [sub, setSub] = useState<"overview" | "referrers" | "leads" | "ledger" | "rules" | "settings">("overview");
+  return (
+    <div className="space-y-6">
+      <div className="flex flex-wrap gap-2 border-b border-white/8 pb-3">
+        {(["overview", "referrers", "leads", "ledger", "rules", "settings"] as const).map((k) => (
+          <button
+            key={k}
+            type="button"
+            onClick={() => setSub(k)}
+            className={`px-4 py-1.5 rounded-full text-xs uppercase tracking-wider transition ${
+              sub === k
+                ? "bg-[#00F5D4]/15 text-[#00F5D4] border border-[#00F5D4]/30"
+                : "bg-white/[0.04] text-white/65 border border-white/10 hover:bg-white/[0.08]"
+            }`}
+            data-testid={`genesis-subtab-${k}`}
+          >
+            {k}
+          </button>
+        ))}
+      </div>
+      {sub === "overview" && <GenesisOverviewSub />}
+      {sub === "referrers" && <GenesisReferrersSub />}
+      {sub === "leads" && <GenesisLeadsSub />}
+      {sub === "ledger" && <GenesisLedgerSub />}
+      {sub === "rules" && <GenesisRulesSub />}
+      {sub === "settings" && <GenesisSettingsSub />}
+    </div>
+  );
+}
+
+function GenesisOverviewSub() {
+  const q = useQuery({ queryKey: ["admin", "genesis", "overview"], queryFn: () => api<GenesisOverview>("/admin/genesis/overview") });
+  if (!q.data) return <SkeletonBlock />;
+  const d = q.data;
+  return (
+    <div className="space-y-6">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <Stat label="Referrers" value={String(Number(d.referrers.total ?? 0))} sub={`${Number(d.referrers.approved ?? 0)} approved`} />
+        <Stat label="Leads" value={String(Number(d.leads.total ?? 0))} sub={`${Number(d.leads.qualified_count ?? 0)} qualified`} />
+        <Stat label="Investor leads" value={String(Number(d.leads.investor_leads ?? 0))} sub="Compliance review" />
+        <Stat label="Open fraud flags" value={String(Number(d.fraud.open_flags ?? 0))} />
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <Stat label="Pending points" value={Number(d.points.pending_points ?? 0).toLocaleString()} />
+        <Stat label="Approved points" value={Number(d.points.approved_points ?? 0).toLocaleString()} />
+        <Stat label="$AICA reserved" value={Number(d.points.token_reserved ?? 0).toLocaleString()} sub={`of ${d.pool.total.toLocaleString()} pool`} />
+      </div>
+      <div className="brand-card p-5">
+        <div className="text-[11px] uppercase tracking-[0.16em] text-white/50 font-medium">Token pool</div>
+        <div className="mt-3 text-sm">
+          <div className="flex items-center justify-between text-white/70">
+            <span>Reserved</span>
+            <span>{d.pool.reserved.toLocaleString()} / {d.pool.total.toLocaleString()}</span>
+          </div>
+          <div className="mt-2 h-2 bg-white/[0.06] rounded-full overflow-hidden">
+            <div className="h-full bg-[#00F5D4]" style={{ width: `${Math.min(100, (d.pool.reserved / Math.max(1, d.pool.total)) * 100).toFixed(2)}%` }} />
+          </div>
+          <div className="mt-2 text-xs text-white/45">Remaining: {d.pool.remaining.toLocaleString()} $AICA</div>
+        </div>
+      </div>
+      <div className="brand-card p-5">
+        <div className="text-[11px] uppercase tracking-[0.16em] text-white/50 font-medium">Mode flags</div>
+        <div className="mt-3 text-sm grid grid-cols-2 gap-3">
+          <div>GENESIS_PRIVATE_MODE: <span className={d.flags.privateMode ? "text-[#00F5D4]" : "text-red-400"}>{String(d.flags.privateMode)}</span></div>
+          <div>PUBLIC_REFERRAL_MODE: <span className={d.flags.publicReferralMode ? "text-[#00F5D4]" : "text-white/55"}>{String(d.flags.publicReferralMode)}</span></div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function GenesisReferrersSub() {
+  const qc = useQueryClient();
+  const q = useQuery({
+    queryKey: ["admin", "genesis", "referrers"],
+    queryFn: () => api<{ referrers: GenesisReferrer[] }>("/admin/genesis/referrers"),
+  });
+  const [showCreate, setShowCreate] = useState(false);
+  const [openId, setOpenId] = useState<string | null>(null);
+  const [createForm, setCreateForm] = useState({ email: "", fullName: "", tier: "family_friends", status: "approved" });
+  const create = useMutation({
+    mutationFn: () => api("/admin/genesis/referrers", { body: createForm }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["admin", "genesis"] });
+      setShowCreate(false);
+      setCreateForm({ email: "", fullName: "", tier: "family_friends", status: "approved" });
+    },
+  });
+  const update = useMutation({
+    mutationFn: ({ id, patch }: { id: string; patch: Record<string, unknown> }) =>
+      api(`/admin/genesis/referrers/${id}`, { method: "PATCH", body: patch }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["admin", "genesis"] }),
+  });
+  if (!q.data) return <SkeletonBlock />;
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <span className="text-sm text-white/60">{q.data.referrers.length} referrers</span>
+        <div className="flex gap-2">
+          <a
+            href="/api/admin/genesis/referrers?format=csv"
+            className="glass-btn rounded-full h-9 px-4 text-xs inline-flex items-center gap-1"
+            data-testid="link-export-referrers"
+          >
+            <Download className="w-3.5 h-3.5" /> CSV
+          </a>
+          <button
+            onClick={() => setShowCreate((v) => !v)}
+            className="teal-btn rounded-full h-9 px-4 text-xs"
+            data-testid="button-new-referrer"
+          >
+            + Add referrer
+          </button>
+        </div>
+      </div>
+      {showCreate && (
+        <div className="brand-card p-4 grid grid-cols-1 md:grid-cols-4 gap-3">
+          <input className="bg-white/[0.04] border border-white/10 rounded-lg px-3 py-2 text-sm" placeholder="email" value={createForm.email} onChange={(e) => setCreateForm({ ...createForm, email: e.target.value })} data-testid="input-new-referrer-email" />
+          <input className="bg-white/[0.04] border border-white/10 rounded-lg px-3 py-2 text-sm" placeholder="full name" value={createForm.fullName} onChange={(e) => setCreateForm({ ...createForm, fullName: e.target.value })} />
+          <select className="bg-white/[0.04] border border-white/10 rounded-lg px-3 py-2 text-sm" value={createForm.tier} onChange={(e) => setCreateForm({ ...createForm, tier: e.target.value })}>
+            {["family_friends", "trusted_introducer", "genesis_partner", "strategic", "creator", "developer", "agency", "investor_introduction"].map((t) => (
+              <option key={t} value={t} className="bg-[#0A0A0A]">{t}</option>
+            ))}
+          </select>
+          <button
+            onClick={() => create.mutate()}
+            disabled={create.isPending || !createForm.email}
+            className="teal-btn rounded-lg px-3 py-2 text-sm disabled:opacity-50"
+            data-testid="button-create-referrer"
+          >
+            {create.isPending ? "Creating..." : "Create"}
+          </button>
+        </div>
+      )}
+      <div className="brand-card overflow-hidden">
+        <table className="w-full text-sm">
+          <thead className="text-[11px] uppercase tracking-wider text-white/45 bg-white/[0.02]">
+            <tr>
+              <th className="px-3 py-2 text-left">Code</th>
+              <th className="px-3 py-2 text-left">Email / Name</th>
+              <th className="px-3 py-2 text-left">Tier</th>
+              <th className="px-3 py-2 text-left">Status</th>
+              <th className="px-3 py-2 text-right">Mult</th>
+              <th className="px-3 py-2 text-left">Comp</th>
+              <th className="px-3 py-2 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-white/5">
+            {q.data.referrers.length === 0 ? (
+              <tr><td colSpan={7} className="px-3 py-8 text-center text-white/40">No referrers yet.</td></tr>
+            ) : q.data.referrers.flatMap((r) => [
+              <tr key={r.id} data-testid={`row-genesis-referrer-${r.id}`}>
+                <td className="px-3 py-2 font-mono text-xs text-[#00F5D4]">
+                  <button
+                    onClick={() => setOpenId(openId === r.id ? null : r.id)}
+                    className="hover:underline"
+                    data-testid={`button-open-referrer-${r.id}`}
+                  >
+                    {r.referralCode}
+                  </button>
+                </td>
+                <td className="px-3 py-2">
+                  <div className="font-mono text-xs text-white/85">{r.email ?? "-"}</div>
+                  <div className="text-xs text-white/45">{r.fullName ?? r.displayName ?? "-"}</div>
+                </td>
+                <td className="px-3 py-2 text-xs text-white/70">{r.tier}</td>
+                <td className="px-3 py-2"><StatePill state={r.status} /></td>
+                <td className="px-3 py-2 text-right text-xs">{(r.multiplierBp / 100).toFixed(2)}x</td>
+                <td className="px-3 py-2 text-xs text-white/65">{r.compensationType}</td>
+                <td className="px-3 py-2 text-right">
+                  <div className="inline-flex gap-1">
+                    {r.status !== "approved" && (
+                      <button onClick={() => update.mutate({ id: r.id, patch: { status: "approved" } })} className="px-2 py-1 rounded-md bg-[#00F5D4]/15 text-[#00F5D4] text-[10px] uppercase tracking-wider">Approve</button>
+                    )}
+                    {r.status !== "rejected" && (
+                      <button onClick={() => update.mutate({ id: r.id, patch: { status: "rejected" } })} className="px-2 py-1 rounded-md bg-red-500/15 text-red-400 text-[10px] uppercase tracking-wider">Reject</button>
+                    )}
+                    {r.status === "approved" && (
+                      <button onClick={() => update.mutate({ id: r.id, patch: { status: "disabled" } })} className="px-2 py-1 rounded-md bg-white/8 text-white/65 text-[10px] uppercase tracking-wider">Disable</button>
+                    )}
+                  </div>
+                </td>
+              </tr>,
+              openId === r.id ? (
+                <tr key={`${r.id}-drawer`} className="bg-white/[0.02]">
+                  <td colSpan={7} className="px-3 py-4">
+                    <ReferrerDrawer
+                      referrer={r}
+                      onUpdate={(patch) => update.mutate({ id: r.id, patch })}
+                    />
+                  </td>
+                </tr>
+              ) : null,
+            ])}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+function ReferrerDrawer({
+  referrer,
+  onUpdate,
+}: {
+  referrer: GenesisReferrer;
+  onUpdate: (patch: Record<string, unknown>) => void;
+}) {
+  const [tier, setTier] = useState(referrer.tier);
+  const [multiplier, setMultiplier] = useState(referrer.multiplierBp / 100);
+  const [notes, setNotes] = useState(referrer.adminNotes ?? "");
+  const leads = useQuery({
+    queryKey: ["admin", "genesis", "leads", "referrer", referrer.id],
+    queryFn: () =>
+      api<{ leads: GenesisLead[] }>(`/admin/genesis/leads`).then((r) => ({
+        leads: r.leads.filter((l) => l.referrerId === referrer.id),
+      })),
+  });
+  const ledger = useQuery({
+    queryKey: ["admin", "genesis", "ledger", "referrer", referrer.id],
+    queryFn: () =>
+      api<{ ledger: GenesisLedgerRow[] }>(`/admin/genesis/ledger`).then((r) => ({
+        ledger: r.ledger.filter((e) => e.referrerId === referrer.id),
+      })),
+  });
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div className="space-y-3">
+        <div className="text-[11px] uppercase tracking-wider text-white/45">
+          Profile
+        </div>
+        <div className="text-xs text-white/70 space-y-1">
+          <div>UUID: <span className="font-mono text-white/85">{referrer.id}</span></div>
+          <div>Status: {referrer.status}</div>
+          <div>Compensation: {referrer.compensationType}</div>
+        </div>
+        <div className="grid grid-cols-2 gap-2">
+          <label className="text-[11px] uppercase tracking-wider text-white/45 block">
+            Tier
+            <select
+              value={tier}
+              onChange={(e) => setTier(e.target.value)}
+              className="mt-1 w-full bg-white/[0.04] border border-white/10 rounded-lg px-2 py-1.5 text-xs"
+              data-testid={`select-tier-${referrer.id}`}
+            >
+              {[
+                "family_friends",
+                "trusted_introducer",
+                "genesis_partner",
+                "strategic",
+                "creator",
+                "developer",
+                "agency",
+                "investor_introduction",
+              ].map((t) => (
+                <option key={t} value={t} className="bg-[#0A0A0A]">{t}</option>
+              ))}
+            </select>
+          </label>
+          <label className="text-[11px] uppercase tracking-wider text-white/45 block">
+            Multiplier (x)
+            <input
+              type="number"
+              min={0}
+              max={10}
+              step={0.01}
+              value={multiplier}
+              onChange={(e) => setMultiplier(Number(e.target.value) || 0)}
+              className="mt-1 w-full bg-white/[0.04] border border-white/10 rounded-lg px-2 py-1.5 text-xs"
+              data-testid={`input-multiplier-${referrer.id}`}
+            />
+          </label>
+        </div>
+        <label className="text-[11px] uppercase tracking-wider text-white/45 block">
+          Admin notes
+          <textarea
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            rows={3}
+            className="mt-1 w-full bg-white/[0.04] border border-white/10 rounded-lg px-2 py-1.5 text-xs"
+            data-testid={`input-notes-${referrer.id}`}
+          />
+        </label>
+        <button
+          onClick={() =>
+            onUpdate({
+              tier,
+              multiplierBp: Math.round(multiplier * 100),
+              adminNotes: notes || null,
+            })
+          }
+          className="teal-btn rounded-full h-8 px-4 text-xs"
+          data-testid={`button-save-referrer-${referrer.id}`}
+        >
+          Save profile
+        </button>
+      </div>
+      <div>
+        <div className="text-[11px] uppercase tracking-wider text-white/45 mb-2">
+          Leads ({leads.data?.leads.length ?? 0})
+        </div>
+        <div className="max-h-48 overflow-auto text-xs space-y-1">
+          {leads.data?.leads.length === 0 ? (
+            <div className="text-white/40">None.</div>
+          ) : (
+            leads.data?.leads.map((l) => (
+              <div key={l.id} className="flex justify-between gap-2">
+                <span className="truncate">{l.name} · {l.email}</span>
+                <span className="text-white/45">{l.status}</span>
+              </div>
+            ))
+          )}
+        </div>
+        <div className="text-[11px] uppercase tracking-wider text-white/45 mb-2 mt-4">
+          Ledger ({ledger.data?.ledger.length ?? 0})
+        </div>
+        <div className="max-h-48 overflow-auto text-xs space-y-1">
+          {ledger.data?.ledger.length === 0 ? (
+            <div className="text-white/40">None.</div>
+          ) : (
+            ledger.data?.ledger.map((e) => (
+              <div key={e.id} className="flex justify-between gap-2">
+                <span className="truncate">{e.bonusLabel ?? e.actionKey}</span>
+                <span className="text-white/45">
+                  {e.pointsApproved.toLocaleString()} pts · {e.status}
+                </span>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function GenesisLeadsSub() {
+  const qc = useQueryClient();
+  const [statusFilter, setStatusFilter] = useState("");
+  const [interestFilter, setInterestFilter] = useState("");
+  const params = new URLSearchParams();
+  if (statusFilter) params.set("status", statusFilter);
+  if (interestFilter) params.set("interest", interestFilter);
+  const qs = params.toString() ? `?${params.toString()}` : "";
+  const q = useQuery({
+    queryKey: ["admin", "genesis", "leads", qs],
+    queryFn: () => api<{ leads: GenesisLead[] }>(`/admin/genesis/leads${qs}`),
+  });
+  const update = useMutation({
+    mutationFn: ({ id, patch }: { id: string; patch: Record<string, unknown> }) =>
+      api(`/admin/genesis/leads/${id}`, { method: "PATCH", body: patch }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["admin", "genesis"] }),
+  });
+  if (!q.data) return <SkeletonBlock />;
+  return (
+    <div className="space-y-4">
+      <div className="flex flex-wrap items-center gap-3">
+        <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="bg-white/[0.04] border border-white/10 rounded-lg px-3 py-1.5 text-xs">
+          <option value="" className="bg-[#0A0A0A]">All statuses</option>
+          {["new", "under_review", "contacted", "verified", "qualified", "converted", "not_qualified", "rejected", "duplicate", "compliance_hold", "investor_review", "investor_kyc", "investor_meeting", "investor_funded", "investor_rejected"].map((s) => (
+            <option key={s} value={s} className="bg-[#0A0A0A]">{s}</option>
+          ))}
+        </select>
+        <select value={interestFilter} onChange={(e) => setInterestFilter(e.target.value)} className="bg-white/[0.04] border border-white/10 rounded-lg px-3 py-1.5 text-xs">
+          <option value="" className="bg-[#0A0A0A]">All interests</option>
+          {["customer", "enterprise", "developer", "agency", "investor", "partner", "other"].map((i) => (
+            <option key={i} value={i} className="bg-[#0A0A0A]">{i}</option>
+          ))}
+        </select>
+        <span className="ml-auto text-sm text-white/55">{q.data.leads.length} leads</span>
+        <a
+          href={`/api/admin/genesis/leads${qs ? qs + "&" : "?"}format=csv`}
+          className="glass-btn rounded-full h-8 px-3 text-xs inline-flex items-center gap-1"
+          data-testid="link-export-leads"
+        >
+          <Download className="w-3.5 h-3.5" /> CSV
+        </a>
+      </div>
+      <div className="brand-card overflow-hidden">
+        <table className="w-full text-sm">
+          <thead className="text-[11px] uppercase tracking-wider text-white/45 bg-white/[0.02]">
+            <tr>
+              <th className="px-3 py-2 text-left">When</th>
+              <th className="px-3 py-2 text-left">Name / Email</th>
+              <th className="px-3 py-2 text-left">Interest</th>
+              <th className="px-3 py-2 text-left">Status</th>
+              <th className="px-3 py-2 text-left">Referrer</th>
+              <th className="px-3 py-2 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-white/5">
+            {q.data.leads.length === 0 ? (
+              <tr><td colSpan={6} className="px-3 py-8 text-center text-white/40">No leads.</td></tr>
+            ) : q.data.leads.map((l) => (
+              <tr key={l.id} data-testid={`row-genesis-lead-${l.id}`}>
+                <td className="px-3 py-2 text-xs text-white/55">{new Date(l.createdAt).toLocaleDateString()}</td>
+                <td className="px-3 py-2">
+                  <div>{l.name}</div>
+                  <div className="font-mono text-[11px] text-white/55">{l.email}</div>
+                </td>
+                <td className="px-3 py-2 text-xs text-white/70">{l.interestType}</td>
+                <td className="px-3 py-2">
+                  <select
+                    value={l.status}
+                    onChange={(e) => update.mutate({ id: l.id, patch: { status: e.target.value } })}
+                    className="bg-white/[0.04] border border-white/10 rounded-md px-2 py-1 text-[11px]"
+                  >
+                    {["new", "under_review", "contacted", "verified", "qualified", "converted", "not_qualified", "rejected", "duplicate", "compliance_hold", "investor_review", "investor_kyc", "investor_meeting", "investor_funded", "investor_rejected"].map((s) => (
+                      <option key={s} value={s} className="bg-[#0A0A0A]">{s}</option>
+                    ))}
+                  </select>
+                </td>
+                <td className="px-3 py-2">
+                  <div className="font-mono text-xs text-[#00F5D4]">{l.referralCode ?? "-"}</div>
+                  <div className="text-[10px] text-white/45">{l.referrerEmail ?? ""}</div>
+                </td>
+                <td className="px-3 py-2 text-right text-xs text-white/55">{l.submissionChannel}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+const NAMED_BONUSES = [
+  "Strategic Introduction Bonus",
+  "Investor Introduction Bonus",
+  "Enterprise Customer Bonus",
+  "Advisor/Partner Bonus",
+  "Special Founder Approved Bonus",
+] as const;
+
+function GenesisLedgerSub() {
+  const qc = useQueryClient();
+  const [statusFilter, setStatusFilter] = useState("");
+  const [showBonus, setShowBonus] = useState(false);
+  const [bonus, setBonus] = useState({
+    referrerId: "",
+    bonusLabel: NAMED_BONUSES[0] as (typeof NAMED_BONUSES)[number],
+    pointsApproved: 0,
+    notes: "",
+  });
+  const qs = statusFilter ? `?status=${statusFilter}` : "";
+  const q = useQuery({
+    queryKey: ["admin", "genesis", "ledger", qs],
+    queryFn: () => api<{ ledger: GenesisLedgerRow[] }>(`/admin/genesis/ledger${qs}`),
+  });
+  const act = useMutation({
+    mutationFn: ({ id, body }: { id: string; body: Record<string, unknown> }) =>
+      api(`/admin/genesis/ledger/${id}`, { method: "PATCH", body }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["admin", "genesis"] }),
+  });
+  const award = useMutation({
+    mutationFn: () =>
+      api("/admin/genesis/ledger/bonus", { method: "POST", body: bonus }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["admin", "genesis"] });
+      setShowBonus(false);
+      setBonus({
+        referrerId: "",
+        bonusLabel: NAMED_BONUSES[0],
+        pointsApproved: 0,
+        notes: "",
+      });
+    },
+  });
+  if (!q.data) return <SkeletonBlock />;
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center gap-3 flex-wrap">
+        <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="bg-white/[0.04] border border-white/10 rounded-lg px-3 py-1.5 text-xs">
+          <option value="" className="bg-[#0A0A0A]">All</option>
+          {["pending", "approved", "rejected", "compliance_hold", "vesting", "vested"].map((s) => (
+            <option key={s} value={s} className="bg-[#0A0A0A]">{s}</option>
+          ))}
+        </select>
+        <span className="ml-auto text-sm text-white/55">{q.data.ledger.length} entries</span>
+        <button
+          onClick={() => setShowBonus((v) => !v)}
+          className="teal-btn rounded-full h-8 px-3 text-xs"
+          data-testid="button-award-bonus"
+        >
+          + Named bonus
+        </button>
+        <a href={`/api/admin/genesis/ledger${qs ? qs + "&" : "?"}format=csv`} className="glass-btn rounded-full h-8 px-3 text-xs inline-flex items-center gap-1" data-testid="link-export-ledger">
+          <Download className="w-3.5 h-3.5" /> CSV
+        </a>
+      </div>
+      {showBonus && (
+        <div className="brand-card p-4 grid grid-cols-1 md:grid-cols-4 gap-3">
+          <input
+            className="bg-white/[0.04] border border-white/10 rounded-lg px-3 py-2 text-sm md:col-span-1"
+            placeholder="referrer UUID"
+            value={bonus.referrerId}
+            onChange={(e) => setBonus({ ...bonus, referrerId: e.target.value })}
+            data-testid="input-bonus-referrer-id"
+          />
+          <select
+            className="bg-white/[0.04] border border-white/10 rounded-lg px-3 py-2 text-sm"
+            value={bonus.bonusLabel}
+            onChange={(e) =>
+              setBonus({ ...bonus, bonusLabel: e.target.value as (typeof NAMED_BONUSES)[number] })
+            }
+          >
+            {NAMED_BONUSES.map((b) => (
+              <option key={b} value={b} className="bg-[#0A0A0A]">{b}</option>
+            ))}
+          </select>
+          <input
+            type="number"
+            min={0}
+            className="bg-white/[0.04] border border-white/10 rounded-lg px-3 py-2 text-sm"
+            placeholder="points approved"
+            value={bonus.pointsApproved}
+            onChange={(e) => setBonus({ ...bonus, pointsApproved: Number(e.target.value) || 0 })}
+            data-testid="input-bonus-points"
+          />
+          <button
+            onClick={() => award.mutate()}
+            disabled={award.isPending || !bonus.referrerId || bonus.pointsApproved <= 0}
+            className="teal-btn rounded-lg px-3 py-2 text-sm disabled:opacity-50"
+            data-testid="button-award-confirm"
+          >
+            {award.isPending ? "Awarding..." : "Award"}
+          </button>
+          <textarea
+            className="bg-white/[0.04] border border-white/10 rounded-lg px-3 py-2 text-sm md:col-span-4"
+            placeholder="Notes (optional)"
+            value={bonus.notes}
+            onChange={(e) => setBonus({ ...bonus, notes: e.target.value })}
+            rows={2}
+          />
+        </div>
+      )}
+      <div className="brand-card overflow-hidden">
+        <table className="w-full text-sm">
+          <thead className="text-[11px] uppercase tracking-wider text-white/45 bg-white/[0.02]">
+            <tr>
+              <th className="px-3 py-2 text-left">When</th>
+              <th className="px-3 py-2 text-left">Referrer</th>
+              <th className="px-3 py-2 text-left">Action</th>
+              <th className="px-3 py-2 text-right">Pending</th>
+              <th className="px-3 py-2 text-right">Approved</th>
+              <th className="px-3 py-2 text-right">$AICA</th>
+              <th className="px-3 py-2 text-left">Status</th>
+              <th className="px-3 py-2 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-white/5">
+            {q.data.ledger.length === 0 ? (
+              <tr><td colSpan={8} className="px-3 py-8 text-center text-white/40">No ledger entries.</td></tr>
+            ) : q.data.ledger.map((l) => (
+              <tr key={l.id} data-testid={`row-genesis-ledger-${l.id}`}>
+                <td className="px-3 py-2 text-xs text-white/55">{new Date(l.createdAt).toLocaleDateString()}</td>
+                <td className="px-3 py-2 font-mono text-xs text-[#00F5D4]">{l.referralCode ?? "-"}</td>
+                <td className="px-3 py-2 text-xs">{l.bonusLabel ?? l.actionKey}</td>
+                <td className="px-3 py-2 text-right">{l.pointsPending.toLocaleString()}</td>
+                <td className="px-3 py-2 text-right">{l.pointsApproved.toLocaleString()}</td>
+                <td className="px-3 py-2 text-right text-[#00F5D4]">{Number(l.tokenEquivalent).toLocaleString()}</td>
+                <td className="px-3 py-2"><StatePill state={l.status} /></td>
+                <td className="px-3 py-2 text-right">
+                  <div className="inline-flex gap-1">
+                    {l.status === "pending" && (
+                      <>
+                        <button
+                          onClick={() => {
+                            const raw = prompt(
+                              "Approve with how many points?",
+                              String(l.pointsPending),
+                            );
+                            if (raw === null) return;
+                            const points = Number(raw);
+                            if (!Number.isFinite(points) || points < 0) return;
+                            act.mutate({
+                              id: l.id,
+                              body: { action: "approve", pointsApproved: points },
+                            });
+                          }}
+                          className="px-2 py-1 rounded-md bg-[#00F5D4]/15 text-[#00F5D4] text-[10px] uppercase tracking-wider"
+                          data-testid={`button-approve-${l.id}`}
+                        >
+                          Approve / Adjust
+                        </button>
+                        <button
+                          onClick={() => {
+                            const reason = prompt("Rejection reason?") ?? "";
+                            act.mutate({ id: l.id, body: { action: "reject", rejectedReason: reason } });
+                          }}
+                          className="px-2 py-1 rounded-md bg-red-500/15 text-red-400 text-[10px] uppercase tracking-wider"
+                        >
+                          Reject
+                        </button>
+                      </>
+                    )}
+                    {l.status === "approved" && (
+                      <button
+                        onClick={() => {
+                          const raw = prompt(
+                            "Manually adjust approved points to:",
+                            String(l.pointsApproved),
+                          );
+                          if (raw === null) return;
+                          const points = Number(raw);
+                          if (!Number.isFinite(points) || points < 0) return;
+                          act.mutate({
+                            id: l.id,
+                            body: { action: "approve", pointsApproved: points },
+                          });
+                        }}
+                        className="px-2 py-1 rounded-md bg-white/8 text-white/65 text-[10px] uppercase tracking-wider"
+                        data-testid={`button-adjust-${l.id}`}
+                      >
+                        Adjust
+                      </button>
+                    )}
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+function GenesisRulesSub() {
+  const qc = useQueryClient();
+  const q = useQuery({
+    queryKey: ["admin", "genesis", "rules"],
+    queryFn: () => api<{ rules: GenesisRule[] }>("/admin/genesis/rules"),
+  });
+  const update = useMutation({
+    mutationFn: ({ id, patch }: { id: string; patch: Record<string, unknown> }) =>
+      api(`/admin/genesis/rules/${id}`, { method: "PATCH", body: patch }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["admin", "genesis", "rules"] }),
+  });
+  if (!q.data) return <SkeletonBlock />;
+  return (
+    <div className="brand-card overflow-hidden">
+      <table className="w-full text-sm">
+        <thead className="text-[11px] uppercase tracking-wider text-white/45 bg-white/[0.02]">
+          <tr>
+            <th className="px-3 py-2 text-left">Action</th>
+            <th className="px-3 py-2 text-left">Label</th>
+            <th className="px-3 py-2 text-right">Points</th>
+            <th className="px-3 py-2 text-left">Mode</th>
+            <th className="px-3 py-2 text-left">Enabled</th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-white/5">
+          {q.data.rules.map((r) => (
+            <tr key={r.id} data-testid={`row-genesis-rule-${r.actionKey}`}>
+              <td className="px-3 py-2 font-mono text-xs">{r.actionKey}</td>
+              <td className="px-3 py-2 text-xs text-white/70">{r.label}</td>
+              <td className="px-3 py-2 text-right">
+                <input
+                  type="number"
+                  defaultValue={r.points}
+                  onBlur={(e) => {
+                    const v = Number(e.target.value);
+                    if (!Number.isNaN(v) && v !== r.points) update.mutate({ id: r.id, patch: { points: v } });
+                  }}
+                  className="w-24 bg-white/[0.04] border border-white/10 rounded px-2 py-1 text-right"
+                />
+              </td>
+              <td className="px-3 py-2">
+                <select
+                  value={r.awardMode}
+                  onChange={(e) => update.mutate({ id: r.id, patch: { awardMode: e.target.value } })}
+                  className="bg-white/[0.04] border border-white/10 rounded px-2 py-1 text-xs"
+                >
+                  <option value="auto" className="bg-[#0A0A0A]">auto</option>
+                  <option value="manual_review" className="bg-[#0A0A0A]">manual_review</option>
+                </select>
+              </td>
+              <td className="px-3 py-2">
+                <input
+                  type="checkbox"
+                  checked={r.enabled}
+                  onChange={(e) => update.mutate({ id: r.id, patch: { enabled: e.target.checked } })}
+                />
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+interface GenesisSettings {
+  privateMode: boolean;
+  privateModeLocked: boolean;
+  publicReferralMode: boolean;
+  perReferrerPointCap: number;
+  perCampaignPointCap: number;
+  tokenPoolTotal: number;
+  pointToTokenRatio: number;
+  note: string;
+}
+
+function GenesisSettingsSub() {
+  const qc = useQueryClient();
+  const q = useQuery({
+    queryKey: ["admin", "genesis", "settings"],
+    queryFn: () => api<GenesisSettings>("/admin/genesis/settings"),
+  });
+  const [form, setForm] = useState<Partial<GenesisSettings>>({});
+  useEffect(() => {
+    if (q.data) {
+      setForm({
+        publicReferralMode: q.data.publicReferralMode,
+        perReferrerPointCap: q.data.perReferrerPointCap,
+        perCampaignPointCap: q.data.perCampaignPointCap,
+        tokenPoolTotal: q.data.tokenPoolTotal,
+        pointToTokenRatio: q.data.pointToTokenRatio,
+      });
+    }
+  }, [q.data]);
+  const save = useMutation({
+    mutationFn: (body: Partial<GenesisSettings>) =>
+      api<{ settings: GenesisSettings }>("/admin/genesis/settings", {
+        method: "PUT",
+        body,
+      }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["admin", "genesis", "settings"] });
+    },
+  });
+  if (!q.data) return <SkeletonBlock />;
+  const lockedPublic = q.data.privateMode;
+  return (
+    <div className="brand-card p-6 text-sm space-y-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <div className="text-xs text-white/45 uppercase tracking-wider mb-1">Private mode</div>
+          <div className="flex items-center gap-2">
+            <span className="text-[#00F5D4] font-mono">{String(q.data.privateMode)}</span>
+            <span className="text-[10px] uppercase tracking-wider text-white/35">env-locked</span>
+          </div>
+        </div>
+        <div>
+          <label className="text-xs text-white/45 uppercase tracking-wider mb-1 block">
+            Public referral mode
+          </label>
+          <label className={`flex items-center gap-2 ${lockedPublic ? "opacity-50" : ""}`}>
+            <input
+              type="checkbox"
+              checked={!!form.publicReferralMode}
+              disabled={lockedPublic}
+              onChange={(e) => setForm({ ...form, publicReferralMode: e.target.checked })}
+              data-testid="checkbox-public-referral-mode"
+            />
+            <span>Allow public sign-ups (forced off while private mode is on)</span>
+          </label>
+        </div>
+        <NumberField
+          label="Per-referrer point cap (0 = none)"
+          value={form.perReferrerPointCap ?? 0}
+          onChange={(v) => setForm({ ...form, perReferrerPointCap: v })}
+          testId="input-per-referrer-cap"
+        />
+        <NumberField
+          label="Per-campaign point cap (0 = none)"
+          value={form.perCampaignPointCap ?? 0}
+          onChange={(v) => setForm({ ...form, perCampaignPointCap: v })}
+          testId="input-per-campaign-cap"
+        />
+        <NumberField
+          label="Token pool total ($AICA)"
+          value={form.tokenPoolTotal ?? 0}
+          onChange={(v) => setForm({ ...form, tokenPoolTotal: v })}
+          testId="input-token-pool-total"
+        />
+        <NumberField
+          label="Point → $AICA ratio"
+          value={form.pointToTokenRatio ?? 1}
+          onChange={(v) => setForm({ ...form, pointToTokenRatio: v })}
+          testId="input-point-ratio"
+        />
+      </div>
+      <div className="flex items-center gap-3">
+        <button
+          className="teal-btn rounded-full h-9 px-5 text-xs font-medium disabled:opacity-50"
+          onClick={() => save.mutate(form)}
+          disabled={save.isPending}
+          data-testid="button-save-settings"
+        >
+          {save.isPending ? "Saving…" : "Save settings"}
+        </button>
+        {save.isSuccess && <span className="text-xs text-[#00F5D4]">Saved.</span>}
+        {save.isError && <span className="text-xs text-red-400">Save failed.</span>}
+      </div>
+      <p className="text-xs text-white/55 leading-relaxed">{q.data.note}</p>
+    </div>
+  );
+}
+
+function NumberField({
+  label,
+  value,
+  onChange,
+  testId,
+}: {
+  label: string;
+  value: number;
+  onChange: (v: number) => void;
+  testId?: string;
+}) {
+  return (
+    <label className="block">
+      <span className="text-xs text-white/45 uppercase tracking-wider mb-1 block">{label}</span>
+      <input
+        type="number"
+        min={0}
+        value={value}
+        onChange={(e) => onChange(Number(e.target.value) || 0)}
+        className="w-full bg-white/[0.03] border border-white/10 rounded-md px-3 py-2 text-sm text-white"
+        data-testid={testId}
+      />
+    </label>
+  );
 }

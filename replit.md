@@ -203,6 +203,39 @@ Production env vars (set in Replit Deployments → Secrets):
 
 See `README.md` for the full setup walkthrough.
 
+## Genesis Referral Program (Phase 1 - private mode)
+
+Invite-only referral program shipped inside the investor portal artifact (`artifacts/invest`) with a marketing CTA on the GitHub Pages site (`artifacts/web/src/pages/Home.tsx`).
+
+### Surfaces
+- `/genesis` (public) - program landing on `invest.aicreates.ai`
+- `/genesis/request-access` (public) - intake form. Creates a pending `app_users` row (id `pending:genesis:{email}`) plus a `genesis_referrers` row in `pending` status. On the requester's first Clerk sign-in, the auth middleware migrates the stub id to the real Clerk userId so the existing referrer record (and any leads/ledger) is preserved.
+- `/r/:code` (public) - personalized capture page with consent + UTM/first-touch tracking
+- `/genesis/dashboard` (auth required) - referrer dashboard: QR (api.qrserver.com), copy-link, manual intro form, leads + ledger tables
+- `/admin` → `Genesis` tab (admin only) - 6 sub-tabs: Overview / Referrers / Leads / Ledger / Rules / Settings, with CSV export on referrers, leads, ledger
+- Marketing home (`www.aicreates.ai`) has a Genesis CTA section linking to `https://invest.aicreates.ai/genesis`
+
+### Schema (`lib/db/src/schema/genesis.ts`)
+8 tables: `referrers`, `leads`, `referral_events`, `reward_rules`, `ledger`, `vesting_schedules`, `payout_requests`, `fraud_flags`. Token amounts stored as `bigint mode "number"`. Codes are 8-char base64url lowercase.
+
+### Audit logging
+Genesis admin write actions reuse the existing `admin_audit_log` table (singular, not `admin_audit_logs`) via `logAdminAction()` — no new audit table is added. This is intentional to avoid splitting the audit trail across two tables; all admin writes (Stripe, Genesis, etc.) flow through the same shared log.
+
+### API contract
+Public Genesis endpoints (`/genesis/public/flags`, `/genesis/r/:code`, `/genesis/leads`, `/genesis/request-access`) are declared in `lib/api-spec/openapi.yaml` and codegen'd via `pnpm --filter @workspace/api-spec run codegen`. Admin Genesis routes use the existing Express + Zod direct pattern (consistent with the rest of the api-server) and are not currently in the OpenAPI surface.
+
+### Routes (`artifacts/api-server/src/routes/genesis.ts`)
+Public: `GET /genesis/public/flags`, `GET /genesis/r/:code`, `POST /genesis/leads`, `POST /genesis/request-access`. Self: `GET/PUT /genesis/me`, `POST /genesis/leads/manual`. Admin: overview, referrers CRUD, leads PATCH, ledger approve/reject/named-bonus, rules update, settings.
+
+### Compliance
+Investor leads (`interestType=investor`) auto-set `status=investor_review` and skip auto-points award. Same-email-as-referrer flagged `compliance_hold`. 11 default reward rules seeded lazily on first call.
+
+### Env flags
+- `GENESIS_PRIVATE_MODE` (default `true`) - private mode banner + intake gating
+- `PUBLIC_REFERRAL_MODE` (default `false`) - reserved for Phase 2
+- `TOKEN_POOL_TOTAL` (default `250000000`) - $AICA reserved for Genesis cohort
+- `DEFAULT_POINT_TO_TOKEN_RATIO` (default `1`) - point → $AICA conversion
+
 ## Eve chat widget (hidden)
 
 The Eve widget (`artifacts/web/src/components/EveWidget.tsx`) and its backend route (`artifacts/api-server/src/routes/eve.ts`) remain in the codebase but the widget is not mounted in `App.tsx`. To re-enable: uncomment the import and the `<EveWidget />` mount in `App.tsx`.

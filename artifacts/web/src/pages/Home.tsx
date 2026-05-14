@@ -490,6 +490,53 @@ export default function Home() {
         </div>
       </section>
 
+      {/* GENESIS REFERRAL */}
+      <section className="py-14 md:py-20 relative">
+        <div className="container mx-auto px-4 md:px-6 w-full">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.6 }}
+            className="relative max-w-5xl mx-auto rounded-3xl border border-white/10 bg-gradient-to-b from-[#0E0E0E] to-[#0A0A0A] p-8 sm:p-10 md:p-14 overflow-hidden"
+          >
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(0,245,212,0.10),transparent_65%)] pointer-events-none" />
+            <div className="absolute inset-x-0 top-0 h-px divider-line" />
+            <div className="relative grid grid-cols-1 md:grid-cols-[1fr,auto] gap-6 md:gap-10 items-center">
+              <div>
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#00F5D4]/30 bg-[#00F5D4]/10 text-[10px] uppercase tracking-[0.18em] text-[#00F5D4] font-semibold">
+                  Invite-only · Phase 1
+                </div>
+                <h2 className="mt-4 text-2xl sm:text-3xl md:text-4xl font-serif font-semibold text-white leading-[1.1]">
+                  Genesis Referral Program
+                </h2>
+                <p className="mt-3 text-white/65 text-sm sm:text-base max-w-xl leading-relaxed">
+                  Built by our family-and-friends circle. A private network of referrers
+                  earning $AICA tokens for warm introductions to early customers,
+                  partners, and supporters of the agentic intelligence layer.
+                </p>
+              </div>
+              <div className="flex flex-wrap md:flex-nowrap gap-3">
+                <a
+                  href="https://invest.aicreates.ai/genesis"
+                  className="rounded-full h-11 px-6 inline-flex items-center justify-center text-sm font-medium teal-btn"
+                  data-testid="link-home-genesis-learn"
+                >
+                  Learn more <ArrowRight className="ml-2 w-4 h-4" />
+                </a>
+                <a
+                  href="https://invest.aicreates.ai/genesis/request-access"
+                  className="rounded-full h-11 px-6 inline-flex items-center justify-center text-sm font-medium glass-btn"
+                  data-testid="link-home-genesis-request"
+                >
+                  Request access
+                </a>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
       {/* VISUAL WHITEPAPER */}
       <section className="py-14 md:py-20 relative">
         <div className="container mx-auto px-4 md:px-6 w-full">

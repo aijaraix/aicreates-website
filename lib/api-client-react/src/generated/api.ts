@@ -5,18 +5,28 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import type {
+  MutationFunction,
   QueryFunction,
   QueryKey,
+  UseMutationOptions,
+  UseMutationResult,
   UseQueryOptions,
   UseQueryResult,
 } from "@tanstack/react-query";
 
-import type { HealthStatus } from "./api.schemas";
+import type {
+  GenesisAccessRequest,
+  GenesisLeadCreate,
+  GenesisLeadCreated,
+  GenesisPublicFlags,
+  GenesisReferrerSummary,
+  HealthStatus,
+} from "./api.schemas";
 
 import { customFetch } from "../custom-fetch";
-import type { ErrorType } from "../custom-fetch";
+import type { ErrorType, BodyType } from "../custom-fetch";
 
 type AwaitedInput<T> = PromiseLike<T> | T;
 
@@ -99,3 +109,342 @@ export function useHealthCheck<
 
   return { ...query, queryKey: queryOptions.queryKey };
 }
+
+/**
+ * @summary Public Genesis program flags (private mode, public referral mode, token pool)
+ */
+export const getGetGenesisPublicFlagsUrl = () => {
+  return `/api/genesis/public/flags`;
+};
+
+export const getGenesisPublicFlags = async (
+  options?: RequestInit,
+): Promise<GenesisPublicFlags> => {
+  return customFetch<GenesisPublicFlags>(getGetGenesisPublicFlagsUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetGenesisPublicFlagsQueryKey = () => {
+  return [`/api/genesis/public/flags`] as const;
+};
+
+export const getGetGenesisPublicFlagsQueryOptions = <
+  TData = Awaited<ReturnType<typeof getGenesisPublicFlags>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getGenesisPublicFlags>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetGenesisPublicFlagsQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getGenesisPublicFlags>>
+  > = ({ signal }) => getGenesisPublicFlags({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getGenesisPublicFlags>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetGenesisPublicFlagsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getGenesisPublicFlags>>
+>;
+export type GetGenesisPublicFlagsQueryError = ErrorType<unknown>;
+
+/**
+ * @summary Public Genesis program flags (private mode, public referral mode, token pool)
+ */
+
+export function useGetGenesisPublicFlags<
+  TData = Awaited<ReturnType<typeof getGenesisPublicFlags>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getGenesisPublicFlags>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetGenesisPublicFlagsQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Resolve referrer by short code (used by /r/:code capture page)
+ */
+export const getGetGenesisReferrerByCodeUrl = (code: string) => {
+  return `/api/genesis/r/${code}`;
+};
+
+export const getGenesisReferrerByCode = async (
+  code: string,
+  options?: RequestInit,
+): Promise<GenesisReferrerSummary> => {
+  return customFetch<GenesisReferrerSummary>(
+    getGetGenesisReferrerByCodeUrl(code),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+export const getGetGenesisReferrerByCodeQueryKey = (code: string) => {
+  return [`/api/genesis/r/${code}`] as const;
+};
+
+export const getGetGenesisReferrerByCodeQueryOptions = <
+  TData = Awaited<ReturnType<typeof getGenesisReferrerByCode>>,
+  TError = ErrorType<void>,
+>(
+  code: string,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getGenesisReferrerByCode>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getGetGenesisReferrerByCodeQueryKey(code);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getGenesisReferrerByCode>>
+  > = ({ signal }) =>
+    getGenesisReferrerByCode(code, { signal, ...requestOptions });
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!code,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof getGenesisReferrerByCode>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetGenesisReferrerByCodeQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getGenesisReferrerByCode>>
+>;
+export type GetGenesisReferrerByCodeQueryError = ErrorType<void>;
+
+/**
+ * @summary Resolve referrer by short code (used by /r/:code capture page)
+ */
+
+export function useGetGenesisReferrerByCode<
+  TData = Awaited<ReturnType<typeof getGenesisReferrerByCode>>,
+  TError = ErrorType<void>,
+>(
+  code: string,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof getGenesisReferrerByCode>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetGenesisReferrerByCodeQueryOptions(code, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Submit a new lead from the public capture page
+ */
+export const getCreateGenesisLeadUrl = () => {
+  return `/api/genesis/leads`;
+};
+
+export const createGenesisLead = async (
+  genesisLeadCreate: GenesisLeadCreate,
+  options?: RequestInit,
+): Promise<GenesisLeadCreated> => {
+  return customFetch<GenesisLeadCreated>(getCreateGenesisLeadUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(genesisLeadCreate),
+  });
+};
+
+export const getCreateGenesisLeadMutationOptions = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createGenesisLead>>,
+    TError,
+    { data: BodyType<GenesisLeadCreate> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof createGenesisLead>>,
+  TError,
+  { data: BodyType<GenesisLeadCreate> },
+  TContext
+> => {
+  const mutationKey = ["createGenesisLead"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof createGenesisLead>>,
+    { data: BodyType<GenesisLeadCreate> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return createGenesisLead(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CreateGenesisLeadMutationResult = NonNullable<
+  Awaited<ReturnType<typeof createGenesisLead>>
+>;
+export type CreateGenesisLeadMutationBody = BodyType<GenesisLeadCreate>;
+export type CreateGenesisLeadMutationError = ErrorType<void>;
+
+/**
+ * @summary Submit a new lead from the public capture page
+ */
+export const useCreateGenesisLead = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createGenesisLead>>,
+    TError,
+    { data: BodyType<GenesisLeadCreate> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof createGenesisLead>>,
+  TError,
+  { data: BodyType<GenesisLeadCreate> },
+  TContext
+> => {
+  return useMutation(getCreateGenesisLeadMutationOptions(options));
+};
+
+/**
+ * @summary Request access to the private Genesis referral program
+ */
+export const getRequestGenesisAccessUrl = () => {
+  return `/api/genesis/request-access`;
+};
+
+export const requestGenesisAccess = async (
+  genesisAccessRequest: GenesisAccessRequest,
+  options?: RequestInit,
+): Promise<void> => {
+  return customFetch<void>(getRequestGenesisAccessUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(genesisAccessRequest),
+  });
+};
+
+export const getRequestGenesisAccessMutationOptions = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof requestGenesisAccess>>,
+    TError,
+    { data: BodyType<GenesisAccessRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof requestGenesisAccess>>,
+  TError,
+  { data: BodyType<GenesisAccessRequest> },
+  TContext
+> => {
+  const mutationKey = ["requestGenesisAccess"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof requestGenesisAccess>>,
+    { data: BodyType<GenesisAccessRequest> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return requestGenesisAccess(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type RequestGenesisAccessMutationResult = NonNullable<
+  Awaited<ReturnType<typeof requestGenesisAccess>>
+>;
+export type RequestGenesisAccessMutationBody = BodyType<GenesisAccessRequest>;
+export type RequestGenesisAccessMutationError = ErrorType<void>;
+
+/**
+ * @summary Request access to the private Genesis referral program
+ */
+export const useRequestGenesisAccess = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof requestGenesisAccess>>,
+    TError,
+    { data: BodyType<GenesisAccessRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof requestGenesisAccess>>,
+  TError,
+  { data: BodyType<GenesisAccessRequest> },
+  TContext
+> => {
+  return useMutation(getRequestGenesisAccessMutationOptions(options));
+};

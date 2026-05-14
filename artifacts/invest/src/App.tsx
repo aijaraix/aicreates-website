@@ -36,6 +36,10 @@ import Faq from "@/pages/Faq";
 import Profile from "@/pages/Profile";
 import RequireProfile from "@/components/RequireProfile";
 import NotFound from "@/pages/not-found";
+import Genesis from "@/pages/Genesis";
+import GenesisRequestAccess from "@/pages/GenesisRequestAccess";
+import GenesisCapture from "@/pages/GenesisCapture";
+import GenesisDashboard from "@/pages/GenesisDashboard";
 import { SectionLabel } from "@/components/brand";
 import SiteHeader from "@/components/SiteHeader";
 import { useInvestSeo } from "@/lib/useInvestSeo";
@@ -351,6 +355,14 @@ function ClerkProviderWithRoutes() {
               <Admin />
             </Protected>
           </Route>
+          <Route path="/genesis" component={Genesis} />
+          <Route path="/genesis/request-access" component={GenesisRequestAccess} />
+          <Route path="/genesis/dashboard">
+            <Protected>
+              <GenesisDashboard />
+            </Protected>
+          </Route>
+          <Route path="/r/:code" component={GenesisCapture} />
           <Route path="/admin/chat">
             <Protected>
               <AdminChat />

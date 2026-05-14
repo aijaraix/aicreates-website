@@ -10,6 +10,8 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: genesis
+    description: Genesis Referral Program (Phase 1 MVP)
 paths:
   /healthz:
     get:
@@ -24,6 +26,74 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /genesis/public/flags:
+    get:
+      operationId: getGenesisPublicFlags
+      tags: [genesis]
+      summary: Public Genesis program flags (private mode, public referral mode, token pool)
+      responses:
+        "200":
+          description: Flags
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenesisPublicFlags"
+  /genesis/r/{code}:
+    get:
+      operationId: getGenesisReferrerByCode
+      tags: [genesis]
+      summary: Resolve referrer by short code (used by /r/:code capture page)
+      parameters:
+        - in: path
+          name: code
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Referrer summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenesisReferrerSummary"
+        "404":
+          description: Not found
+  /genesis/leads:
+    post:
+      operationId: createGenesisLead
+      tags: [genesis]
+      summary: Submit a new lead from the public capture page
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GenesisLeadCreate"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenesisLeadCreated"
+        "400":
+          description: Validation failed
+  /genesis/request-access:
+    post:
+      operationId: requestGenesisAccess
+      tags: [genesis]
+      summary: Request access to the private Genesis referral program
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GenesisAccessRequest"
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Validation failed
 components:
   schemas:
     HealthStatus:
@@ -33,4 +103,95 @@ components:
           type: string
       required:
         - status
-
+    GenesisPublicFlags:
+      type: object
+      properties:
+        privateMode:
+          type: boolean
+        publicReferralMode:
+          type: boolean
+        tokenPoolTotal:
+          type: integer
+        pointToTokenRatio:
+          type: number
+      required: [privateMode, publicReferralMode, tokenPoolTotal, pointToTokenRatio]
+    GenesisReferrerSummary:
+      type: object
+      properties:
+        referrer:
+          type: object
+          properties:
+            code:
+              type: string
+            displayName:
+              type: string
+              nullable: true
+            tier:
+              type: string
+          required: [code, tier]
+      required: [referrer]
+    GenesisLeadCreate:
+      type: object
+      properties:
+        referralCode:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+          nullable: true
+        company:
+          type: string
+          nullable: true
+        country:
+          type: string
+          nullable: true
+        region:
+          type: string
+          nullable: true
+        interestType:
+          type: string
+          enum: [customer, enterprise, developer, agency, investor, partner, other]
+        estimatedInvestmentRange:
+          type: string
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+        consentAccepted:
+          type: boolean
+        utm:
+          type: object
+          additionalProperties: true
+        firstTouchPath:
+          type: string
+          nullable: true
+        lastTouchPath:
+          type: string
+          nullable: true
+      required: [referralCode, name, email, interestType, consentAccepted]
+    GenesisLeadCreated:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        leadId:
+          type: string
+      required: [ok, leadId]
+    GenesisAccessRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        fullName:
+          type: string
+        reason:
+          type: string
+        source:
+          type: string
+          nullable: true
+      required: [email, fullName, reason]

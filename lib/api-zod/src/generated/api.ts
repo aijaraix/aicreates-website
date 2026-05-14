@@ -14,3 +14,66 @@ import * as zod from "zod";
 export const HealthCheckResponse = zod.object({
   status: zod.string(),
 });
+
+/**
+ * @summary Public Genesis program flags (private mode, public referral mode, token pool)
+ */
+export const GetGenesisPublicFlagsResponse = zod.object({
+  privateMode: zod.boolean(),
+  publicReferralMode: zod.boolean(),
+  tokenPoolTotal: zod.number(),
+  pointToTokenRatio: zod.number(),
+});
+
+/**
+ * @summary Resolve referrer by short code (used by /r/:code capture page)
+ */
+export const GetGenesisReferrerByCodeParams = zod.object({
+  code: zod.coerce.string(),
+});
+
+export const GetGenesisReferrerByCodeResponse = zod.object({
+  referrer: zod.object({
+    code: zod.string(),
+    displayName: zod.string().nullish(),
+    tier: zod.string(),
+  }),
+});
+
+/**
+ * @summary Submit a new lead from the public capture page
+ */
+export const CreateGenesisLeadBody = zod.object({
+  referralCode: zod.string(),
+  name: zod.string(),
+  email: zod.string().email(),
+  phone: zod.string().nullish(),
+  company: zod.string().nullish(),
+  country: zod.string().nullish(),
+  region: zod.string().nullish(),
+  interestType: zod.enum([
+    "customer",
+    "enterprise",
+    "developer",
+    "agency",
+    "investor",
+    "partner",
+    "other",
+  ]),
+  estimatedInvestmentRange: zod.string().nullish(),
+  notes: zod.string().nullish(),
+  consentAccepted: zod.boolean(),
+  utm: zod.record(zod.string(), zod.unknown()).optional(),
+  firstTouchPath: zod.string().nullish(),
+  lastTouchPath: zod.string().nullish(),
+});
+
+/**
+ * @summary Request access to the private Genesis referral program
+ */
+export const RequestGenesisAccessBody = zod.object({
+  email: zod.string().email(),
+  fullName: zod.string(),
+  reason: zod.string(),
+  source: zod.string().nullish(),
+});

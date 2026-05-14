@@ -8,3 +8,64 @@
 export interface HealthStatus {
   status: string;
 }
+
+export interface GenesisPublicFlags {
+  privateMode: boolean;
+  publicReferralMode: boolean;
+  tokenPoolTotal: number;
+  pointToTokenRatio: number;
+}
+
+export type GenesisReferrerSummaryReferrer = {
+  code: string;
+  displayName?: string | null;
+  tier: string;
+};
+
+export interface GenesisReferrerSummary {
+  referrer: GenesisReferrerSummaryReferrer;
+}
+
+export type GenesisLeadCreateInterestType =
+  (typeof GenesisLeadCreateInterestType)[keyof typeof GenesisLeadCreateInterestType];
+
+export const GenesisLeadCreateInterestType = {
+  customer: "customer",
+  enterprise: "enterprise",
+  developer: "developer",
+  agency: "agency",
+  investor: "investor",
+  partner: "partner",
+  other: "other",
+} as const;
+
+export type GenesisLeadCreateUtm = { [key: string]: unknown };
+
+export interface GenesisLeadCreate {
+  referralCode: string;
+  name: string;
+  email: string;
+  phone?: string | null;
+  company?: string | null;
+  country?: string | null;
+  region?: string | null;
+  interestType: GenesisLeadCreateInterestType;
+  estimatedInvestmentRange?: string | null;
+  notes?: string | null;
+  consentAccepted: boolean;
+  utm?: GenesisLeadCreateUtm;
+  firstTouchPath?: string | null;
+  lastTouchPath?: string | null;
+}
+
+export interface GenesisLeadCreated {
+  ok: boolean;
+  leadId: string;
+}
+
+export interface GenesisAccessRequest {
+  email: string;
+  fullName: string;
+  reason: string;
+  source?: string | null;
+}

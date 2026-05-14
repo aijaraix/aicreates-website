@@ -17,6 +17,7 @@ import gatewayRouter from "./gateway";
 import profileRouter from "./profile";
 import availabilityRouter from "./availability";
 import chatRouter from "./chat";
+import genesisRouter from "./genesis";
 
 const router: IRouter = Router();
 
@@ -38,5 +39,6 @@ router.use(gatewayRouter);
 router.use(profileRouter);
 router.use(availabilityRouter);
 router.use(chatRouter);
+router.use(genesisRouter);
 
 export default router;
