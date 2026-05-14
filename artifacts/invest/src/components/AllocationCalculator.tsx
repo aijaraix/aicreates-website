@@ -12,18 +12,35 @@ export default function AllocationCalculator() {
   const round = useQuery({
     queryKey: ["rounds", "active"],
     queryFn: () =>
-      api<{ round: { pricePerTokenMillicents: number; label: string } }>(
-        "/rounds/active",
-      ),
+      api<{
+        round: {
+          pricePerTokenMillicents: number;
+          label: string;
+          vesting: {
+            tgePercent: number;
+            cliffMonths: number;
+            vestingMonths: number;
+          };
+        };
+      }>("/rounds/active"),
   });
   const price = round.data?.round.pricePerTokenMillicents ?? 10;
+  const roundVesting = round.data?.round.vesting;
+  const tgePercent = roundVesting?.tgePercent ?? 0.1;
+  const cliffMonths = roundVesting?.cliffMonths ?? 3;
+  const vestingMonths = roundVesting?.vestingMonths ?? 12;
   const tokens = useMemo(
     () => tokensForAmount(amount, price),
     [amount, price],
   );
-  const vesting = useMemo(() => computeVesting(tokens), [tokens]);
+  const vesting = useMemo(
+    () => computeVesting(tokens, null, { tgePercent, cliffMonths, vestingMonths }),
+    [tokens, tgePercent, cliffMonths, vestingMonths],
+  );
   const tge = vesting.schedule[0]!;
   const monthly = vesting.schedule[1]!;
+  const totalDurationMonths = cliffMonths + vestingMonths;
+  const tgePctLabel = `${Math.round(tgePercent * 100)}%`;
   return (
     <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 md:p-8">
       <div className="text-xs uppercase tracking-[0.18em] text-white/40 mb-3">
@@ -77,7 +94,7 @@ export default function AllocationCalculator() {
         <div className="grid grid-cols-2 gap-3">
           <Stat label="Token allocation" value={`${fmt(tokens)} AICA`} accent />
           <Stat
-            label="At TGE (25%)"
+            label={`At TGE (${tgePctLabel})`}
             value={`${fmt(tge.tokens)} AICA`}
           />
           <Stat
@@ -85,16 +102,17 @@ export default function AllocationCalculator() {
             value={`${fmt(monthly.tokens)} AICA`}
           />
           <Stat
-            label="Total after 30 mo"
+            label={`Total after ${totalDurationMonths} mo`}
             value={`${fmt(tokens)} AICA`}
           />
         </div>
       </div>
       <p className="mt-5 text-xs text-white/40">
         Computed at the active round price (
-        {`$${(price / 1000).toFixed(3)}`} per AICA). Vesting: 25% at TGE,
-        6-month cliff, then linear over 24 months. SAFT terms are pending
-        counsel review.
+        {`$${(price / 1000).toFixed(3)}`} per AICA). Vesting for{" "}
+        {round.data?.round.label ?? "this round"}: {tgePctLabel} at TGE,{" "}
+        {cliffMonths}-month cliff, then linear over {vestingMonths} months.
+        SAFT terms are pending counsel review.
       </p>
     </div>
   );

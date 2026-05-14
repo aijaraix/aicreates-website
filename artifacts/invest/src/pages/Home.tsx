@@ -798,7 +798,7 @@ export default function Home() {
               10,000,000,000 <span className="text-[#00F5D4] text-2xl">AICA</span>
             </div>
             <p className="mt-4 text-sm text-white/65 leading-relaxed">
-              Fixed supply. 22.50% allocated to the private sale across 5 SAFT rounds ($50M raise, ~$230M FDV blended). All private-round tokens subject to vesting (25% at TGE, 6-month cliff, then linear over 24 months).
+              Fixed supply. 22.50% allocated to the private sale across 5 SAFT rounds ($50M raise, ~$230M FDV blended). All private-round tokens vest per round: earlier rounds carry longer lockups (Strategic Seed: 10% at TGE, 3-month cliff, 12-month linear) and later rounds unlock faster (Community / Launchpad: 30% at TGE, no cliff, 3-month linear).
             </p>
           </div>
           <div className="rounded-2xl border border-[#00F5D4]/25 bg-[#00F5D4]/[0.04] p-7">
@@ -1129,9 +1129,11 @@ export default function Home() {
             </div>
             <VestingCalendar schedule={sample.schedule} total={10_000} />
             <p className="mt-4 text-xs text-white/40">
-              25% at TGE, 6-month cliff, then linear over 24 months. The
-              vesting calendar updates with your real funded date once your
-              commitment settles.
+              Sample shows the currently-open Strategic Seed schedule (10% at
+              TGE, 3-month cliff, then linear over 12 months). Other rounds
+              follow shorter schedules per the round table above. The vesting
+              calendar updates with your real funded date once your commitment
+              settles.
             </p>
           </div>
           <AllocationCalculator />

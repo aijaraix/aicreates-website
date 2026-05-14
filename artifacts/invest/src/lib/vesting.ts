@@ -23,9 +23,13 @@ export function computeVesting(
   fundedAt?: Date | null,
   opts: { tgePercent?: number; cliffMonths?: number; vestingMonths?: number } = {},
 ): { tgeDate: string; cliffDate: string; schedule: VestingPoint[] } {
-  const tgePercent = opts.tgePercent ?? 0.25;
-  const cliffMonths = opts.cliffMonths ?? 6;
-  const vestingMonths = opts.vestingMonths ?? 24;
+  // Defaults match the currently-open Strategic Seed round (10% TGE,
+  // 3-month cliff, 12-month linear). Callers should pass round-specific
+  // vesting via opts; these defaults are only used for the static sample
+  // calendar on /invest before a round is selected.
+  const tgePercent = opts.tgePercent ?? 0.1;
+  const cliffMonths = opts.cliffMonths ?? 3;
+  const vestingMonths = opts.vestingMonths ?? 12;
   const total = Math.max(0, Math.floor(totalTokens));
   const tgeBase = fundedAt ? new Date(fundedAt.getTime()) : new Date(DEFAULT_TGE);
   const tgeTokens = Math.floor(total * tgePercent);

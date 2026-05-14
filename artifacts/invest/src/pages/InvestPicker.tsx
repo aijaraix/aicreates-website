@@ -473,8 +473,8 @@ export default function InvestPicker() {
               <li>Pricing is auto-applied per round; you can mix rounds.</li>
               <li>+10% allocation on totals ≥ $5,000.</li>
               <li>+20% allocation on totals ≥ $25,000.</li>
-              <li>25% unlocks at TGE, 6-month cliff, then 24-month linear.</li>
-              <li>Total private sale: 1.25B AICA across 5 rounds.</li>
+              <li>Vesting laddered by round: Strategic Seed 10% TGE / 3mo cliff / 12mo linear, ladders down to Community / Launchpad 30% TGE / 0mo cliff / 3mo linear.</li>
+              <li>Total private sale: 2.25B AICA across 5 rounds (22.50% of fixed 10B supply).</li>
             </ul>
           </div>
           <VestingPreview totalTokens={totalTokens + bonusTokens} />

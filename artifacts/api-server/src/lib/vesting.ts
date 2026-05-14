@@ -2,10 +2,14 @@
  * Server-authoritative vesting schedule. Single source of truth used by
  * both the dashboard ("/api/me/allocations") and the .ics export.
  *
- * Default schedule (matches the SAFT visual whitepaper):
- *   - 25% unlocked at TGE
- *   - 6-month cliff (no further unlocks)
- *   - Remaining 75% linear over 24 monthly tranches after the cliff
+ * Default schedule (matches the currently-open Strategic Seed round):
+ *   - 10% unlocked at TGE
+ *   - 3-month cliff (no further unlocks)
+ *   - Remaining 90% linear over 12 monthly tranches after the cliff
+ *
+ * Callers should pass round-specific vesting via args.tgePercent /
+ * cliffMonths / vestingMonths; the defaults exist only for safety when
+ * a commitment has no associated round vesting metadata.
  */
 export interface VestingPoint {
   date: string;
@@ -30,9 +34,9 @@ export function computeVestingSchedule(args: VestingScheduleArgs): {
   schedule: VestingPoint[];
 } {
   const totalTokens = Math.max(0, Math.floor(args.totalTokens));
-  const tgePercent = args.tgePercent ?? 0.25;
-  const cliffMonths = args.cliffMonths ?? 6;
-  const vestingMonths = args.vestingMonths ?? 24;
+  const tgePercent = args.tgePercent ?? 0.1;
+  const cliffMonths = args.cliffMonths ?? 3;
+  const vestingMonths = args.vestingMonths ?? 12;
 
   // TGE anchor: real funding date if available, else the published TGE.
   const tgeBase = args.fundedAt

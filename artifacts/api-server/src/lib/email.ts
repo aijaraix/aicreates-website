@@ -228,7 +228,7 @@ export async function emailPaymentReceived(
     [
       p(`Hi ${args.investorName},`),
       p(
-        `Your commitment is funded. Tokens will vest per your SAFT (6-month cliff, 24-month linear vest).`,
+        `Your commitment is funded. Tokens will vest per your SAFT on the schedule for your round (TGE %, cliff, and linear vesting period are detailed on your dashboard and in the rounds table).`,
       ),
       `<table cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;margin:8px 0 20px 0;">${[
         row("Commitment", args.commitmentId),
