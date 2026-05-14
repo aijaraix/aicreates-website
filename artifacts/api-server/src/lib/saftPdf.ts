@@ -66,7 +66,7 @@ export interface SaftRenderInput {
   allocations: SaftAllocationLine[];
   walletAddress?: string;
   walletChain?: string | null;
-  paymentMethod: string;
+  paymentMethod: "fiat" | "card" | "ach" | "wire" | "crypto" | string;
   accreditationCategory: string;
   acknowledgments: string[];
   signatureName: string;

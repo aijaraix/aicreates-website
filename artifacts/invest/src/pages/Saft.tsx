@@ -219,7 +219,7 @@ export default function Saft() {
       case 1:
         return Boolean(form.paymentMethod);
       case 2:
-        return Boolean(form.accreditationCategory);
+        return true; // Questionnaire is optional
       case 3:
         return allRisks;
       case 4:
@@ -254,9 +254,20 @@ export default function Saft() {
         }
         back={{ href: "/dashboard", label: "Back to dashboard" }}
         actions={
-          <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-amber-300/40 bg-amber-300/5 text-[11px] uppercase tracking-[0.2em] text-amber-300">
-            <FileText className="w-3.5 h-3.5" /> Draft for counsel review
-          </span>
+          <div className="flex items-center gap-2">
+            <a
+              href="/api/saft/template.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-[#00F5D4]/40 bg-[#00F5D4]/5 text-[11px] uppercase tracking-[0.2em] text-[#00F5D4] hover:bg-[#00F5D4]/10"
+              data-testid="link-preview-saft-template"
+            >
+              <FileText className="w-3.5 h-3.5" /> Review template
+            </a>
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-amber-300/40 bg-amber-300/5 text-[11px] uppercase tracking-[0.2em] text-amber-300">
+              Draft for counsel review
+            </span>
+          </div>
         }
       />
 
@@ -473,10 +484,14 @@ export default function Saft() {
 
           {step === 2 && (
             <div className="space-y-5" data-testid="saft-step-questionnaire">
-              <H title="Investor questionnaire" />
+              <H title="Investor questionnaire (optional)" />
+              <p className="text-sm text-white/55">
+                Every field on this step is optional - skip any that don't
+                apply and click Continue.
+              </p>
               <div>
                 <label className="text-[11px] uppercase tracking-[0.14em] text-white/50">
-                  Accreditation category
+                  Accreditation category (optional)
                 </label>
                 <div className="space-y-2 mt-2">
                   {ACCREDITATION_OPTIONS.map((o) => (

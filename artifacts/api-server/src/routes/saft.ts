@@ -1,4 +1,7 @@
 import { Router, type IRouter } from "express";
+import { readFile } from "node:fs/promises";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { requireAuth } from "../lib/auth";
 import {
   db,
@@ -17,7 +20,7 @@ const router: IRouter = Router();
 interface SaftBody {
   walletAddress?: string;
   walletChain?: string;
-  paymentMethod?: "card" | "ach" | "wire" | "crypto";
+  paymentMethod?: "fiat" | "card" | "ach" | "wire" | "crypto";
   accreditationCategory?: string;
   investmentExperience?: string;
   relationshipToCompany?: string;
@@ -109,6 +112,42 @@ function expectedSignerName(profile: typeof investorProfilesTable.$inferSelect):
     .replace(/\s+/g, " ");
 }
 
+// Public route: serve the unsigned SAFT template so prospective investors
+// can review/download the document before signing. No auth required.
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+let cachedTemplate: Buffer | null = null;
+async function loadTemplate(): Promise<Buffer> {
+  if (cachedTemplate) return cachedTemplate;
+  const candidates = [
+    path.resolve(__dirname, "../../assets/saft-template.pdf"),
+    path.resolve(__dirname, "../assets/saft-template.pdf"),
+    path.resolve(process.cwd(), "artifacts/api-server/assets/saft-template.pdf"),
+  ];
+  for (const p of candidates) {
+    try {
+      cachedTemplate = await readFile(p);
+      return cachedTemplate;
+    } catch {
+      /* keep searching */
+    }
+  }
+  throw new Error("SAFT template not found");
+}
+router.get("/saft/template.pdf", async (_req, res) => {
+  try {
+    const buf = await loadTemplate();
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader(
+      "Content-Disposition",
+      'inline; filename="AIcreatesAI-SAFT-template.pdf"',
+    );
+    res.setHeader("Cache-Control", "public, max-age=300");
+    res.send(buf);
+  } catch (err) {
+    res.status(500).json({ error: "template unavailable" });
+  }
+});
+
 router.get("/saft/:commitId", requireAuth, async (req, res) => {
   const id = req.params["commitId"] as string | undefined;
   if (!id) {
@@ -197,16 +236,17 @@ router.post("/saft/:commitId", requireAuth, async (req, res) => {
   }
 
   const errors: string[] = [];
+  // Accreditation category is now optional - investors can decline to state.
   const accreditationCategory =
     typeof body.accreditationCategory === "string" &&
     body.accreditationCategory.trim()
       ? body.accreditationCategory.trim().slice(0, 120)
-      : "";
-  if (!accreditationCategory) errors.push("accreditationCategory required");
+      : "decline_to_state";
   const signatureName =
     typeof body.signatureName === "string" ? body.signatureName.trim() : "";
   if (!signatureName) errors.push("signatureName required");
   const paymentMethod =
+    body.paymentMethod === "fiat" ||
     body.paymentMethod === "card" ||
     body.paymentMethod === "ach" ||
     body.paymentMethod === "wire" ||

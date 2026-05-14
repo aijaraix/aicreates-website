@@ -176,13 +176,14 @@ export interface SaftSignedEmail {
   commitmentId: string;
   totalCents: number;
   totalTokens: number;
-  paymentMethod: "card" | "ach" | "crypto" | "wire";
+  paymentMethod: "fiat" | "card" | "ach" | "crypto" | "wire";
   portalUrl: string;
 }
 
 export async function emailSaftSigned(args: SaftSignedEmail): Promise<void> {
   const subject = "Your SAFT is signed - next: complete payment";
   const methodLabel: Record<string, string> = {
+    fiat: "Fiat (card or ACH)",
     card: "Card / Apple Pay / Google Pay",
     ach: "Bank transfer (ACH)",
     crypto: "Crypto",

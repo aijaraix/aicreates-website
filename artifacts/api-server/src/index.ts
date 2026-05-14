@@ -5,6 +5,7 @@ import app from "./app";
 import { logger } from "./lib/logger";
 import { getStripeSync, isStripeConfigured } from "./lib/stripeClient";
 import { startRoundSweep, evaluateRoundTransitions } from "./lib/roundStatus";
+import { startCommitmentExpirySweep } from "./lib/commitmentExpiry";
 import {
   addConnection,
   consumeTicket,
@@ -129,4 +130,5 @@ server.listen(port, (err?: Error) => {
     logger.error({ err: sweepErr }, "initial round transition failed"),
   );
   startRoundSweep();
+  startCommitmentExpirySweep();
 });
