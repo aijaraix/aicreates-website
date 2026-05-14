@@ -1,5 +1,13 @@
+import { useState } from "react";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import {
   ArrowRight,
   Download,
@@ -141,6 +149,7 @@ export default function Home() {
     path: "/",
   });
   const sample = computeVesting(10_000);
+  const [deckOpen, setDeckOpen] = useState(false);
   return (
     <div className="min-h-[100dvh] text-white overflow-x-hidden">
       {/* ----------------------------- HERO ----------------------------- */}
@@ -1097,13 +1106,14 @@ export default function Home() {
                 Step through the entire AIcreatesAI pitch deck slide by slide, or download the full whitepaper for offline review.
               </p>
               <div className="mt-8 flex flex-wrap gap-3 justify-center">
-                <a
-                  href="#pitch-deck-viewer"
+                <button
+                  type="button"
+                  onClick={() => setDeckOpen(true)}
                   className="inline-flex items-center justify-center h-12 px-8 rounded-full teal-btn"
                   data-testid="button-view-pitch-deck-cta"
                 >
                   View Pitch Deck <ArrowRight className="ml-2 w-4 h-4" />
-                </a>
+                </button>
                 <a
                   href={`${import.meta.env.BASE_URL}litepaper.pdf`}
                   download="AIcreatesAI Whitepaper.pdf"
@@ -1116,17 +1126,23 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <div id="pitch-deck-viewer" className="mt-10">
-            <DeckCarousel
-              basePath={`${import.meta.env.BASE_URL}deck`}
-              manifestUrl={`${import.meta.env.BASE_URL}deck/manifest.json`}
-              title="AIcreatesAI Pitch Deck"
-              subline="Swipe through the deck, open it fullscreen, or download the PDF."
-              testIdPrefix="deck-portal"
-            />
-          </div>
         </div>
       </section>
+
+      <Dialog open={deckOpen} onOpenChange={setDeckOpen}>
+        <DialogContent className="max-w-5xl w-[95vw] p-0 gap-0 border-0 bg-transparent shadow-none sm:rounded-none [&>button]:bg-black/60 [&>button]:text-white [&>button]:rounded-full [&>button]:p-1.5 [&>button]:opacity-100 [&>button]:right-2 [&>button]:top-2 [&>button]:z-10">
+          <DialogHeader className="sr-only">
+            <DialogTitle>AIcreatesAI Pitch Deck</DialogTitle>
+            <DialogDescription>Step through the AIcreatesAI pitch deck.</DialogDescription>
+          </DialogHeader>
+          <DeckCarousel
+            basePath={`${import.meta.env.BASE_URL}deck`}
+            manifestUrl={`${import.meta.env.BASE_URL}deck/manifest.json`}
+            showHeader={false}
+            testIdPrefix="deck-portal-modal"
+          />
+        </DialogContent>
+      </Dialog>
 
       {/* ----------------------------- ROADMAP ----------------------------- */}
       <Section

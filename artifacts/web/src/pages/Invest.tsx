@@ -210,7 +210,7 @@ export default function Invest() {
                 disabled: false,
                 href: "/litepaper" as string | undefined,
                 external: false,
-                cta: "Open the litepaper",
+                cta: "Litepaper",
                 testId: "button-view-litepaper-card",
               },
               {
@@ -219,7 +219,7 @@ export default function Invest() {
                 desc: "Step through the visual deck slide by slide, with the full PDF available to download from the viewer.",
                 disabled: false,
                 onClick: () => setDeckOpen(true),
-                cta: "Open the viewer",
+                cta: "Pitch Deck",
                 testId: "button-view-pitch-deck-card",
               },
               {
@@ -230,7 +230,7 @@ export default function Invest() {
                 href: `${import.meta.env.BASE_URL}litepaper.pdf` as string | undefined,
                 download: "AIcreatesAI Whitepaper.pdf",
                 external: true,
-                cta: "Download PDF",
+                cta: "Download",
                 testId: "button-download-whitepaper-card",
               },
             ].map((card) => (
