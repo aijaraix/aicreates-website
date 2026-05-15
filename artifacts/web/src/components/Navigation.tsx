@@ -150,6 +150,19 @@ export function Navigation() {
               </Button>
             </Link>
             <a
+              href="https://invest.aicreates.ai/genesis"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Button
+                variant="outline"
+                className="rounded-full h-9 px-5 glass-btn text-sm font-medium"
+                data-testid="button-nav-ambassadors"
+              >
+                Ambassadors
+              </Button>
+            </a>
+            <a
               href={import.meta.env.PROD ? "https://invest.aicreates.ai/invest/" : "/invest/"}
               target="_blank"
               rel="noopener noreferrer"
@@ -211,6 +224,20 @@ export function Navigation() {
                       Litepaper
                     </Button>
                   </Link>
+                  <a
+                    href="https://invest.aicreates.ai/genesis"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => setOpen(false)}
+                  >
+                    <Button
+                      variant="outline"
+                      className="w-full rounded-full h-11 glass-btn"
+                      data-testid="button-mobile-nav-ambassadors"
+                    >
+                      Ambassadors
+                    </Button>
+                  </a>
                   <a
                     href={import.meta.env.PROD ? "https://invest.aicreates.ai/invest/" : "/invest/"}
                     target="_blank"

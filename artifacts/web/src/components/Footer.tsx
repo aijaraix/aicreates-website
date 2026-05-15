@@ -35,6 +35,7 @@ const COLUMNS: { heading: string; links: { name: string; href: string }[] }[] = 
       { name: "Contact", href: "/contact" },
       { name: "Token", href: "/token" },
       { name: "Opportunity", href: "/opportunity" },
+      { name: "Ambassadors", href: "https://invest.aicreates.ai/genesis" },
       { name: "Privacy", href: "/privacy" },
       { name: "Terms", href: "/terms" },
     ],
@@ -228,11 +229,23 @@ export function Footer() {
                 <ul className="space-y-3">
                   {col.links.map((link) => (
                     <li key={link.href}>
-                      <Link href={link.href}>
-                        <span className="text-sm text-white/70 hover:text-[#00F5D4] transition-colors cursor-pointer">
+                      {/^https?:\/\//.test(link.href) ? (
+                        <a
+                          href={link.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-sm text-white/70 hover:text-[#00F5D4] transition-colors cursor-pointer"
+                          data-testid={`link-footer-${link.name.toLowerCase().replace(/\s+/g, "-")}`}
+                        >
                           {link.name}
-                        </span>
-                      </Link>
+                        </a>
+                      ) : (
+                        <Link href={link.href}>
+                          <span className="text-sm text-white/70 hover:text-[#00F5D4] transition-colors cursor-pointer">
+                            {link.name}
+                          </span>
+                        </Link>
+                      )}
                     </li>
                   ))}
                 </ul>

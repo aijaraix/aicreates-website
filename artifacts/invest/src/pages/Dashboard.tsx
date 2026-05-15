@@ -394,6 +394,39 @@ function openAllGoogleCalendarEvents(a: Allocation) {
   }
 }
 
+function AmbassadorCta() {
+  return (
+    <Link
+      href="/genesis"
+      data-testid="link-dashboard-ambassador-cta"
+      className="block group mb-10"
+    >
+      <div className="relative overflow-hidden rounded-2xl border border-[#00F5D4]/25 bg-gradient-to-br from-[#00F5D4]/[0.08] via-[#0E0E0E] to-[#0A0A0A] p-6 md:p-7 transition-colors hover:border-[#00F5D4]/45">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(0,245,212,0.10),transparent_60%)] pointer-events-none" />
+        <div className="relative flex flex-wrap items-center justify-between gap-4">
+          <div className="min-w-0">
+            <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full border border-[#00F5D4]/30 bg-[#00F5D4]/10 text-[10px] uppercase tracking-[0.18em] text-[#00F5D4] font-semibold">
+              Genesis · Invite-only
+            </div>
+            <div className="mt-3 font-display text-lg md:text-xl font-semibold tracking-tight text-white">
+              Become a Genesis Ambassador
+            </div>
+            <p className="mt-1.5 text-sm text-white/65 max-w-xl leading-relaxed">
+              You're already inside. Earn $AICA tokens, platform credit, or a
+              hybrid mix for warm introductions to early customers, partners,
+              and supporters of the agentic intelligence layer.
+            </p>
+          </div>
+          <div className="shrink-0 inline-flex items-center gap-2 px-5 h-10 rounded-full teal-btn text-sm font-medium">
+            Learn more
+            <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
+          </div>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
 export default function Dashboard() {
   useInvestSeo({
     title: "Dashboard",
@@ -524,6 +557,8 @@ export default function Dashboard() {
             hint={nextUnlock ? "TBD - set after community round" : undefined}
           />
         </div>
+
+        <AmbassadorCta />
 
         <CurrentRoundStrip />
 
