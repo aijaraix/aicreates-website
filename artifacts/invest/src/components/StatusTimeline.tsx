@@ -85,9 +85,9 @@ function timestampFor(s: TimelineState, key: TimelineStep): string | null {
     case "locked":
       return fmtDate(s.lockedAt ?? s.fundedAt);
     case "tge":
-      return fmtDate(s.tgeDate);
+      return s.tgeDate ? fmtDate(s.tgeDate) : "TBD";
     case "vesting":
-      return fmtDate(s.cliffDate);
+      return s.cliffDate ? fmtDate(s.cliffDate) : "TBD";
     default:
       return null;
   }

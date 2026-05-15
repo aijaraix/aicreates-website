@@ -40,7 +40,7 @@ export default function VestingPreview({
                 i === 0 ? "bg-[#00F5D4]" : "bg-[#00F5D4]/40"
               }`}
               style={{ height: `${Math.max(2, h)}%` }}
-              title={`${new Date(p.date).toLocaleDateString()} - ${p.cumulative.toLocaleString()} AICA cumulative`}
+              title={`Unlock ${i + 1} of ${vesting.schedule.length} - ${p.cumulative.toLocaleString()} AICA cumulative (date set after community round)`}
             />
           );
         })}

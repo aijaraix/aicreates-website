@@ -1153,7 +1153,7 @@ export default function Home() {
         <div className="grid md:grid-cols-4 gap-3">
           {[
             { phase: "Q2 2026", title: "Layer", body: "Hybrid Compute Fabric live. Eve OS private beta." },
-            { phase: "Q4 2026", title: "Launch", body: "TGE. NeoBank consumer waitlist opens." },
+            { phase: "TBD - post community round", title: "Launch", body: "TGE date set after the community round closes. NeoBank consumer waitlist opens at the same window." },
             { phase: "Q2 2027", title: "Scale", body: "GPU cluster online. Eve OS GA + partner program." },
             { phase: "Q4 2027", title: "Network", body: "On-chain settlement. Cross-org agent network." },
           ].map((p) => (

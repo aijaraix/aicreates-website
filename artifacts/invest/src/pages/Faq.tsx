@@ -59,7 +59,7 @@ const GROUPS: FaqGroup[] = [
     items: [
       {
         q: "When is TGE?",
-        a: "Target TGE is December 1, 2026. Updates are posted to /documents and to email subscribers.",
+        a: "TGE date is set after the community round closes. We deliberately do not publish a hard date until then so the schedule reflects real demand. Once announced, your dashboard shows the live countdown and calendar exports, and we email every SAFT signer.",
       },
       {
         q: "What is the vesting schedule?",

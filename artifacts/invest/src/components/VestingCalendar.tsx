@@ -41,7 +41,7 @@ export default function VestingCalendar({
               onBlur={() => setHover(null)}
               className="flex-1 group relative border-r border-white/[0.04] last:border-r-0 hover:bg-white/[0.04]"
               data-testid={`vesting-point-${i}`}
-              aria-label={`${p.label} ${new Date(p.date).toDateString()}`}
+              aria-label={`${p.label} - unlock ${i + 1} of ${schedule.length} (date set after the community round)`}
             >
               <span
                 className={`absolute left-1/2 -translate-x-1/2 bottom-2 w-1.5 rounded-full ${
@@ -55,10 +55,11 @@ export default function VestingCalendar({
         </div>
       </div>
       <div className="flex justify-between text-[11px] uppercase tracking-[0.14em] text-white/40 mt-2">
-        <span>{new Date(schedule[0]!.date).toLocaleDateString()}</span>
-        <span>
-          {new Date(schedule[schedule.length - 1]!.date).toLocaleDateString()}
-        </span>
+        <span>TGE</span>
+        <span>Final unlock</span>
+      </div>
+      <div className="mt-1 text-[10px] text-white/35">
+        Calendar dates set after the community round closes.
       </div>
       <div className="mt-3 text-sm text-white/70 min-h-[2.5rem]">
         {point ? (
@@ -66,8 +67,6 @@ export default function VestingCalendar({
             <span className="text-[#00F5D4] font-medium">
               {point.tokens.toLocaleString()} AICA
             </span>
-            <span className="text-white/40 mx-2">•</span>
-            <span>{new Date(point.date).toLocaleDateString()}</span>
             <span className="text-white/40 mx-2">•</span>
             <span>cumulative {point.cumulative.toLocaleString()}</span>
             <span className="text-white/40 mx-2">•</span>

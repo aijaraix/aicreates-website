@@ -140,14 +140,11 @@ function useCountdown(targetIso: string | null): {
 }
 
 function TgeBanner({
-  allocation,
   fundedCount,
 }: {
   allocation: Allocation;
   fundedCount: number;
 }) {
-  const tge = allocation.vesting?.tgeDate ?? null;
-  const cd = useCountdown(tge);
   return (
     <div
       className="mb-8 rounded-2xl border border-[#00F5D4]/40 bg-[#00F5D4]/[0.06] p-5"
@@ -163,43 +160,21 @@ function TgeBanner({
             First unlock at TGE.
           </div>
           <div className="mt-1 text-xs text-white/55">
-            TGE target: {tge ? new Date(tge).toLocaleDateString() : "-"}
+            TGE date is set after the community round closes. Once announced,
+            we'll publish it here with countdown and calendar exports.
           </div>
         </div>
-        <div className="flex items-center gap-3 text-center">
-          {cd.isPast ? (
-            <div className="text-sm text-[#00F5D4]" data-testid="tge-live">
-              Unlocking now
-            </div>
-          ) : (
-            <>
-              <CountUnit n={cd.days} label="d" />
-              <CountUnit n={cd.hours} label="h" />
-              <CountUnit n={cd.minutes} label="m" />
-              <CountUnit n={cd.seconds} label="s" />
-            </>
-          )}
-        </div>
-      </div>
-      <div className="mt-4 flex flex-wrap gap-2">
-        <button
-          type="button"
-          onClick={() => downloadIcs(allocation)}
-          className="inline-flex items-center gap-1.5 px-4 h-9 rounded-full glass-btn text-sm"
-          data-testid="button-tge-ics"
+        <div
+          className="text-center"
+          data-testid="tge-tbd"
         >
-          <Download className="w-3.5 h-3.5" /> Add to calendar (.ics)
-        </button>
-        {googleCalendarUrls(allocation).length > 0 && (
-          <button
-            type="button"
-            onClick={() => openAllGoogleCalendarEvents(allocation)}
-            className="inline-flex items-center gap-1.5 px-4 h-9 rounded-full glass-btn text-sm"
-            data-testid="button-tge-gcal"
-          >
-            <Calendar className="w-3.5 h-3.5" /> Add to Google Calendar
-          </button>
-        )}
+          <div className="font-display text-2xl text-[#00F5D4] tracking-tight">
+            TBD
+          </div>
+          <div className="text-[10px] uppercase tracking-[0.16em] text-white/40 mt-1">
+            announced soon
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -546,11 +521,7 @@ export default function Dashboard() {
             value={
               nextUnlock ? `${nextUnlock.tokens.toLocaleString()} AICA` : "-"
             }
-            hint={
-              nextUnlock
-                ? new Date(nextUnlock.date).toLocaleDateString()
-                : undefined
-            }
+            hint={nextUnlock ? "TBD - set after community round" : undefined}
           />
         </div>
 
@@ -662,26 +633,13 @@ export default function Dashboard() {
                       </Link>
                     )}
                     {a.isFunded && a.vesting && (
-                      <>
-                        <button
-                          onClick={() => downloadIcs(a)}
-                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/10 hover:bg-white/[0.04]"
-                          data-testid={`button-ics-${a.id}`}
-                        >
-                          <Download className="w-3.5 h-3.5" /> .ics
-                        </button>
-                        {googleCalendarUrls(a).length > 0 && (
-                          <button
-                            onClick={() => openAllGoogleCalendarEvents(a)}
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/10 hover:bg-white/[0.04]"
-                            data-testid={`button-gcal-${a.id}`}
-                            title="Opens one Google Calendar tab per unlock event"
-                          >
-                            <Calendar className="w-3.5 h-3.5" /> Google Cal
-                            ({googleCalendarUrls(a).length})
-                          </button>
-                        )}
-                      </>
+                      <span
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/10 text-white/55"
+                        data-testid={`pill-tge-tbd-${a.id}`}
+                        title="Calendar exports unlock once TGE is announced after the community round"
+                      >
+                        <Calendar className="w-3.5 h-3.5" /> Calendar - after TGE
+                      </span>
                     )}
                   </div>
                 </div>
@@ -731,15 +689,9 @@ export default function Dashboard() {
                           : null,
                       fundedAt: a.fundedAt,
                       lockedAt: a.fundedAt,
-                      tgeDate: a.vesting?.tgeDate ?? null,
-                      cliffDate: a.vesting?.cliffDate ?? null,
-                      hasUnlocked:
-                        a.isFunded &&
-                        Boolean(
-                          a.vesting?.schedule.some(
-                            (p) => Date.parse(p.date) <= Date.now(),
-                          ),
-                        ),
+                      tgeDate: null,
+                      cliffDate: null,
+                      hasUnlocked: false,
                     }}
                   />
                 </div>
@@ -749,11 +701,11 @@ export default function Dashboard() {
                   <Mini label="Funded" value={fmtDate(a.fundedAt)} />
                   <Mini
                     label="TGE"
-                    value={a.vesting ? fmtDate(a.vesting.tgeDate) : "-"}
+                    value="TBD - after community round"
                   />
                   <Mini
                     label="Cliff ends"
-                    value={a.vesting ? fmtDate(a.vesting.cliffDate) : "-"}
+                    value="TBD - after TGE"
                   />
                 </div>
 
@@ -1263,7 +1215,7 @@ function PaymentThankYouModal({
     },
     {
       title: "What happens next.",
-      body: "Your commitment will move to 'Funded' within a few minutes (cards are instant; ACH and wires take 1-3 business days). After funding, you'll see your vesting schedule, TGE countdown, and calendar exports right here.",
+      body: "Your commitment will move to 'Funded' within a few minutes (cards are instant; ACH and wires take 1-3 business days). After funding, you'll see your vesting schedule shape right here. The actual TGE date is set after the community round closes, and we'll publish the countdown and calendar exports on this dashboard the moment it's announced.",
     },
     {
       title: "Add your distribution wallet.",

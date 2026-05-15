@@ -45,7 +45,7 @@ export default function ReleaseBar({
       <div
         className="flex items-end gap-[2px] h-20"
         role="img"
-        aria-label={`Distribution release schedule for ${total.toLocaleString()} AICA across ${schedule.length} unlock dates`}
+        aria-label={`Distribution release shape across ${schedule.length} unlock checkpoints (dates set after the community round)`}
       >
         {schedule.map((p, i) => {
           const h = (p.cumulative / max) * 100;
@@ -56,19 +56,18 @@ export default function ReleaseBar({
                 i === 0 ? "bg-[#00F5D4]" : "bg-[#00F5D4]/40"
               }`}
               style={{ height: `${Math.max(2, h)}%` }}
-              title={`${new Date(p.date).toLocaleDateString()} - ${p.cumulative.toLocaleString()} AICA cumulative`}
+              title={`Unlock ${i + 1} of ${schedule.length} - ${p.cumulative.toLocaleString()} AICA cumulative`}
             />
           );
         })}
       </div>
       <div className="flex justify-between text-[10px] text-white/40 mt-2">
-        <span>TGE {new Date(first.date).toLocaleDateString()}</span>
-        {midPoint && (
-          <span>
-            First unlock {new Date(midPoint.date).toLocaleDateString()}
-          </span>
-        )}
-        <span>Final {new Date(last.date).toLocaleDateString()}</span>
+        <span>TGE</span>
+        {midPoint && <span>First unlock</span>}
+        <span>Final</span>
+      </div>
+      <div className="text-[10px] text-white/35 mt-1">
+        Dates set after the community round closes.
       </div>
       {/* Accessible textual summary for keyboard / screen-reader users.
           Hidden from sighted users but read out as a flat list of unlock
@@ -76,9 +75,10 @@ export default function ReleaseBar({
       <ul className="sr-only" data-testid="release-bar-sr-summary">
         {schedule.map((p, i) => (
           <li key={i}>
-            {p.label} on {new Date(p.date).toLocaleDateString()}:{" "}
+            {p.label} (unlock {i + 1} of {schedule.length}):{" "}
             {p.tokens.toLocaleString()} AICA unlocked,{" "}
-            {p.cumulative.toLocaleString()} cumulative.
+            {p.cumulative.toLocaleString()} cumulative. Date set after the
+            community round.
           </li>
         ))}
       </ul>
