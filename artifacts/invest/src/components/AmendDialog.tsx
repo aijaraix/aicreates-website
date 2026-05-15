@@ -49,8 +49,16 @@ const AMENDABLE_STATES = new Set([
   "pending",
 ]);
 
-const MIN_CENTS = 100_000;
+const DEFAULT_MIN_CENTS = 25_000;
 const MAX_CENTS = 1_000_000_000;
+
+interface InvestLimits {
+  minCents: number;
+  maxCents: number;
+  fundedCount: number;
+  testMode: boolean;
+  testPurchasesRemaining: number;
+}
 
 export function isAmendable(state: string | null | undefined): boolean {
   return AMENDABLE_STATES.has(String(state ?? ""));
@@ -100,12 +108,21 @@ export function AmendDialog({
     staleTime: 30_000,
   });
 
+  const limitsQ = useQuery({
+    queryKey: ["invest", "limits"],
+    queryFn: () => api<InvestLimits>("/invest/limits"),
+    enabled: open,
+  });
+  const minCents = limitsQ.data?.minCents ?? DEFAULT_MIN_CENTS;
+  const testMode = limitsQ.data?.testMode ?? false;
+  const testPurchasesRemaining = limitsQ.data?.testPurchasesRemaining ?? 0;
+
   const mutation = useMutation({
     mutationFn: async () => {
       const cents = Math.round(Number(amountUsd) * 100);
-      if (!Number.isFinite(cents) || cents < MIN_CENTS || cents > MAX_CENTS) {
+      if (!Number.isFinite(cents) || cents < minCents || cents > MAX_CENTS) {
         throw new Error(
-          `Amount must be between $${(MIN_CENTS / 100).toLocaleString()} and $${(MAX_CENTS / 100).toLocaleString()}.`,
+          `Amount must be between $${(minCents / 100).toLocaleString()} and $${(MAX_CENTS / 100).toLocaleString()}.`,
         );
       }
       if (mode === "admin" && !reason.trim()) {
@@ -194,7 +211,7 @@ export function AmendDialog({
           <span className="text-white/70">Amount (USD)</span>
           <input
             type="number"
-            min={MIN_CENTS / 100}
+            min={minCents / 100}
             max={MAX_CENTS / 100}
             step={1}
             value={amountUsd}
@@ -205,6 +222,17 @@ export function AmendDialog({
           <div className="mt-1 text-[11px] text-white/40">
             New allocation: {newTokens.toLocaleString()} AICA
           </div>
+          {testMode && (
+            <div
+              className="mt-1 text-[11px] text-[#00F5D4]"
+              data-testid="amend-test-mode-banner"
+            >
+              Test mode: any amount ≥ ${(minCents / 100).toLocaleString()} allowed for the next{" "}
+              {testPurchasesRemaining} funded purchase
+              {testPurchasesRemaining === 1 ? "" : "s"}, then a $250 minimum
+              applies.
+            </div>
+          )}
         </label>
 
         {mode === "admin" && (
