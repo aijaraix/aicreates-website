@@ -618,6 +618,8 @@ interface CommitmentRow {
   paymentMethod: string | null;
   saftSignedAt: Date | null;
   saftSignerName: string | null;
+  saftCountersignedAt: Date | null;
+  saftCountersignerName: string | null;
   fundedAt: Date | null;
   receiptUrl: string | null;
   billingCountry: string | null;
@@ -694,6 +696,8 @@ router.get("/admin/commitments-search", async (req, res) => {
       walletAddress: commitmentsTable.walletAddress,
       saftSignedAt: commitmentsTable.saftSignedAt,
       saftSignerName: saftSubmissionsTable.signatureName,
+      saftCountersignedAt: saftSubmissionsTable.countersignedAt,
+      saftCountersignerName: saftSubmissionsTable.countersignerName,
       fundedAt: commitmentsTable.fundedAt,
       createdAt: commitmentsTable.createdAt,
       completedAt: commitmentsTable.completedAt,

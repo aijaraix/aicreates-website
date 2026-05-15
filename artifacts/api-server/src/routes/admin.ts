@@ -6,9 +6,11 @@ import {
   appUsersTable,
   commitmentsTable,
   saftSubmissionsTable,
+  investorProfilesTable,
 } from "@workspace/db";
 import { and, desc, eq, isNull, sql } from "drizzle-orm";
 import { logAdminAction } from "../lib/audit";
+import { appendCountersignPage } from "../lib/saftPdf";
 
 const router: IRouter = Router();
 
@@ -194,6 +196,7 @@ router.get("/admin/commitments/:id/saft-pdf", async (req, res) => {
   const rows = await db
     .select({
       pdfBytes: saftSubmissionsTable.pdfBytes,
+      countersignedPdfBytes: saftSubmissionsTable.countersignedPdfBytes,
       supersededAt: saftSubmissionsTable.supersededAt,
     })
     .from(saftSubmissionsTable)
@@ -208,12 +211,146 @@ router.get("/admin/commitments/:id/saft-pdf", async (req, res) => {
     res.status(404).json({ error: "Not found" });
     return;
   }
+  // Admin always gets the latest binding version - prefer the
+  // fully-executed (countersigned) PDF when it exists.
+  const bytes = sub.countersignedPdfBytes ?? sub.pdfBytes;
+  const suffix = sub.countersignedPdfBytes ? "fully-executed" : "signed";
   res.setHeader("Content-Type", "application/pdf");
   res.setHeader(
     "Content-Disposition",
-    `inline; filename="aica-saft-${id}.pdf"`,
+    `inline; filename="aica-saft-${suffix}-${id}.pdf"`,
   );
-  res.send(sub.pdfBytes);
+  res.send(bytes);
+});
+
+/**
+ * Apply the company countersignature to the active SAFT for a
+ * commitment, producing the fully-executed instrument. Idempotent: if
+ * already countersigned, returns the existing record. Body accepts an
+ * optional `countersignerName` and `countersignerTitle` overriding the
+ * default ("AICreatesAI Inc., Authorized Officer").
+ */
+router.post("/admin/commitments/:id/countersign", async (req, res) => {
+  const id = req.params["id"];
+  if (!id) {
+    res.status(400).json({ error: "id required" });
+    return;
+  }
+  const body = (req.body ?? {}) as {
+    countersignerName?: string;
+    countersignerTitle?: string;
+  };
+  const adminUser = req.appUser!;
+  const countersignerName =
+    (body.countersignerName?.trim() ||
+      adminUser.fullName ||
+      adminUser.email ||
+      "AICreatesAI Inc., Authorized Officer").slice(0, 120);
+  const countersignerTitle =
+    body.countersignerTitle?.trim().slice(0, 120) || null;
+
+  const rows = await db
+    .select({
+      submissionId: saftSubmissionsTable.id,
+      pdfBytes: saftSubmissionsTable.pdfBytes,
+      countersignedAt: saftSubmissionsTable.countersignedAt,
+      countersignedPdfBytes: saftSubmissionsTable.countersignedPdfBytes,
+      signedAt: saftSubmissionsTable.signedAt,
+      signatureName: saftSubmissionsTable.signatureName,
+      userId: saftSubmissionsTable.userId,
+    })
+    .from(saftSubmissionsTable)
+    .where(
+      and(
+        eq(saftSubmissionsTable.commitmentId, id),
+        isNull(saftSubmissionsTable.supersededAt),
+      ),
+    )
+    .orderBy(desc(saftSubmissionsTable.signedAt))
+    .limit(1);
+  const sub = rows[0];
+  if (!sub || !sub.pdfBytes) {
+    res.status(404).json({ error: "No active signed SAFT for this commitment" });
+    return;
+  }
+  if (sub.countersignedAt && sub.countersignedPdfBytes) {
+    res.json({
+      ok: true,
+      alreadyCountersigned: true,
+      countersignedAt: sub.countersignedAt,
+    });
+    return;
+  }
+  if (!sub.signedAt) {
+    res.status(409).json({
+      error: "Cannot countersign: investor signature timestamp is missing.",
+    });
+    return;
+  }
+  // Resolve investor legal name from their profile so the addendum
+  // names the right party. Fall back to the typed signature name.
+  const profile = (
+    await db
+      .select({
+        kind: investorProfilesTable.kind,
+        legalEntityName: investorProfilesTable.legalEntityName,
+        legalFirstName: investorProfilesTable.legalFirstName,
+        legalLastName: investorProfilesTable.legalLastName,
+      })
+      .from(investorProfilesTable)
+      .where(eq(investorProfilesTable.userId, sub.userId))
+      .limit(1)
+  )[0];
+  const investorLegalName =
+    profile?.kind === "business"
+      ? profile.legalEntityName ?? sub.signatureName
+      : `${profile?.legalFirstName ?? ""} ${profile?.legalLastName ?? ""}`
+          .trim() || sub.signatureName;
+
+  const countersignedAt = new Date();
+  const fullyExecuted = await appendCountersignPage(sub.pdfBytes, {
+    countersignerName,
+    countersignerTitle,
+    countersignedAt: countersignedAt.toISOString(),
+    commitmentId: id,
+    investorLegalName,
+    signedAtIso: sub.signedAt.toISOString(),
+  });
+  const updated = await db
+    .update(saftSubmissionsTable)
+    .set({
+      countersignedAt,
+      countersignedBy: adminUser.id,
+      countersignerName,
+      countersignerTitle,
+      countersignedPdfBytes: fullyExecuted,
+    })
+    .where(
+      and(
+        eq(saftSubmissionsTable.id, sub.submissionId),
+        isNull(saftSubmissionsTable.countersignedAt),
+      ),
+    )
+    .returning({ id: saftSubmissionsTable.id });
+  if (updated.length === 0) {
+    res.json({ ok: true, alreadyCountersigned: true });
+    return;
+  }
+
+  await logAdminAction({
+    actorEmail: adminUser.email,
+    action: "saft_countersign",
+    targetType: "commitment",
+    targetId: id,
+    details: {
+      countersignerName,
+      countersignerTitle,
+      submissionId: sub.submissionId,
+      actorUserId: adminUser.id,
+    },
+  });
+
+  res.json({ ok: true, countersignedAt: countersignedAt.toISOString() });
 });
 
 router.get("/admin/stats", async (_req, res) => {

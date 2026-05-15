@@ -256,13 +256,24 @@ export default function Saft() {
         actions={
           <div className="flex items-center gap-2">
             <a
-              href="/api/saft/template.pdf"
+              href={`/api/saft/${commitId}/draft.pdf`}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-[#00F5D4]/40 bg-[#00F5D4]/5 text-[11px] uppercase tracking-[0.2em] text-[#00F5D4] hover:bg-[#00F5D4]/10"
               data-testid="link-preview-saft-template"
+              title="Download a SAFT pre-filled with your profile + commitment details (unsigned draft)"
             >
-              <FileText className="w-3.5 h-3.5" /> Review template
+              <FileText className="w-3.5 h-3.5" /> Download my draft
+            </a>
+            <a
+              href="/api/saft/template.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden md:inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/15 bg-white/[0.02] text-[11px] uppercase tracking-[0.2em] text-white/60 hover:bg-white/[0.05]"
+              data-testid="link-blank-saft-template"
+              title="Blank SAFT template (no investor data)"
+            >
+              <FileText className="w-3.5 h-3.5" /> Blank template
             </a>
             <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-amber-300/40 bg-amber-300/5 text-[11px] uppercase tracking-[0.2em] text-amber-300">
               Draft for counsel review

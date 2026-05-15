@@ -50,6 +50,8 @@ router.get("/me/allocations", requireAuth, async (req, res) => {
       signedAt: saftSubmissionsTable.signedAt,
       signatureName: saftSubmissionsTable.signatureName,
       payload: saftSubmissionsTable.payload,
+      countersignedAt: saftSubmissionsTable.countersignedAt,
+      countersignerName: saftSubmissionsTable.countersignerName,
     })
     .from(saftSubmissionsTable)
     .where(
@@ -176,6 +178,8 @@ router.get("/me/allocations", requireAuth, async (req, res) => {
       saftSignedAt: c.saftSignedAt ?? saft?.signedAt ?? null,
       saftStatus: saft?.status ?? null,
       saftSignerName: saft?.signatureName ?? null,
+      saftCountersignedAt: saft?.countersignedAt ?? null,
+      saftCountersignerName: saft?.countersignerName ?? null,
       lastFailureReason: c.lastFailureReason ?? null,
       lastFailureCode: c.lastFailureCode ?? null,
       lastFailureDeclineCode: c.lastFailureDeclineCode ?? null,

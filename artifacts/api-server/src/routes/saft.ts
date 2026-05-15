@@ -554,6 +554,8 @@ router.get("/saft/:commitId/pdf", requireAuth, async (req, res) => {
   const rows = await db
     .select({
       pdfBytes: saftSubmissionsTable.pdfBytes,
+      countersignedPdfBytes: saftSubmissionsTable.countersignedPdfBytes,
+      countersignedAt: saftSubmissionsTable.countersignedAt,
       userId: saftSubmissionsTable.userId,
     })
     .from(saftSubmissionsTable)
@@ -575,12 +577,103 @@ router.get("/saft/:commitId/pdf", requireAuth, async (req, res) => {
     res.status(404).json({ error: "Not found" });
     return;
   }
+  // Prefer the fully-executed (countersigned) PDF when available so the
+  // dashboard "SAFT PDF" link always serves the latest, most-binding
+  // version of the document.
+  const bytes = sub.countersignedPdfBytes ?? sub.pdfBytes;
+  const suffix = sub.countersignedPdfBytes ? "fully-executed" : "signed";
   res.setHeader("Content-Type", "application/pdf");
   res.setHeader(
     "Content-Disposition",
-    `inline; filename="aica-saft-${id}.pdf"`,
+    `inline; filename="aica-saft-${suffix}-${id}.pdf"`,
   );
-  res.send(sub.pdfBytes);
+  res.send(bytes);
+});
+
+/**
+ * Pre-populated draft download. Renders a SAFT for the requesting
+ * investor using their current profile + commitment + allocation data,
+ * before they have completed the on-screen sign flow. Useful for
+ * sharing with counsel or saving a record of what the document will
+ * look like once signed. Does NOT persist anything.
+ */
+router.get("/saft/:commitId/draft.pdf", requireAuth, async (req, res) => {
+  const id = req.params["commitId"] as string | undefined;
+  if (!id) {
+    res.status(400).json({ error: "commitId required" });
+    return;
+  }
+  const rows = await db
+    .select()
+    .from(commitmentsTable)
+    .where(
+      and(
+        eq(commitmentsTable.id, id),
+        eq(commitmentsTable.userId, req.appUser!.id),
+      ),
+    )
+    .limit(1);
+  const commitment = rows[0];
+  if (!commitment) {
+    res.status(404).json({ error: "Not found" });
+    return;
+  }
+  const profileRows = await db
+    .select()
+    .from(investorProfilesTable)
+    .where(eq(investorProfilesTable.userId, req.appUser!.id))
+    .limit(1);
+  const profile = profileRows[0];
+  if (!profile) {
+    res.status(403).json({ error: "profile_required" });
+    return;
+  }
+  const allocations = await loadAllocationsForCommitment(commitment.id, {
+    roundSlug: commitment.roundSlug,
+    tokens: commitment.tokenAllocation,
+    amountCents: commitment.amountCents,
+  });
+  const profileForPdf: SaftProfileForPdf = {
+    kind: profile.kind === "business" ? "business" : "individual",
+    email: profile.email,
+    phone: profile.phone,
+    addressLine1: profile.addressLine1,
+    addressLine2: profile.addressLine2,
+    city: profile.city,
+    region: profile.region,
+    postalCode: profile.postalCode,
+    country: profile.country,
+    legalFirstName: profile.legalFirstName,
+    legalLastName: profile.legalLastName,
+    dateOfBirth: profile.dateOfBirth,
+    taxIdLast4: profile.taxIdLast4,
+    legalEntityName: profile.legalEntityName,
+    entityType: profile.entityType,
+    jurisdictionOfFormation: profile.jurisdictionOfFormation,
+    einLast4: profile.einLast4,
+    signatoryName: profile.signatoryName,
+    signatoryTitle: profile.signatoryTitle,
+  };
+  const expectedName = expectedSignerName(profile) || "(unsigned draft)";
+  const pdfBytes = await renderSaftPdf({
+    commitmentId: commitment.id,
+    profile: profileForPdf,
+    allocations,
+    walletAddress: commitment.walletAddress ?? undefined,
+    walletChain: null,
+    paymentMethod: commitment.paymentMethod ?? "(to be selected)",
+    accreditationCategory: commitment.accreditationStatus ?? "(to be selected)",
+    acknowledgments: REQUIRED_ACK_KEYS.map((k) => ACK_TEXT[k] ?? k),
+    signatureName: `${expectedName} (DRAFT - UNSIGNED)`,
+    signedAt: new Date().toISOString(),
+    signerIp: null,
+  });
+  res.setHeader("Content-Type", "application/pdf");
+  res.setHeader(
+    "Content-Disposition",
+    `inline; filename="aica-saft-draft-${commitment.id}.pdf"`,
+  );
+  res.send(Buffer.from(pdfBytes));
 });
 
 export default router;

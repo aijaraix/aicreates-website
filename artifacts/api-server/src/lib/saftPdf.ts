@@ -487,3 +487,87 @@ export async function renderSaftPdf(input: SaftRenderInput): Promise<Buffer> {
 
   return Buffer.from(await doc.save());
 }
+
+export interface CountersignInput {
+  countersignerName: string;
+  countersignerTitle?: string | null;
+  countersignedAt: string;
+  commitmentId: string;
+  investorLegalName: string;
+  signedAtIso: string;
+}
+
+/**
+ * Appends a single-page "Counterparty Signature" addendum to an
+ * already-signed SAFT PDF, producing the fully-executed instrument.
+ * The original signed pages are preserved unchanged; the addendum is
+ * the binding company countersignature applied by an authorized
+ * AICreatesAI officer from the admin console.
+ */
+export async function appendCountersignPage(
+  signedPdf: Buffer,
+  input: CountersignInput,
+): Promise<Buffer> {
+  const doc = await PDFDocument.load(signedPdf);
+  const helv = await doc.embedFont(StandardFonts.Helvetica);
+  const helvBold = await doc.embedFont(StandardFonts.HelveticaBold);
+  const mono = await doc.embedFont(StandardFonts.Courier);
+  const ink = rgb(0.07, 0.07, 0.07);
+  const dim = rgb(0.4, 0.4, 0.4);
+  const accent = rgb(0, 0.58, 0.51);
+  const page = doc.addPage([PAGE.w, PAGE.h]);
+  let y = drawHeader(page, helv, helvBold);
+  page.drawText("Counterparty Signature - Fully Executed", {
+    x: PAGE.left, y, size: 12, font: helvBold, color: accent,
+  });
+  y -= 22;
+  page.drawText(
+    `${COMPANY_NAME} hereby executes and accepts this Simple Agreement for`,
+    { x: PAGE.left, y, size: 10, font: helv, color: ink },
+  );
+  y -= 13;
+  page.drawText(
+    `Future Tokens with ${input.investorLegalName}, originally signed by the`,
+    { x: PAGE.left, y, size: 10, font: helv, color: ink },
+  );
+  y -= 13;
+  page.drawText(
+    `Investor on ${fmtDate(input.signedAtIso)}. Countersignature is binding upon both parties.`,
+    { x: PAGE.left, y, size: 10, font: helv, color: ink },
+  );
+  y -= 30;
+  page.drawText("Company", { x: PAGE.left, y, size: 11, font: helvBold, color: ink });
+  y -= 16;
+  drawKv(page, helv, helvBold, "Entity", COMPANY_NAME, y); y -= 14;
+  drawKv(page, helv, helvBold, "Address", COMPANY_ADDRESS, y); y -= 14;
+  drawKv(page, helv, helvBold, "EIN", COMPANY_EIN, y); y -= 24;
+  page.drawText("Authorized Signatory", { x: PAGE.left, y, size: 11, font: helvBold, color: ink });
+  y -= 22;
+  page.drawText("/s/", { x: PAGE.left, y, size: 12, font: helv, color: dim });
+  page.drawText(input.countersignerName, {
+    x: PAGE.left + 24, y: y - 2, size: 16, font: helvBold, color: accent,
+  });
+  y -= 18;
+  page.drawLine({
+    start: { x: PAGE.left, y: y + 4 }, end: { x: PAGE.left + 320, y: y + 4 },
+    thickness: 0.5, color: rgb(0.7, 0.7, 0.7),
+  });
+  page.drawText(
+    `Name: ${input.countersignerName}${input.countersignerTitle ? `, ${input.countersignerTitle}` : ""}`,
+    { x: PAGE.left, y, size: 9, font: helv, color: ink },
+  );
+  y -= 14;
+  page.drawText(`For and on behalf of ${COMPANY_NAME}`, {
+    x: PAGE.left, y, size: 9, font: helv, color: ink,
+  });
+  y -= 14;
+  page.drawText(
+    `Countersigned: ${fmtDate(input.countersignedAt)} (${input.countersignedAt})`,
+    { x: PAGE.left, y, size: 8, font: mono, color: dim },
+  );
+  y -= 12;
+  page.drawText(`Commitment ID: ${input.commitmentId}`, {
+    x: PAGE.left, y, size: 8, font: mono, color: dim,
+  });
+  return Buffer.from(await doc.save());
+}

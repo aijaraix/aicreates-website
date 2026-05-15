@@ -45,6 +45,8 @@ interface Allocation {
   saftSignedAt: string | null;
   saftStatus: string | null;
   saftSignerName: string | null;
+  saftCountersignedAt: string | null;
+  saftCountersignerName: string | null;
   lastFailureReason: string | null;
   lastFailureCode: string | null;
   lastFailureDeclineCode: string | null;
@@ -426,23 +428,16 @@ export default function Dashboard() {
   });
   const { user } = useUser();
   const [, setLocation] = useLocation();
-  const [paidToast, setPaidToast] = useState<string | null>(null);
+  const [paidModal, setPaidModal] = useState<string | null>(null);
   useEffect(() => {
     const sp = new URLSearchParams(window.location.search);
     const paid = sp.get("paid");
     if (paid) {
-      setPaidToast(
-        paid === "1"
-          ? "Payment received. Your commitment will appear as funded shortly."
-          : `Payment received for commitment ${paid.slice(0, 8)}.`,
-      );
+      setPaidModal(paid);
       sp.delete("paid");
       const q = sp.toString();
       setLocation(`/dashboard${q ? `?${q}` : ""}`, { replace: true });
-      const t = setTimeout(() => setPaidToast(null), 6000);
-      return () => clearTimeout(t);
     }
-    return undefined;
   }, [setLocation]);
   const meQuery = useQuery({
     queryKey: ["me"],
@@ -505,15 +500,15 @@ export default function Dashboard() {
         subtitle="Track every AICA Founders commitment - SAFT status, funding, vesting, and unlocks - in one place."
       />
 
+      {paidModal && (
+        <PaymentThankYouModal
+          commitmentId={paidModal}
+          allocation={allocations.find((a) => a.id === paidModal) ?? null}
+          onClose={() => setPaidModal(null)}
+        />
+      )}
+
       <main className="mx-auto max-w-5xl px-6 py-10 md:py-12">
-        {paidToast && (
-          <div
-            className="mb-6 rounded-2xl border border-[#00F5D4]/40 bg-[#00F5D4]/10 p-4 text-sm text-[#00F5D4]"
-            data-testid="toast-paid"
-          >
-            {paidToast}
-          </div>
-        )}
         <DistributionWalletCard
           initialAddress={meQuery.data?.user.solanaWalletAddress ?? null}
         />
@@ -641,10 +636,22 @@ export default function Dashboard() {
                         href={`/api/saft/${a.id}/pdf`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/10 hover:bg-white/[0.04]"
+                        className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border ${
+                          a.saftCountersignedAt
+                            ? "border-[#00F5D4]/50 bg-[#00F5D4]/10 text-[#00F5D4] hover:bg-[#00F5D4]/15"
+                            : "border-white/10 hover:bg-white/[0.04]"
+                        }`}
                         data-testid={`link-saft-${a.id}`}
+                        title={
+                          a.saftCountersignedAt
+                            ? `Countersigned ${fmtDate(a.saftCountersignedAt)}${a.saftCountersignerName ? ` by ${a.saftCountersignerName}` : ""}`
+                            : "Signed SAFT (awaiting company countersignature)"
+                        }
                       >
-                        <FileText className="w-3.5 h-3.5" /> SAFT PDF
+                        <FileText className="w-3.5 h-3.5" />{" "}
+                        {a.saftCountersignedAt
+                          ? "Fully-executed SAFT"
+                          : "Signed SAFT"}
                       </a>
                     ) : (
                       <Link
@@ -1230,5 +1237,105 @@ function DistributionWalletCard({
         </div>
       </div>
     </section>
+  );
+}
+
+function PaymentThankYouModal({
+  commitmentId,
+  allocation,
+  onClose,
+}: {
+  commitmentId: string;
+  allocation: Allocation | null;
+  onClose: () => void;
+}) {
+  const [step, setStep] = useState(0);
+  const steps = [
+    {
+      title: "Thank you - your payment is in.",
+      body: allocation
+        ? `We've received your ${fmt(allocation.amountCents)} commitment for ${allocation.tokenAllocation.toLocaleString()} AICA. A confirmation email is on its way.`
+        : "We've received your payment. A confirmation email is on its way.",
+    },
+    {
+      title: "Where to find your documents.",
+      body: 'Your signed SAFT lives on this dashboard. Look for the teal "Signed SAFT" badge on your commitment - click it to view or download. Once we countersign, the same link upgrades to "Fully-executed SAFT" with both signatures.',
+    },
+    {
+      title: "What happens next.",
+      body: "Your commitment will move to 'Funded' within a few minutes (cards are instant; ACH and wires take 1-3 business days). After funding, you'll see your vesting schedule, TGE countdown, and calendar exports right here.",
+    },
+    {
+      title: "Add your distribution wallet.",
+      body: "Before TGE, drop your Solana wallet address into the card at the top of this page so we know where to send your tokens. You can update it any time.",
+    },
+  ];
+  const last = step === steps.length - 1;
+  const cur = steps[step]!;
+  return (
+    <div
+      className="fixed inset-0 z-[100] grid place-items-center bg-black/70 backdrop-blur-sm p-4"
+      role="dialog"
+      aria-modal="true"
+      data-testid="modal-payment-thankyou"
+    >
+      <div className="w-full max-w-lg rounded-3xl border border-[#00F5D4]/40 bg-[#0A0A0A] p-7 shadow-[0_0_60px_rgba(0,245,212,0.25)]">
+        <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.22em] text-[#00F5D4]/80">
+          <span className="inline-block w-2 h-2 rounded-full bg-[#00F5D4] shadow-[0_0_10px_#00F5D4]" />
+          Payment received
+          <span className="ml-auto text-white/40 normal-case tracking-normal">
+            {step + 1} / {steps.length}
+          </span>
+        </div>
+        <h2 className="mt-4 text-2xl md:text-3xl font-semibold tracking-tight text-white">
+          {cur.title}
+        </h2>
+        <p className="mt-3 text-sm leading-relaxed text-white/70">{cur.body}</p>
+        <div className="mt-5 flex items-center gap-1.5">
+          {steps.map((_, i) => (
+            <span
+              key={i}
+              className={`h-1 flex-1 rounded-full ${
+                i <= step ? "bg-[#00F5D4]" : "bg-white/10"
+              }`}
+            />
+          ))}
+        </div>
+        <div className="mt-6 flex items-center justify-between gap-3">
+          <button
+            type="button"
+            onClick={onClose}
+            className="text-xs text-white/45 hover:text-white/70"
+            data-testid="button-thankyou-skip"
+          >
+            Skip
+          </button>
+          <div className="flex items-center gap-2">
+            {step > 0 && (
+              <button
+                type="button"
+                onClick={() => setStep(step - 1)}
+                className="px-3 py-1.5 rounded-full border border-white/15 text-xs text-white/70 hover:bg-white/[0.04]"
+              >
+                Back
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={() => (last ? onClose() : setStep(step + 1))}
+              className="px-4 py-1.5 rounded-full teal-btn text-xs font-medium"
+              data-testid={last ? "button-thankyou-done" : "button-thankyou-next"}
+            >
+              {last ? "Got it" : "Next"}
+            </button>
+          </div>
+        </div>
+        {commitmentId && (
+          <div className="mt-4 text-[10px] text-white/30 font-mono">
+            Commitment {commitmentId.slice(0, 8)}
+          </div>
+        )}
+      </div>
+    </div>
   );
 }

@@ -37,6 +37,19 @@ export const saftSubmissionsTable = pgTable("saft_submissions", {
   version: text("version").notNull().default("draft-2026-05"),
   pdfBytes: bytea("pdf_bytes"),
   /**
+   * Counterparty (AICreatesAI) signature applied by an admin from the
+   * admin console. When present, `countersignedPdfBytes` holds the
+   * fully-executed PDF (signed PDF + appended countersignature page).
+   * The investor-facing download endpoint serves the countersigned
+   * bytes when available so the dashboard can offer a single
+   * "Fully-executed SAFT" link.
+   */
+  countersignedAt: timestamp("countersigned_at", { withTimezone: true }),
+  countersignedBy: text("countersigned_by"),
+  countersignerName: text("countersigner_name"),
+  countersignerTitle: text("countersigner_title"),
+  countersignedPdfBytes: bytea("countersigned_pdf_bytes"),
+  /**
    * Set when this submission has been superseded by a later one (e.g.
    * after the commitment amount or round was amended and a new SAFT was
    * required). The most recent non-superseded row is the active SAFT.

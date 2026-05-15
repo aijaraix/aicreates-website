@@ -76,6 +76,8 @@ interface CommitmentRow {
   paymentMethod: string | null;
   saftSignedAt: string | null;
   saftSignerName: string | null;
+  saftCountersignedAt: string | null;
+  saftCountersignerName: string | null;
   fundedAt: string | null;
   receiptUrl: string | null;
   billingCountry: string | null;
@@ -1164,6 +1166,12 @@ function CommitmentsTab() {
     onSuccess: () => qc.invalidateQueries({ queryKey: ["admin"] }),
     onError: (err) => alert(`Confirm crypto failed: ${(err as Error).message}`),
   });
+  const countersign = useMutation({
+    mutationFn: (id: string) =>
+      api(`/admin/commitments/${id}/countersign`, { body: {} }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["admin"] }),
+    onError: (err) => alert(`Countersign failed: ${(err as Error).message}`),
+  });
   const bulk = useMutation({
     mutationFn: (action: "confirm-wire" | "confirm-crypto" | "refund") =>
       api<{
@@ -1405,14 +1413,43 @@ function CommitmentsTab() {
                     </td>
                     <td className="px-3 py-3">
                       {c.saftSignedAt ? (
-                        <a
-                          href={`/api/admin/commitments/${c.id}/saft-pdf`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-[#00F5D4] text-[11px] hover:underline"
-                        >
-                          {c.saftSignerName ?? "View"}
-                        </a>
+                        <div className="flex flex-col gap-1">
+                          <a
+                            href={`/api/admin/commitments/${c.id}/saft-pdf`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-[#00F5D4] text-[11px] hover:underline"
+                            title={
+                              c.saftCountersignedAt
+                                ? `Fully-executed ${fmtDate(c.saftCountersignedAt)}`
+                                : "Signed by investor (awaiting countersignature)"
+                            }
+                          >
+                            {c.saftSignerName ?? "View"}
+                          </a>
+                          {c.saftCountersignedAt ? (
+                            <span className="text-[10px] text-[#00F5D4]/80">
+                              ✓ Countersigned
+                            </span>
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                if (
+                                  confirm(
+                                    `Countersign this SAFT on behalf of AICreatesAI Inc.?\n\nThis applies the binding company signature and produces the fully-executed PDF for the investor to download.`,
+                                  )
+                                )
+                                  countersign.mutate(c.id);
+                              }}
+                              disabled={countersign.isPending}
+                              className="text-[10px] text-amber-300 hover:text-amber-200 underline-offset-2 hover:underline text-left disabled:opacity-50"
+                              data-testid={`button-countersign-${c.id}`}
+                            >
+                              Countersign →
+                            </button>
+                          )}
+                        </div>
                       ) : (
                         <span className="text-white/30 text-[11px]">-</span>
                       )}
