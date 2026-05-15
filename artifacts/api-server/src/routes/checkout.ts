@@ -26,10 +26,11 @@ import {
 } from "@workspace/db";
 import { eq, and } from "drizzle-orm";
 
+import { getInvestLimits, ABSOLUTE_MAX_CENTS } from "../lib/investLimits";
+
 const router: IRouter = Router();
 
-const MIN_CUSTOM = 100_000; // $1,000
-const MAX_CUSTOM = 1_000_000_000; // $10,000,000
+const MAX_CUSTOM = ABSOLUTE_MAX_CENTS; // $10,000,000
 
 interface AllocationLine {
   roundSlug?: string;
@@ -122,9 +123,10 @@ router.post("/commitments", requireAuth, async (req, res) => {
 
     const totalCents = lines.reduce((s, l) => s + l.usdCents, 0);
     const totalTokens = lines.reduce((s, l) => s + l.tokens, 0);
-    if (totalCents < MIN_CUSTOM) {
+    const limits = await getInvestLimits();
+    if (totalCents < limits.minCents) {
       res.status(400).json({
-        error: `Total must be at least $${(MIN_CUSTOM / 100).toLocaleString()}.`,
+        error: `Total must be at least $${(limits.minCents / 100).toLocaleString()}.`,
       });
       return;
     }
@@ -308,13 +310,14 @@ router.post("/commitments", requireAuth, async (req, res) => {
     resolvedTierSlug = tier.slug;
     tokenAllocation = tier.tokenAllocation;
   } else if (typeof body.customAmountCents === "number") {
+    const limits = await getInvestLimits();
     if (
       !Number.isFinite(body.customAmountCents) ||
-      body.customAmountCents < MIN_CUSTOM ||
+      body.customAmountCents < limits.minCents ||
       body.customAmountCents > MAX_CUSTOM
     ) {
       res.status(400).json({
-        error: `customAmountCents must be between ${MIN_CUSTOM} and ${MAX_CUSTOM}`,
+        error: `customAmountCents must be between ${limits.minCents} and ${MAX_CUSTOM}`,
       });
       return;
     }
@@ -520,6 +523,18 @@ router.post("/checkout", requireAuth, async (req, res) => {
         error: `Round not open for commitments: ${closedSlugs.join(", ")}`,
         code: "round_not_open",
         closedRounds: closedSlugs,
+      });
+      return;
+    }
+    // Re-check the dynamic floor at funding time. A commitment may have
+    // been created while the test-mode floor was $1, but if subsequent
+    // funded purchases have since exhausted the test-mode allowance we
+    // must block sub-$250 funding here too.
+    const limits = await getInvestLimits();
+    if (c.amountCents < limits.minCents) {
+      res.status(400).json({
+        error: `Commitment amount $${(c.amountCents / 100).toLocaleString()} is below the current $${(limits.minCents / 100).toLocaleString()} minimum. Please amend the commitment to a higher amount.`,
+        code: "below_current_minimum",
       });
       return;
     }

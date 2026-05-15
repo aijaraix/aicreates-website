@@ -14,9 +14,15 @@ import {
 } from "./availability";
 import { getRoundStatusesTx } from "./roundStatus";
 import { logAdminAction } from "./audit";
+import { getInvestLimits, ABSOLUTE_MAX_CENTS } from "./investLimits";
 
+/**
+ * @deprecated Use `getInvestLimits()` for the dynamic per-amend floor.
+ * Kept exported only for back-compat with any external readers; never
+ * referenced inside `amendCommitment` anymore.
+ */
 export const MIN_AMEND_CENTS = 100_000; // $1,000
-export const MAX_AMEND_CENTS = 1_000_000_000; // $10,000,000
+export const MAX_AMEND_CENTS = ABSOLUTE_MAX_CENTS;
 
 /**
  * States from which an investor or admin may amend a commitment's
@@ -69,9 +75,10 @@ export async function amendCommitment(input: AmendInput): Promise<AmendResult> {
       error: `Unknown round: ${input.newRoundSlug}`,
     };
   }
+  const limits = await getInvestLimits();
   if (
     !Number.isFinite(input.newAmountCents) ||
-    input.newAmountCents < MIN_AMEND_CENTS ||
+    input.newAmountCents < limits.minCents ||
     input.newAmountCents > MAX_AMEND_CENTS
   ) {
     return {
@@ -79,7 +86,7 @@ export async function amendCommitment(input: AmendInput): Promise<AmendResult> {
       status: 400,
       code: "amount_out_of_range",
       error: `Amount must be between $${(
-        MIN_AMEND_CENTS / 100
+        limits.minCents / 100
       ).toLocaleString()} and $${(MAX_AMEND_CENTS / 100).toLocaleString()}.`,
     };
   }

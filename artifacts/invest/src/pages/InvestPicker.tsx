@@ -33,8 +33,16 @@ interface CapacityViolation {
   available: number;
 }
 
-const MIN_USD = 1_000;
+const DEFAULT_MIN_USD = 250;
 const MAX_USD = 10_000_000;
+
+interface InvestLimits {
+  minCents: number;
+  maxCents: number;
+  fundedCount: number;
+  testMode: boolean;
+  testPurchasesRemaining: number;
+}
 
 function fmtUsd(cents: number) {
   return new Intl.NumberFormat("en-US", {
@@ -96,6 +104,14 @@ export default function InvestPicker() {
     refetchInterval: 30_000,
   });
 
+  const limitsQ = useQuery({
+    queryKey: ["invest", "limits"],
+    queryFn: () => api<InvestLimits>("/invest/limits"),
+  });
+  const minCents = limitsQ.data?.minCents ?? DEFAULT_MIN_USD * 100;
+  const testMode = limitsQ.data?.testMode ?? false;
+  const testPurchasesRemaining = limitsQ.data?.testPurchasesRemaining ?? 0;
+
   const rounds = availability.data?.rounds ?? [];
   const isAdmin = me.data?.user.role === "admin";
 
@@ -139,7 +155,7 @@ export default function InvestPicker() {
     setByRoundLine((prev) => {
       const existing = prev[round.slug];
       if (existing && existing.usdCents > 0) return prev;
-      const tokens = tokensFromUsdCents(MIN_USD * 100, round.pricePerTokenMillicents);
+      const tokens = tokensFromUsdCents(minCents, round.pricePerTokenMillicents);
       const usdCents = usdCentsFromTokens(tokens, round.pricePerTokenMillicents);
       return {
         ...prev,
@@ -251,7 +267,7 @@ export default function InvestPicker() {
     })
     .map((l) => l.roundSlug);
 
-  const totalsValid = totalCents >= MIN_USD * 100 && totalCents <= MAX_USD * 100;
+  const totalsValid = totalCents >= minCents && totalCents <= MAX_USD * 100;
   const canSubmit =
     totalsValid &&
     cart.some((l) => l.tokens > 0) &&
@@ -519,8 +535,19 @@ export default function InvestPicker() {
               </div>
               {!totalsValid && (
                 <div className="text-xs text-amber-300">
-                  Total must be between {fmtUsd(MIN_USD * 100)} and{" "}
+                  Total must be between {fmtUsd(minCents)} and{" "}
                   {fmtUsd(MAX_USD * 100)}.
+                </div>
+              )}
+              {testMode && (
+                <div
+                  className="text-xs text-[#00F5D4]"
+                  data-testid="test-mode-banner"
+                >
+                  Test mode active: any amount allowed for the next{" "}
+                  {testPurchasesRemaining} funded purchase
+                  {testPurchasesRemaining === 1 ? "" : "s"}, then a $250
+                  minimum applies.
                 </div>
               )}
               {overflowSlugs.length > 0 && (

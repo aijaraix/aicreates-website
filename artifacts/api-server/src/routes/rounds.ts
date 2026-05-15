@@ -3,8 +3,14 @@ import { db } from "@workspace/db";
 import { sql } from "drizzle-orm";
 import { getActiveRound, ROUNDS, ROUND_BY_SLUG } from "../lib/rounds";
 import { getActiveRoundSlug, getRoundStatuses } from "../lib/roundStatus";
+import { getInvestLimits } from "../lib/investLimits";
 
 const router: IRouter = Router();
+
+router.get("/invest/limits", async (_req, res) => {
+  const limits = await getInvestLimits();
+  res.json(limits);
+});
 
 router.get("/rounds/active", async (_req, res) => {
   const activeSlug = await getActiveRoundSlug();
