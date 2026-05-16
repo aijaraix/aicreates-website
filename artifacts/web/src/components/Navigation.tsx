@@ -127,6 +127,7 @@ export function Navigation() {
   const [location] = useLocation();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [openGroup, setOpenGroup] = useState<string | null>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -194,45 +195,77 @@ export function Navigation() {
                   <Wordmark />
                 </div>
 
-                <nav className="flex flex-col gap-0.5">
+                <nav className="flex flex-col gap-1">
                   {[
                     { header: "Products", items: PRODUCT_LINKS },
                     { header: "Solutions", items: SOLUTION_LINKS },
                     { header: "Resources", items: RESOURCE_LINKS },
                     { header: "Company", items: COMPANY_LINKS },
-                  ].map((group) => (
-                    <div key={group.header} className="pt-2 first:pt-0">
-                      <div className="px-3 pb-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white/40">
-                        {group.header}
+                  ].map((group) => {
+                    const isOpen = openGroup === group.header;
+                    const hasActive = group.items.some((p) => !p.external && p.path === location);
+                    return (
+                      <div key={group.header} className="rounded-xl overflow-hidden">
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setOpenGroup(isOpen ? null : group.header)
+                          }
+                          className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-left transition-colors ${
+                            isOpen || hasActive
+                              ? "bg-white/[0.06] text-white"
+                              : "text-white/80 hover:bg-white/[0.03]"
+                          }`}
+                          aria-expanded={isOpen}
+                          data-testid={`button-mobile-group-${group.header.toLowerCase()}`}
+                        >
+                          <span className="text-base font-semibold tracking-tight">
+                            {group.header}
+                          </span>
+                          <ChevronDown
+                            className={`w-4 h-4 opacity-70 transition-transform ${
+                              isOpen ? "rotate-180" : ""
+                            }`}
+                          />
+                        </button>
+                        {isOpen && (
+                          <div className="pl-3 pr-1 py-1 flex flex-col">
+                            {group.items.map((p) =>
+                              p.external ? (
+                                <a
+                                  key={p.path}
+                                  href={p.path}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  onClick={() => setOpen(false)}
+                                  data-testid={`link-mobile-nav-${p.name.toLowerCase().replace(/\s+/g, "-")}`}
+                                  className="block px-4 py-2.5 rounded-lg text-base text-white/75 hover:text-white hover:bg-white/[0.04]"
+                                >
+                                  {p.name}
+                                </a>
+                              ) : (
+                                <Link
+                                  key={p.path}
+                                  href={p.path}
+                                  onClick={() => setOpen(false)}
+                                >
+                                  <span
+                                    className={`block px-4 py-2.5 rounded-lg text-base cursor-pointer ${
+                                      location === p.path
+                                        ? "text-white bg-white/[0.06]"
+                                        : "text-white/75 hover:text-white hover:bg-white/[0.04]"
+                                    }`}
+                                  >
+                                    {p.name}
+                                  </span>
+                                </Link>
+                              ),
+                            )}
+                          </div>
+                        )}
                       </div>
-                      {group.items.map((p) =>
-                        p.external ? (
-                          <a
-                            key={p.path}
-                            href={p.path}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={() => setOpen(false)}
-                            data-testid={`link-mobile-nav-${p.name.toLowerCase().replace(/\s+/g, "-")}`}
-                          >
-                            <span className="block px-3 py-1.5 rounded-lg text-sm font-medium text-white/70">
-                              {p.name}
-                            </span>
-                          </a>
-                        ) : (
-                          <Link key={p.path} href={p.path} onClick={() => setOpen(false)}>
-                            <span
-                              className={`block px-3 py-1.5 rounded-lg text-sm font-medium ${
-                                location === p.path ? "text-white bg-white/[0.06]" : "text-white/70"
-                              }`}
-                            >
-                              {p.name}
-                            </span>
-                          </Link>
-                        ),
-                      )}
-                    </div>
-                  ))}
+                    );
+                  })}
                 </nav>
 
                 <div className="mt-5 pt-4 border-t border-white/5 flex flex-col gap-2">
