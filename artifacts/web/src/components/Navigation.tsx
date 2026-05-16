@@ -127,7 +127,7 @@ export function Navigation() {
   const [location] = useLocation();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
-  const [openGroup, setOpenGroup] = useState<string | null>(null);
+  const [openGroup, setOpenGroup] = useState<string | null>("Products");
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -189,13 +189,13 @@ export function Navigation() {
                 <span className="sr-only">Toggle menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="bg-[#0A0A0A] border-l border-white/5 w-screen max-w-none sm:max-w-none p-5 overflow-y-auto">
-              <div className="flex flex-col h-full">
-                <div className="flex items-center gap-2.5 mb-5">
+            <SheetContent side="right" className="bg-[#0A0A0A] border-l border-white/5 w-screen max-w-none sm:max-w-none p-5 h-[100dvh] overflow-hidden">
+              <div className="flex flex-col h-full min-h-0">
+                <div className="flex items-center gap-2.5 mb-5 shrink-0">
                   <Wordmark />
                 </div>
 
-                <nav className="flex flex-col gap-1">
+                <nav className="flex-1 min-h-0 flex flex-col gap-1">
                   {[
                     { header: "Products", items: PRODUCT_LINKS },
                     { header: "Solutions", items: SOLUTION_LINKS },
@@ -205,13 +205,18 @@ export function Navigation() {
                     const isOpen = openGroup === group.header;
                     const hasActive = group.items.some((p) => !p.external && p.path === location);
                     return (
-                      <div key={group.header} className="rounded-xl overflow-hidden">
+                      <div
+                        key={group.header}
+                        className={`rounded-xl overflow-hidden flex flex-col ${
+                          isOpen ? "flex-1 min-h-0" : "shrink-0"
+                        }`}
+                      >
                         <button
                           type="button"
                           onClick={() =>
                             setOpenGroup(isOpen ? null : group.header)
                           }
-                          className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-left transition-colors ${
+                          className={`shrink-0 w-full flex items-center justify-between px-4 py-3 rounded-xl text-left transition-colors ${
                             isOpen || hasActive
                               ? "bg-white/[0.06] text-white"
                               : "text-white/80 hover:bg-white/[0.03]"
@@ -229,7 +234,7 @@ export function Navigation() {
                           />
                         </button>
                         {isOpen && (
-                          <div className="pl-3 pr-1 py-1 flex flex-col">
+                          <div className="flex-1 min-h-0 pl-3 pr-1 py-1 flex flex-col justify-evenly overflow-hidden">
                             {group.items.map((p) =>
                               p.external ? (
                                 <a
@@ -239,7 +244,7 @@ export function Navigation() {
                                   rel="noopener noreferrer"
                                   onClick={() => setOpen(false)}
                                   data-testid={`link-mobile-nav-${p.name.toLowerCase().replace(/\s+/g, "-")}`}
-                                  className="block px-4 py-2.5 rounded-lg text-base text-white/75 hover:text-white hover:bg-white/[0.04]"
+                                  className="flex items-center px-4 py-2 rounded-lg text-base text-white/75 hover:text-white hover:bg-white/[0.04]"
                                 >
                                   {p.name}
                                 </a>
@@ -250,7 +255,7 @@ export function Navigation() {
                                   onClick={() => setOpen(false)}
                                 >
                                   <span
-                                    className={`block px-4 py-2.5 rounded-lg text-base cursor-pointer ${
+                                    className={`flex items-center px-4 py-2 rounded-lg text-base cursor-pointer ${
                                       location === p.path
                                         ? "text-white bg-white/[0.06]"
                                         : "text-white/75 hover:text-white hover:bg-white/[0.04]"
@@ -268,7 +273,7 @@ export function Navigation() {
                   })}
                 </nav>
 
-                <div className="mt-5 pt-4 border-t border-white/5 flex flex-col gap-2">
+                <div className="shrink-0 mt-4 pt-4 border-t border-white/5 flex flex-col gap-2">
                   <Link href="/litepaper" onClick={() => setOpen(false)}>
                     <Button
                       variant="outline"
