@@ -127,7 +127,7 @@ export function Navigation() {
   const [location] = useLocation();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
-  const [openGroup, setOpenGroup] = useState<string | null>("Products");
+  const [openGroup, setOpenGroup] = useState<string | null>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -195,7 +195,7 @@ export function Navigation() {
                   <Wordmark />
                 </div>
 
-                <nav className="flex-1 min-h-0 flex flex-col gap-1">
+                <nav className="flex-1 min-h-0 flex flex-col gap-1 overflow-y-auto">
                   {[
                     { header: "Products", items: PRODUCT_LINKS },
                     { header: "Solutions", items: SOLUTION_LINKS },
@@ -207,9 +207,7 @@ export function Navigation() {
                     return (
                       <div
                         key={group.header}
-                        className={`rounded-xl overflow-hidden flex flex-col ${
-                          isOpen ? "flex-1 min-h-0" : "shrink-0"
-                        }`}
+                        className="rounded-xl overflow-hidden flex flex-col shrink-0"
                       >
                         <button
                           type="button"
@@ -234,7 +232,7 @@ export function Navigation() {
                           />
                         </button>
                         {isOpen && (
-                          <div className="flex-1 min-h-0 pl-3 pr-1 py-1 flex flex-col justify-evenly overflow-hidden">
+                          <div className="pl-3 pr-1 py-1 flex flex-col">
                             {group.items.map((p) =>
                               p.external ? (
                                 <a
