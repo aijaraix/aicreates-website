@@ -12,28 +12,36 @@ import {
 import { LogoMark } from "./LogoMark";
 import wordmark from "@/assets/aica-wordmark.png";
 
-const PRODUCT_LINKS = [
+type LinkItem = { name: string; path: string; desc: string; external?: boolean };
+
+const PRODUCT_LINKS: LinkItem[] = [
   { name: "Eve OS", path: "/eve-os", desc: "The Agentic Business Operating System" },
   { name: "NeoBank", path: "/neobank", desc: "Capital that thinks" },
 ];
 
-const SOLUTION_LINKS = [
+const SOLUTION_LINKS: LinkItem[] = [
   { name: "For Business", path: "/business", desc: "Operate like a much larger company" },
   { name: "For Developers", path: "/developers", desc: "Build on the agentic primitives" },
 ];
 
-const RESOURCE_LINKS = [
+const RESOURCE_LINKS: LinkItem[] = [
   { name: "Litepaper", path: "/litepaper", desc: "Positioning, architecture, and tokenomics" },
   { name: "Roadmap", path: "/roadmap", desc: "Phased path from product-market fit to scale" },
   { name: "FAQ", path: "/faq", desc: "Common questions, answered" },
   { name: "Press", path: "/press", desc: "Coverage, mentions, and brand assets" },
 ];
 
-const COMPANY_LINKS = [
+const COMPANY_LINKS: LinkItem[] = [
   { name: "About", path: "/about", desc: "Platform, agents, and Company in a Box" },
   { name: "Contact", path: "/contact", desc: "Get in touch with the team" },
   { name: "Token", path: "/token", desc: "$AICA - the native asset of the layer" },
   { name: "Opportunity", path: "/opportunity", desc: "Investor opportunity and materials" },
+  {
+    name: "Ambassadors",
+    path: "https://invest.aicreates.ai/genesis",
+    desc: "Genesis referral program - earn $AICA for warm intros",
+    external: true,
+  },
 ];
 
 function Wordmark({ size = "md" }: { size?: "sm" | "md" }) {
@@ -53,8 +61,6 @@ function Wordmark({ size = "md" }: { size?: "sm" | "md" }) {
     </span>
   );
 }
-
-type LinkItem = { name: string; path: string; desc: string };
 
 function NavDropdown({
   label,
@@ -93,10 +99,23 @@ function NavDropdown({
             key={p.path}
             className="rounded-xl focus:bg-white/[0.06] focus:text-white p-0"
           >
-            <Link href={p.path} className="flex flex-col gap-0.5 px-4 py-3 cursor-pointer w-full">
-              <span className="text-sm font-semibold text-white">{p.name}</span>
-              <span className="text-xs text-white/50">{p.desc}</span>
-            </Link>
+            {p.external ? (
+              <a
+                href={p.path}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex flex-col gap-0.5 px-4 py-3 cursor-pointer w-full"
+                data-testid={`link-nav-${p.name.toLowerCase().replace(/\s+/g, "-")}`}
+              >
+                <span className="text-sm font-semibold text-white">{p.name}</span>
+                <span className="text-xs text-white/50">{p.desc}</span>
+              </a>
+            ) : (
+              <Link href={p.path} className="flex flex-col gap-0.5 px-4 py-3 cursor-pointer w-full">
+                <span className="text-sm font-semibold text-white">{p.name}</span>
+                <span className="text-xs text-white/50">{p.desc}</span>
+              </Link>
+            )}
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>
@@ -150,19 +169,6 @@ export function Navigation() {
               </Button>
             </Link>
             <a
-              href="https://invest.aicreates.ai/genesis"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Button
-                variant="outline"
-                className="rounded-full h-9 px-5 glass-btn text-sm font-medium"
-                data-testid="button-nav-ambassadors"
-              >
-                Ambassadors
-              </Button>
-            </a>
-            <a
               href={import.meta.env.PROD ? "https://invest.aicreates.ai/invest/" : "/invest/"}
               target="_blank"
               rel="noopener noreferrer"
@@ -182,62 +188,63 @@ export function Navigation() {
                 <span className="sr-only">Toggle menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="bg-[#0A0A0A] border-l border-white/5 w-screen max-w-none sm:max-w-none p-6 overflow-y-auto">
+            <SheetContent side="right" className="bg-[#0A0A0A] border-l border-white/5 w-screen max-w-none sm:max-w-none p-5 overflow-y-auto">
               <div className="flex flex-col h-full">
-                <div className="flex items-center gap-2.5 mb-10">
+                <div className="flex items-center gap-2.5 mb-5">
                   <Wordmark />
                 </div>
 
-                <nav className="flex flex-col gap-1">
+                <nav className="flex flex-col gap-0.5">
                   {[
                     { header: "Products", items: PRODUCT_LINKS },
                     { header: "Solutions", items: SOLUTION_LINKS },
                     { header: "Resources", items: RESOURCE_LINKS },
                     { header: "Company", items: COMPANY_LINKS },
                   ].map((group) => (
-                    <div key={group.header}>
-                      <div className="px-3 pt-4 pb-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-white/40">
+                    <div key={group.header} className="pt-2 first:pt-0">
+                      <div className="px-3 pb-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white/40">
                         {group.header}
                       </div>
-                      {group.items.map((p) => (
-                        <Link key={p.path} href={p.path} onClick={() => setOpen(false)}>
-                          <span
-                            className={`block px-3 py-2.5 rounded-lg text-sm font-medium ${
-                              location === p.path ? "text-white bg-white/[0.06]" : "text-white/70"
-                            }`}
+                      {group.items.map((p) =>
+                        p.external ? (
+                          <a
+                            key={p.path}
+                            href={p.path}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={() => setOpen(false)}
+                            data-testid={`link-mobile-nav-${p.name.toLowerCase().replace(/\s+/g, "-")}`}
                           >
-                            {p.name}
-                          </span>
-                        </Link>
-                      ))}
+                            <span className="block px-3 py-1.5 rounded-lg text-sm font-medium text-white/70">
+                              {p.name}
+                            </span>
+                          </a>
+                        ) : (
+                          <Link key={p.path} href={p.path} onClick={() => setOpen(false)}>
+                            <span
+                              className={`block px-3 py-1.5 rounded-lg text-sm font-medium ${
+                                location === p.path ? "text-white bg-white/[0.06]" : "text-white/70"
+                              }`}
+                            >
+                              {p.name}
+                            </span>
+                          </Link>
+                        ),
+                      )}
                     </div>
                   ))}
                 </nav>
 
-                <div className="mt-8 pt-6 border-t border-white/5 flex flex-col gap-2">
+                <div className="mt-5 pt-4 border-t border-white/5 flex flex-col gap-2">
                   <Link href="/litepaper" onClick={() => setOpen(false)}>
                     <Button
                       variant="outline"
-                      className="w-full rounded-full h-11 glass-btn"
+                      className="w-full rounded-full h-10 glass-btn text-sm"
                       data-testid="button-mobile-nav-litepaper"
                     >
                       Litepaper
                     </Button>
                   </Link>
-                  <a
-                    href="https://invest.aicreates.ai/genesis"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={() => setOpen(false)}
-                  >
-                    <Button
-                      variant="outline"
-                      className="w-full rounded-full h-11 glass-btn"
-                      data-testid="button-mobile-nav-ambassadors"
-                    >
-                      Ambassadors
-                    </Button>
-                  </a>
                   <a
                     href={import.meta.env.PROD ? "https://invest.aicreates.ai/invest/" : "/invest/"}
                     target="_blank"
@@ -245,7 +252,7 @@ export function Navigation() {
                     onClick={() => setOpen(false)}
                   >
                     <Button
-                      className="w-full rounded-full h-11 teal-btn"
+                      className="w-full rounded-full h-10 teal-btn text-sm"
                       data-testid="button-mobile-nav-portal"
                     >
                       Portal
