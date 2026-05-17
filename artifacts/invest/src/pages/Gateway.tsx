@@ -119,7 +119,7 @@ export default function Gateway() {
   const app = existing.data?.application;
   const canSubmit =
     thesisFit.trim().length >= 20 &&
-    intendedAmount >= 1000 &&
+    intendedAmount >= 250 &&
     agreeNotSecurity &&
     agreeRisk &&
     country.length > 0;
@@ -239,9 +239,9 @@ export default function Gateway() {
           <Section title="Intended commitment (USD)">
             <input
               type="number"
-              min={1000}
+              min={250}
               max={10_000_000}
-              step={1000}
+              step={250}
               value={intendedAmount}
               onChange={(e) =>
                 setIntendedAmount(Math.max(0, Number(e.target.value) || 0))

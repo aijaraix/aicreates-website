@@ -120,7 +120,7 @@ export const ROUND_TOTALS = {
 export const TIER_ROWS = [
   {
     name: "Founders",
-    minimum: "$1,000",
+    minimum: "$250",
     bonus: "Base allocation",
     tag: "Open",
   },
