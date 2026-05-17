@@ -21,7 +21,7 @@ const TIERS: Tier[] = [
     displayName: "Founders Circle",
     description:
       "Earliest backers of the Agentic Intelligence Layer. Founders Commitment - not a security; refundable until terms are finalized.",
-    amountUsd: 1000,
+    amountUsd: 250,
     tokenAllocation: 66_666,
     order: "1",
   },
