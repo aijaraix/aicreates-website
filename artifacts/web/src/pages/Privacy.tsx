@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import { useSeo } from "@/lib/useSeo";
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
@@ -11,12 +12,13 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 }
 
 export default function Privacy() {
+  const { t, i18n } = useTranslation();
   useSeo({
-    title: "Privacy Policy",
-    description:
-      "How AIcreatesAI collects, uses, and protects your information across the marketing site, products, and investor portal.",
+    title: t("privacy.seo.title"),
+    description: t("privacy.seo.description"),
     path: "/privacy",
   });
+  const showCanonicalNote = i18n.language && !i18n.language.startsWith("en");
   return (
     <div className="flex flex-col w-full">
       <section className="relative pt-28 pb-12 md:pt-36 md:pb-16 overflow-hidden">
@@ -24,7 +26,7 @@ export default function Privacy() {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_0%,rgba(0,245,212,0.08),transparent_70%)] pointer-events-none" />
         <div className="container mx-auto px-4 md:px-6 relative z-10 max-w-3xl">
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <SectionLabel>Legal</SectionLabel>
+            <SectionLabel>{t("privacy.eyebrow")}</SectionLabel>
           </motion.div>
           <motion.h1
             initial={{ opacity: 0, y: 16 }}
@@ -32,9 +34,12 @@ export default function Privacy() {
             transition={{ duration: 0.7, delay: 0.05 }}
             className="mt-6 text-5xl md:text-6xl font-serif font-semibold text-gradient leading-[1.05]"
           >
-            Privacy Policy.
+            {t("privacy.title")}
           </motion.h1>
-          <p className="mt-6 text-sm uppercase tracking-[0.2em] text-white/40">Last updated · January 2026</p>
+          <p className="mt-6 text-sm uppercase tracking-[0.2em] text-white/40">{t("privacy.lastUpdated")}</p>
+          {showCanonicalNote && (
+            <p className="mt-3 text-sm text-white/50">{t("privacy.canonicalNote")}</p>
+          )}
         </div>
       </section>
 

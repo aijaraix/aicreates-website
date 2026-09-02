@@ -1,0 +1,574 @@
+{
+  "nav": {
+    "products": "Sản phẩm",
+    "solutions": "Giải pháp",
+    "resources": "Tài nguyên",
+    "company": "Công ty",
+    "litepaper": "Litepaper",
+    "portal": "Cổng",
+    "openMenu": "Mở menu",
+    "items": {
+      "eveOS": {
+        "name": "Eve OS",
+        "desc": "Đội ngũ không bao giờ ngủ"
+      },
+      "neoBank": {
+        "name": "FinPayTek",
+        "desc": "Thanh toán toàn cầu. Cơ sở hạ tầng Stablecoin."
+      },
+      "business": {
+        "name": "Dành cho doanh nghiệp",
+        "desc": "Vận hành như một công ty lớn hơn rất nhiều"
+      },
+      "developers": {
+        "name": "Dành cho lập trình viên",
+        "desc": "Xây dựng trên các nguyên tố Agentic"
+      },
+      "litepaper": {
+        "name": "Litepaper",
+        "desc": "Định vị, kiến trúc và Tokenomics"
+      },
+      "roadmap": {
+        "name": "Lộ trình",
+        "desc": "Lộ trình theo giai đoạn từ phù hợp sản phẩm-thị trường đến mở rộng"
+      },
+      "faq": {
+        "name": "Hỏi đáp",
+        "desc": "Những câu hỏi thường gặp, được trả lời"
+      },
+      "press": {
+        "name": "Báo chí",
+        "desc": "Báo chí, đề cập và tài sản thương hiệu"
+      },
+      "about": {
+        "name": "Giới thiệu",
+        "desc": "Nền tảng, tác nhân và Company in a Box"
+      },
+      "contact": {
+        "name": "Liên hệ",
+        "desc": "Liên lạc với đội ngũ"
+      },
+      "token": {
+        "name": "Token",
+        "desc": "$AICA - tài sản gốc của lớp"
+      },
+      "opportunity": {
+        "name": "Cơ hội",
+        "desc": "Cơ hội đầu tư và tài liệu"
+      },
+      "ambassadors": {
+        "name": "Đại sứ",
+        "desc": "Chương trình giới thiệu Genesis - kiếm $AICA cho các giới thiệu đủ điều kiện"
+      }
+    }
+  },
+  "footer": {
+    "products": "Sản phẩm",
+    "solutions": "Giải pháp",
+    "resources": "Tài nguyên",
+    "company": "Công ty",
+    "legal": "Pháp lý",
+    "privacy": "Quyền riêng tư",
+    "terms": "Điều khoản",
+    "newsletter": "Cập nhật thông tin",
+    "newsletterDesc": "Nhận ghi chú phát hành và tin tức hệ sinh thái.",
+    "emailPlaceholder": "ban@congty.com",
+    "subscribe": "Đăng ký",
+    "rights": "Đã đăng ký bản quyền."
+  },
+  "invest": {
+    "hero": {
+      "eyebrow": "Cơ hội",
+      "title": "Cơ hội trong kỷ nguyên Agentic.",
+      "subtitle": "Cùng chúng tôi xây dựng hệ điều hành cho kỷ nguyên Agentic.",
+      "reserve": "Đặt giữ phân bổ",
+      "readLitepaper": "Đọc Litepaper"
+    },
+    "opportunity": {
+      "eyebrow": "Cơ hội",
+      "title": "Hạ tầng cho thế hệ doanh nghiệp tiếp theo.",
+      "p1": "Chúng tôi đang xây dựng hạ tầng nền tảng cho thế hệ doanh nghiệp tiếp theo. Khi AI được tích hợp sâu vào mọi công ty, nhu cầu về các hệ điều hành thông minh và tự chủ sẽ bùng nổ.",
+      "p2": "AICreatesAi nằm ở trung tâm của sự chuyển dịch này, tạo ra các nền tảng và lớp thông minh sẽ vận hành cách doanh nghiệp hoạt động trong tương lai."
+    },
+    "compute": {
+      "eyebrow": "Tính toán",
+      "title": "Xây dựng hạ tầng tính toán đẳng cấp thế giới.",
+      "p1": "Là một phần trong vòng gọi vốn 50 triệu USD, chúng tôi đầu tư mạnh vào tính toán hiệu năng cao. Hệ thống ban đầu là một cụm GPU cao cấp trị giá 3,5 triệu USD, được thiết kế cho huấn luyện mô hình, suy luận và cải thiện liên tục các hệ thống AI độc quyền của chúng tôi.",
+      "p2": "Hạ tầng này là xương sống của lớp thông minh tự cải thiện và mang lại lợi thế kỹ thuật đáng kể ngay từ ngày đầu.",
+      "stat1k": "50 triệu USD",
+      "stat1v": "Vòng chiến lược",
+      "stat2k": "3,5 triệu USD",
+      "stat2v": "Cụm GPU ban đầu",
+      "stat3k": "24/7",
+      "stat3v": "Huấn luyện liên tục",
+      "stat4k": "Ngày 1",
+      "stat4v": "Lợi thế kỹ thuật"
+    },
+    "materials": {
+      "eyebrow": "Tài liệu",
+      "title": "Tìm hiểu thêm về tầm nhìn của chúng tôi.",
+      "subtitle": "Đọc Litepaper, xem pitch deck hoặc tải Whitepaper đầy đủ.",
+      "litepaperTitle": "Xem Litepaper",
+      "litepaperDesc": "Luận điểm dài: định vị, kiến trúc và lớp trí tuệ Agentic bằng ngôn ngữ dễ hiểu.",
+      "litepaperCta": "Litepaper",
+      "deckTitle": "Xem Pitch Deck",
+      "deckDesc": "Lướt qua bộ slide trực quan từng trang, có thể tải toàn bộ PDF từ trình xem.",
+      "deckCta": "Pitch Deck",
+      "whitepaperTitle": "Tải Whitepaper",
+      "whitepaperDesc": "Whitepaper kỹ thuật đầy đủ ở dạng PDF. Kiến trúc, kinh tế token và lộ trình trong một tài liệu.",
+      "whitepaperCta": "Tải xuống",
+      "soon": "Sắp ra mắt"
+    },
+    "token": {
+      "eyebrow": "Token",
+      "title": "$AICA vận hành lớp này.",
+      "desc": "Token $AICA hỗ trợ các gói đăng ký, sự tham gia mạng tính toán và phần thưởng cho người đóng góp trên toàn lớp trí tuệ Agentic. Nguồn cung cố định, phân bổ có vesting và mô hình kinh tế bền vững xoay quanh việc sử dụng thực.",
+      "cta": "Đọc Tokenomics"
+    },
+    "why": {
+      "eyebrow": "Vì sao bây giờ",
+      "title": "Vì sao cơ hội AICreatesAi?",
+      "subtitle": "Một canh bạc định nghĩa danh mục về lớp mà doanh nghiệp, vốn và người tiêu dùng sẽ vận hành.",
+      "pillar": "Trụ cột",
+      "p1Title": "Giá trị tích lũy dài hạn",
+      "p1Desc": "Các mô hình AI độc quyền và một Closed-Loop Quality Engine, sắc bén hơn sau mỗi chu kỳ sử dụng thực.",
+      "p2Title": "Nền tảng kỹ thuật vững chắc",
+      "p2Desc": "Tính toán hiệu năng cao chuyên dụng ngay từ ngày đầu, neo bằng cụm GPU 3,5 triệu USD ban đầu.",
+      "p3Title": "Nhiều dòng doanh thu",
+      "p3Desc": "Lộ trình rõ ràng qua các gói đăng ký, một sàn kỹ năng đang hình thành và sự tham gia hệ sinh thái.",
+      "p4Title": "Đội ngũ giàu kinh nghiệm, thị trường khổng lồ",
+      "p4Desc": "Kinh nghiệm vận hành và kỹ thuật sâu sắc trong một thị trường mà AI đang xây dựng lại từ gốc."
+    },
+    "cta": {
+      "title": "Kỷ nguyên Agentic không chờ đợi.",
+      "subtitle": "Vào cổng để xem cơ hội của bạn một cách đầy đủ - luận điểm, kiến trúc, lịch vesting và trạng thái vòng trực tiếp, tất cả tại một nơi.",
+      "open": "Mở cổng"
+    },
+    "dialog": {
+      "title": "AICA Whitepaper",
+      "desc": "Xem qua whitepaper của AIcreatesAI."
+    },
+    "disclaimer": {
+      "label": "Miễn trừ trách nhiệm",
+      "text": "Trang này chỉ nhằm mục đích thông tin và không cấu thành lời chào bán hay lời mời mua bất kỳ chứng khoán hoặc token nào. Token AICA, khi được phát hành, sẽ là token tiện ích để sử dụng trong hệ sinh thái AIcreatesAI và chịu các hạn chế về vesting và pháp lý theo quốc gia. Các cam kết về công nghệ giai đoạn sớm và tiền mã hóa tiềm ẩn rủi ro đáng kể và bạn có thể mất toàn bộ vốn. Các điều khoản chi tiết của đợt bán riêng tư được cung cấp cho nhà đầu tư được chứng nhận qua cổng nhà đầu tư."
+    },
+    "seo": {
+      "title": "Đầu tư - Hậu thuẫn cho lớp trí tuệ Agentic",
+      "description": "Đặt giữ phân bổ của bạn trong đợt bán riêng tư AICA. Vòng chiến lược 50 triệu USD, cụm GPU ban đầu 3,5 triệu USD, token nguồn cung cố định và cổng nhà đầu tư đầy đủ."
+    }
+  },
+  "eveos": {
+    "seo": {
+      "title": "Eve OS - Đội ngũ không bao giờ ngủ",
+      "description": "Eve hoạt động như một chánh văn phòng, điều phối các trưởng bộ phận AI chuyên trách trong toàn bộ công ty của bạn."
+    },
+    "hero": {
+      "eyebrow": "Sản phẩm chủ lực",
+      "subline": "Gặp gỡ đội ngũ không bao giờ ngủ.",
+      "desc": "Eve điều hành công ty của bạn giống như một Chánh văn phòng. Cô ấy điều phối sáu trưởng bộ phận AI chuyên trách làm việc song song, thực thi và đánh giá công việc 24/7.",
+      "joinWaitlist": "Khám phá Eve OS",
+      "readLitepaper": "Đọc Litepaper"
+    },
+    "what": {
+      "eyebrow": "Eve OS là gì?",
+      "title": "Một đội ngũ điều hành sống động.",
+      "p1": "Eve OS không phải là một chatbot. Đây là một đội ngũ điều hành tự chủ, đầy đủ nhân sự. Bạn cung cấp các mục tiêu cấp cao, và Eve đóng vai trò là Chánh văn phòng của bạn, phân tích các mục tiêu đó thành các nhiệm vụ của từng phòng ban.",
+      "p2": "Cô ấy ủy quyền công việc cho các tác nhân AI chuyên trách về Tiếp thị, Bán hàng, Quảng cáo, Tài chính, Vận hành và Pháp lý, điều phối nỗ lực của họ song song để mang lại kết quả hoàn chỉnh, đã được đánh giá."
+    },
+    "how": {
+      "eyebrow": "Sự điều phối",
+      "title": "Mô hình tác nhân song song 24/7.",
+      "sub": "Bạn đặt mục tiêu. Chánh văn phòng ủy quyền. Các phòng ban thực thi song song.",
+      "steps": {
+        "s1": {
+          "title": "Xác định mục tiêu",
+          "desc": "Cung cấp mục tiêu cấp cao bằng ngôn ngữ đơn giản. Không cần câu lệnh phức tạp."
+        },
+        "s2": {
+          "title": "Kế hoạch của Chánh văn phòng",
+          "desc": "Eve phân tích mục tiêu thành các nhiệm vụ chuyên biệt cho từng phòng ban."
+        },
+        "s3": {
+          "title": "Thực thi song song",
+          "desc": "Sáu trưởng phòng AI làm việc đồng thời trên các lĩnh vực của họ."
+        },
+        "s4": {
+          "title": "Đánh giá chéo giữa các phòng ban",
+          "desc": "Các tác nhân đánh giá công việc của nhau để đảm bảo sự đồng bộ và chất lượng."
+        },
+        "s5": {
+          "title": "Phê duyệt cuối cùng",
+          "desc": "Bạn nhận được một kết quả phối hợp, hoàn chỉnh sẵn sàng để ký duyệt."
+        }
+      }
+    },
+    "caps": {
+      "eyebrow": "Các phòng ban",
+      "title": "Sáu trưởng bộ phận AI chuyên trách.",
+      "sub": "Một đội ngũ điều hành hoàn chỉnh, có sẵn ngay lập tức và luôn đồng bộ.",
+      "items": {
+        "marketing": {
+          "t": "Tiếp thị",
+          "d": "Lập kế hoạch chiến dịch, tạo nội dung, theo dõi hiệu suất và tối ưu hóa."
+        },
+        "sales": {
+          "t": "Bán hàng",
+          "d": "Quản lý khách hàng tiềm năng, chuỗi tiếp cận, theo dõi đường ống và hỗ trợ giao dịch."
+        },
+        "advertising": {
+          "t": "Quảng cáo",
+          "d": "Sáng tạo quảng cáo, đấu thầu nền tảng, mở rộng quy mô chiến dịch và tối ưu hóa ROAS."
+        },
+        "finance": {
+          "t": "Tài chính",
+          "d": "Báo cáo, lập ngân sách, dự báo và phân tích tài chính."
+        },
+        "ops": {
+          "t": "Vận hành",
+          "d": "Tự động hóa quy trình làm việc, quản lý nhiệm vụ và tối ưu hóa quy trình."
+        },
+        "legal": {
+          "t": "Pháp lý & Tuân thủ",
+          "d": "Tạo tài liệu, hỗ trợ hợp đồng và giám sát rủi ro."
+        }
+      }
+    },
+    "team": {
+      "eyebrow": "Đội ngũ",
+      "title": "Một chánh văn phòng. Sáu trưởng bộ phận.",
+      "sub": "Eve chỉ đạo một ban điều hành chuyên biệt. Mỗi tác nhân được xây dựng riêng cho lĩnh vực của họ.",
+      "eve": {
+        "role": "Chánh văn phòng",
+        "department": "Điều phối",
+        "desc": "Tiếp nhận tầm nhìn của bạn, xây dựng kế hoạch và điều phối các trưởng bộ phận."
+      },
+      "marketing": {
+        "role": "Giám đốc Tiếp thị",
+        "department": "Tiếp thị",
+        "desc": "Thúc đẩy câu chuyện thương hiệu, chiến lược nội dung và định vị thị trường."
+      },
+      "sales": {
+        "role": "Giám đốc Doanh thu",
+        "department": "Bán hàng",
+        "desc": "Xây dựng đường ống, quản lý tiếp cận và đẩy nhanh tốc độ giao dịch."
+      },
+      "advertising": {
+        "role": "Trưởng phòng Tăng trưởng",
+        "department": "Quảng cáo",
+        "desc": "Tối ưu hóa chi tiêu, mở rộng chiến dịch và thúc đẩy thu hút."
+      },
+      "finance": {
+        "role": "Giám đốc Tài chính",
+        "department": "Tài chính",
+        "desc": "Quản lý ngân quỹ, dự báo dòng tiền và xử lý tuân thủ."
+      },
+      "operations": {
+        "role": "Giám đốc Vận hành",
+        "department": "Vận hành",
+        "desc": "Tối ưu hóa quy trình làm việc, đảm bảo giao hàng và duy trì hệ thống."
+      },
+      "legal": {
+        "role": "Cố vấn Trưởng",
+        "department": "Pháp lý",
+        "desc": "Đánh giá hợp đồng, quản lý rủi ro và đảm bảo tuân thủ."
+      }
+    },
+    "stands": {
+      "eyebrow": "Tại sao nó hiệu quả",
+      "title": "Thực thi song song thực sự.",
+      "sub": "Một tác nhân đơn lẻ sẽ bị quá tải. Một đội ngũ phối hợp sẽ mang lại kết quả.",
+      "diffs": {
+        "d1": {
+          "tag": "Kiến trúc",
+          "title": "Thực thi song song",
+          "desc": "Các nhiệm vụ diễn ra đồng thời trên các phòng ban, giúp giảm đáng kể thời gian hoàn thành."
+        },
+        "d2": {
+          "tag": "Chất lượng",
+          "title": "Đánh giá chéo",
+          "desc": "Giống như một công ty thực sự, các phòng ban đánh giá công việc của nhau trước khi chúng đến bàn làm việc của bạn."
+        },
+        "d3": {
+          "tag": "Quy mô",
+          "title": "Hoạt động liên tục",
+          "desc": "Đội ngũ không bao giờ ngủ, đưa việc thực thi toàn cầu trở thành hiện thực 24/7."
+        }
+      }
+    },
+    "who": {
+      "eyebrow": "Dành cho các Nhà lãnh đạo",
+      "title": "Xây dựng cho những nhà sáng lập đầy tham vọng.",
+      "sub": "Tập trung vào tầm nhìn. Hãy để đội ngũ lo việc thực thi.",
+      "bullets": {
+        "b1": "Mở rộng quy mô đầu ra của bạn mà không cần tăng số lượng nhân sự.",
+        "b2": "Thực hiện các sáng kiến phức tạp, đa phòng ban một cách dễ dàng.",
+        "b3": "Duy trì chất lượng cao thông qua hệ thống đánh giá chéo tự động.",
+        "b4": "Vận hành một doanh nghiệp toàn cầu 24/7 thực sự."
+      }
+    },
+    "cta": {
+      "title": "Gặp gỡ đội ngũ không bao giờ ngủ.",
+      "sub": "Khám phá cách Eve có thể chuyển đổi hoạt động của bạn.",
+      "button": "Truy cập evecxo.com"
+    }
+  },
+  "neobank": {
+    "seo": {
+      "title": "FinPayTek - Thanh toán toàn cầu. Cơ sở hạ tầng Stablecoin.",
+      "description": "Ví điện tử, chuyển đổi tiền pháp định và tuân thủ. Xây dựng cho cá nhân và doanh nghiệp."
+    },
+    "hero": {
+      "eyebrow": "Cơ sở hạ tầng tài chính",
+      "title": "FinPayTek.",
+      "subline": "Thanh toán toàn cầu. Cơ sở hạ tầng Stablecoin.",
+      "coming": "Truy cập finpaytek.com",
+      "seeLayer": "Xây dựng cho cá nhân và doanh nghiệp."
+    },
+    "pillars": {
+      "eyebrow": "Trường hợp sử dụng",
+      "title": "Dành cho cá nhân và doanh nghiệp.",
+      "items": {
+        "p1": {
+          "t": "Ví di động tiêu dùng",
+          "d": "Gửi, nhận, nạp và theo dõi tiền của bạn trên toàn cầu một cách dễ dàng."
+        },
+        "p2": {
+          "t": "Ngân quỹ doanh nghiệp",
+          "d": "Quản lý thanh toán, thu tiền và báo cáo doanh nghiệp một cách liền mạch."
+        },
+        "p3": {
+          "t": "Chuyển đổi tiền pháp định",
+          "d": "Chuyển đổi giữa tiền pháp định và stablecoin ngay lập tức với tính thanh khoản sâu."
+        },
+        "p4": {
+          "t": "Tuân thủ",
+          "d": "Tích hợp KYC/KYB và quản lý rủi ro để giữ an toàn cho tiền của bạn."
+        }
+      }
+    },
+    "tiers": {
+      "eyebrow": "Quy trình",
+      "title": "Di chuyển tiền trong 5 bước.",
+      "personal": {
+        "tag": "Bước 1 & 2",
+        "title": "Đăng ký an toàn.",
+        "point1": "Tạo tài khoản FinPayTek của bạn",
+        "point2": "Hoàn thành xác minh KYC/KYB nhanh chóng",
+        "point3": "Truy cập ví kỹ thuật số của bạn ngay lập tức"
+      },
+      "business": {
+        "tag": "Bước 3 & 4",
+        "title": "Nạp tiền và chuyển đổi.",
+        "point1": "Nạp tiền qua các cổng chuyển đổi tiền pháp định liền mạch của chúng tôi",
+        "point2": "Chuyển đổi tiền pháp định sang stablecoin ngay lập tức",
+        "point3": "Chốt tỷ giá thanh khoản sâu"
+      },
+      "enterprise": {
+        "tag": "Bước 5",
+        "title": "Giữ hoặc chuyển tiền.",
+        "point1": "Giữ stablecoin an toàn trong ví của bạn",
+        "point2": "Chuyển tiền toàn cầu với độ trễ gần như bằng không",
+        "point3": "Theo dõi các giao dịch và tình trạng mạng"
+      }
+    },
+    "why": {
+      "eyebrow": "Cơ sở hạ tầng",
+      "title": "Một nền tảng toàn cầu đáng tin cậy.",
+      "p1": "FinPayTek cung cấp cơ sở hạ tầng stablecoin cần thiết cho thương mại toàn cầu hiện đại. Chúng tôi xử lý sự phức tạp của việc chuyển đổi tiền pháp định, tuân thủ và thanh toán xuyên biên giới để bạn không phải làm vậy.",
+      "p2": "Bất kể bạn là người tiêu dùng quản lý ví di động hay một doanh nghiệp điều phối các khoản thanh toán và thu tiền ngân quỹ phức tạp, nền tảng của chúng tôi mang lại sự minh bạch và tốc độ.",
+      "p3": "Mọi giao dịch đều được hỗ trợ bởi bảo mật cấp ngân hàng, báo cáo rõ ràng và mạng lưới rủi ro chủ động để bảo vệ tài sản của bạn."
+    },
+    "cta": {
+      "title": "Thanh toán toàn cầu. Cơ sở hạ tầng Stablecoin.",
+      "sub": "Xây dựng cho cá nhân và doanh nghiệp.",
+      "coming": "Khám phá FinPayTek"
+    }
+  },
+  "litepaper": {
+    "seo": {
+      "title": "Litepaper - Agentic Intelligence Layer",
+      "description": "Luận điểm đầy đủ, kiến trúc, tokenomics và lộ trình cho Hệ điều hành kinh doanh Agentic. Tháng 5 năm 2026."
+    },
+    "hero": {
+      "eyebrow": "Litepaper",
+      "title": "AICreatesAi Litepaper",
+      "sub": "Hệ điều hành kinh doanh Agentic",
+      "date": "Tháng 5 năm 2026",
+      "viewDeck": "Xem Pitch Deck",
+      "getInTouch": "Liên hệ"
+    },
+    "tocLabel": "Mục lục",
+    "coin": {
+      "eyebrow": "$AICA Token",
+      "title": "Tài sản gốc của Agentic Intelligence Layer.",
+      "desc": "Giảm giá đăng ký, tham gia mạng tính toán và phần thưởng cho người đóng góp - tất cả được thanh toán bằng $AICA. Tổng cung cố định ở mức 10.000.000.000 token."
+    },
+    "disclaimer": {
+      "label": "Miễn trừ trách nhiệm",
+      "text": "Trang này chỉ nhằm mục đích thông tin và không cấu thành lời chào bán hay lời mời mua bất kỳ chứng khoán hoặc token nào. Token AICA, khi được phát hành, sẽ là token tiện ích để sử dụng trong hệ sinh thái AIcreatesAI và chịu các hạn chế về vesting và pháp lý theo quốc gia. Các cam kết về công nghệ giai đoạn sớm và tiền mã hóa tiềm ẩn rủi ro đáng kể và bạn có thể mất toàn bộ vốn. Các điều khoản chi tiết của đợt bán riêng tư được cung cấp cho nhà đầu tư được chứng nhận qua cổng nhà đầu tư."
+    },
+    "cta": {
+      "label": "Cơ hội",
+      "title": "Hậu thuẫn cho Agentic Intelligence Layer.",
+      "sub": "Cổng nhà đầu tư có luận điểm đầy đủ, các bậc phân bổ và quy trình SAFT. Xem whitepaper trực quan để có một tour được hướng dẫn.",
+      "open": "Mở cổng nhà đầu tư",
+      "viewDeck": "Xem Pitch Deck"
+    },
+    "dialog": {
+      "title": "AICA Whitepaper",
+      "desc": "Xem qua whitepaper của AIcreatesAI."
+    },
+    "sections": {
+      "executiveSummary": {
+        "title": "Tóm tắt điều hành",
+        "p1": "AICreatesAi đang xây dựng Hệ điều hành kinh doanh Agentic đầu tiên trên thế giới - một \"Company in a Box\" hoàn chỉnh cho phép mọi chủ doanh nghiệp vận hành một công ty ảo được điều phối, thông minh và liên tục cải thiện.",
+        "p2": "Chúng tôi đang huy động 50 triệu USD chủ yếu để phát triển trí tuệ AI độc quyền, hạ tầng tính toán tiên tiến và hệ điều hành cốt lõi. Nền tảng sẽ mang lại kết quả kinh doanh đáng tin cậy thông qua một cách tiếp cận theo giai đoạn, với quyền sở hữu dài hạn các mô hình AI của riêng chúng tôi.",
+        "p3": "Các tính năng chính bao gồm trải nghiệm desktop-native, hệ thống chất lượng vòng kín, ví Agentic với quyền kiểm soát thực sự của người dùng và nền kinh tế token bền vững được thiết kế để thưởng cho người đóng góp."
+      },
+      "problem": {
+        "title": "Vấn đề",
+        "p1": "Hầu hết các chủ doanh nghiệp nhỏ và solopreneur gặp khó khăn trong việc quản lý nhiều chức năng phức tạp mà không có nguồn lực của các công ty lớn hơn. Các công cụ AI hiện tại bị phân mảnh, không đáng tin cậy cho các nhiệm vụ kinh doanh thực sự hoặc đòi hỏi chuyên môn kỹ thuật đáng kể. Có nhu cầu rõ ràng về một hệ thống duy nhất, đáng tin cậy hoạt động như một công ty thực sự - với sự điều phối thông minh, kiểm soát chất lượng và cải thiện liên tục."
+      },
+      "vision": {
+        "title": "Tầm nhìn và Giải pháp của chúng tôi",
+        "p1": "AICreatesAi đang tạo ra một danh mục mới: Hệ điều hành kinh doanh Agentic.",
+        "p2": "Nền tảng của chúng tôi cho phép người dùng mô tả mục tiêu kinh doanh bằng ngôn ngữ tự nhiên và nhận được thực thi được điều phối, chất lượng cao trên marketing, bán hàng, tài chính, pháp lý, vận hành và phát triển - với đánh giá chất lượng tích hợp và cải thiện liên tục.",
+        "p3": "Chúng tôi đang thực hiện một chiến lược kỷ luật, theo giai đoạn mang lại giá trị thực sớm trong khi xây dựng khả năng phòng thủ dài hạn thông qua dữ liệu, trải nghiệm sản phẩm và phát triển mô hình độc quyền."
+      },
+      "market": {
+        "title": "Cơ hội thị trường",
+        "p1": "Nhu cầu về các công cụ được hỗ trợ bởi AI thực sự giúp vận hành doanh nghiệp đang tăng nhanh. Trọng tâm chính của chúng tôi là solopreneur, chủ doanh nghiệp nhỏ và các đội ngũ dịch vụ cần các khả năng cấp doanh nghiệp mà không có sự phức tạp hay chi phí của doanh nghiệp lớn."
+      },
+      "product": {
+        "title": "Tổng quan sản phẩm",
+        "p1": "AICreatesAi cung cấp một nền tảng thống nhất có thể truy cập qua web, di động và một trải nghiệm desktop bản địa mạnh mẽ.",
+        "listIntro": "Khả năng cốt lõi (cấp cao):",
+        "l1": "Quy trình kinh doanh đa chức năng được điều phối",
+        "l2": "Hệ thống đánh giá và cải thiện chất lượng tự động",
+        "l3": "Bộ nhớ kinh doanh liên tục và nhận thức bối cảnh",
+        "l4": "Ví Agentic với quyền được kiểm soát bởi người dùng",
+        "l5": "Skills Marketplace trong tương lai",
+        "l6": "Phát triển dài hạn các mô hình AI độc quyền được tối ưu hóa cho sử dụng kinh doanh",
+        "p2": "Vòng huy động 50 triệu USD được dành riêng để xây dựng trí tuệ AI cốt lõi, hệ thống tính toán và hệ điều hành \"Company in a Box\"."
+      },
+      "moat": {
+        "title": "Lợi thế cạnh tranh và hào bảo vệ",
+        "listIntro": "Chiến lược của chúng tôi tập trung vào một số lợi thế chính:",
+        "l1": "Trải nghiệm người dùng desktop-native vượt trội",
+        "l2": "Hệ thống AI vòng kín cải thiện chất lượng đầu ra",
+        "l3": "Hybrid compute với nền tảng quyền riêng tư và hiệu suất mạnh mẽ",
+        "l4": "Kiểm soát ví Agentic thực tế",
+        "l5": "Một bánh đà dữ liệu và cải thiện mô hình mạnh mẽ",
+        "l6": "Thực thi kỷ luật, theo giai đoạn giúp giảm rủi ro"
+      },
+      "gtm": {
+        "title": "Chiến lược tiếp cận thị trường",
+        "p1": "Ban đầu chúng tôi sẽ nhắm vào solopreneur và chủ doanh nghiệp nhỏ - phân khúc hưởng lợi nhiều nhất từ một hệ thống thống nhất, đáng tin cậy. Cách tiếp cận của chúng tôi nhấn mạnh vào tăng trưởng dẫn dắt bởi sản phẩm, xây dựng cộng đồng và minh chứng rõ ràng về kết quả kinh doanh thực."
+      },
+      "funds": {
+        "title": "Sử dụng vốn (50 triệu USD)",
+        "listIntro": "Phần lớn vòng huy động sẽ được phân bổ cho:",
+        "l1": "Phát triển các mô hình AI độc quyền và trí tuệ",
+        "l2": "Hạ tầng tính toán tiên tiến",
+        "l3": "Phát triển sản phẩm cốt lõi và kỹ thuật",
+        "l4": "Hoạt động tiếp cận thị trường và xây dựng đội ngũ",
+        "l5": "Dự trữ chiến lược"
+      },
+      "tokenomics": {
+        "title": "Tokenomics",
+        "p1": "AICreatesAi Token ($AICA) hỗ trợ các gói đăng ký, sự tham gia hệ sinh thái dài hạn và phần thưởng cho người đóng góp cũng như các tiện ích khác đã được lên kế hoạch.",
+        "subTitle": "Tổng quan Token",
+        "subText": "Tổng cung: 10.000.000.000 $AICA",
+        "listIntro": "Nguyên tắc Token chính:",
+        "l1": "Doanh thu nền tảng cốt lõi ban đầu sẽ được dẫn dắt bởi các gói đăng ký để đảm bảo sự ổn định vận hành sau đó việc sử dụng Token sẽ được tích hợp khi cần thiết.",
+        "l2": "Token sẽ cung cấp tiện ích thông qua giảm giá đăng ký, tham gia vào mạng tính toán và phần thưởng phân phối cho người đóng góp. GPU, Dữ liệu, v.v.",
+        "l3": "Tất cả các token được bán trong các vòng riêng tư sẽ chịu các lịch vesting phù hợp.",
+        "l4": "Một mô hình kinh tế bền vững đang được thiết kế với trọng tâm vào sử dụng thực, sự liên kết dài hạn và sức khỏe hệ sinh thái."
+      },
+      "roadmap": {
+        "title": "Lộ trình cấp cao",
+        "phase01Title": "Giai đoạn 0-1",
+        "phase01Text": "Xây dựng nền tảng cốt lõi, hệ thống chất lượng vòng kín và các quy trình ban đầu. Đạt được sự phù hợp sản phẩm-thị trường sớm.",
+        "phase2Title": "Giai đoạn 2",
+        "phase2Text": "Mở rộng khả năng, ra mắt các tính năng marketplace, đào sâu phát triển mô hình độc quyền và mở rộng cơ sở người dùng.",
+        "phase3Title": "Giai đoạn 3",
+        "phase3Text": "Mở rộng trí tuệ và sự tham gia tính toán, cung cấp các khả năng tự chủ tiên tiến và phát triển hệ sinh thái."
+      },
+      "risks": {
+        "title": "Rủi ro và Giảm thiểu",
+        "p1": "Chúng tôi thừa nhận bản chất tham vọng của tầm nhìn này. Cách tiếp cận theo giai đoạn của chúng tôi, tập trung vào hệ thống chất lượng và nhấn mạnh vào kết quả thực của người dùng được thiết kế để quản lý rủi ro thực thi, kỹ thuật và thị trường một cách hiệu quả."
+      },
+      "conclusion": {
+        "title": "Kết luận",
+        "p1": "AICreatesAi đang xây dựng hệ điều hành cho kỷ nguyên Agentic của kinh doanh.",
+        "p2": "Với vòng huy động 50 triệu USD tập trung vào trí tuệ AI cốt lõi, hạ tầng tính toán và sản phẩm \"Company in a Box\", chúng tôi được định vị để tạo ra một nền tảng định nghĩa danh mục mang lại giá trị tức thì trong khi xây dựng các lợi thế cạnh tranh lâu dài."
+      }
+    }
+  },
+  "contact": {
+    "seo": {
+      "title": "Liên hệ",
+      "description": "Liên lạc với AIcreatesAI - danh sách chờ cho Eve OS và FinPayTek, quan hệ nhà đầu tư, báo chí và đối tác."
+    },
+    "eyebrow": "Liên hệ",
+    "title": "Bắt đầu một cuộc trò chuyện.",
+    "sub": "Cho chúng tôi biết bạn đang xây dựng, triển khai hoặc thẩm định gì. Chúng tôi sẽ chuyển bạn đến đúng người.",
+    "directLabel": "Trực tiếp",
+    "hqLabel": "Trụ sở chính",
+    "hqValue": "Miami, Florida",
+    "successTitle": "Đã nhận tin nhắn.",
+    "successDesc": "Cảm ơn bạn. Chúng tôi sẽ trả lời từ {{email}} sớm.",
+    "sendAnother": "Gửi tin nhắn khác",
+    "interestsLabel": "Tôi đang liên hệ với tư cách",
+    "interests": {
+      "eveWaitlist": "Danh sách chờ Eve OS",
+      "neoWaitlist": "Danh sách chờ FinPayTek",
+      "devWaitlist": "Danh sách chờ nhà phát triển",
+      "investor": "Nhà đầu tư",
+      "press": "Báo chí",
+      "other": "Khác"
+    },
+    "fields": {
+      "name": "Họ và tên",
+      "namePh": "Nguyễn Văn A",
+      "email": "Email",
+      "emailPh": "ban@congty.com",
+      "company": "Công ty",
+      "companyPh": "Tổ chức",
+      "role": "Vai trò",
+      "rolePh": "Nhà sáng lập, nhà đầu tư, người vận hành",
+      "message": "Tin nhắn",
+      "messagePh": "Bạn đang xây dựng, triển khai hoặc thẩm định gì?"
+    },
+    "submit": "Gửi tin nhắn",
+    "sending": "Đang gửi",
+    "orEmailPrefix": "Hoặc gửi email",
+    "orEmailSuffix": ".",
+    "toast": {
+      "sentTitle": "Đã gửi tin nhắn.",
+      "sentDesc": "Chúng tôi sẽ liên lạc sớm.",
+      "errorTitle": "Không thể tiếp cận máy chủ.",
+      "errorDesc": "Gửi email trực tiếp cho chúng tôi tại sholom@aicreates.ai và chúng tôi sẽ phản hồi nhanh chóng."
+    }
+  },
+  "privacy": {
+    "seo": {
+      "title": "Chính sách quyền riêng tư",
+      "description": "Cách AIcreatesAI thu thập, sử dụng và bảo vệ thông tin của bạn trên trang web tiếp thị, sản phẩm và cổng nhà đầu tư."
+    },
+    "eyebrow": "Pháp lý",
+    "title": "Chính sách quyền riêng tư.",
+    "lastUpdated": "Cập nhật lần cuối · Tháng 1 năm 2026",
+    "canonicalNote": "Trang này được chuẩn hóa bằng tiếng Anh."
+  },
+  "terms": {
+    "seo": {
+      "title": "Điều khoản dịch vụ",
+      "description": "Các điều khoản quản lý việc sử dụng trang web AIcreatesAI, sản phẩm và cổng nhà đầu tư."
+    },
+    "eyebrow": "Pháp lý",
+    "title": "Điều khoản dịch vụ.",
+    "lastUpdated": "Cập nhật lần cuối · Tháng 1 năm 2026",
+    "canonicalNote": "Trang này được chuẩn hóa bằng tiếng Anh."
+  }
+}

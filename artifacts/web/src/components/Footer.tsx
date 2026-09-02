@@ -1,43 +1,48 @@
 import { Link } from "wouter";
 import { useState, type FormEvent } from "react";
+import { useTranslation } from "react-i18next";
 import { useToast } from "@/hooks/use-toast";
 import { LogoMark } from "./LogoMark";
 import wordmark from "@/assets/aica-wordmark.png";
 
-const COLUMNS: { heading: string; links: { name: string; href: string }[] }[] = [
+import type { TFunction } from "i18next";
+
+const buildColumns = (
+  t: TFunction,
+): { heading: string; links: { name: string; href: string }[] }[] => [
   {
-    heading: "Products",
+    heading: t("footer.products"),
     links: [
-      { name: "Eve OS", href: "/eve-os" },
-      { name: "NeoBank", href: "/neobank" },
+      { name: t("nav.items.eveOS.name"), href: "/eve-os" },
+      { name: t("nav.items.neoBank.name"), href: "/neobank" },
     ],
   },
   {
-    heading: "Solutions",
+    heading: t("footer.solutions"),
     links: [
-      { name: "For Business", href: "/business" },
-      { name: "For Developers", href: "/developers" },
+      { name: t("nav.items.business.name"), href: "/business" },
+      { name: t("nav.items.developers.name"), href: "/developers" },
     ],
   },
   {
-    heading: "Resources",
+    heading: t("footer.resources"),
     links: [
-      { name: "Litepaper", href: "/litepaper" },
-      { name: "Roadmap", href: "/roadmap" },
-      { name: "FAQ", href: "/faq" },
-      { name: "Press", href: "/press" },
+      { name: t("nav.items.litepaper.name"), href: "/litepaper" },
+      { name: t("nav.items.roadmap.name"), href: "/roadmap" },
+      { name: t("nav.items.faq.name"), href: "/faq" },
+      { name: t("nav.items.press.name"), href: "/press" },
     ],
   },
   {
-    heading: "Company",
+    heading: t("footer.company"),
     links: [
-      { name: "About", href: "/about" },
-      { name: "Contact", href: "/contact" },
-      { name: "Token", href: "/token" },
-      { name: "Opportunity", href: "/opportunity" },
-      { name: "Ambassadors", href: "https://invest.aicreates.ai/genesis" },
-      { name: "Privacy", href: "/privacy" },
-      { name: "Terms", href: "/terms" },
+      { name: t("nav.items.about.name"), href: "/about" },
+      { name: t("nav.items.contact.name"), href: "/contact" },
+      { name: t("nav.items.token.name"), href: "/token" },
+      { name: t("nav.items.opportunity.name"), href: "/opportunity" },
+      { name: t("nav.items.ambassadors.name"), href: "https://invest.aicreates.ai/genesis" },
+      { name: t("footer.privacy"), href: "/privacy" },
+      { name: t("footer.terms"), href: "/terms" },
     ],
   },
 ];
@@ -46,6 +51,7 @@ const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const NEWSLETTER_ENDPOINT = "https://formsubmit.co/ajax/sholom@aicreates.ai";
 
 function NewsletterSubscribe() {
+  const { t } = useTranslation();
   const [email, setEmail] = useState("");
   const [honey, setHoney] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -105,7 +111,7 @@ function NewsletterSubscribe() {
   return (
     <div className="max-w-sm">
       <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-white/40 mb-3">
-        Stay in the loop
+        {t("footer.newsletter")}
       </h4>
       <div>
         {submitted ? (
@@ -127,7 +133,7 @@ function NewsletterSubscribe() {
               value={honey}
               onChange={(e) => setHoney(e.target.value)}
               aria-hidden="true"
-              className="absolute left-[-9999px] h-0 w-0 opacity-0"
+              className="absolute start-[-9999px] h-0 w-0 opacity-0"
             />
             <div className="flex flex-col sm:flex-row gap-2">
               <label htmlFor="newsletter-email" className="sr-only">
@@ -138,7 +144,7 @@ function NewsletterSubscribe() {
                 type="email"
                 required
                 autoComplete="email"
-                placeholder="you@company.com"
+                placeholder={t("footer.emailPlaceholder")}
                 value={email}
                 onChange={(e) => {
                   setEmail(e.target.value);
@@ -154,7 +160,7 @@ function NewsletterSubscribe() {
                 data-testid="button-newsletter-subscribe"
                 className="inline-flex items-center justify-center rounded-md bg-[#00F5D4] px-4 py-2.5 text-sm font-semibold text-[#0A0A0A] transition-colors hover:bg-[#00F5D4]/90 disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                {submitting ? "Subscribing..." : "Subscribe"}
+                {submitting ? "…" : t("footer.subscribe")}
               </button>
             </div>
             {error && (
@@ -177,6 +183,8 @@ function NewsletterSubscribe() {
 }
 
 export function Footer() {
+  const { t } = useTranslation();
+  const COLUMNS = buildColumns(t);
   return (
     <footer className="bg-[#0A0A0A] relative border-t border-white/5 pt-20 pb-10 mt-24">
       <div className="container mx-auto px-4 md:px-6">
@@ -261,10 +269,10 @@ export function Footer() {
 
         <div className="pt-6 border-t border-white/5 md:border-t-0 md:pt-2 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <p className="text-white/30 text-xs tracking-wide">
-            © 2026 AIcreatesAI. All rights reserved.
+            © 2026 AIcreatesAI. {t("footer.rights")}
           </p>
           <p className="text-white/30 text-xs tracking-wide">
-            Engineered for the agentic era.
+            {t("footer.tagline", "Engineered for the agentic era.")}
           </p>
         </div>
       </div>

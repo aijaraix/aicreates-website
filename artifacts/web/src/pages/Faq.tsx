@@ -23,7 +23,7 @@ const GROUPS: Group[] = [
     items: [
       {
         q: "What does AICreatesAi do?",
-        a: "We build the agentic intelligence layer - a self-improving foundation for how companies, capital, and consumers will operate. Eve OS is our flagship product on top of that layer; NeoBank is our consumer and business capital surface.",
+        a: "We build the agentic intelligence layer - a self-improving foundation for how companies, capital, and consumers will operate. Eve OS is our flagship product on top of that layer; FinPayTek is our consumer and business capital surface.",
       },
       {
         q: "Why this, why now?",
@@ -119,7 +119,7 @@ function Item({ qa }: { qa: QA }) {
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className="w-full flex items-center justify-between gap-6 py-5 text-left group"
+        className="w-full flex items-center justify-between gap-6 py-5 text-start group"
         aria-expanded={open}
       >
         <span className="text-base md:text-lg text-white/90 font-medium leading-snug group-hover:text-[#00F5D4] transition-colors">
@@ -217,7 +217,7 @@ export default function Faq() {
               </p>
               <Link href="/contact">
                 <Button size="lg" className="rounded-full h-12 px-8 teal-btn">
-                  Get in touch <ArrowRight className="ml-2 w-4 h-4" />
+                  Get in touch <ArrowRight className="ms-2 w-4 h-4" />
                 </Button>
               </Link>
             </div>

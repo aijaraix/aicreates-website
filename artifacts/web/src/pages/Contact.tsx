@@ -12,7 +12,7 @@ const CONTACT_ENDPOINT = "https://formsubmit.co/ajax/sholom@aicreates.ai";
 
 const INTERESTS = [
   "Eve OS Waitlist",
-  "NeoBank Waitlist",
+  "FinPayTek Waitlist",
   "Developer Waitlist",
   "Investor",
   "Press",
@@ -33,7 +33,7 @@ export default function Contact() {
   useSeo({
     title: "Contact",
     description:
-      "Get in touch with AIcreatesAI - waitlists for Eve OS and NeoBank, investor relations, press, and partnerships.",
+      "Get in touch with AIcreatesAI - waitlists for Eve OS and FinPayTek, investor relations, press, and partnerships.",
     path: "/contact",
   });
   const { toast } = useToast();
@@ -52,7 +52,7 @@ export default function Contact() {
     if (!match) {
       const aliases: Record<string, Interest> = {
         "eve os": "Eve OS Waitlist",
-        "neobank": "NeoBank Waitlist",
+        "neobank": "FinPayTek Waitlist",
         "developer": "Developer Waitlist",
         "developers": "Developer Waitlist",
       };
@@ -255,9 +255,9 @@ export default function Contact() {
                       className="w-full rounded-full teal-btn h-12 text-sm disabled:opacity-70"
                     >
                       {submitting ? (
-                        <><Loader2 className="mr-2 w-4 h-4 animate-spin" /> Sending</>
+                        <><Loader2 className="me-2 w-4 h-4 animate-spin" /> Sending</>
                       ) : (
-                        <>Send message <Send className="ml-2 w-4 h-4" /></>
+                        <>Send message <Send className="ms-2 w-4 h-4" /></>
                       )}
                     </Button>
                     <p className="text-xs text-white/35 text-center">

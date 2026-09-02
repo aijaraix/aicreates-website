@@ -317,7 +317,7 @@ export default function DeckCarousel({
               onClick={() => go(-1)}
               aria-label="Previous slide"
               data-testid={`${testIdPrefix}-prev`}
-              className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full border border-white/15 bg-black/50 text-white/80 hover:text-white hover:bg-black/70 backdrop-blur flex items-center justify-center"
+              className="absolute start-2 sm:start-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full border border-white/15 bg-black/50 text-white/80 hover:text-white hover:bg-black/70 backdrop-blur flex items-center justify-center"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
@@ -326,7 +326,7 @@ export default function DeckCarousel({
               onClick={() => go(1)}
               aria-label="Next slide"
               data-testid={`${testIdPrefix}-next`}
-              className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full border border-white/15 bg-black/50 text-white/80 hover:text-white hover:bg-black/70 backdrop-blur flex items-center justify-center"
+              className="absolute end-2 sm:end-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full border border-white/15 bg-black/50 text-white/80 hover:text-white hover:bg-black/70 backdrop-blur flex items-center justify-center"
             >
               <ChevronRight className="w-5 h-5" />
             </button>
@@ -340,7 +340,7 @@ export default function DeckCarousel({
             onClick={toggleFullscreen}
             aria-label="Exit fullscreen"
             data-testid={`${testIdPrefix}-fullscreen-exit`}
-            className="absolute top-3 right-3 w-10 h-10 rounded-full border border-white/15 bg-black/60 text-white/80 hover:text-white hover:bg-black/80 backdrop-blur flex items-center justify-center"
+            className="absolute top-3 end-3 w-10 h-10 rounded-full border border-white/15 bg-black/60 text-white/80 hover:text-white hover:bg-black/80 backdrop-blur flex items-center justify-center"
           >
             <X className="w-5 h-5" />
           </button>
@@ -348,7 +348,7 @@ export default function DeckCarousel({
 
         {/* Slide counter */}
         {count > 0 && (
-          <div className="absolute bottom-3 left-3 px-2.5 py-1 rounded-full bg-black/60 backdrop-blur border border-white/10 text-[11px] font-mono text-white/70">
+          <div className="absolute bottom-3 start-3 px-2.5 py-1 rounded-full bg-black/60 backdrop-blur border border-white/10 text-[11px] font-mono text-white/70">
             {String(active + 1).padStart(2, "0")}{" "}
             <span className="text-white/30">/</span>{" "}
             {String(count).padStart(2, "0")}
@@ -357,7 +357,7 @@ export default function DeckCarousel({
 
         {/* Fullscreen toggle in fullscreen-emulated mode */}
         {!isFullscreen && (
-          <div className="absolute bottom-3 right-3 hidden sm:block">
+          <div className="absolute bottom-3 end-3 hidden sm:block">
             <button
               type="button"
               onClick={toggleFullscreen}

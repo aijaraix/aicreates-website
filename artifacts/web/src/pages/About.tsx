@@ -157,7 +157,7 @@ export default function About() {
             >
               <Link href="/eve-os">
                 <Button size="lg" className="rounded-full h-12 px-7 teal-btn">
-                  See it as Eve OS <ArrowRight className="ml-2 w-4 h-4" />
+                  See it as Eve OS <ArrowRight className="ms-2 w-4 h-4" />
                 </Button>
               </Link>
               <Link href="/litepaper">
@@ -337,7 +337,7 @@ export default function About() {
               </div>
               <Link href="/contact">
                 <Button size="lg" className="rounded-full h-12 px-8 teal-btn whitespace-nowrap">
-                  Engage with us <ArrowRight className="ml-2 w-4 h-4" />
+                  Engage with us <ArrowRight className="ms-2 w-4 h-4" />
                 </Button>
               </Link>
             </div>

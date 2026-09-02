@@ -90,7 +90,7 @@ export default function Press() {
               AIcreatesAI is a deep-tech company building the agentic intelligence layer - a self-improving foundation for how companies, capital, and consumers will operate.
             </p>
             <p>
-              Its flagship product, Eve OS, is the Agentic Business Operating System - a Company in a Box that coordinates marketing, sales, finance, legal, operations, and development on one intelligence layer with quality review built into every cycle. NeoBank, the company's consumer and business capital surface, runs on the same layer.
+              Its flagship product, Eve OS, is the Agentic Business Operating System - a Company in a Box that coordinates marketing, sales, finance, legal, operations, and development on one intelligence layer with quality review built into every cycle. FinPayTek, the company's consumer and business capital surface, runs on the same layer.
             </p>
             <p>The company is headquartered in Miami, Florida.</p>
           </div>
@@ -117,7 +117,7 @@ export default function Press() {
               <h3 className="text-2xl font-serif font-semibold text-white">Sholom Hammond</h3>
               <div className="text-sm text-[#00F5D4] mt-1 mb-4">Founder & CEO, AIcreatesAI</div>
               <p className="text-white/65 leading-relaxed mb-3">
-                Sholom Hammond is the founder of AIcreatesAI, a deep-tech company building the agentic intelligence layer that powers Eve OS and NeoBank.
+                Sholom Hammond is the founder of AIcreatesAI, a deep-tech company building the agentic intelligence layer that powers Eve OS and FinPayTek.
               </p>
               <p className="text-white/55 leading-relaxed text-sm">
                 A high-resolution founder photo is available on request - email{" "}
@@ -288,7 +288,7 @@ export default function Press() {
               </p>
               <Link href="/contact?interest=Press">
                 <Button size="lg" className="rounded-full h-12 px-8 teal-btn">
-                  Contact press <ArrowRight className="ml-2 w-4 h-4" />
+                  Contact press <ArrowRight className="ms-2 w-4 h-4" />
                 </Button>
               </Link>
             </div>

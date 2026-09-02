@@ -35,7 +35,7 @@ const PHASES = [
   {
     n: "Phase 3",
     title: "Capital surface",
-    desc: "NeoBank consumer and business surfaces on the agentic intelligence layer.",
+    desc: "FinPayTek consumer and business surfaces on the agentic intelligence layer.",
     bullets: ["Programmable wallets and rails", "Agentic treasury and yield", "Capital surface for businesses"],
   },
   {
@@ -106,7 +106,7 @@ export default function Roadmap() {
       <section className="py-14 md:py-20 relative">
         <div className="container mx-auto px-4 md:px-6">
           <div className="relative max-w-4xl mx-auto">
-            <div className="absolute left-5 md:left-6 top-0 bottom-0 w-px bg-gradient-to-b from-[#00F5D4]/40 via-white/10 to-transparent" />
+            <div className="absolute start-5 md:start-6 top-0 bottom-0 w-px bg-gradient-to-b from-[#00F5D4]/40 via-white/10 to-transparent" />
             <ol className="space-y-6">
               {PHASES.map((p, i) => (
                 <motion.li
@@ -115,9 +115,9 @@ export default function Roadmap() {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true, margin: "-80px" }}
                   transition={{ duration: 0.4, delay: i * 0.04 }}
-                  className="relative pl-14 md:pl-20"
+                  className="relative ps-14 md:ps-20"
                 >
-                  <div className="absolute left-2.5 md:left-3.5 top-2 w-5 h-5 rounded-full bg-[#0A0A0A] border-2 border-[#00F5D4] shadow-[0_0_12px_rgba(0,245,212,0.6)]" />
+                  <div className="absolute start-2.5 md:start-3.5 top-2 w-5 h-5 rounded-full bg-[#0A0A0A] border-2 border-[#00F5D4] shadow-[0_0_12px_rgba(0,245,212,0.6)]" />
                   <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 hover:border-[#00F5D4]/30 transition-colors">
                     <div className="flex items-center gap-3 mb-2">
                       <span className="text-xs font-mono text-[#00F5D4] tracking-widest">{p.n}</span>
@@ -167,7 +167,7 @@ export default function Roadmap() {
               </p>
               <Link href="/litepaper">
                 <Button size="lg" className="rounded-full h-12 px-8 teal-btn">
-                  Read the litepaper <ArrowRight className="ml-2 w-4 h-4" />
+                  Read the litepaper <ArrowRight className="ms-2 w-4 h-4" />
                 </Button>
               </Link>
             </div>

@@ -61,7 +61,7 @@ export default function Business() {
             >
               <Link href="/eve-os">
                 <Button size="lg" className="rounded-full h-12 px-7 teal-btn">
-                  Explore Eve OS <ArrowRight className="ml-2 w-4 h-4" />
+                  Explore Eve OS <ArrowRight className="ms-2 w-4 h-4" />
                 </Button>
               </Link>
               <Link href="/contact">
@@ -229,7 +229,7 @@ export default function Business() {
               </div>
               <Link href="/contact">
                 <Button size="lg" className="rounded-full h-12 px-8 teal-btn whitespace-nowrap">
-                  Talk to sales <ArrowRight className="ml-2 w-4 h-4" />
+                  Talk to sales <ArrowRight className="ms-2 w-4 h-4" />
                 </Button>
               </Link>
             </div>

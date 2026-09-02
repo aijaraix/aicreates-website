@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import { useSeo } from "@/lib/useSeo";
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
@@ -11,12 +12,13 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 }
 
 export default function Terms() {
+  const { t, i18n } = useTranslation();
   useSeo({
-    title: "Terms of Service",
-    description:
-      "The terms governing use of the AIcreatesAI website, products, and investor portal.",
+    title: t("terms.seo.title"),
+    description: t("terms.seo.description"),
     path: "/terms",
   });
+  const showCanonicalNote = i18n.language && !i18n.language.startsWith("en");
   return (
     <div className="flex flex-col w-full">
       <section className="relative pt-28 pb-12 md:pt-36 md:pb-16 overflow-hidden">
@@ -24,7 +26,7 @@ export default function Terms() {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_0%,rgba(0,245,212,0.08),transparent_70%)] pointer-events-none" />
         <div className="container mx-auto px-4 md:px-6 relative z-10 max-w-3xl">
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <SectionLabel>Legal</SectionLabel>
+            <SectionLabel>{t("terms.eyebrow")}</SectionLabel>
           </motion.div>
           <motion.h1
             initial={{ opacity: 0, y: 16 }}
@@ -32,37 +34,42 @@ export default function Terms() {
             transition={{ duration: 0.7, delay: 0.05 }}
             className="mt-6 text-5xl md:text-6xl font-serif font-semibold text-gradient leading-[1.05]"
           >
-            Terms of Service.
+            {t("terms.title")}
           </motion.h1>
-          <p className="mt-6 text-sm uppercase tracking-[0.2em] text-white/40">Last updated · January 2026</p>
+          <p className="mt-6 text-sm uppercase tracking-[0.2em] text-white/40">{t("terms.lastUpdated")}</p>
+          {showCanonicalNote && (
+            <p className="mt-3 text-sm text-white/50">{t("terms.canonicalNote")}</p>
+          )}
         </div>
       </section>
 
       <section className="pb-16 md:pb-24">
         <div className="container mx-auto px-4 md:px-6 max-w-3xl space-y-10 text-white/65 leading-relaxed">
           <div>
-            <h2 className="text-2xl font-serif font-semibold text-white mb-3">Use of the site</h2>
-            <p>The www.aicreates.ai website is provided by AIcreatesAI for informational purposes. By accessing or using the site you agree to these terms. If you do not agree, please do not use the site.</p>
+            <h2 className="text-2xl font-serif font-semibold text-white mb-3">{t("terms.body.use.title")}</h2>
+            <p>{t("terms.body.use.text")}</p>
           </div>
           <div>
-            <h2 className="text-2xl font-serif font-semibold text-white mb-3">Content and intellectual property</h2>
-            <p>All content on this site - including text, graphics, logos, design, and the AIcreatesAI brand - is the property of AIcreatesAI or its licensors and is protected by applicable intellectual property laws. You may not reproduce, distribute, or create derivative works without prior written permission.</p>
+            <h2 className="text-2xl font-serif font-semibold text-white mb-3">{t("terms.body.ip.title")}</h2>
+            <p>{t("terms.body.ip.text")}</p>
           </div>
           <div>
-            <h2 className="text-2xl font-serif font-semibold text-white mb-3">Forward-looking statements</h2>
-            <p>Descriptions of products, capabilities, and roadmap on this site - including the Agentic Intelligence Layer, Eve OS, NeoBank, and the Litepaper - represent current intent and direction, not guarantees. Plans and timelines may change.</p>
+            <h2 className="text-2xl font-serif font-semibold text-white mb-3">{t("terms.body.forward.title")}</h2>
+            <p>{t("terms.body.forward.text")}</p>
           </div>
           <div>
-            <h2 className="text-2xl font-serif font-semibold text-white mb-3">Disclaimers</h2>
-            <p>The site is provided on an as-is, as-available basis without warranties of any kind. AIcreatesAI is not liable for any indirect, incidental, or consequential damages arising from your use of the site.</p>
+            <h2 className="text-2xl font-serif font-semibold text-white mb-3">{t("terms.body.disclaimers.title")}</h2>
+            <p>{t("terms.body.disclaimers.text")}</p>
           </div>
           <div>
-            <h2 className="text-2xl font-serif font-semibold text-white mb-3">Changes</h2>
-            <p>We may update these terms from time to time. Continued use of the site after changes are posted constitutes acceptance of the revised terms.</p>
+            <h2 className="text-2xl font-serif font-semibold text-white mb-3">{t("terms.body.changes.title")}</h2>
+            <p>{t("terms.body.changes.text")}</p>
           </div>
           <div>
-            <h2 className="text-2xl font-serif font-semibold text-white mb-3">Contact</h2>
-            <p>Questions about these terms: <a href="mailto:sholom@aicreates.ai" className="text-[#00F5D4] hover:underline">sholom@aicreates.ai</a>.</p>
+            <h2 className="text-2xl font-serif font-semibold text-white mb-3">{t("terms.body.contact.title")}</h2>
+            <p>
+              {t("terms.body.contact.prefix")} <a href="mailto:sholom@aicreates.ai" className="text-[#00F5D4] hover:underline">sholom@aicreates.ai</a>.
+            </p>
           </div>
         </div>
       </section>

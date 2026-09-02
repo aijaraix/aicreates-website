@@ -166,10 +166,10 @@ export default function Token() {
             <table className="w-full text-sm" data-testid="table-core-incentives">
               <thead className="text-xs uppercase tracking-[0.14em] text-white/40">
                 <tr>
-                  <th className="text-left px-6 py-4 font-medium w-[24%]">Category</th>
-                  <th className="text-left px-6 py-4 font-medium w-[28%]">What participants do</th>
-                  <th className="text-left px-6 py-4 font-medium w-[28%]">How rewards work</th>
-                  <th className="text-left px-6 py-4 font-medium w-[20%]">Why it matters</th>
+                  <th className="text-start px-6 py-4 font-medium w-[24%]">Category</th>
+                  <th className="text-start px-6 py-4 font-medium w-[28%]">What participants do</th>
+                  <th className="text-start px-6 py-4 font-medium w-[28%]">How rewards work</th>
+                  <th className="text-start px-6 py-4 font-medium w-[20%]">Why it matters</th>
                 </tr>
               </thead>
               <tbody>
@@ -380,9 +380,9 @@ export default function Token() {
               <table className="w-full text-sm" data-testid="table-utility-summary">
                 <thead className="text-xs uppercase tracking-[0.14em] text-white/40">
                   <tr>
-                    <th className="text-left px-6 py-4 font-medium">Utility type</th>
-                    <th className="text-left px-6 py-4 font-medium">Primary beneficiaries</th>
-                    <th className="text-left px-6 py-4 font-medium">Key purpose</th>
+                    <th className="text-start px-6 py-4 font-medium">Utility type</th>
+                    <th className="text-start px-6 py-4 font-medium">Primary beneficiaries</th>
+                    <th className="text-start px-6 py-4 font-medium">Key purpose</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -452,7 +452,7 @@ export default function Token() {
               </div>
               <a href="https://invest.aicreates.ai" target="_blank" rel="noopener noreferrer">
                 <Button size="lg" className="rounded-full h-12 px-8 teal-btn whitespace-nowrap" data-testid="link-investor-portal">
-                  Open investor portal <ArrowRight className="ml-2 w-4 h-4" />
+                  Open investor portal <ArrowRight className="ms-2 w-4 h-4" />
                 </Button>
               </a>
             </div>

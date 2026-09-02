@@ -237,9 +237,9 @@ export function EveWidget() {
             transition={{ type: "spring", stiffness: 320, damping: 22 }}
             className={cn(
               "group fixed z-50 flex items-center gap-3 rounded-full",
-              "bottom-5 right-5 sm:bottom-6 sm:right-6",
+              "bottom-5 end-5 sm:bottom-6 sm:end-6",
               "bg-gradient-to-br from-violet-500/90 to-blue-500/90",
-              "p-1 pr-4 shadow-[0_8px_32px_rgba(139,92,246,0.45)]",
+              "p-1 pe-4 shadow-[0_8px_32px_rgba(139,92,246,0.45)]",
               "border border-white/20 backdrop-blur-xl",
               "text-white",
             )}
@@ -249,13 +249,13 @@ export function EveWidget() {
             <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full bg-black/30 ring-2 ring-white/30">
               <img src={eveAvatar} alt="Eve" className="h-full w-full object-cover" />
               {!hasOpened && (
-                <span className="absolute -right-0.5 -top-0.5 flex h-3 w-3">
+                <span className="absolute -end-0.5 -top-0.5 flex h-3 w-3">
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
                   <span className="relative inline-flex h-3 w-3 rounded-full bg-emerald-400 ring-2 ring-violet-600/80" />
                 </span>
               )}
             </div>
-            <div className="hidden flex-col text-left leading-tight sm:flex">
+            <div className="hidden flex-col text-start leading-tight sm:flex">
               <span className="text-sm font-semibold">Chat with Eve</span>
               <span className="text-[11px] text-white/80">AI ambassador</span>
             </div>
@@ -276,7 +276,7 @@ export function EveWidget() {
             transition={{ type: "spring", stiffness: 320, damping: 28 }}
             className={cn(
               "fixed z-50 flex flex-col overflow-hidden",
-              "bottom-4 right-4 sm:bottom-6 sm:right-6",
+              "bottom-4 end-4 sm:bottom-6 sm:end-6",
               "h-[min(620px,calc(100dvh-2rem))] w-[min(400px,calc(100vw-2rem))]",
               "rounded-2xl border border-white/10",
               "bg-zinc-950/90 backdrop-blur-2xl",
@@ -289,7 +289,7 @@ export function EveWidget() {
               <div className="flex items-center gap-3">
                 <div className="relative h-10 w-10 overflow-hidden rounded-full bg-black/30 ring-2 ring-violet-300/40">
                   <img src={eveAvatar} alt="Eve" className="h-full w-full object-cover" />
-                  <span className="absolute right-0 top-0 h-2.5 w-2.5 rounded-full bg-emerald-400 ring-2 ring-zinc-950" />
+                  <span className="absolute end-0 top-0 h-2.5 w-2.5 rounded-full bg-emerald-400 ring-2 ring-zinc-950" />
                 </div>
                 <div className="flex flex-col leading-tight">
                   <span className="text-sm font-semibold text-white">Eve</span>

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "wouter";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -45,10 +46,10 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 }
 
 export default function Invest() {
+  const { t } = useTranslation();
   useSeo({
-    title: "Invest - Back the Agentic Intelligence Layer",
-    description:
-      "Reserve your allocation in the AICA private sale. $50M strategic raise, $3.5M initial GPU cluster, fixed-supply token, and the full investor portal.",
+    title: t("invest.seo.title"),
+    description: t("invest.seo.description"),
     path: "/opportunity",
   });
   const [deckOpen, setDeckOpen] = useState(false);
@@ -65,6 +66,54 @@ export default function Invest() {
     reduce
       ? { initial: { opacity: 0 }, whileInView: { opacity: 1 }, viewport: { once: true, margin: "-80px" }, transition: { duration: 0.3, delay } }
       : { initial: { opacity: 0, y: 20 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, margin: "-80px" }, transition: { duration: 0.5, delay } };
+
+  const stats = [
+    { k: t("invest.compute.stat1k"), v: t("invest.compute.stat1v") },
+    { k: t("invest.compute.stat2k"), v: t("invest.compute.stat2v") },
+    { k: t("invest.compute.stat3k"), v: t("invest.compute.stat3v") },
+    { k: t("invest.compute.stat4k"), v: t("invest.compute.stat4v") },
+  ];
+
+  const materials = [
+    {
+      icon: FileText,
+      title: t("invest.materials.litepaperTitle"),
+      desc: t("invest.materials.litepaperDesc"),
+      disabled: false,
+      href: "/litepaper" as string | undefined,
+      external: false,
+      cta: t("invest.materials.litepaperCta"),
+      testId: "button-view-litepaper-card",
+    },
+    {
+      icon: BookOpen,
+      title: t("invest.materials.deckTitle"),
+      desc: t("invest.materials.deckDesc"),
+      disabled: false,
+      onClick: () => setDeckOpen(true),
+      cta: t("invest.materials.deckCta"),
+      testId: "button-view-pitch-deck-card",
+    },
+    {
+      icon: Download,
+      title: t("invest.materials.whitepaperTitle"),
+      desc: t("invest.materials.whitepaperDesc"),
+      disabled: false,
+      href: `${import.meta.env.BASE_URL}litepaper.pdf` as string | undefined,
+      download: "AIcreatesAI Whitepaper.pdf",
+      external: true,
+      cta: t("invest.materials.whitepaperCta"),
+      testId: "button-download-whitepaper-card",
+    },
+  ];
+
+  const pillars = [
+    { icon: Layers, tag: "01", title: t("invest.why.p1Title"), desc: t("invest.why.p1Desc") },
+    { icon: Cpu, tag: "02", title: t("invest.why.p2Title"), desc: t("invest.why.p2Desc") },
+    { icon: Network, tag: "03", title: t("invest.why.p3Title"), desc: t("invest.why.p3Desc") },
+    { icon: Users, tag: "04", title: t("invest.why.p4Title"), desc: t("invest.why.p4Desc") },
+  ];
+
   return (
     <div className="flex flex-col w-full">
       {/* HERO */}
@@ -75,19 +124,19 @@ export default function Invest() {
         <div className="container mx-auto px-4 md:px-6 relative z-10 w-full">
           <div className="max-w-5xl">
             <motion.div {...fadeIn(0)}>
-              <SectionLabel>Opportunity</SectionLabel>
+              <SectionLabel>{t("invest.hero.eyebrow")}</SectionLabel>
             </motion.div>
             <motion.h1
               {...fadeUp(0.05)}
               className="mt-6 text-[40px] sm:text-5xl md:text-7xl lg:text-[88px] font-serif font-bold leading-[1.02] text-white tracking-tight [text-shadow:0_2px_30px_rgba(0,245,212,0.25),0_2px_24px_rgba(0,0,0,0.6)]"
             >
-              The Opportunity in the Agentic Era.
+              {t("invest.hero.title")}
             </motion.h1>
             <motion.p
               {...fadeUp(0.15)}
               className="mt-7 text-lg sm:text-xl md:text-2xl text-white/80 max-w-3xl leading-relaxed font-light"
             >
-              Join us in building the operating system for the agentic era.
+              {t("invest.hero.subtitle")}
             </motion.p>
 
             <motion.div
@@ -104,7 +153,7 @@ export default function Invest() {
                   className="rounded-full h-12 px-7 teal-btn"
                   data-testid="button-reserve-allocation"
                 >
-                  Reserve Allocation <ArrowRight className="ml-2 w-4 h-4" />
+                  {t("invest.hero.reserve")} <ArrowRight className="ms-2 w-4 h-4" />
                 </Button>
               </a>
               <Link href="/litepaper">
@@ -114,7 +163,7 @@ export default function Invest() {
                   className="rounded-full h-12 px-7 glass-btn"
                   data-testid="button-hero-read-litepaper"
                 >
-                  Read the Litepaper
+                  {t("invest.hero.readLitepaper")}
                 </Button>
               </Link>
             </motion.div>
@@ -127,18 +176,14 @@ export default function Invest() {
         <div className="container mx-auto px-4 md:px-6">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-12 items-start max-w-6xl mx-auto">
             <div className="md:col-span-5">
-              <SectionLabel>The Opportunity</SectionLabel>
+              <SectionLabel>{t("invest.opportunity.eyebrow")}</SectionLabel>
               <h2 className="mt-5 text-3xl sm:text-4xl md:text-5xl font-serif font-semibold text-gradient leading-[1.05]">
-                The infrastructure for the next generation of business.
+                {t("invest.opportunity.title")}
               </h2>
             </div>
             <div className="md:col-span-7 space-y-5 text-white/65 text-base sm:text-lg leading-relaxed">
-              <p>
-                We are building the foundational infrastructure for the next generation of business. As AI becomes deeply embedded in every company, the demand for intelligent, autonomous operating systems will explode.
-              </p>
-              <p>
-                AICreatesAi is positioned at the center of this shift, creating the platforms and intelligence layer that will power how businesses operate in the future.
-              </p>
+              <p>{t("invest.opportunity.p1")}</p>
+              <p>{t("invest.opportunity.p2")}</p>
             </div>
           </div>
         </div>
@@ -153,29 +198,20 @@ export default function Invest() {
 
             <div className="relative grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
               <div className="lg:col-span-7">
-                <SectionLabel>Compute</SectionLabel>
+                <SectionLabel>{t("invest.compute.eyebrow")}</SectionLabel>
                 <h2 className="mt-5 text-3xl sm:text-4xl md:text-5xl font-serif font-semibold text-gradient leading-[1.05]">
-                  Building world-class compute infrastructure.
+                  {t("invest.compute.title")}
                 </h2>
                 <div className="mt-7 space-y-5 text-white/65 text-base sm:text-lg leading-relaxed">
-                  <p>
-                    As part of our $50M raise, we are deploying heavily into high-performance computing. Our initial system is a $3.5 million high-end GPU cluster designed for advanced model training, inference, and continuous improvement of our proprietary AI systems.
-                  </p>
-                  <p>
-                    This infrastructure forms the backbone of our self-improving intelligence layer and gives us a significant technical advantage from day one.
-                  </p>
+                  <p>{t("invest.compute.p1")}</p>
+                  <p>{t("invest.compute.p2")}</p>
                 </div>
               </div>
 
               <div className="lg:col-span-5 grid grid-cols-2 gap-3">
-                {[
-                  { k: "$50M", v: "Strategic raise" },
-                  { k: "$3.5M", v: "Initial GPU cluster" },
-                  { k: "24/7", v: "Continuous training" },
-                  { k: "Day 1", v: "Technical advantage" },
-                ].map((s) => (
+                {stats.map((s) => (
                   <div
-                    key={s.k}
+                    key={s.v}
                     className="rounded-2xl border border-white/10 bg-white/[0.02] p-5 hover:border-[#00F5D4]/30 transition-colors"
                   >
                     <div className="text-2xl md:text-3xl font-serif font-semibold text-[#00F5D4] tracking-tight">{s.k}</div>
@@ -192,48 +228,17 @@ export default function Invest() {
       <section className="py-14 md:py-24 relative">
         <div className="container mx-auto px-4 md:px-6">
           <div className="max-w-3xl mb-12 mx-auto text-center">
-            <div className="inline-flex"><SectionLabel>Materials</SectionLabel></div>
+            <div className="inline-flex"><SectionLabel>{t("invest.materials.eyebrow")}</SectionLabel></div>
             <h2 className="mt-5 text-3xl sm:text-4xl md:text-5xl font-serif font-semibold text-gradient leading-[1.05]">
-              Learn more about our vision.
+              {t("invest.materials.title")}
             </h2>
             <p className="mt-5 text-base sm:text-lg text-white/55 leading-relaxed">
-              Read the long-form litepaper, step through the pitch deck, or download the full whitepaper.
+              {t("invest.materials.subtitle")}
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5 max-w-5xl mx-auto">
-            {[
-              {
-                icon: FileText,
-                title: "View Litepaper",
-                desc: "Long-form thesis: positioning, architecture, and the agentic intelligence layer in plain language.",
-                disabled: false,
-                href: "/litepaper" as string | undefined,
-                external: false,
-                cta: "Litepaper",
-                testId: "button-view-litepaper-card",
-              },
-              {
-                icon: BookOpen,
-                title: "View Pitch Deck",
-                desc: "Step through the visual deck slide by slide, with the full PDF available to download from the viewer.",
-                disabled: false,
-                onClick: () => setDeckOpen(true),
-                cta: "Pitch Deck",
-                testId: "button-view-pitch-deck-card",
-              },
-              {
-                icon: Download,
-                title: "Download Whitepaper",
-                desc: "Full technical whitepaper as a PDF. Architecture, token economics, and roadmap in one document.",
-                disabled: false,
-                href: `${import.meta.env.BASE_URL}litepaper.pdf` as string | undefined,
-                download: "AIcreatesAI Whitepaper.pdf",
-                external: true,
-                cta: "Download",
-                testId: "button-download-whitepaper-card",
-              },
-            ].map((card) => (
+            {materials.map((card) => (
               <motion.div
                 key={card.title}
                 {...inView(0)}
@@ -252,7 +257,7 @@ export default function Invest() {
                     data-testid={card.testId}
                   >
                     <span>{card.cta}</span>
-                    <span className="text-[10px] font-mono uppercase tracking-[0.18em] text-white/35">Soon</span>
+                    <span className="text-[10px] font-mono uppercase tracking-[0.18em] text-white/35">{t("invest.materials.soon")}</span>
                   </Button>
                 ) : "onClick" in card && card.onClick ? (
                   <Button
@@ -261,7 +266,7 @@ export default function Invest() {
                     className="w-full rounded-full h-10 px-5 glass-btn group"
                     data-testid={card.testId}
                   >
-                    {card.cta} <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                    {card.cta} <ArrowRight className="ms-2 w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                   </Button>
                 ) : "download" in card && card.download ? (
                   <a
@@ -274,7 +279,7 @@ export default function Invest() {
                       className="w-full rounded-full h-10 px-5 glass-btn group"
                       data-testid={card.testId}
                     >
-                      {card.cta} <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                      {card.cta} <ArrowRight className="ms-2 w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                     </Button>
                   </a>
                 ) : card.external ? (
@@ -288,7 +293,7 @@ export default function Invest() {
                       className="w-full rounded-full h-10 px-5 glass-btn group"
                       data-testid={card.testId}
                     >
-                      {card.cta} <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                      {card.cta} <ArrowRight className="ms-2 w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                     </Button>
                   </a>
                 ) : (
@@ -298,7 +303,7 @@ export default function Invest() {
                       className="w-full rounded-full h-10 px-5 glass-btn group"
                       data-testid={card.testId}
                     >
-                      {card.cta} <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                      {card.cta} <ArrowRight className="ms-2 w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                     </Button>
                   </Link>
                 )}
@@ -321,14 +326,12 @@ export default function Invest() {
                 />
               </div>
               <div className="md:col-span-3">
-                <SectionLabel>The Token</SectionLabel>
+                <SectionLabel>{t("invest.token.eyebrow")}</SectionLabel>
                 <h2 className="mt-5 text-3xl sm:text-4xl md:text-5xl font-serif font-semibold text-gradient leading-[1.05]">
-                  {withGlyphs("$AICA powers the layer.")}
+                  {withGlyphs(t("invest.token.title"))}
                 </h2>
                 <p className="mt-5 text-base sm:text-lg text-white/65 leading-relaxed">
-                  {withGlyphs(
-                    "The $AICA token underwrites subscriptions, compute network participation, and contributor rewards across the agentic intelligence layer. Fixed supply, vested allocations, and a sustainable economic model designed around real usage.",
-                  )}
+                  {withGlyphs(t("invest.token.desc"))}
                 </p>
                 <div className="mt-6 flex flex-wrap gap-3">
                   <Link href="/litepaper#tokenomics">
@@ -337,8 +340,8 @@ export default function Invest() {
                       className="rounded-full h-10 px-5 glass-btn group"
                       data-testid="button-token-litepaper"
                     >
-                      Read tokenomics{" "}
-                      <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                      {t("invest.token.cta")}{" "}
+                      <ArrowRight className="ms-2 w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                     </Button>
                   </Link>
                 </div>
@@ -352,42 +355,17 @@ export default function Invest() {
       <section className="py-14 md:py-24 relative">
         <div className="container mx-auto px-4 md:px-6">
           <div className="max-w-3xl mb-12">
-            <SectionLabel>Why Now</SectionLabel>
+            <SectionLabel>{t("invest.why.eyebrow")}</SectionLabel>
             <h2 className="mt-5 text-3xl sm:text-4xl md:text-5xl font-serif font-semibold text-gradient leading-[1.05]">
-              Why the AICreatesAi opportunity?
+              {t("invest.why.title")}
             </h2>
             <p className="mt-5 text-base sm:text-lg text-white/55 leading-relaxed">
-              A category-defining bet on the layer that companies, capital, and consumers will run on.
+              {t("invest.why.subtitle")}
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
-            {[
-              {
-                icon: Layers,
-                tag: "01",
-                title: "Long-term compounding value",
-                desc: "Proprietary AI models and a closed-loop quality engine that get sharper with every cycle of real-world use.",
-              },
-              {
-                icon: Cpu,
-                tag: "02",
-                title: "Strong technical foundation",
-                desc: "Dedicated high-performance compute from day one, anchored by an initial $3.5M GPU cluster.",
-              },
-              {
-                icon: Network,
-                tag: "03",
-                title: "Multiple revenue streams",
-                desc: "A clear path across subscriptions, an emerging skills marketplace, and ecosystem participation.",
-              },
-              {
-                icon: Users,
-                tag: "04",
-                title: "Experienced team, massive market",
-                desc: "Deep operator and engineering experience building inside a market that AI is rebuilding from the ground up.",
-              },
-            ].map((p, i) => (
+            {pillars.map((p, i) => (
               <motion.div
                 key={p.tag}
                 {...inView(i * 0.06)}
@@ -397,7 +375,7 @@ export default function Invest() {
                   <div className="w-10 h-10 rounded-lg bg-[#00F5D4]/10 border border-[#00F5D4]/20 flex items-center justify-center">
                     <p.icon className="w-5 h-5 text-[#00F5D4]" strokeWidth={1.5} />
                   </div>
-                  <span className="text-[10px] font-mono text-white/30 tracking-widest uppercase">Pillar {p.tag}</span>
+                  <span className="text-[10px] font-mono text-white/30 tracking-widest uppercase">{t("invest.why.pillar")} {p.tag}</span>
                 </div>
                 <h3 className="text-lg sm:text-xl font-serif font-semibold text-white mb-2.5 leading-tight">{p.title}</h3>
                 <p className="text-white/55 text-sm sm:text-base leading-relaxed">{p.desc}</p>
@@ -421,10 +399,10 @@ export default function Invest() {
                 transition={{ duration: 0.6 }}
                 className="text-3xl sm:text-4xl md:text-6xl font-serif font-semibold text-gradient leading-[1.05]"
               >
-                The agentic era is not waiting.
+                {t("invest.cta.title")}
               </motion.h2>
               <p className="mt-5 text-base sm:text-lg text-white/65 leading-relaxed max-w-2xl mx-auto">
-                Step into the portal to review your opportunity in full - thesis, architecture, vesting calendar, and live round status, all in one place.
+                {t("invest.cta.subtitle")}
               </p>
               <div className="mt-8 flex flex-wrap gap-3 justify-center">
                 <a
@@ -437,7 +415,7 @@ export default function Invest() {
                     size="lg"
                     className="rounded-full h-12 px-8 teal-btn"
                   >
-                    Open the Portal <ArrowRight className="ml-2 w-4 h-4" />
+                    {t("invest.cta.open")} <ArrowRight className="ms-2 w-4 h-4" />
                   </Button>
                 </a>
               </div>
@@ -447,10 +425,10 @@ export default function Invest() {
       </section>
 
       <Dialog open={deckOpen} onOpenChange={setDeckOpen}>
-        <DialogContent className="max-w-5xl w-[95vw] p-0 gap-0 border-0 bg-transparent shadow-none sm:rounded-none [&>button]:bg-black/60 [&>button]:text-white [&>button]:rounded-full [&>button]:p-1.5 [&>button]:opacity-100 [&>button]:right-2 [&>button]:top-2 [&>button]:z-10">
+        <DialogContent className="max-w-5xl w-[95vw] p-0 gap-0 border-0 bg-transparent shadow-none sm:rounded-none [&>button]:bg-black/60 [&>button]:text-white [&>button]:rounded-full [&>button]:p-1.5 [&>button]:opacity-100 [&>button]:end-2 [&>button]:top-2 [&>button]:z-10">
           <DialogHeader className="sr-only">
-            <DialogTitle>AICA Whitepaper</DialogTitle>
-            <DialogDescription>Step through the AIcreatesAI whitepaper.</DialogDescription>
+            <DialogTitle>{t("invest.dialog.title")}</DialogTitle>
+            <DialogDescription>{t("invest.dialog.desc")}</DialogDescription>
           </DialogHeader>
           <DeckCarousel
             showHeader={false}
@@ -464,10 +442,10 @@ export default function Invest() {
         <div className="container mx-auto px-4 md:px-6 max-w-5xl">
           <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 md:p-8">
             <div className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/40 mb-3">
-              Disclaimer
+              {t("invest.disclaimer.label")}
             </div>
             <p className="text-white/50 text-sm leading-relaxed">
-              This page is for informational purposes only and does not constitute an offer to sell or a solicitation to buy any securities or tokens. AICA tokens, when issued, will be utility tokens for consumptive use within the AIcreatesAI ecosystem and are subject to vesting and jurisdictional restrictions. Early-stage technology and cryptocurrency commitments involve significant risk and you may lose all funds. Detailed private-sale terms are available to accredited investors via the investor portal.
+              {t("invest.disclaimer.text")}
             </p>
           </div>
         </div>

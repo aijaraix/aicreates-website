@@ -1,0 +1,574 @@
+{
+  "nav": {
+    "products": "Produits",
+    "solutions": "Solutions",
+    "resources": "Ressources",
+    "company": "Société",
+    "litepaper": "Litepaper",
+    "portal": "Portail",
+    "openMenu": "Ouvrir le menu",
+    "items": {
+      "eveOS": {
+        "name": "Eve OS",
+        "desc": "L'équipe qui ne dort jamais"
+      },
+      "neoBank": {
+        "name": "FinPayTek",
+        "desc": "Paiements mondiaux. Infrastructure de stablecoins."
+      },
+      "business": {
+        "name": "Pour les entreprises",
+        "desc": "Fonctionnez comme une entreprise bien plus grande"
+      },
+      "developers": {
+        "name": "Pour les développeurs",
+        "desc": "Construisez sur les primitives agentiques"
+      },
+      "litepaper": {
+        "name": "Litepaper",
+        "desc": "Positionnement, architecture et tokenomics"
+      },
+      "roadmap": {
+        "name": "Feuille de route",
+        "desc": "Chemin par phases du product-market fit à l'échelle"
+      },
+      "faq": {
+        "name": "FAQ",
+        "desc": "Questions fréquentes, répondues"
+      },
+      "press": {
+        "name": "Presse",
+        "desc": "Couverture, mentions et ressources de marque"
+      },
+      "about": {
+        "name": "À propos",
+        "desc": "Plateforme, agents et Company in a Box"
+      },
+      "contact": {
+        "name": "Contact",
+        "desc": "Entrez en contact avec l'équipe"
+      },
+      "token": {
+        "name": "Token",
+        "desc": "$AICA - l'actif natif de la couche"
+      },
+      "opportunity": {
+        "name": "Opportunité",
+        "desc": "Opportunité et matériaux pour investisseurs"
+      },
+      "ambassadors": {
+        "name": "Ambassadeurs",
+        "desc": "Programme de parrainage Genesis - gagnez des $AICA pour des présentations qualifiées"
+      }
+    }
+  },
+  "footer": {
+    "products": "Produits",
+    "solutions": "Solutions",
+    "resources": "Ressources",
+    "company": "Société",
+    "legal": "Mentions légales",
+    "privacy": "Confidentialité",
+    "terms": "Conditions",
+    "newsletter": "Restez informé",
+    "newsletterDesc": "Recevez les notes de version et les actualités de l'écosystème.",
+    "emailPlaceholder": "vous@entreprise.com",
+    "subscribe": "S'abonner",
+    "rights": "Tous droits réservés."
+  },
+  "invest": {
+    "hero": {
+      "eyebrow": "Opportunité",
+      "title": "L'opportunité de l'ère agentique.",
+      "subtitle": "Rejoignez-nous pour construire le système d'exploitation de l'ère agentique.",
+      "reserve": "Réserver une allocation",
+      "readLitepaper": "Lire le Litepaper"
+    },
+    "opportunity": {
+      "eyebrow": "L'opportunité",
+      "title": "L'infrastructure pour la prochaine génération d'entreprises.",
+      "p1": "Nous construisons l'infrastructure fondamentale de la prochaine génération d'entreprises. À mesure que l'IA s'intègre profondément dans chaque société, la demande de systèmes d'exploitation intelligents et autonomes va exploser.",
+      "p2": "AICreatesAi se positionne au cœur de ce changement, en créant les plateformes et la couche d'intelligence qui alimenteront le fonctionnement des entreprises de demain."
+    },
+    "compute": {
+      "eyebrow": "Compute",
+      "title": "Construire une infrastructure de calcul de classe mondiale.",
+      "p1": "Dans le cadre de notre levée de 50 M$, nous investissons massivement dans le calcul haute performance. Notre système initial est un cluster GPU haut de gamme de 3,5 millions de dollars conçu pour l'entraînement, l'inférence et l'amélioration continue de nos systèmes d'IA propriétaires.",
+      "p2": "Cette infrastructure forme l'épine dorsale de notre couche d'intelligence auto-améliorante et nous donne un avantage technique significatif dès le premier jour.",
+      "stat1k": "50 M$",
+      "stat1v": "Levée stratégique",
+      "stat2k": "3,5 M$",
+      "stat2v": "Cluster GPU initial",
+      "stat3k": "24/7",
+      "stat3v": "Entraînement continu",
+      "stat4k": "Jour 1",
+      "stat4v": "Avantage technique"
+    },
+    "materials": {
+      "eyebrow": "Documents",
+      "title": "En savoir plus sur notre vision.",
+      "subtitle": "Lisez le litepaper, parcourez le pitch deck ou téléchargez le whitepaper complet.",
+      "litepaperTitle": "Voir le Litepaper",
+      "litepaperDesc": "Thèse longue : positionnement, architecture et couche d'intelligence agentique en langage clair.",
+      "litepaperCta": "Litepaper",
+      "deckTitle": "Voir le Pitch Deck",
+      "deckDesc": "Parcourez la présentation visuelle diapositive par diapositive, avec le PDF complet téléchargeable depuis la visionneuse.",
+      "deckCta": "Pitch Deck",
+      "whitepaperTitle": "Télécharger le Whitepaper",
+      "whitepaperDesc": "Whitepaper technique complet en PDF. Architecture, économie du token et feuille de route en un seul document.",
+      "whitepaperCta": "Télécharger",
+      "soon": "Bientôt"
+    },
+    "token": {
+      "eyebrow": "Le Token",
+      "title": "$AICA alimente la couche.",
+      "desc": "Le token $AICA soutient les abonnements, la participation au réseau de calcul et les récompenses des contributeurs à travers la couche d'intelligence agentique. Offre fixe, allocations vestées et modèle économique durable conçu autour d'un usage réel.",
+      "cta": "Lire la tokenomics"
+    },
+    "why": {
+      "eyebrow": "Pourquoi maintenant",
+      "title": "Pourquoi l'opportunité AICreatesAi ?",
+      "subtitle": "Un pari qui définit une catégorie sur la couche que les entreprises, le capital et les consommateurs utiliseront.",
+      "pillar": "Pilier",
+      "p1Title": "Valeur cumulative à long terme",
+      "p1Desc": "Modèles d'IA propriétaires et moteur qualité en boucle fermée qui s'affinent à chaque cycle d'usage réel.",
+      "p2Title": "Fondation technique solide",
+      "p2Desc": "Calcul haute performance dédié dès le premier jour, ancré par un cluster GPU initial de 3,5 M$.",
+      "p3Title": "Sources de revenus multiples",
+      "p3Desc": "Une trajectoire claire entre abonnements, marketplace de compétences émergent et participation à l'écosystème.",
+      "p4Title": "Équipe expérimentée, marché immense",
+      "p4Desc": "Une expérience profonde d'opérateurs et d'ingénieurs dans un marché que l'IA reconstruit de fond en comble."
+    },
+    "cta": {
+      "title": "L'ère agentique n'attend pas.",
+      "subtitle": "Entrez dans le portail pour examiner votre opportunité en détail - thèse, architecture, calendrier de vesting et statut du tour en direct, le tout au même endroit.",
+      "open": "Ouvrir le portail"
+    },
+    "dialog": {
+      "title": "AICA Whitepaper",
+      "desc": "Parcourez le whitepaper AIcreatesAI."
+    },
+    "disclaimer": {
+      "label": "Avertissement",
+      "text": "Cette page est fournie à titre informatif uniquement et ne constitue ni une offre de vente ni une sollicitation d'achat de titres ou de tokens. Les tokens AICA, une fois émis, seront des tokens utilitaires pour un usage consommatoire dans l'écosystème AIcreatesAI et seront soumis à des restrictions de vesting et de juridiction. Les engagements en technologies au stade précoce et en cryptomonnaies comportent un risque significatif et vous pouvez perdre la totalité des fonds. Les conditions détaillées de la vente privée sont disponibles pour les investisseurs accrédités via le portail investisseur."
+    },
+    "seo": {
+      "title": "Investir - Soutenir la couche d'intelligence agentique",
+      "description": "Réservez votre allocation dans la vente privée AICA. Levée stratégique de 50 M$, cluster GPU initial de 3,5 M$, token à offre fixe et portail investisseur complet."
+    }
+  },
+  "eveos": {
+    "seo": {
+      "title": "Eve OS - L'équipe qui ne dort jamais",
+      "description": "Eve agit comme un chef de cabinet, coordonnant des chefs de département d'IA spécialisés dans toute votre entreprise."
+    },
+    "hero": {
+      "eyebrow": "Produit Phare",
+      "subline": "Rencontrez l'équipe qui ne dort jamais.",
+      "desc": "Eve dirige votre entreprise comme un chef de cabinet. Elle coordonne six chefs de département d'IA spécialisés travaillant en parallèle, exécutant et révisant le travail 24h/24 et 7j/7.",
+      "joinWaitlist": "Découvrir Eve OS",
+      "readLitepaper": "Lire le Litepaper"
+    },
+    "what": {
+      "eyebrow": "Qu'est-ce qu'Eve OS ?",
+      "title": "Une équipe de direction vivante.",
+      "p1": "Eve OS n'est pas un chatbot. C'est une équipe de direction autonome et complète. Vous fixez les objectifs de haut niveau, et Eve agit comme votre chef de cabinet, décomposant ces objectifs en tâches départementales.",
+      "p2": "Elle délègue le travail à des agents d'IA spécialisés en Marketing, Ventes, Publicité, Finance, Opérations et Juridique, orchestrant leurs efforts en parallèle pour livrer des résultats complets et révisés."
+    },
+    "how": {
+      "eyebrow": "L'Orchestration",
+      "title": "Un modèle d'agents parallèles 24/7.",
+      "sub": "Vous fixez l'objectif. Le chef de cabinet délègue. Les départements exécutent en parallèle.",
+      "steps": {
+        "s1": {
+          "title": "Définition de l'objectif",
+          "desc": "Fournissez un objectif de haut niveau en langage clair. Aucune invite complexe requise."
+        },
+        "s2": {
+          "title": "Planification du Chef de Cabinet",
+          "desc": "Eve décompose l'objectif en tâches départementales spécialisées."
+        },
+        "s3": {
+          "title": "Exécution Parallèle",
+          "desc": "Six chefs de département d'IA travaillent simultanément dans leurs domaines."
+        },
+        "s4": {
+          "title": "Examen Interdépartemental",
+          "desc": "Les agents révisent le travail des autres pour garantir l'alignement et la qualité."
+        },
+        "s5": {
+          "title": "Approbation Finale",
+          "desc": "Vous recevez un résultat coordonné et terminé, prêt pour votre signature."
+        }
+      }
+    },
+    "caps": {
+      "eyebrow": "Départements",
+      "title": "Six chefs d'IA spécialisés.",
+      "sub": "Une équipe de direction complète, disponible instantanément et toujours alignée.",
+      "items": {
+        "marketing": {
+          "t": "Marketing",
+          "d": "Planification de campagnes, création de contenu, suivi des performances et optimisation."
+        },
+        "sales": {
+          "t": "Ventes",
+          "d": "Gestion des leads, séquences de prospection, suivi du pipeline et support des transactions."
+        },
+        "advertising": {
+          "t": "Publicité",
+          "d": "Création publicitaire, enchères sur les plateformes, mise à l'échelle des campagnes et optimisation du ROAS."
+        },
+        "finance": {
+          "t": "Finance",
+          "d": "Rapports, budgétisation, prévisions et analyse financière."
+        },
+        "ops": {
+          "t": "Opérations",
+          "d": "Automatisation des flux de travail, gestion des tâches et optimisation des processus."
+        },
+        "legal": {
+          "t": "Juridique et Conformité",
+          "d": "Génération de documents, support contractuel et surveillance des risques."
+        }
+      }
+    },
+    "team": {
+      "eyebrow": "L'Équipe",
+      "title": "Un chef de cabinet. Six chefs de département.",
+      "sub": "Eve dirige une suite exécutive spécialisée. Chaque agent est conçu pour son domaine.",
+      "eve": {
+        "role": "Chef de Cabinet",
+        "department": "Orchestration",
+        "desc": "Prend votre vision, élabore le plan et coordonne les chefs de département."
+      },
+      "marketing": {
+        "role": "CMO",
+        "department": "Marketing",
+        "desc": "Pilote le récit de la marque, la stratégie de contenu et le positionnement sur le marché."
+      },
+      "sales": {
+        "role": "CRO",
+        "department": "Ventes",
+        "desc": "Construit le pipeline, gère la prospection et accélère la vitesse des transactions."
+      },
+      "advertising": {
+        "role": "Directeur de la Croissance",
+        "department": "Publicité",
+        "desc": "Optimise les dépenses, met à l'échelle les campagnes et stimule l'acquisition."
+      },
+      "finance": {
+        "role": "CFO",
+        "department": "Finance",
+        "desc": "Gère la trésorerie, prévoit la trésorerie et s'occupe de la conformité."
+      },
+      "operations": {
+        "role": "COO",
+        "department": "Opérations",
+        "desc": "Optimise les flux de travail, garantit la livraison et maintient les systèmes."
+      },
+      "legal": {
+        "role": "Avocat Général",
+        "department": "Juridique",
+        "desc": "Révise les contrats, gère les risques et garantit la conformité."
+      }
+    },
+    "stands": {
+      "eyebrow": "Pourquoi ça marche",
+      "title": "Véritable exécution parallèle.",
+      "sub": "Un seul agent est débordé. Une équipe coordonnée livre des résultats.",
+      "diffs": {
+        "d1": {
+          "tag": "Architecture",
+          "title": "Exécution Parallèle",
+          "desc": "Les tâches se déroulent simultanément dans tous les départements, réduisant considérablement le temps de réalisation."
+        },
+        "d2": {
+          "tag": "Qualité",
+          "title": "Examen par les Pairs",
+          "desc": "Tout comme dans une vraie entreprise, les départements révisent le travail des autres avant qu'il n'arrive sur votre bureau."
+        },
+        "d3": {
+          "tag": "Échelle",
+          "title": "Opérations Continues",
+          "desc": "L'équipe ne dort jamais, faisant de l'exécution mondiale une réalité 24h/24 et 7j/7."
+        }
+      }
+    },
+    "who": {
+      "eyebrow": "Pour les Dirigeants",
+      "title": "Conçu pour les fondateurs ambitieux.",
+      "sub": "Concentrez-vous sur la vision. Laissez l'équipe s'occuper de l'exécution.",
+      "bullets": {
+        "b1": "Faites évoluer votre production sans augmenter les effectifs.",
+        "b2": "Exécutez sans effort des initiatives complexes et interdépartementales.",
+        "b3": "Maintenez une haute qualité grâce à l'examen automatisé par les pairs.",
+        "b4": "Exploitez une véritable entreprise mondiale 24h/24 et 7j/7."
+      }
+    },
+    "cta": {
+      "title": "Rencontrez l'équipe qui ne dort jamais.",
+      "sub": "Découvrez comment Eve peut transformer vos opérations.",
+      "button": "Visitez evecxo.com"
+    }
+  },
+  "neobank": {
+    "seo": {
+      "title": "FinPayTek - Paiements mondiaux. Infrastructure de stablecoins.",
+      "description": "Portefeuilles numériques, rampes fiat et conformité. Conçu pour les particuliers et les entreprises."
+    },
+    "hero": {
+      "eyebrow": "Infrastructure Financière",
+      "title": "FinPayTek.",
+      "subline": "Paiements mondiaux. Infrastructure de stablecoins.",
+      "coming": "Visitez finpaytek.com",
+      "seeLayer": "Conçu pour les particuliers et les entreprises."
+    },
+    "pillars": {
+      "eyebrow": "Cas d'utilisation",
+      "title": "Pour les particuliers et les entreprises.",
+      "items": {
+        "p1": {
+          "t": "Portefeuille Mobile Consommateur",
+          "d": "Envoyez, recevez, financez et suivez votre argent à l'échelle mondiale avec facilité."
+        },
+        "p2": {
+          "t": "Trésorerie d'Entreprise",
+          "d": "Gérez les paiements, les recouvrements et les rapports d'entreprise de manière transparente."
+        },
+        "p3": {
+          "t": "Rampes Fiat",
+          "d": "Convertissez instantanément entre fiat et stablecoins avec une liquidité profonde."
+        },
+        "p4": {
+          "t": "Conformité",
+          "d": "KYC/KYB intégré et gestion des risques pour garder votre argent en sécurité."
+        }
+      }
+    },
+    "tiers": {
+      "eyebrow": "Le Flux",
+      "title": "Déplacez l'argent en 5 étapes.",
+      "personal": {
+        "tag": "Étape 1 & 2",
+        "title": "Intégration sécurisée.",
+        "point1": "Créez votre compte FinPayTek",
+        "point2": "Terminez la vérification rapide KYC/KYB",
+        "point3": "Accédez instantanément à votre portefeuille numérique"
+      },
+      "business": {
+        "tag": "Étape 3 & 4",
+        "title": "Financer et convertir.",
+        "point1": "Financez via nos rampes fiat fluides",
+        "point2": "Convertissez instantanément fiat en stablecoins",
+        "point3": "Bloquez des taux de liquidité profonds"
+      },
+      "enterprise": {
+        "tag": "Étape 5",
+        "title": "Conserver ou transférer.",
+        "point1": "Conservez vos stablecoins en toute sécurité dans votre portefeuille",
+        "point2": "Transférez à l'échelle mondiale avec une latence quasi nulle",
+        "point3": "Suivez les transactions et la santé du réseau"
+      }
+    },
+    "why": {
+      "eyebrow": "Infrastructure",
+      "title": "Une plateforme mondiale crédible.",
+      "p1": "FinPayTek fournit l'infrastructure de stablecoins requise pour le commerce mondial moderne. Nous gérons la complexité des rampes fiat, de la conformité et des règlements transfrontaliers pour que vous n'ayez pas à le faire.",
+      "p2": "Que vous soyez un consommateur gérant un portefeuille mobile ou une entreprise orchestrant des paiements et des recouvrements de trésorerie complexes, notre plateforme offre transparence et rapidité.",
+      "p3": "Chaque transaction est soutenue par une sécurité de niveau bancaire, des rapports clairs et un réseau de risques actif pour protéger vos actifs."
+    },
+    "cta": {
+      "title": "Paiements mondiaux. Infrastructure de stablecoins.",
+      "sub": "Conçu pour les particuliers et les entreprises.",
+      "coming": "Découvrir FinPayTek"
+    }
+  },
+  "litepaper": {
+    "seo": {
+      "title": "Litepaper - La couche d'intelligence agentique",
+      "description": "La thèse complète, l'architecture, la tokenomics et la feuille de route du système d'exploitation agentique pour entreprises. Mai 2026."
+    },
+    "hero": {
+      "eyebrow": "Litepaper",
+      "title": "AICreatesAi Litepaper",
+      "sub": "Le système d'exploitation agentique pour entreprises",
+      "date": "Mai 2026",
+      "viewDeck": "Voir le Pitch Deck",
+      "getInTouch": "Entrer en contact"
+    },
+    "tocLabel": "Sommaire",
+    "coin": {
+      "eyebrow": "$AICA Token",
+      "title": "L'actif natif de l'Agentic Intelligence Layer.",
+      "desc": "Remises d'abonnement, participation au réseau de calcul et récompenses des contributeurs - le tout réglé en $AICA. L'offre totale est fixée à 10 000 000 000 tokens."
+    },
+    "disclaimer": {
+      "label": "Avertissement",
+      "text": "Cette page est fournie à titre informatif uniquement et ne constitue ni une offre de vente ni une sollicitation d'achat de titres ou de tokens. Les tokens AICA, une fois émis, seront des tokens utilitaires pour un usage consommatoire dans l'écosystème AIcreatesAI et seront soumis à des restrictions de vesting et de juridiction. Les engagements en technologies au stade précoce et en cryptomonnaies comportent un risque significatif et vous pouvez perdre la totalité des fonds. Les conditions détaillées de la vente privée sont disponibles pour les investisseurs accrédités via le portail investisseur."
+    },
+    "cta": {
+      "label": "L'opportunité",
+      "title": "Soutenez la couche d'intelligence agentique.",
+      "sub": "Le portail investisseur contient la thèse complète, les niveaux d'allocation et le flux SAFT. Consultez le whitepaper visuel pour une visite guidée.",
+      "open": "Ouvrir le portail investisseur",
+      "viewDeck": "Voir le Pitch Deck"
+    },
+    "dialog": {
+      "title": "AICA Whitepaper",
+      "desc": "Parcourez le whitepaper AIcreatesAI."
+    },
+    "sections": {
+      "executiveSummary": {
+        "title": "Résumé exécutif",
+        "p1": "AICreatesAi construit le premier système d'exploitation agentique pour entreprises au monde - une \"Company in a Box\" complète qui permet à tout dirigeant d'exploiter une entreprise virtuelle coordonnée, intelligente et en amélioration continue.",
+        "p2": "Nous levons 50 millions de dollars principalement pour développer une intelligence IA propriétaire, une infrastructure de calcul avancée et le système d'exploitation central. La plateforme délivrera des résultats métier fiables via une approche par phases, avec une propriété à long terme de nos propres modèles d'IA.",
+        "p3": "Les fonctionnalités clés incluent une expérience desktop-native, des systèmes qualité en boucle fermée, des portefeuilles agentiques avec un véritable contrôle utilisateur, et une économie de token durable conçue pour récompenser les contributeurs."
+      },
+      "problem": {
+        "title": "Le problème",
+        "p1": "La plupart des dirigeants de petites entreprises et des solopreneurs peinent à gérer plusieurs fonctions complexes sans disposer des ressources des grandes sociétés. Les outils IA actuels sont fragmentés, peu fiables pour les vraies tâches métier ou exigent une expertise technique importante. Il existe un besoin clair d'un système unique et fiable qui agit comme une vraie entreprise - avec coordination intelligente, contrôle qualité et amélioration continue."
+      },
+      "vision": {
+        "title": "Notre vision et notre solution",
+        "p1": "AICreatesAi crée une nouvelle catégorie : le système d'exploitation agentique pour entreprises.",
+        "p2": "Notre plateforme permet aux utilisateurs de décrire leurs objectifs en langage naturel et de recevoir une exécution coordonnée et de haute qualité sur le marketing, les ventes, la finance, le juridique, les opérations et le développement - avec contrôle qualité intégré et amélioration continue.",
+        "p3": "Nous exécutons une stratégie disciplinée et par phases qui apporte de la valeur réelle tôt, tout en construisant une défensibilité à long terme par les données, l'expérience produit et le développement de modèles propriétaires."
+      },
+      "market": {
+        "title": "Opportunité de marché",
+        "p1": "La demande d'outils IA qui aident réellement à faire tourner les entreprises croît rapidement. Notre cible principale est les solopreneurs, les dirigeants de petites entreprises et les équipes de services qui ont besoin de capacités de niveau entreprise sans la complexité ni le coût d'une grande entreprise."
+      },
+      "product": {
+        "title": "Aperçu du produit",
+        "p1": "AICreatesAi délivre une plateforme unifiée accessible via le web, le mobile et une puissante expérience desktop native.",
+        "listIntro": "Capacités principales (vue haute) :",
+        "l1": "Flux métier multi-fonctions coordonnés",
+        "l2": "Systèmes automatiques de contrôle et d'amélioration qualité",
+        "l3": "Mémoire métier persistante et conscience du contexte",
+        "l4": "Portefeuilles agentiques avec permissions contrôlées par l'utilisateur",
+        "l5": "Skills Marketplace à venir",
+        "l6": "Développement à long terme de modèles d'IA propriétaires optimisés pour l'usage métier",
+        "p2": "La levée de 50 M$ est dédiée à la construction de l'intelligence IA centrale, des systèmes de calcul et du système d'exploitation \"Company in a Box\"."
+      },
+      "moat": {
+        "title": "Avantage compétitif et fossé",
+        "listIntro": "Notre stratégie se concentre sur plusieurs avantages clés :",
+        "l1": "Expérience utilisateur desktop-native supérieure",
+        "l2": "Systèmes d'IA en boucle fermée qui améliorent la qualité de sortie",
+        "l3": "Calcul hybride avec de solides fondations de confidentialité et de performance",
+        "l4": "Contrôles pratiques pour les portefeuilles agentiques",
+        "l5": "Un puissant volant d'inertie de données et d'amélioration de modèles",
+        "l6": "Une exécution disciplinée et par phases qui réduit le risque"
+      },
+      "gtm": {
+        "title": "Stratégie de mise sur le marché",
+        "p1": "Nous ciblerons d'abord les solopreneurs et dirigeants de petites entreprises - le segment qui bénéficie le plus d'un système unifié et fiable. Notre approche met l'accent sur la croissance pilotée par le produit, la construction de communauté et la démonstration claire de résultats métier réels."
+      },
+      "funds": {
+        "title": "Utilisation des fonds (50 millions de dollars)",
+        "listIntro": "La majorité de la levée sera allouée à :",
+        "l1": "Développement de modèles d'IA et d'intelligence propriétaires",
+        "l2": "Infrastructure de calcul avancée",
+        "l3": "Développement produit et ingénierie de base",
+        "l4": "Activités de mise sur le marché et constitution d'équipe",
+        "l5": "Réserve stratégique"
+      },
+      "tokenomics": {
+        "title": "Tokenomics",
+        "p1": "Le AICreatesAi Token ($AICA) soutient les abonnements, la participation à long terme dans l'écosystème et les récompenses des contributeurs, ainsi que d'autres utilités prévues.",
+        "subTitle": "Aperçu du token",
+        "subText": "Offre totale : 10 000 000 000 $AICA",
+        "listIntro": "Principes clés du token :",
+        "l1": "Les revenus de la plateforme seront initialement portés par les abonnements pour garantir la stabilité opérationnelle, puis l'utilisation du Token sera intégrée là où nécessaire.",
+        "l2": "Le token apportera de l'utilité via des remises d'abonnement, la participation au réseau de calcul et les récompenses distribuées aux contributeurs. GPU, données, etc.",
+        "l3": "Tous les tokens vendus dans les tours privés seront soumis à des calendriers de vesting appropriés.",
+        "l4": "Un modèle économique durable est en cours de conception, axé sur l'usage réel, l'alignement à long terme et la santé de l'écosystème."
+      },
+      "roadmap": {
+        "title": "Feuille de route haut niveau",
+        "phase01Title": "Phases 0-1",
+        "phase01Text": "Construire la plateforme centrale, les systèmes qualité en boucle fermée et les premiers flux. Atteindre un product-market fit précoce.",
+        "phase2Title": "Phase 2",
+        "phase2Text": "Étendre les capacités, lancer les fonctionnalités du marketplace, approfondir le développement de modèles propriétaires et faire croître la base d'utilisateurs.",
+        "phase3Title": "Phase 3",
+        "phase3Text": "Mettre à l'échelle l'intelligence et la participation au calcul, livrer des capacités autonomes avancées et faire croître l'écosystème."
+      },
+      "risks": {
+        "title": "Risques et mitigations",
+        "p1": "Nous reconnaissons le caractère ambitieux de cette vision. Notre approche par phases, notre attention aux systèmes qualité et notre accent sur les résultats utilisateur réels sont conçus pour gérer efficacement les risques d'exécution, techniques et de marché."
+      },
+      "conclusion": {
+        "title": "Conclusion",
+        "p1": "AICreatesAi construit le système d'exploitation de l'ère agentique des entreprises.",
+        "p2": "Avec une levée de 50 M$ focalisée sur l'intelligence IA centrale, l'infrastructure de calcul et le produit \"Company in a Box\", nous sommes positionnés pour créer une plateforme qui définit la catégorie, en livrant une valeur immédiate tout en construisant des avantages compétitifs durables."
+      }
+    }
+  },
+  "contact": {
+    "seo": {
+      "title": "Contact",
+      "description": "Entrez en contact avec AIcreatesAI - listes d'attente pour Eve OS et FinPayTek, relations investisseurs, presse et partenariats."
+    },
+    "eyebrow": "Contact",
+    "title": "Commencez une conversation.",
+    "sub": "Dites-nous ce que vous construisez, déployez ou financez. Nous vous orienterons vers la bonne personne.",
+    "directLabel": "Direct",
+    "hqLabel": "Siège",
+    "hqValue": "Miami, Floride",
+    "successTitle": "Message reçu.",
+    "successDesc": "Merci. Nous répondrons depuis {{email}} très prochainement.",
+    "sendAnother": "Envoyer un autre message",
+    "interestsLabel": "Je vous contacte en tant que",
+    "interests": {
+      "eveWaitlist": "Liste d'attente Eve OS",
+      "neoWaitlist": "Liste d'attente FinPayTek",
+      "devWaitlist": "Liste d'attente développeur",
+      "investor": "Investisseur",
+      "press": "Presse",
+      "other": "Autre"
+    },
+    "fields": {
+      "name": "Nom complet",
+      "namePh": "Jeanne Dupont",
+      "email": "Email",
+      "emailPh": "vous@entreprise.com",
+      "company": "Société",
+      "companyPh": "Organisation",
+      "role": "Rôle",
+      "rolePh": "Fondateur, investisseur, opérateur",
+      "message": "Message",
+      "messagePh": "Que construisez-vous, déployez-vous ou financez-vous ?"
+    },
+    "submit": "Envoyer le message",
+    "sending": "Envoi",
+    "orEmailPrefix": "Ou écrivez à",
+    "orEmailSuffix": ".",
+    "toast": {
+      "sentTitle": "Message envoyé.",
+      "sentDesc": "Nous reviendrons vers vous très bientôt.",
+      "errorTitle": "Impossible d'atteindre le serveur.",
+      "errorDesc": "Écrivez-nous directement à sholom@aicreates.ai et nous répondrons rapidement."
+    }
+  },
+  "privacy": {
+    "seo": {
+      "title": "Politique de confidentialité",
+      "description": "Comment AIcreatesAI collecte, utilise et protège vos informations sur le site marketing, les produits et le portail investisseur."
+    },
+    "eyebrow": "Mentions légales",
+    "title": "Politique de confidentialité.",
+    "lastUpdated": "Dernière mise à jour · janvier 2026",
+    "canonicalNote": "Cette page fait foi en anglais."
+  },
+  "terms": {
+    "seo": {
+      "title": "Conditions d'utilisation",
+      "description": "Les conditions régissant l'utilisation du site, des produits et du portail investisseur AIcreatesAI."
+    },
+    "eyebrow": "Mentions légales",
+    "title": "Conditions d'utilisation.",
+    "lastUpdated": "Dernière mise à jour · janvier 2026",
+    "canonicalNote": "Cette page fait foi en anglais."
+  }
+}

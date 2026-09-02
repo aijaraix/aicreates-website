@@ -17,7 +17,7 @@ export default function NotFound() {
         </p>
         <Link href="/">
           <Button size="lg" className="rounded-full h-12 px-7 teal-btn">
-            Back to home <ArrowRight className="ml-2 w-4 h-4" />
+            Back to home <ArrowRight className="ms-2 w-4 h-4" />
           </Button>
         </Link>
       </div>

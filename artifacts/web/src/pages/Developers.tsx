@@ -63,7 +63,7 @@ export default function Developers() {
             >
               <Link href="/contact?interest=Developer%20Waitlist">
                 <Button size="lg" className="rounded-full h-12 px-7 teal-btn">
-                  Join the developer waitlist <ArrowRight className="ml-2 w-4 h-4" />
+                  Join the developer waitlist <ArrowRight className="ms-2 w-4 h-4" />
                 </Button>
               </Link>
               <Link href="/roadmap">
@@ -187,7 +187,7 @@ export default function Developers() {
               </div>
               <Link href="/contact?interest=Developer%20Waitlist">
                 <Button size="lg" className="rounded-full h-12 px-8 teal-btn whitespace-nowrap">
-                  Join the waitlist <ArrowRight className="ml-2 w-4 h-4" />
+                  Join the waitlist <ArrowRight className="ms-2 w-4 h-4" />
                 </Button>
               </Link>
             </div>

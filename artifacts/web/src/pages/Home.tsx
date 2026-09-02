@@ -83,30 +83,30 @@ const SLIDES: Slide[] = [
     id: "eve-os",
     label: "Flagship Product",
     title: "Eve OS.",
-    subline: "The Agentic Business Operating System.",
+    subline: "Meet the team that never sleeps.",
     body1:
-      "The first platform that doesn't just assist your business - it becomes your business. Plans, executes, reviews, and improves across every function from one native desktop experience.",
+      "Eve runs your company like a Chief of Staff. She delegates work to specialized AI agents across Marketing, Sales, Finance, Legal, Operations, and Development.",
     body2:
-      "Marketing, Sales, Finance, Legal, Operations, Development - all coordinated on one intelligence layer.",
+      "You set the goal. The 6 department heads execute in parallel, review each other's work, and deliver a coordinated outcome.",
     ctaText: "Explore Eve OS",
     ctaHref: "/eve-os",
-    pills: ["Marketing", "Sales", "Finance", "Legal", "Operations", "Development"],
+    pills: ["Marketing", "Sales", "Advertising", "Finance", "Operations", "Legal"],
     bgImage: eveOsSpotlightUrl,
     bgSize: "contain",
     bgPosition: "right center",
   },
   {
     id: "neobank",
-    label: "Secondary Product Line",
-    title: "NeoBank.",
-    subline: "Capital that thinks.",
+    label: "Financial Infrastructure",
+    title: "FinPayTek.",
+    subline: "Global payments. Stablecoin infrastructure.",
     body1:
-      "A consumer and business neobank built directly on top of our intelligence layer. Capital that thinks, allocates, and protects itself.",
+      "Digital wallets, fiat ramps, and compliance built for people and businesses.",
     body2:
-      "Treasury, Payments, Credit, Yield, Compliance, Identity - one agentic surface for every flow of money.",
-    ctaText: "Inside NeoBank",
+      "Create your account, verify instantly, fund via fiat ramps, convert to stablecoins, and hold or transfer globally.",
+    ctaText: "Explore FinPayTek",
     ctaHref: "/neobank",
-    pills: ["Treasury", "Payments", "Credit", "Yield", "Compliance", "Identity"],
+    pills: ["Wallets", "Fiat Ramps", "Stablecoins", "Payments", "Compliance", "Treasury"],
     bgImage: neobankSpotlightUrl,
     bgSize: "auto 140%",
     bgPosition: "30% center",
@@ -157,7 +157,7 @@ function ProductSpotlight() {
               animate={{ opacity: 0.9 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.5 }}
-              className="hidden md:block absolute inset-y-0 right-0 w-[55%] lg:w-[60%] pointer-events-none [mask-image:linear-gradient(to_left,black_25%,transparent_98%)]"
+              className="hidden md:block absolute inset-y-0 end-0 w-[55%] lg:w-[60%] pointer-events-none [mask-image:linear-gradient(to_left,black_25%,transparent_98%)]"
               style={{
                 backgroundImage: `url(${slide.bgImage})`,
                 backgroundSize: slide.bgSize,
@@ -167,7 +167,7 @@ function ProductSpotlight() {
             />
           </AnimatePresence>
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(0,245,212,0.18),transparent_60%)] pointer-events-none" />
-          <div className="hidden md:block absolute inset-y-0 left-0 w-3/4 lg:w-2/3 bg-gradient-to-r from-[#0A0A0A] via-[#0A0A0A]/95 to-transparent pointer-events-none" />
+          <div className="hidden md:block absolute inset-y-0 start-0 w-3/4 lg:w-2/3 bg-gradient-to-r from-[#0A0A0A] via-[#0A0A0A]/95 to-transparent pointer-events-none" />
 
           <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-8 p-6 sm:p-10 md:p-12 lg:p-16 min-h-[460px] sm:min-h-[500px] md:min-h-[540px] lg:min-h-[560px]">
             <AnimatePresence mode="wait">
@@ -195,7 +195,7 @@ function ProductSpotlight() {
                     data-testid={`button-cta-${slide.id}`}
                   >
                     {slide.ctaText}{" "}
-                    <ArrowUpRight className="ml-1.5 w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                    <ArrowUpRight className="ms-1.5 w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                   </Button>
                 </Link>
               </motion.div>
@@ -296,7 +296,7 @@ export default function Home() {
             >
               <Link href="/eve-os">
                 <Button size="lg" className="rounded-full h-12 px-7 teal-btn">
-                  Explore Eve OS <ArrowRight className="ml-2 w-4 h-4" />
+                  Explore Eve OS <ArrowRight className="ms-2 w-4 h-4" />
                 </Button>
               </Link>
               <Link href="/contact">
@@ -522,7 +522,7 @@ export default function Home() {
                   className="rounded-full h-11 px-6 inline-flex items-center justify-center text-sm font-medium teal-btn"
                   data-testid="link-home-genesis-learn"
                 >
-                  Learn more <ArrowRight className="ml-2 w-4 h-4" />
+                  Learn more <ArrowRight className="ms-2 w-4 h-4" />
                 </a>
                 <a
                   href="https://invest.aicreates.ai/genesis/request-access"
@@ -563,7 +563,7 @@ export default function Home() {
                   className="rounded-full h-12 px-8 teal-btn"
                   data-testid="button-view-pitch-deck"
                 >
-                  View Pitch Deck <ArrowRight className="ml-2 w-4 h-4" />
+                  View Pitch Deck <ArrowRight className="ms-2 w-4 h-4" />
                 </Button>
                 <a
                   href={`${import.meta.env.BASE_URL}litepaper.pdf`}
@@ -586,7 +586,7 @@ export default function Home() {
       </section>
 
       <Dialog open={deckOpen} onOpenChange={setDeckOpen}>
-        <DialogContent className="max-w-5xl w-[95vw] p-0 gap-0 border-0 bg-transparent shadow-none sm:rounded-none [&>button]:bg-black/60 [&>button]:text-white [&>button]:rounded-full [&>button]:p-1.5 [&>button]:opacity-100 [&>button]:right-2 [&>button]:top-2 [&>button]:z-10">
+        <DialogContent className="max-w-5xl w-[95vw] p-0 gap-0 border-0 bg-transparent shadow-none sm:rounded-none [&>button]:bg-black/60 [&>button]:text-white [&>button]:rounded-full [&>button]:p-1.5 [&>button]:opacity-100 [&>button]:end-2 [&>button]:top-2 [&>button]:z-10">
           <DialogHeader className="sr-only">
             <DialogTitle>AICA Whitepaper</DialogTitle>
             <DialogDescription>Step through the AIcreatesAI whitepaper.</DialogDescription>

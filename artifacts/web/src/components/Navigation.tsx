@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
+import { useTranslation } from "react-i18next";
 import { Menu, ChevronDown } from "lucide-react";
 import { Button } from "./ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
@@ -10,36 +11,39 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { LogoMark } from "./LogoMark";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 import wordmark from "@/assets/aica-wordmark.png";
 
 type LinkItem = { name: string; path: string; desc: string; external?: boolean };
 
-const PRODUCT_LINKS: LinkItem[] = [
-  { name: "Eve OS", path: "/eve-os", desc: "The Agentic Business Operating System" },
-  { name: "NeoBank", path: "/neobank", desc: "Capital that thinks" },
+type TFn = (k: string) => string;
+
+const productLinks = (t: TFn): LinkItem[] => [
+  { name: t("nav.items.eveOS.name"), path: "/eve-os", desc: t("nav.items.eveOS.desc") },
+  { name: t("nav.items.neoBank.name"), path: "/neobank", desc: t("nav.items.neoBank.desc") },
 ];
 
-const SOLUTION_LINKS: LinkItem[] = [
-  { name: "For Business", path: "/business", desc: "Operate like a much larger company" },
-  { name: "For Developers", path: "/developers", desc: "Build on the agentic primitives" },
+const solutionLinks = (t: TFn): LinkItem[] => [
+  { name: t("nav.items.business.name"), path: "/business", desc: t("nav.items.business.desc") },
+  { name: t("nav.items.developers.name"), path: "/developers", desc: t("nav.items.developers.desc") },
 ];
 
-const RESOURCE_LINKS: LinkItem[] = [
-  { name: "Litepaper", path: "/litepaper", desc: "Positioning, architecture, and tokenomics" },
-  { name: "Roadmap", path: "/roadmap", desc: "Phased path from product-market fit to scale" },
-  { name: "FAQ", path: "/faq", desc: "Common questions, answered" },
-  { name: "Press", path: "/press", desc: "Coverage, mentions, and brand assets" },
+const resourceLinks = (t: TFn): LinkItem[] => [
+  { name: t("nav.items.litepaper.name"), path: "/litepaper", desc: t("nav.items.litepaper.desc") },
+  { name: t("nav.items.roadmap.name"), path: "/roadmap", desc: t("nav.items.roadmap.desc") },
+  { name: t("nav.items.faq.name"), path: "/faq", desc: t("nav.items.faq.desc") },
+  { name: t("nav.items.press.name"), path: "/press", desc: t("nav.items.press.desc") },
 ];
 
-const COMPANY_LINKS: LinkItem[] = [
-  { name: "About", path: "/about", desc: "Platform, agents, and Company in a Box" },
-  { name: "Contact", path: "/contact", desc: "Get in touch with the team" },
-  { name: "Token", path: "/token", desc: "$AICA - the native asset of the layer" },
-  { name: "Opportunity", path: "/opportunity", desc: "Investor opportunity and materials" },
+const companyLinks = (t: TFn): LinkItem[] => [
+  { name: t("nav.items.about.name"), path: "/about", desc: t("nav.items.about.desc") },
+  { name: t("nav.items.contact.name"), path: "/contact", desc: t("nav.items.contact.desc") },
+  { name: t("nav.items.token.name"), path: "/token", desc: t("nav.items.token.desc") },
+  { name: t("nav.items.opportunity.name"), path: "/opportunity", desc: t("nav.items.opportunity.desc") },
   {
-    name: "Ambassadors",
+    name: t("nav.items.ambassadors.name"),
     path: "https://invest.aicreates.ai/genesis",
-    desc: "Genesis referral program - earn $AICA for warm intros",
+    desc: t("nav.items.ambassadors.desc"),
     external: true,
   },
 ];
@@ -124,10 +128,16 @@ function NavDropdown({
 }
 
 export function Navigation() {
+  const { t } = useTranslation();
   const [location] = useLocation();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [openGroup, setOpenGroup] = useState<string | null>(null);
+
+  const PRODUCT_LINKS = productLinks(t);
+  const SOLUTION_LINKS = solutionLinks(t);
+  const RESOURCE_LINKS = resourceLinks(t);
+  const COMPANY_LINKS = companyLinks(t);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -151,22 +161,23 @@ export function Navigation() {
           </Link>
 
           <nav className="hidden md:flex items-center gap-1">
-            <NavDropdown label="Products" items={PRODUCT_LINKS} testId="nav-products" location={location} />
-            <NavDropdown label="Solutions" items={SOLUTION_LINKS} testId="nav-solutions" location={location} />
-            <NavDropdown label="Resources" items={RESOURCE_LINKS} testId="nav-resources" location={location} />
-            <NavDropdown label="Company" items={COMPANY_LINKS} testId="nav-company" location={location} />
+            <NavDropdown label={t("nav.products")} items={PRODUCT_LINKS} testId="nav-products" location={location} />
+            <NavDropdown label={t("nav.solutions")} items={SOLUTION_LINKS} testId="nav-solutions" location={location} />
+            <NavDropdown label={t("nav.resources")} items={RESOURCE_LINKS} testId="nav-resources" location={location} />
+            <NavDropdown label={t("nav.company")} items={COMPANY_LINKS} testId="nav-company" location={location} />
           </nav>
         </div>
 
         <div className="flex items-center gap-3">
           <div className="hidden md:flex items-center gap-2">
+            <LanguageSwitcher compact />
             <Link href="/litepaper">
               <Button
                 variant="outline"
                 className="rounded-full h-9 px-5 glass-btn text-sm font-medium"
                 data-testid="button-nav-litepaper"
               >
-                Litepaper
+                {t("nav.litepaper")}
               </Button>
             </Link>
             <a
@@ -178,18 +189,21 @@ export function Navigation() {
                 className="rounded-full h-9 px-5 teal-btn text-sm"
                 data-testid="button-nav-portal"
               >
-                Portal
+                {t("nav.portal")}
               </Button>
             </a>
+          </div>
+          <div className="md:hidden">
+            <LanguageSwitcher compact />
           </div>
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="md:hidden text-white hover:bg-white/10">
                 <Menu className="h-5 w-5" />
-                <span className="sr-only">Toggle menu</span>
+                <span className="sr-only">{t("nav.openMenu")}</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="bg-[#0A0A0A] border-l border-white/5 w-screen max-w-none sm:max-w-none p-5 h-[100dvh] overflow-hidden">
+            <SheetContent side="right" className="bg-[#0A0A0A] border-s border-white/5 w-screen max-w-none sm:max-w-none p-5 h-[100dvh] overflow-hidden">
               <div className="flex flex-col h-full min-h-0">
                 <div className="flex items-center gap-2.5 mb-5 shrink-0">
                   <Wordmark />
@@ -197,10 +211,10 @@ export function Navigation() {
 
                 <nav className="flex-1 min-h-0 flex flex-col gap-1 overflow-y-auto">
                   {[
-                    { header: "Products", items: PRODUCT_LINKS },
-                    { header: "Solutions", items: SOLUTION_LINKS },
-                    { header: "Resources", items: RESOURCE_LINKS },
-                    { header: "Company", items: COMPANY_LINKS },
+                    { header: t("nav.products"), items: PRODUCT_LINKS },
+                    { header: t("nav.solutions"), items: SOLUTION_LINKS },
+                    { header: t("nav.resources"), items: RESOURCE_LINKS },
+                    { header: t("nav.company"), items: COMPANY_LINKS },
                   ].map((group) => {
                     const isOpen = openGroup === group.header;
                     const hasActive = group.items.some((p) => !p.external && p.path === location);
@@ -214,7 +228,7 @@ export function Navigation() {
                           onClick={() =>
                             setOpenGroup(isOpen ? null : group.header)
                           }
-                          className={`shrink-0 w-full flex items-center justify-between px-4 py-3 rounded-xl text-left transition-colors ${
+                          className={`shrink-0 w-full flex items-center justify-between px-4 py-3 rounded-xl text-start transition-colors ${
                             isOpen || hasActive
                               ? "bg-white/[0.06] text-white"
                               : "text-white/80 hover:bg-white/[0.03]"
@@ -232,7 +246,7 @@ export function Navigation() {
                           />
                         </button>
                         {isOpen && (
-                          <div className="pl-3 pr-1 py-1 flex flex-col">
+                          <div className="ps-3 pe-1 py-1 flex flex-col">
                             {group.items.map((p) =>
                               p.external ? (
                                 <a
@@ -278,7 +292,7 @@ export function Navigation() {
                       className="w-full rounded-full h-10 glass-btn text-sm"
                       data-testid="button-mobile-nav-litepaper"
                     >
-                      Litepaper
+                      {t("nav.litepaper")}
                     </Button>
                   </Link>
                   <a
@@ -291,7 +305,7 @@ export function Navigation() {
                       className="w-full rounded-full h-10 teal-btn text-sm"
                       data-testid="button-mobile-nav-portal"
                     >
-                      Portal
+                      {t("nav.portal")}
                     </Button>
                   </a>
                 </div>
