@@ -264,24 +264,12 @@ importers:
 
   artifacts/invest:
     dependencies:
-      '@clerk/localizations':
-        specifier: ^4.6.6
-        version: 4.6.6(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@clerk/react':
         specifier: ^6.6.2
         version: 6.6.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@clerk/themes':
         specifier: ^2.4.57
         version: 2.4.57(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      i18next:
-        specifier: ^26.2.0
-        version: 26.2.0(typescript@5.9.3)
-      i18next-browser-languagedetector:
-        specifier: ^8.2.1
-        version: 8.2.1
-      react-i18next:
-        specifier: ^17.0.8
-        version: 17.0.8(i18next@26.2.0(typescript@5.9.3))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.9.3)
     devDependencies:
       '@hookform/resolvers':
         specifier: ^3.10.0
@@ -930,9 +918,6 @@ importers:
 
   scripts:
     devDependencies:
-      '@anthropic-ai/sdk':
-        specifier: ^0.97.1
-        version: 0.97.1(zod@4.3.6)
       '@types/node':
         specifier: 'catalog:'
         version: 25.3.5
@@ -944,15 +929,6 @@ importers:
         version: 4.21.0
 
 packages:
-
-  '@anthropic-ai/sdk@0.97.1':
-    resolution: {integrity: sha512-wOf7AUeJPitcVpvKO4UMu63mWH5SaVipkGd7OOQJt/G6VYGlV8D2Gp9dLxOrttDJh/9gqPqdaBwDGcBevumeAg==}
-    hasBin: true
-    peerDependencies:
-      zod: ^3.25.0 || ^4.0.0
-    peerDependenciesMeta:
-      zod:
-        optional: true
 
   '@babel/code-frame@7.29.0':
     resolution: {integrity: sha512-9NhCeYjq9+3uxgdtp20LSiJXJvN0FeCtNGpJxuMFZ1Kv3cWUNb6DOhJwUvcVCzKGR66cw4njwM6hrJLqgOwbcw==}
@@ -1064,10 +1040,6 @@ packages:
     peerDependencies:
       express: ^4.17.0 || ^5.0.0
 
-  '@clerk/localizations@4.6.6':
-    resolution: {integrity: sha512-lRuwXAklgVedHQ5dbeMjX8xX2PDzSrHA+YgrXsuLDEl38UHKLQtBeCa3/RjmdRGxZrr0UsaP7sQb6dxoQZFslw==}
-    engines: {node: '>=20.9.0'}
-
   '@clerk/react@6.6.2':
     resolution: {integrity: sha512-eLev3C21yh2vqyvEBfXpc1QHa4q+wxbtRdTtBG0fCI+tMQUim8TIS300AJAciM6ox8tgInTWwIeIxr5jiYsvtw==}
     engines: {node: '>=20.9.0'}
@@ -1089,18 +1061,6 @@ packages:
 
   '@clerk/shared@4.10.2':
     resolution: {integrity: sha512-2RXGaCV94U2wYWaMQZA/AhVkqjcSx8f+oVjh6wgr4yXDmZ24BQRjPJ+K4L6IHiB/agoaXtKWJ0GI8InRZjo9/g==}
-    engines: {node: '>=20.9.0'}
-    peerDependencies:
-      react: ^18.0.0 || ~19.0.3 || ~19.1.4 || ~19.2.3 || ~19.3.0-0
-      react-dom: ^18.0.0 || ~19.0.3 || ~19.1.4 || ~19.2.3 || ~19.3.0-0
-    peerDependenciesMeta:
-      react:
-        optional: true
-      react-dom:
-        optional: true
-
-  '@clerk/shared@4.12.2':
-    resolution: {integrity: sha512-jDkip8tKTzYz/cPKMCsjOoACH3Xh37zcbCrssMRTYOq3GZypIpZ6WAs4m4G82URL0WY+yz5frrHVjRrHyAb6LA==}
     engines: {node: '>=20.9.0'}
     peerDependencies:
       react: ^18.0.0 || ~19.0.3 || ~19.1.4 || ~19.2.3 || ~19.3.0-0
@@ -2878,10 +2838,6 @@ packages:
     engines: {node: '>=6'}
     hasBin: true
 
-  json-schema-to-ts@3.1.1:
-    resolution: {integrity: sha512-+DWg8jCJG2TEnpy7kOm/7/AxaYoaRbjVB4LFZLySZlWn8exGs3A4OLJR966cVvU26N7X9TWxl+Jsw7dzAqKT6g==}
-    engines: {node: '>=16'}
-
   json-schema-traverse@1.0.0:
     resolution: {integrity: sha512-NM8/P9n3XjXhIZn1lLhkFaACTOURQXjWhV4BA/RnOv8xvgqtqpAX9IO4mRQxSx1Rlo4tqzeqb0sOlruaOy3dug==}
 
@@ -3363,6 +3319,7 @@ packages:
   recharts@2.15.4:
     resolution: {integrity: sha512-UT/q6fwS3c1dHbXv2uFgYJ9BMFHu3fwnd7AYZaEQhXuYQ4hgsxLvsUXzGdKeZrW5xopzDCvuA2N41WJ88I7zIw==}
     engines: {node: '>=14'}
+    deprecated: 1.x and 2.x branches are no longer active. Bump to Recharts v3 to receive latest features and bugfixes. See https://github.com/recharts/recharts/wiki/3.0-migration-guide
     peerDependencies:
       react: ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -3579,12 +3536,10 @@ packages:
     resolution: {integrity: sha512-o5sSPKEkg/DIQNmH43V0/uerLrpzVedkUh8tGNvaeXpfpuwjKenlSox/2O/BTlZUtEe+JG7s5YhEz608PlAHRA==}
     engines: {node: '>=0.6'}
 
-  ts-algebra@2.0.0:
-    resolution: {integrity: sha512-FPAhNPFMrkwz76P7cdjdmiShwMynZYN6SgOujD1urY4oNm80Ou9oMdmbR45LotcKOXoy7wSmHkRFE6Mxbrhefw==}
-
   tsconfck@3.1.6:
     resolution: {integrity: sha512-ks6Vjr/jEw0P1gmOVwutM3B7fWxoWBL2KRDb1JfqGVawBmO5UsvmWOQFGHBPl5yxYz4eERr19E6L7NMv+Fej4w==}
     engines: {node: ^18 || >=20}
+    deprecated: unmaintained
     hasBin: true
     peerDependencies:
       typescript: ^5.0.0
@@ -3820,13 +3775,6 @@ packages:
 
 snapshots:
 
-  '@anthropic-ai/sdk@0.97.1(zod@4.3.6)':
-    dependencies:
-      json-schema-to-ts: 3.1.1
-      standardwebhooks: 1.0.0
-    optionalDependencies:
-      zod: 4.3.6
-
   '@babel/code-frame@7.29.0':
     dependencies:
       '@babel/helper-validator-identifier': 7.28.5
@@ -3983,13 +3931,6 @@ snapshots:
       - react
       - react-dom
 
-  '@clerk/localizations@4.6.6(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
-    dependencies:
-      '@clerk/shared': 4.12.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-    transitivePeerDependencies:
-      - react
-      - react-dom
-
   '@clerk/react@6.6.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
     dependencies:
       '@clerk/shared': 4.10.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -4010,17 +3951,6 @@ snapshots:
       react-dom: 19.1.0(react@19.1.0)
 
   '@clerk/shared@4.10.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
-    dependencies:
-      '@tanstack/query-core': 5.100.9
-      dequal: 2.0.3
-      glob-to-regexp: 0.4.1
-      js-cookie: 3.0.5
-      std-env: 3.10.0
-    optionalDependencies:
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
-
-  '@clerk/shared@4.12.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
     dependencies:
       '@tanstack/query-core': 5.100.9
       dequal: 2.0.3
@@ -5814,11 +5744,6 @@ snapshots:
 
   jsesc@3.1.0: {}
 
-  json-schema-to-ts@3.1.1:
-    dependencies:
-      '@babel/runtime': 7.29.2
-      ts-algebra: 2.0.0
-
   json-schema-traverse@1.0.0: {}
 
   json5@2.2.3: {}
@@ -6519,8 +6444,6 @@ snapshots:
       is-number: 7.0.0
 
   toidentifier@1.0.1: {}
-
-  ts-algebra@2.0.0: {}
 
   tsconfck@3.1.6(typescript@5.9.3):
     optionalDependencies:
