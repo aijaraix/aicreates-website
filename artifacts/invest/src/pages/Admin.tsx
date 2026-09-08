@@ -2,6 +2,7 @@ import { Redirect } from "wouter";
 import { useEffect, useState, type ReactNode } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
+import SeriesSeedPipeline from "@/components/SeriesSeedPipeline";
 import PortalNav from "@/components/PortalNav";
 import { AmendDialog, isAmendable } from "@/components/AmendDialog";
 import PageHeader from "@/components/PageHeader";
@@ -236,7 +237,10 @@ export default function Admin() {
       </div>
     );
   }
-  if (me.data && me.data.user.role !== "admin") {
+  if (me.isError || !me.data) {
+    return <div role="alert" className="min-h-screen bg-[#0A0A0A] p-8 text-white">Unable to verify operator access. Reload the page or sign in again.</div>;
+  }
+  if (me.data.user.role !== "admin") {
     return <Redirect to="/dashboard" />;
   }
 
@@ -251,12 +255,13 @@ export default function Admin() {
       <main className="mx-auto max-w-7xl px-6 py-10 md:py-12">
         <Tabs value={tab} onValueChange={setTab} className="w-full">
           <TabsList
-            className="mb-8 bg-white/[0.03] border border-white/10"
+            className="mb-8 h-auto flex-wrap justify-start bg-white/[0.03] border border-white/10"
             data-testid="admin-tabs"
           >
             <TabsTrigger value="overview" data-testid="tab-overview">
               Overview
             </TabsTrigger>
+            <TabsTrigger value="series-seed">Series Seed</TabsTrigger>
             <TabsTrigger value="investors" data-testid="tab-investors">
               Investors
             </TabsTrigger>
@@ -276,6 +281,7 @@ export default function Admin() {
           <TabsContent value="overview">
             <OverviewTab />
           </TabsContent>
+          <TabsContent value="series-seed"><SeriesSeedPipeline /></TabsContent>
           <TabsContent value="investors">
             <InvestorsTab />
           </TabsContent>

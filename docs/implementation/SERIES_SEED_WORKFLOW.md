@@ -20,10 +20,12 @@ Transitions lock the case row, require the expected revision and next lifecycle 
 
 ## Verification
 
-Seven real PostgreSQL tests passed on the Ubuntu test host at 2026-09-08T12:04:24Z. Coverage: cross-investor denial and minimal response fields; racing updates; replay/conflicting reuse; lifecycle order/evidence requirement; audit failure rollback; unchanged legacy fixture; audited linking without reassignment. The test uses a unique schema and requires an explicit loopback `SERIES_SEED_TEST_DATABASE_URL`, never the application's ambient DATABASE_URL.
+Eight real PostgreSQL tests passed on the Ubuntu test host at 2026-09-08T12:11:46Z. Coverage: cross-investor denial and minimal response fields; racing updates; replay/conflicting reuse; lifecycle order/evidence requirement; audit failure rollback; unchanged legacy fixture; audited linking without reassignment; parameterized search and per-case history. The test uses a unique schema and requires an explicit loopback `SERIES_SEED_TEST_DATABASE_URL`, never the application's ambient DATABASE_URL.
 
-Run: `pnpm --filter @workspace/api-server run test:series-seed` with that isolated test URL. On this run the database was a disposable embedded PostgreSQL cluster; test schema and cluster were removed. Shared library and API TypeScript checks and API build pass.
+Run: `pnpm --filter @workspace/api-server run test:series-seed` with that isolated test URL. On this run the database was a disposable embedded PostgreSQL cluster; test schema and cluster were removed. Shared library, API and investor portal TypeScript checks pass; API and investor portal production builds pass.
+
+The existing operator console now has a Series Seed tab for case creation/search, sequential decisions, evidence references, linking existing investor accounts and decision history. It uses the real API client and retains legacy tabs. Unknown/failed identity lookup no longer renders the operator console. This UI has build/type verification; provider-backed browser acceptance requires Clerk staging configuration. No authentication bypass was added.
 
 ## Remaining work
 
-Operator UI, authenticated HTTP end-to-end checks, real investor identity reconciliation, approved document access, evidence-content validation, counsel-approved financing transitions, Adam/IR integration and production migration remain open. Keep legacy financing behavior until legal/business decisions and verified replacements permit retirement. No confidential Drive content was published.
+Authenticated HTTP/browser end-to-end checks, real investor identity reconciliation, approved document access, evidence-content validation, counsel-approved financing transitions, Adam/IR integration and production migration remain open. Keep legacy financing behavior until legal/business decisions and verified replacements permit retirement. No confidential Drive content was published.

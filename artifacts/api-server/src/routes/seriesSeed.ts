@@ -59,8 +59,21 @@ router.get(
   "/admin/series-seed/cases",
   requireAuth,
   requireAdmin,
-  handle(async (_req, res) => {
-    res.json({ cases: await workflow.listInternal() });
+  handle(async (req, res) => {
+    const query = z
+      .string()
+      .trim()
+      .max(200)
+      .parse(req.query.q ?? "");
+    res.json({ cases: await workflow.listInternal(query) });
+  }),
+);
+router.get(
+  "/admin/series-seed/cases/:id/events",
+  requireAuth,
+  requireAdmin,
+  handle(async (req, res) => {
+    res.json({ events: await workflow.history(uuid.parse(req.params.id)) });
   }),
 );
 router.post(

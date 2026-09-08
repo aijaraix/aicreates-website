@@ -209,3 +209,29 @@ test("linking an invited investor is audited and cannot transfer another investo
     { revision: 1, evidence_reference: "investor-user:investor-a" },
   ]);
 });
+
+test("operator search stays parameterized and history follows the selected case", async () => {
+  const record = await workflow.create(
+    "operator",
+    "Search-only prospect",
+    null,
+  );
+  await workflow.advance("operator", record.id, decision("research", 0));
+  assert.deepEqual(
+    (await workflow.listInternal("Search-only")).map((x) => x.id),
+    [record.id],
+  );
+  assert.equal(
+    (await workflow.listInternal("'; DROP TABLE commitments; --")).length,
+    0,
+  );
+  assert.deepEqual(
+    (await workflow.history(record.id)).map((x) => x.to_stage),
+    ["discovery", "research"],
+  );
+  assert.equal(
+    (await pool.query("SELECT count(*)::int AS count FROM commitments")).rows[0]
+      .count,
+    1,
+  );
+});

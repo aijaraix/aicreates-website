@@ -125,10 +125,20 @@ export class SeriesSeedWorkflow {
     });
   }
 
-  async listInternal() {
+  async listInternal(query = "") {
     return (
       await this.pool.query(
-        "SELECT * FROM series_seed_cases ORDER BY updated_at DESC LIMIT 200",
+        "SELECT * FROM series_seed_cases WHERE ($1='' OR prospect_name ILIKE '%'||$1||'%') ORDER BY updated_at DESC LIMIT 200",
+        [query],
+      )
+    ).rows;
+  }
+
+  async history(id: string) {
+    return (
+      await this.pool.query(
+        "SELECT id,actor_user_id,to_stage,reason,evidence_reference,created_at FROM series_seed_events WHERE case_id=$1 ORDER BY revision",
+        [id],
       )
     ).rows;
   }
