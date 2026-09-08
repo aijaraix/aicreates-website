@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 
-const SITE = "AIcreatesAI";
+const SITE = "AI Creates AI";
 const ORIGIN = "https://www.aicreates.ai";
 const DEFAULT_OG = `${ORIGIN}/social/og-default.png`;
 const DEFAULT_OG_SQUARE = `${ORIGIN}/social/og-square.png`;
-const DEFAULT_OG_ALT = "AIcreatesAI - The Agentic Intelligence Layer";
+const DEFAULT_OG_ALT = "AI Creates AI — The company behind EVE CXO";
 
 function setMeta(
   selector: string,
@@ -79,6 +79,7 @@ export type SeoOptions = {
   path: string;
   /** Optional full title that bypasses the `<title> | AIcreatesAI` suffix. */
   fullTitle?: string;
+  indexable?: boolean;
   /** 1200x630 cover image (absolute URL or path under /). */
   image?: string;
   /** 600x600 square image for WhatsApp/iMessage (absolute URL or path under /). */
@@ -92,6 +93,7 @@ export function useSeo({
   description,
   path,
   fullTitle: fullTitleOverride,
+  indexable = true,
   image = DEFAULT_OG,
   squareImage = DEFAULT_OG_SQUARE,
   imageAlt = DEFAULT_OG_ALT,
@@ -105,6 +107,12 @@ export function useSeo({
     document.title = fullTitle;
     setMeta('meta[name="description"]', "name", "description", description);
     setLink("canonical", url);
+    setMeta(
+      'meta[name="robots"]',
+      "name",
+      "robots",
+      indexable ? "index, follow" : "noindex, follow",
+    );
 
     setMeta('meta[property="og:site_name"]', "property", "og:site_name", SITE);
     setMeta('meta[property="og:type"]', "property", "og:type", "website");
@@ -150,6 +158,7 @@ export function useSeo({
   }, [
     title,
     fullTitleOverride,
+    indexable,
     description,
     path,
     image,

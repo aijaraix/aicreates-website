@@ -252,7 +252,7 @@ export function Navigation() {
               className="rounded-full h-9 px-5 glass-btn text-sm font-medium"
               data-testid="button-nav-litepaper"
             >
-              <Link href="/litepaper">{t("nav.litepaper")}</Link>
+              <Link href="/eve-cxo">{t("nav.items.eveOS.name")}</Link>
             </Button>
             <Button
               asChild
@@ -380,8 +380,8 @@ export function Navigation() {
                     className="w-full rounded-full h-10 glass-btn text-sm"
                     data-testid="button-mobile-nav-litepaper"
                   >
-                    <Link href="/litepaper" onClick={() => setOpen(false)}>
-                      {t("nav.litepaper")}
+                    <Link href="/eve-cxo" onClick={() => setOpen(false)}>
+                      {t("nav.items.eveOS.name")}
                     </Link>
                   </Button>
                   <Button

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useId, useState } from "react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
@@ -9,7 +9,9 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/[0.02]">
       <span className="w-1.5 h-1.5 rounded-full bg-[#00F5D4] shadow-[0_0_8px_rgba(0,245,212,0.7)]" />
-      <span className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/70">{children}</span>
+      <span className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/70">
+        {children}
+      </span>
     </div>
   );
 }
@@ -22,91 +24,50 @@ const GROUPS: Group[] = [
     title: "Company",
     items: [
       {
-        q: "What does AICreatesAi do?",
-        a: "We build the agentic intelligence layer - a self-improving foundation for how companies, capital, and consumers will operate. Eve OS is our flagship product on top of that layer; FinPayTek is our consumer and business capital surface.",
+        q: "What does AI Creates AI do?",
+        a: "AI Creates AI is the company behind EVE CXO, the AI Operating System for Business. The product brings executive direction, department work and connected tools into one operating experience.",
       },
       {
-        q: "Why this, why now?",
-        a: "AI is moving from assistant to operator. The next decade will be defined by software that plans, executes, reviews, and improves on its own. The infrastructure that coordinates that work is what we are building.",
-      },
-      {
-        q: "Where is the company based?",
-        a: "Headquartered in Miami, Florida.",
+        q: "How do Adam, Eve and Hermes fit together?",
+        a: "Adam supports AI Creates AI internally. Eve is the customer-facing executive intelligence in EVE CXO. Hermes is the shared orchestration runtime beneath both. Jarvis provides the dedicated builder and engineering experience.",
       },
     ],
   },
   {
-    title: "Platform and product",
+    title: "EVE CXO",
     items: [
       {
-        q: "What is the agentic intelligence layer?",
-        a: "A unified runtime for coordinated agentic execution - planning, action, review, and memory - across every business function, with hybrid compute, closed-loop quality, and policy-aware autonomy.",
+        q: "Which departments does EVE CXO cover?",
+        a: "The commercial experience brings together Marketing, Sales, Finance, Legal, Operations, HR and Engineering. Department heads coordinate specialist work, while existing workspace roles and agents retain their own identities.",
       },
       {
-        q: "How is Eve OS different from a chatbot or AI assistant?",
-        a: "Eve OS is a Company in a Box. Marketing, sales, finance, legal, operations, and development run together as one coordinated team, with quality review built in. It is execution, not conversation.",
+        q: "Do I need technical skills to get started?",
+        a: "You can describe business goals in plain language. Connecting accounts and activating particular workflows may require an administrator or technical setup.",
       },
       {
-        q: "Do I need technical skills to use it?",
-        a: "No. Eve OS is designed for operators. You describe goals in plain language; the layer handles the coordination.",
+        q: "Where can I see the product and current access options?",
+        a: "Visit evecxo.com for the product, sign-in and current access options. Contact AI Creates AI if you need help assessing a deployment or business workflow.",
       },
       {
-        q: "When can I use it?",
-        a: "Private waitlist now. Eve OS rolls out in staged cohorts as the agentic intelligence layer matures and capacity expands. Join the Eve OS waitlist via Contact and we will reach out as your cohort opens.",
+        q: "Can agents take action without my review?",
+        a: "Authority depends on workspace roles, tool permissions and the selected workflow. Consequential actions require the applicable approval. Connecting a tool is separate from approving a particular action.",
       },
       {
-        q: "Is it available in my country?",
-        a: "Eve OS is rolling out globally, with initial cohort access prioritized in the United States. Some regions may be limited at launch by infrastructure availability or local regulation; the waitlist captures your jurisdiction so we can confirm availability for you.",
-      },
-      {
-        q: "Where does my data live?",
-        a: "Hybrid compute lets work run locally, at the edge, or in the cloud based on the task. Sensitive data and tenancy controls keep you in command of what leaves your boundary.",
+        q: "Where does my business data live?",
+        a: "Data handling depends on the deployment and connected providers. Review the applicable product privacy information and integration permissions before supplying sensitive information; contact us for deployment-specific requirements.",
       },
     ],
   },
   {
-    title: "$AICA token",
+    title: "Investor and legacy enquiries",
     items: [
       {
-        q: "What is $AICA?",
-        a: "$AICA is the native utility token of the AIcreatesAI agentic intelligence layer. It powers participation, settlement, and rewards across the ecosystem.",
+        q: "How do I contact investor relations?",
+        a: "Use the Investor option on the contact form. Materials and access are provided through the approved investor process; this website does not confirm an allocation or investment.",
       },
       {
-        q: "What is the supply?",
-        a: "Total supply is fixed at 10,000,000,000 $AICA. No additional tokens will ever be minted.",
-      },
-      {
-        q: "What can I use $AICA for?",
-        a: "Subscription discounts on Eve OS and connected products, participation in the compute network, settlement of agentic actions, and access to the future Skills Marketplace.",
-      },
-      {
-        q: "How do contributors earn $AICA?",
-        a: "Operators of compute, data providers, model contributors, and ecosystem builders earn $AICA proportional to their measured contribution to the network.",
-      },
-      {
-        q: "How does the token economy stay sustainable?",
-        a: "Revenue from real platform usage flows back into the ecosystem and recycles into rewards, compute, and contributor incentives - so demand and supply are anchored to actual work performed on the layer.",
-      },
-      {
-        q: "Is the token a security?",
-        a: "$AICA is designed as a utility token for consumptive use within the AIcreatesAI ecosystem. This page is informational only and does not constitute an offer or solicitation.",
-      },
-    ],
-  },
-  {
-    title: "Opportunity",
-    items: [
-      {
-        q: "How can I participate in the opportunity?",
-        a: "Reach out via the contact form selecting Investor, or visit the investor portal to begin the allocation process.",
-      },
-      {
-        q: "Who can participate?",
-        a: "Participation is restricted to eligible investors meeting accreditation and jurisdictional requirements.",
-      },
-      {
-        q: "What are the materials?",
-        a: "The litepaper is the public long-form positioning, architecture, and tokenomics. View it on the Litepaper page; additional investor materials are available on request.",
+        q: "What about earlier token or SAFT materials?",
+        a: "Earlier informational pages remain available as legacy context. Existing investor records and agreements have not been changed by this website update. Contact the company about your specific records or documents.",
       },
     ],
   },
@@ -114,12 +75,15 @@ const GROUPS: Group[] = [
 
 function Item({ qa }: { qa: QA }) {
   const [open, setOpen] = useState(false);
+  const answerId = useId();
   return (
     <div className="border-b border-white/5 last:border-0">
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
         className="w-full flex items-center justify-between gap-6 py-5 text-start group"
+        id={`${answerId}-question`}
+        aria-controls={open ? answerId : undefined}
         aria-expanded={open}
       >
         <span className="text-base md:text-lg text-white/90 font-medium leading-snug group-hover:text-[#00F5D4] transition-colors">
@@ -133,13 +97,18 @@ function Item({ qa }: { qa: QA }) {
         {open && (
           <motion.div
             key="content"
+            id={answerId}
+            role="region"
+            aria-labelledby={`${answerId}-question`}
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.25 }}
             className="overflow-hidden"
           >
-            <p className="pb-5 text-white/60 leading-relaxed text-sm md:text-base">{qa.a}</p>
+            <p className="pb-5 text-white/60 leading-relaxed text-sm md:text-base">
+              {qa.a}
+            </p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -151,7 +120,7 @@ export default function Faq() {
   useSeo({
     title: "FAQ - questions, answered",
     description:
-      "Common questions on AIcreatesAI, the platform, the $AICA token, and the opportunity - all in one place.",
+      "Questions about AI Creates AI, EVE CXO, workspace control and investor enquiries.",
     path: "/faq",
   });
   return (
@@ -162,7 +131,11 @@ export default function Faq() {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_0%,rgba(0,245,212,0.10),transparent_70%)] pointer-events-none" />
         <div className="container mx-auto px-4 md:px-6 relative z-10">
           <div className="max-w-4xl">
-            <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+            >
               <SectionLabel>FAQ</SectionLabel>
             </motion.div>
             <motion.h1
@@ -179,7 +152,7 @@ export default function Faq() {
               transition={{ duration: 0.7, delay: 0.15 }}
               className="mt-6 text-lg md:text-xl text-white/60 max-w-2xl leading-relaxed"
             >
-              The most common questions we get on the company, the platform, the token, and the opportunity.
+              Questions about the company, EVE CXO and how to get in touch.
             </motion.p>
           </div>
         </div>
@@ -191,7 +164,9 @@ export default function Faq() {
           <div className="max-w-4xl mx-auto space-y-12">
             {GROUPS.map((g) => (
               <div key={g.title}>
-                <h2 className="text-xs font-semibold uppercase tracking-[0.22em] text-white/40 mb-4">{g.title}</h2>
+                <h2 className="text-xs font-semibold uppercase tracking-[0.22em] text-white/40 mb-4">
+                  {g.title}
+                </h2>
                 <div className="rounded-2xl border border-white/10 bg-white/[0.02] px-6 md:px-8">
                   {g.items.map((qa, i) => (
                     <Item key={i} qa={qa} />
@@ -215,11 +190,15 @@ export default function Faq() {
               <p className="text-lg text-white/55 max-w-xl mx-auto mb-8">
                 Reach out and we will route you to the right person.
               </p>
-              <Link href="/contact">
-                <Button size="lg" className="rounded-full h-12 px-8 teal-btn">
+              <Button
+                size="lg"
+                className="rounded-full h-12 px-8 teal-btn"
+                asChild
+              >
+                <Link href="/contact">
                   Get in touch <ArrowRight className="ms-2 w-4 h-4" />
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             </div>
           </div>
         </div>

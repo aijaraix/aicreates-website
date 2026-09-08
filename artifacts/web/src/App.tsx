@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AnimatePresence, motion } from "framer-motion";
-import React, { useEffect } from "react";
+import React, { lazy, Suspense, useEffect } from "react";
 
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
@@ -12,21 +12,21 @@ import { Footer } from "@/components/Footer";
 // import { EveWidget } from "@/components/EveWidget";
 
 import Home from "@/pages/Home";
-import EveOS from "@/pages/EveOS";
-import NeoBank from "@/pages/NeoBank";
-import About from "@/pages/About";
-import Business from "@/pages/Business";
-import Developers from "@/pages/Developers";
-import Token from "@/pages/Token";
-import Roadmap from "@/pages/Roadmap";
-import Faq from "@/pages/Faq";
-import Press from "@/pages/Press";
-import Litepaper from "@/pages/Litepaper";
-import Invest from "@/pages/Invest";
-import Contact from "@/pages/Contact";
-import Privacy from "@/pages/Privacy";
-import Terms from "@/pages/Terms";
-import NotFound from "@/pages/not-found";
+const EveOS = lazy(() => import("@/pages/EveOS"));
+const NeoBank = lazy(() => import("@/pages/NeoBank"));
+const About = lazy(() => import("@/pages/About"));
+const Business = lazy(() => import("@/pages/Business"));
+const Developers = lazy(() => import("@/pages/Developers"));
+const Token = lazy(() => import("@/pages/Token"));
+const Roadmap = lazy(() => import("@/pages/Roadmap"));
+const Faq = lazy(() => import("@/pages/Faq"));
+const Press = lazy(() => import("@/pages/Press"));
+const Litepaper = lazy(() => import("@/pages/Litepaper"));
+const Invest = lazy(() => import("@/pages/Invest"));
+const Contact = lazy(() => import("@/pages/Contact"));
+const Privacy = lazy(() => import("@/pages/Privacy"));
+const Terms = lazy(() => import("@/pages/Terms"));
+const NotFound = lazy(() => import("@/pages/not-found"));
 
 const queryClient = new QueryClient();
 
@@ -244,7 +244,9 @@ function App() {
               Skip to content
             </a>
             <main id="main-content" className="flex-1 flex flex-col">
-              <Router />
+              <Suspense fallback={<div role="status" className="container mx-auto min-h-[60vh] px-4 pt-32 text-white/70">Loading page…</div>}>
+                <Router />
+              </Suspense>
             </main>
             <Footer />
             {/* <EveWidget /> */}

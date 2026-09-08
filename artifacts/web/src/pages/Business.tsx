@@ -1,30 +1,55 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { ArrowRight, Briefcase, TrendingUp, ShieldCheck, Activity, CheckCircle2 } from "lucide-react";
+import {
+  ArrowRight,
+  Briefcase,
+  TrendingUp,
+  ShieldCheck,
+  Activity,
+  CheckCircle2,
+} from "lucide-react";
 import { useSeo } from "@/lib/useSeo";
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/[0.02]">
       <span className="w-1.5 h-1.5 rounded-full bg-[#00F5D4] shadow-[0_0_8px_rgba(0,245,212,0.7)]" />
-      <span className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/70">{children}</span>
+      <span className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/70">
+        {children}
+      </span>
     </div>
   );
 }
 
 const OUTCOMES = [
-  { icon: Activity, t: "Throughput without headcount", d: "Run more functions in parallel without scaling the team linearly." },
-  { icon: TrendingUp, t: "Compounding quality", d: "Every cycle feeds memory and review - work gets better the longer you use it." },
-  { icon: ShieldCheck, t: "Policy-aware autonomy", d: "Scoped permissions, spend caps, and approvals keep the system in bounds." },
-  { icon: Briefcase, t: "One coordinated company", d: "Marketing, sales, finance, legal, ops, and dev on a single intelligence layer." },
+  {
+    icon: Activity,
+    t: "Throughput without headcount",
+    d: "Run more functions in parallel without scaling the team linearly.",
+  },
+  {
+    icon: TrendingUp,
+    t: "Compounding quality",
+    d: "Use business context and review to improve successive cycles of work.",
+  },
+  {
+    icon: ShieldCheck,
+    t: "Policy-aware autonomy",
+    d: "Scoped permissions, spend caps, and approvals keep the system in bounds.",
+  },
+  {
+    icon: Briefcase,
+    t: "One coordinated company",
+    d: "Marketing, sales, finance, legal, ops, and dev on a single intelligence layer.",
+  },
 ];
 
 export default function Business() {
   useSeo({
     title: "For Business - operate like a much larger company",
     description:
-      "Eve OS gives operators a coordinated, self-improving virtual company - enterprise-grade execution without enterprise complexity or cost.",
+      "EVE CXO helps business operators coordinate seven departments, working context and approved tools.",
     path: "/business",
   });
   return (
@@ -34,7 +59,11 @@ export default function Business() {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_0%,rgba(0,245,212,0.10),transparent_70%)] pointer-events-none" />
         <div className="container mx-auto px-4 md:px-6 relative z-10">
           <div className="max-w-5xl">
-            <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+            >
               <SectionLabel>For Business</SectionLabel>
             </motion.div>
             <motion.h1
@@ -51,7 +80,8 @@ export default function Business() {
               transition={{ duration: 0.7, delay: 0.15 }}
               className="mt-8 text-lg md:text-2xl text-white/65 max-w-3xl leading-relaxed"
             >
-              Eve OS gives operators a coordinated, self-improving company - so you get enterprise-grade execution without enterprise complexity or cost.
+              EVE CXO helps operators coordinate department work, business
+              context and approved tools from one workspace.
             </motion.p>
             <motion.div
               initial={{ opacity: 0, y: 16 }}
@@ -59,16 +89,23 @@ export default function Business() {
               transition={{ duration: 0.7, delay: 0.25 }}
               className="mt-10 flex flex-col sm:flex-row gap-3"
             >
-              <Link href="/eve-os">
-                <Button size="lg" className="rounded-full h-12 px-7 teal-btn">
-                  Explore Eve OS <ArrowRight className="ms-2 w-4 h-4" />
-                </Button>
-              </Link>
-              <Link href="/contact">
-                <Button size="lg" variant="outline" className="rounded-full h-12 px-7 glass-btn">
-                  Talk to sales
-                </Button>
-              </Link>
+              <Button
+                size="lg"
+                className="rounded-full h-12 px-7 teal-btn"
+                asChild
+              >
+                <Link href="/eve-cxo">
+                  Explore EVE CXO <ArrowRight className="ms-2 w-4 h-4" />
+                </Link>
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                className="rounded-full h-12 px-7 glass-btn"
+                asChild
+              >
+                <Link href="/contact">Talk to sales</Link>
+              </Button>
             </motion.div>
           </div>
         </div>
@@ -83,7 +120,8 @@ export default function Business() {
               SMBs. Agencies. Enterprise.
             </h2>
             <p className="mt-6 text-white/55 leading-relaxed">
-              The same agentic intelligence layer adapts to the operating reality of three very different audiences.
+              The same agentic intelligence layer adapts to the operating
+              reality of three very different audiences.
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -91,20 +129,32 @@ export default function Business() {
               {
                 tag: "SMB",
                 title: "Operate like a much larger company",
-                d: "Founders and operating teams of 1 to 50 use Eve OS as their entire back office - marketing, sales, finance, support, and ops on one coordinated layer, without hiring across every function.",
-                bullets: ["Launch and run from one workspace", "Replace fragmented SaaS sprawl", "Compounding quality with usage"],
+                d: "Designed for founders and operating teams coordinating their back office - marketing, sales, finance, support, and ops on one coordinated layer, without hiring across every function.",
+                bullets: [
+                  "Launch and run from one workspace",
+                  "Replace fragmented SaaS sprawl",
+                  "Compounding quality with usage",
+                ],
               },
               {
                 tag: "Agency",
                 title: "A virtual delivery team behind every account",
                 d: "Studios, agencies, and consultancies run client work through swarms of specialized agents - higher throughput per account, faster turnaround, with humans staying in the strategic and creative seat.",
-                bullets: ["Per-client workspaces and policy", "Agency-level usage and rev share", "White-label surfaces (roadmap)"],
+                bullets: [
+                  "Per-client workspaces and policy",
+                  "Agency-level usage and rev share",
+                  "White-label surfaces (roadmap)",
+                ],
               },
               {
                 tag: "Enterprise",
                 title: "Coordinated autonomy across departments",
                 d: "Larger operators bring their own systems, data, and identity into the layer with scoped permissions, spend caps, audit trails, and the Quality Engine governing every autonomous action.",
-                bullets: ["SSO, scoped permissions, audit", "Bring your data, tools, and policies", "Per-team budgets and approvals"],
+                bullets: [
+                  "SSO, scoped permissions, audit",
+                  "Bring your data, tools, and policies",
+                  "Per-team budgets and approvals",
+                ],
               },
             ].map((s, i) => (
               <motion.div
@@ -115,13 +165,25 @@ export default function Business() {
                 transition={{ duration: 0.5, delay: i * 0.06, ease: "easeOut" }}
                 className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 hover:border-[#00F5D4]/40 transition-colors"
               >
-                <div className="text-[10px] font-mono uppercase tracking-[0.22em] text-[#00F5D4] mb-3">{s.tag}</div>
-                <div className="text-lg font-semibold text-white mb-3">{s.title}</div>
-                <p className="text-sm text-white/55 leading-relaxed mb-4">{s.d}</p>
+                <div className="text-[10px] font-mono uppercase tracking-[0.22em] text-[#00F5D4] mb-3">
+                  {s.tag}
+                </div>
+                <div className="text-lg font-semibold text-white mb-3">
+                  {s.title}
+                </div>
+                <p className="text-sm text-white/55 leading-relaxed mb-4">
+                  {s.d}
+                </p>
                 <ul className="space-y-2">
                   {s.bullets.map((b) => (
-                    <li key={b} className="flex items-start gap-2 text-sm text-white/65">
-                      <CheckCircle2 className="w-4 h-4 text-[#00F5D4] mt-0.5 shrink-0" strokeWidth={1.6} />
+                    <li
+                      key={b}
+                      className="flex items-start gap-2 text-sm text-white/65"
+                    >
+                      <CheckCircle2
+                        className="w-4 h-4 text-[#00F5D4] mt-0.5 shrink-0"
+                        strokeWidth={1.6}
+                      />
                       <span>{b}</span>
                     </li>
                   ))}
@@ -152,9 +214,14 @@ export default function Business() {
                 className="glass-card p-7 hover:border-[#00F5D4]/30 transition-colors"
               >
                 <div className="w-10 h-10 rounded-lg bg-[#00F5D4]/10 border border-[#00F5D4]/20 flex items-center justify-center mb-5">
-                  <o.icon className="w-5 h-5 text-[#00F5D4]" strokeWidth={1.5} />
+                  <o.icon
+                    className="w-5 h-5 text-[#00F5D4]"
+                    strokeWidth={1.5}
+                  />
                 </div>
-                <h3 className="text-lg font-serif font-semibold text-white mb-2">{o.t}</h3>
+                <h3 className="text-lg font-serif font-semibold text-white mb-2">
+                  {o.t}
+                </h3>
                 <p className="text-white/55 text-sm leading-relaxed">{o.d}</p>
               </motion.div>
             ))}
@@ -176,17 +243,29 @@ export default function Business() {
               {
                 tag: "Solo",
                 title: "One-person companies that punch above their weight.",
-                points: ["Run six functions from one desktop", "Quality review on every output", "Persistent memory of your business"],
+                points: [
+                  "Coordinate seven departments from one workspace",
+                  "Review and approval steps",
+                  "Persistent memory of your business",
+                ],
               },
               {
                 tag: "Small business",
                 title: "Replace fragmented SaaS with a coordinated system.",
-                points: ["Cross-function workflows", "Programmable approvals", "Audit-ready outputs"],
+                points: [
+                  "Cross-function workflows",
+                  "Programmable approvals",
+                  "Audit-ready outputs",
+                ],
               },
               {
                 tag: "Growing teams",
                 title: "Scale process and quality without scaling headcount.",
-                points: ["Role-based permissions", "Shared business memory", "Sovereign tenancy options"],
+                points: [
+                  "Role-based permissions",
+                  "Shared business memory",
+                  "Sovereign tenancy options",
+                ],
               },
             ].map((t, i) => (
               <motion.div
@@ -197,12 +276,22 @@ export default function Business() {
                 transition={{ duration: 0.5, delay: i * 0.06 }}
                 className="glass-card p-8 flex flex-col hover:border-[#00F5D4]/30 transition-colors"
               >
-                <div className="text-[10px] uppercase tracking-[0.2em] text-white/40 mb-5">{t.tag}</div>
-                <h3 className="text-xl font-serif font-semibold text-white mb-5 leading-tight">{t.title}</h3>
+                <div className="text-[10px] uppercase tracking-[0.2em] text-white/40 mb-5">
+                  {t.tag}
+                </div>
+                <h3 className="text-xl font-serif font-semibold text-white mb-5 leading-tight">
+                  {t.title}
+                </h3>
                 <ul className="space-y-2.5 mt-auto pt-4 border-t border-white/5">
                   {t.points.map((p) => (
-                    <li key={p} className="flex items-start gap-2.5 text-white/65 text-sm">
-                      <CheckCircle2 className="w-4 h-4 text-[#00F5D4] shrink-0 mt-0.5" strokeWidth={1.75} />
+                    <li
+                      key={p}
+                      className="flex items-start gap-2.5 text-white/65 text-sm"
+                    >
+                      <CheckCircle2
+                        className="w-4 h-4 text-[#00F5D4] shrink-0 mt-0.5"
+                        strokeWidth={1.75}
+                      />
                       <span>{p}</span>
                     </li>
                   ))}
@@ -227,11 +316,15 @@ export default function Business() {
                   Tell us how you run today and we will show you what changes.
                 </p>
               </div>
-              <Link href="/contact">
-                <Button size="lg" className="rounded-full h-12 px-8 teal-btn whitespace-nowrap">
+              <Button
+                size="lg"
+                className="rounded-full h-12 px-8 teal-btn whitespace-nowrap"
+                asChild
+              >
+                <Link href="/contact">
                   Talk to sales <ArrowRight className="ms-2 w-4 h-4" />
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             </div>
           </div>
         </div>

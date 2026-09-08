@@ -223,8 +223,7 @@ export function Footer() {
                 <span>Elevate.</span>
               </div>
               <p className="text-white/50 text-sm leading-relaxed max-w-sm mb-6">
-                Building the agentic intelligence layer for the next generation
-                of companies, capital, and consumers.
+                AI Creates AI is the company behind EVE CXO, the AI Operating System for Business.
               </p>
               <a
                 href="https://x.com/theaicreatesai"

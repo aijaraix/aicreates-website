@@ -1,32 +1,66 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { ArrowRight, Code2, Plug, Layers, ShieldCheck, Workflow, Boxes } from "lucide-react";
+import {
+  ArrowRight,
+  Code2,
+  Plug,
+  Layers,
+  ShieldCheck,
+  Workflow,
+  Boxes,
+} from "lucide-react";
 import { useSeo } from "@/lib/useSeo";
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/[0.02]">
       <span className="w-1.5 h-1.5 rounded-full bg-[#00F5D4] shadow-[0_0_8px_rgba(0,245,212,0.7)]" />
-      <span className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/70">{children}</span>
+      <span className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/70">
+        {children}
+      </span>
     </div>
   );
 }
 
 const PRIMITIVES = [
-  { icon: Layers, t: "Intelligence Layer", d: "Programmatic access to coordinated planning, execution, review, and memory." },
-  { icon: Workflow, t: "Workflows", d: "Compose multi-agent flows with policy, approvals, and self-healing built in." },
-  { icon: Plug, t: "Connectors", d: "Bring your tools, data, and identity into the layer with scoped permissions." },
-  { icon: ShieldCheck, t: "Wallet & Policy", d: "Scoped budgets, approvals, and audit trails for every autonomous action." },
-  { icon: Boxes, t: "Skills Marketplace", d: "Distribute and consume specialized skills across the ecosystem (roadmap)." },
-  { icon: Code2, t: "SDKs", d: "First-class clients for the surfaces developers actually ship in." },
+  {
+    icon: Layers,
+    t: "Intelligence Layer",
+    d: "Programmatic access to coordinated planning, execution, review, and memory.",
+  },
+  {
+    icon: Workflow,
+    t: "Workflows",
+    d: "Compose multi-agent flows with policy, approvals, and self-healing built in.",
+  },
+  {
+    icon: Plug,
+    t: "Connectors",
+    d: "Bring your tools, data, and identity into the layer with scoped permissions.",
+  },
+  {
+    icon: ShieldCheck,
+    t: "Wallet & Policy",
+    d: "Scoped budgets, approvals, and audit trails for every autonomous action.",
+  },
+  {
+    icon: Boxes,
+    t: "Skills Marketplace",
+    d: "Distribute and consume specialized skills across the ecosystem (roadmap).",
+  },
+  {
+    icon: Code2,
+    t: "SDKs",
+    d: "Planned clients and documentation for supported integration surfaces.",
+  },
 ];
 
 export default function Developers() {
   useSeo({
     title: "For Developers - build on the agentic primitives",
     description:
-      "The same agentic intelligence layer that powers Eve OS - workflows, policy, memory, the Credit Ledger, and the Skills Marketplace - made available to builders.",
+      "The same agentic intelligence layer that powers EVE CXO - workflows, policy, memory, the Credit Ledger, and the Skills Marketplace - being developed for builders.",
     path: "/developers",
   });
   return (
@@ -36,7 +70,11 @@ export default function Developers() {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_0%,rgba(0,245,212,0.10),transparent_70%)] pointer-events-none" />
         <div className="container mx-auto px-4 md:px-6 relative z-10">
           <div className="max-w-5xl">
-            <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+            >
               <SectionLabel>For Developers</SectionLabel>
             </motion.div>
             <motion.h1
@@ -53,7 +91,9 @@ export default function Developers() {
               transition={{ duration: 0.7, delay: 0.15 }}
               className="mt-8 text-lg md:text-2xl text-white/65 max-w-3xl leading-relaxed"
             >
-              The same agentic intelligence layer that powers Eve OS will be available to builders - workflows, policy, memory, and a Skills Marketplace.
+              The same agentic intelligence layer that powers EVE CXO will be
+              available to builders - workflows, policy, memory, and a Skills
+              Marketplace.
             </motion.p>
             <motion.div
               initial={{ opacity: 0, y: 16 }}
@@ -61,16 +101,24 @@ export default function Developers() {
               transition={{ duration: 0.7, delay: 0.25 }}
               className="mt-10 flex flex-col sm:flex-row gap-3"
             >
-              <Link href="/contact?interest=Developer%20Waitlist">
-                <Button size="lg" className="rounded-full h-12 px-7 teal-btn">
-                  Join the developer waitlist <ArrowRight className="ms-2 w-4 h-4" />
-                </Button>
-              </Link>
-              <Link href="/roadmap">
-                <Button size="lg" variant="outline" className="rounded-full h-12 px-7 glass-btn">
-                  See the roadmap
-                </Button>
-              </Link>
+              <Button
+                size="lg"
+                className="rounded-full h-12 px-7 teal-btn"
+                asChild
+              >
+                <Link href="/contact?interest=Developer%20Waitlist">
+                  Join the developer waitlist{" "}
+                  <ArrowRight className="ms-2 w-4 h-4" />
+                </Link>
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                className="rounded-full h-12 px-7 glass-btn"
+                asChild
+              >
+                <Link href="/roadmap">See the roadmap</Link>
+              </Button>
             </motion.div>
           </div>
         </div>
@@ -82,17 +130,32 @@ export default function Developers() {
           <div className="max-w-3xl mb-10">
             <SectionLabel>Skills marketplace</SectionLabel>
             <h2 className="mt-6 text-4xl md:text-5xl font-serif font-semibold text-gradient leading-[1.05]">
-              Build a skill. Get paid every time it runs.
+              Reusable skills. A development direction.
             </h2>
             <p className="mt-6 text-white/55 leading-relaxed">
-              The Skills Marketplace is the distribution surface for the agentic intelligence layer. Publish a skill, plug into the Credit Ledger, and earn a transparent revenue share every time another operator's agent uses it - no contracts, no chasing, no integrations to manage.
+              Reusable skills and a future distribution experience are part of
+              the product direction. Developer access, review requirements and
+              commercial terms will be published as the program becomes
+              available.
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {[
-              { tag: "Publish", t: "Ship a skill", d: "Wrap a workflow, model, connector, or full vertical agent into a versioned, policy-aware skill." },
-              { tag: "Distribute", t: "Reach every operator", d: "Skills are discoverable from inside Eve OS the moment they're approved - no separate go-to-market." },
-              { tag: "Earn", t: "Per-use revenue share", d: "The Credit Ledger meters every invocation and settles your share automatically in $AICA." },
+              {
+                tag: "Publish",
+                t: "Ship a skill",
+                d: "Wrap a workflow, model, connector, or full vertical agent into a versioned, policy-aware skill.",
+              },
+              {
+                tag: "Distribute",
+                t: "Reach every operator",
+                d: "A planned distribution experience will help operators find approved skills.",
+              },
+              {
+                tag: "Earn",
+                t: "Commercial terms",
+                d: "Pricing and any developer compensation require published program terms; no token settlement is promised here.",
+              },
             ].map((s, i) => (
               <motion.div
                 key={s.tag}
@@ -102,15 +165,24 @@ export default function Developers() {
                 transition={{ duration: 0.5, delay: i * 0.06, ease: "easeOut" }}
                 className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 hover:border-[#00F5D4]/40 transition-colors"
               >
-                <div className="text-[10px] font-mono uppercase tracking-[0.22em] text-[#00F5D4] mb-3">{s.tag}</div>
-                <div className="text-lg font-semibold text-white mb-2">{s.t}</div>
+                <div className="text-[10px] font-mono uppercase tracking-[0.22em] text-[#00F5D4] mb-3">
+                  {s.tag}
+                </div>
+                <div className="text-lg font-semibold text-white mb-2">
+                  {s.t}
+                </div>
                 <p className="text-sm text-white/55 leading-relaxed">{s.d}</p>
               </motion.div>
             ))}
           </div>
           <div className="mt-6 rounded-2xl border border-[#00F5D4]/25 bg-[#00F5D4]/[0.04] p-6">
             <div className="text-sm text-white/70 leading-relaxed">
-              <span className="text-[#00F5D4] font-medium">Aligned by design.</span> Builders, operators, and the network all benefit when a skill performs well. The Quality Engine scores every invocation, so the marketplace ranks on outcomes - not marketing.
+              <span className="text-[#00F5D4] font-medium">
+                Aligned by design.
+              </span>{" "}
+              Builders, operators, and the network all benefit when a skill
+              performs well. The Quality Engine scores every invocation, so the
+              marketplace ranks on outcomes - not marketing.
             </div>
           </div>
         </div>
@@ -136,9 +208,14 @@ export default function Developers() {
                 className="glass-card p-6 hover:border-[#00F5D4]/30 transition-colors"
               >
                 <div className="w-10 h-10 rounded-lg bg-[#00F5D4]/10 border border-[#00F5D4]/20 flex items-center justify-center mb-5">
-                  <p.icon className="w-5 h-5 text-[#00F5D4]" strokeWidth={1.5} />
+                  <p.icon
+                    className="w-5 h-5 text-[#00F5D4]"
+                    strokeWidth={1.5}
+                  />
                 </div>
-                <h3 className="text-base font-semibold text-white mb-2">{p.t}</h3>
+                <h3 className="text-base font-semibold text-white mb-2">
+                  {p.t}
+                </h3>
                 <p className="text-white/55 text-sm leading-relaxed">{p.d}</p>
               </motion.div>
             ))}
@@ -158,13 +235,17 @@ export default function Developers() {
             </div>
             <div className="md:col-span-7 space-y-6 text-white/65 text-lg leading-relaxed">
               <p>
-                Real workloads, not demos. The platform exposes typed contracts, deterministic policy, and observable execution from day one.
+                The engineering direction emphasizes typed contracts, clear
+                permission boundaries and observable execution. Contact us about
+                current developer access.
               </p>
               <p>
-                Quality is a first-class primitive - rubrics, scoring, and rewrites are baked in, not left to the integrator to bolt on.
+                Quality is a first-class primitive - rubrics, scoring, and
+                rewrites are baked in, not left to the integrator to bolt on.
               </p>
               <p>
-                Privacy and tenancy are not optional. Hybrid compute lets you choose where work runs and what data leaves your boundary.
+                Deployment and data-handling options require review against the
+                needs of each workspace and its connected providers.
               </p>
             </div>
           </div>
@@ -182,14 +263,19 @@ export default function Developers() {
                   Build with us.
                 </h2>
                 <p className="text-lg text-white/55 max-w-xl">
-                  Developer access is rolling out in phases. Get on the list and we will be in touch.
+                  Developer access is rolling out in phases. Get on the list and
+                  we will be in touch.
                 </p>
               </div>
-              <Link href="/contact?interest=Developer%20Waitlist">
-                <Button size="lg" className="rounded-full h-12 px-8 teal-btn whitespace-nowrap">
+              <Button
+                size="lg"
+                className="rounded-full h-12 px-8 teal-btn whitespace-nowrap"
+                asChild
+              >
+                <Link href="/contact?interest=Developer%20Waitlist">
                   Join the waitlist <ArrowRight className="ms-2 w-4 h-4" />
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             </div>
           </div>
         </div>
