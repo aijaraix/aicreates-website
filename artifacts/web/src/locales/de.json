@@ -9,7 +9,7 @@
     "openMenu": "Menü öffnen",
     "items": {
       "eveOS": {
-        "name": "Eve OS",
+        "name": "EVE CXO",
         "desc": "Das Team, das niemals schläft"
       },
       "neoBank": {
@@ -25,8 +25,8 @@
         "desc": "Bauen Sie auf agentischen Primitiven auf"
       },
       "litepaper": {
-        "name": "Litepaper",
-        "desc": "Positionierung, Architektur und Tokenomics"
+        "name": "Frühere Materialien",
+        "desc": "Referenzseiten zu früheren Plänen"
       },
       "roadmap": {
         "name": "Roadmap",
@@ -159,20 +159,20 @@
   },
   "eveos": {
     "seo": {
-      "title": "Eve OS - Das Team, das niemals schläft",
+      "title": "EVE CXO - Das Team, das niemals schläft",
       "description": "Eve agiert als Stabschef und koordiniert spezialisierte KI-Abteilungsleiter in Ihrem Unternehmen."
     },
     "hero": {
       "eyebrow": "Vorzeigeprodukt",
       "subline": "Lernen Sie das Team kennen, das niemals schläft.",
-      "desc": "Eve führt Ihr Unternehmen wie ein Stabschef. Sie koordiniert sechs spezialisierte KI-Abteilungsleiter, die parallel arbeiten und rund um die Uhr Aufgaben ausführen und überprüfen.",
-      "joinWaitlist": "Eve OS entdecken",
+      "desc": "Eve führt Ihr Unternehmen wie ein Stabschef. Sie koordiniert sieben spezialisierte KI-Abteilungsleiter, die parallel arbeiten und rund um die Uhr Aufgaben ausführen und überprüfen.",
+      "joinWaitlist": "EVE CXO entdecken",
       "readLitepaper": "Litepaper lesen"
     },
     "what": {
-      "eyebrow": "Was ist Eve OS?",
+      "eyebrow": "Was ist EVE CXO?",
       "title": "Ein lebendiges Führungsteam.",
-      "p1": "Eve OS ist kein Chatbot. Es ist ein voll besetztes, autonomes Führungsteam. Sie geben die übergeordneten Ziele vor, und Eve fungiert als Ihr Stabschef und bricht diese Ziele in Abteilungsaufgaben herunter.",
+      "p1": "EVE CXO ist kein Chatbot. Es ist ein voll besetztes, autonomes Führungsteam. Sie geben die übergeordneten Ziele vor, und Eve fungiert als Ihr Stabschef und bricht diese Ziele in Abteilungsaufgaben herunter.",
       "p2": "Sie delegiert die Arbeit an spezialisierte KI-Agenten in den Bereichen Marketing, Vertrieb, Werbung, Finanzen, Operations und Recht und orchestriert deren Bemühungen parallel, um abgeschlossene, überprüfte Ergebnisse zu liefern."
     },
     "how": {
@@ -190,7 +190,7 @@
         },
         "s3": {
           "title": "Parallele Ausführung",
-          "desc": "Sechs KI-Abteilungsleiter arbeiten gleichzeitig in ihren Bereichen."
+          "desc": "Sieben KI-Abteilungsleiter arbeiten gleichzeitig in ihren Bereichen."
         },
         "s4": {
           "title": "Abteilungsübergreifende Überprüfung",
@@ -204,7 +204,7 @@
     },
     "caps": {
       "eyebrow": "Abteilungen",
-      "title": "Sechs spezialisierte KI-Leiter.",
+      "title": "Sieben spezialisierte KI-Leiter.",
       "sub": "Ein komplettes Führungsteam, sofort verfügbar und immer abgestimmt.",
       "items": {
         "marketing": {
@@ -235,7 +235,7 @@
     },
     "team": {
       "eyebrow": "Das Team",
-      "title": "Ein Stabschef. Sechs Abteilungsleiter.",
+      "title": "Ein Stabschef. Sieben Abteilungsleiter.",
       "sub": "Eve leitet ein spezialisiertes Führungsgremium. Jeder Agent ist speziell für seinen Bereich konzipiert.",
       "eve": {
         "role": "Stabschef",
@@ -508,7 +508,7 @@
   "contact": {
     "seo": {
       "title": "Kontakt",
-      "description": "Setzen Sie sich mit AIcreatesAI in Verbindung - Wartelisten für Eve OS und FinPayTek, Investor Relations, Presse und Partnerschaften."
+      "description": "Setzen Sie sich mit AIcreatesAI in Verbindung - Wartelisten für EVE CXO und FinPayTek, Investor Relations, Presse und Partnerschaften."
     },
     "eyebrow": "Kontakt",
     "title": "Starten Sie ein Gespräch.",
@@ -521,7 +521,7 @@
     "sendAnother": "Weitere senden",
     "interestsLabel": "Ich melde mich als",
     "interests": {
-      "eveWaitlist": "Eve OS Warteliste",
+      "eveWaitlist": "EVE CXO Warteliste",
       "neoWaitlist": "FinPayTek Warteliste",
       "devWaitlist": "Entwickler-Warteliste",
       "investor": "Investor",

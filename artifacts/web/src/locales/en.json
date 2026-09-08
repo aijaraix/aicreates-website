@@ -9,7 +9,7 @@
     "openMenu": "Open menu",
     "items": {
       "eveOS": {
-        "name": "Eve OS",
+        "name": "EVE CXO",
         "desc": "The team that never sleeps"
       },
       "neoBank": {
@@ -25,8 +25,8 @@
         "desc": "Build on the agentic primitives"
       },
       "litepaper": {
-        "name": "Litepaper",
-        "desc": "Positioning, architecture, and tokenomics"
+        "name": "Earlier materials",
+        "desc": "Reference pages from earlier plans"
       },
       "roadmap": {
         "name": "Roadmap",
@@ -159,20 +159,20 @@
   },
   "eveos": {
     "seo": {
-      "title": "Eve OS - The team that never sleeps",
-      "description": "Eve acts like a chief of staff, coordinating specialized AI department heads across your company."
+      "title": "EVE CXO — The AI Operating System for Business",
+      "description": "Eve coordinates seven departments and their specialists around your objectives, with your tools, your workspace and approval before consequential action."
     },
     "hero": {
       "eyebrow": "Flagship Product",
-      "subline": "Meet the team that never sleeps.",
-      "desc": "Eve runs your company like a Chief of Staff. She coordinates six specialized AI department heads working in parallel, executing and reviewing work 24/7.",
-      "joinWaitlist": "Explore Eve OS",
+      "subline": "The AI Operating System for Business",
+      "desc": "Eve is your executive intelligence and chief of staff. Coordinate seven departments and their specialists around business objectives, with your tools and your decisions in control.",
+      "joinWaitlist": "Explore EVE CXO",
       "readLitepaper": "Read the Litepaper"
     },
     "what": {
-      "eyebrow": "What is Eve OS?",
+      "eyebrow": "What is EVE CXO?",
       "title": "A living executive team.",
-      "p1": "Eve OS is not a chatbot. It's a fully staffed, autonomous executive team. You provide the high-level goals, and Eve acts as your Chief of Staff, breaking down those goals into departmental tasks.",
+      "p1": "EVE CXO brings executive coordination, department expertise and specialist work into one business environment. Eve helps turn your objectives into scoped tasks and accountable handoffs.",
       "p2": "She delegates work to specialized AI agents across Marketing, Sales, Advertising, Finance, Operations, and Legal, orchestrating their efforts in parallel to deliver completed, reviewed outcomes."
     },
     "how": {
@@ -190,7 +190,7 @@
         },
         "s3": {
           "title": "Parallel Execution",
-          "desc": "Six AI department heads work simultaneously across their domains."
+          "desc": "Seven AI department heads work simultaneously across their domains."
         },
         "s4": {
           "title": "Cross-Department Review",
@@ -204,7 +204,7 @@
     },
     "caps": {
       "eyebrow": "Departments",
-      "title": "Six specialized AI heads.",
+      "title": "Seven customer-facing departments.",
       "sub": "A complete executive team, instantly available and always aligned.",
       "items": {
         "marketing": {
@@ -235,7 +235,7 @@
     },
     "team": {
       "eyebrow": "The Team",
-      "title": "One chief of staff. Six department heads.",
+      "title": "One chief of staff. Seven department heads.",
       "sub": "Eve directs a specialized executive suite. Each agent is purpose-built for their domain.",
       "eve": {
         "role": "Chief of Staff",
@@ -508,7 +508,7 @@
   "contact": {
     "seo": {
       "title": "Contact",
-      "description": "Get in touch with AIcreatesAI - waitlists for Eve OS and FinPayTek, investor relations, press, and partnerships."
+      "description": "Get in touch with AIcreatesAI - waitlists for EVE CXO and FinPayTek, investor relations, press, and partnerships."
     },
     "eyebrow": "Contact",
     "title": "Start a conversation.",
@@ -521,7 +521,7 @@
     "sendAnother": "Send another",
     "interestsLabel": "I'm reaching out as",
     "interests": {
-      "eveWaitlist": "Eve OS Waitlist",
+      "eveWaitlist": "EVE CXO Waitlist",
       "neoWaitlist": "FinPayTek Waitlist",
       "devWaitlist": "Developer Waitlist",
       "investor": "Investor",
@@ -581,7 +581,7 @@
       },
       "forward": {
         "title": "Forward-looking statements",
-        "text": "Descriptions of products, capabilities, and roadmap on this site - including the Agentic Intelligence Layer, Eve OS, FinPayTek, and the Litepaper - represent current intent and direction, not guarantees. Plans and timelines may change."
+        "text": "Descriptions of products, capabilities, and roadmap on this site - including the Agentic Intelligence Layer, EVE CXO, FinPayTek, and the Litepaper - represent current intent and direction, not guarantees. Plans and timelines may change."
       },
       "disclaimers": {
         "title": "Disclaimers",

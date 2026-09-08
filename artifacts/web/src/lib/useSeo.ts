@@ -1,12 +1,17 @@
 import { useEffect } from "react";
 
-const SITE = "AIcreatesAI";
+const SITE = "AI Creates AI";
 const ORIGIN = "https://www.aicreates.ai";
 const DEFAULT_OG = `${ORIGIN}/social/og-default.png`;
 const DEFAULT_OG_SQUARE = `${ORIGIN}/social/og-square.png`;
-const DEFAULT_OG_ALT = "AIcreatesAI - The Agentic Intelligence Layer";
+const DEFAULT_OG_ALT = "AI Creates AI — The company behind EVE CXO";
 
-function setMeta(selector: string, attr: "name" | "property", key: string, content: string) {
+function setMeta(
+  selector: string,
+  attr: "name" | "property",
+  key: string,
+  content: string,
+) {
   let el = document.head.querySelector<HTMLMetaElement>(selector);
   if (!el) {
     el = document.createElement("meta");
@@ -42,7 +47,9 @@ function setAllOgImages(coverUrl: string, squareUrl: string, alt: string) {
     "og:image:alt",
   ];
   for (const p of props) {
-    document.head.querySelectorAll(`meta[property="${p}"]`).forEach((n) => n.remove());
+    document.head
+      .querySelectorAll(`meta[property="${p}"]`)
+      .forEach((n) => n.remove());
   }
   const append = (property: string, content: string) => {
     const el = document.createElement("meta");
@@ -50,7 +57,8 @@ function setAllOgImages(coverUrl: string, squareUrl: string, alt: string) {
     el.setAttribute("content", content);
     document.head.appendChild(el);
   };
-  const typeFor = (u: string) => (/\.jpe?g(\?|$)/i.test(u) ? "image/jpeg" : "image/png");
+  const typeFor = (u: string) =>
+    /\.jpe?g(\?|$)/i.test(u) ? "image/jpeg" : "image/png";
   append("og:image", coverUrl);
   append("og:image:secure_url", coverUrl);
   append("og:image:type", typeFor(coverUrl));
@@ -71,6 +79,7 @@ export type SeoOptions = {
   path: string;
   /** Optional full title that bypasses the `<title> | AIcreatesAI` suffix. */
   fullTitle?: string;
+  indexable?: boolean;
   /** 1200x630 cover image (absolute URL or path under /). */
   image?: string;
   /** 600x600 square image for WhatsApp/iMessage (absolute URL or path under /). */
@@ -84,6 +93,7 @@ export function useSeo({
   description,
   path,
   fullTitle: fullTitleOverride,
+  indexable = true,
   image = DEFAULT_OG,
   squareImage = DEFAULT_OG_SQUARE,
   imageAlt = DEFAULT_OG_ALT,
@@ -97,22 +107,62 @@ export function useSeo({
     document.title = fullTitle;
     setMeta('meta[name="description"]', "name", "description", description);
     setLink("canonical", url);
+    setMeta(
+      'meta[name="robots"]',
+      "name",
+      "robots",
+      indexable ? "index, follow" : "noindex, follow",
+    );
 
     setMeta('meta[property="og:site_name"]', "property", "og:site_name", SITE);
     setMeta('meta[property="og:type"]', "property", "og:type", "website");
     setMeta('meta[property="og:locale"]', "property", "og:locale", "en_US");
     setMeta('meta[property="og:title"]', "property", "og:title", fullTitle);
-    setMeta('meta[property="og:description"]', "property", "og:description", description);
+    setMeta(
+      'meta[property="og:description"]',
+      "property",
+      "og:description",
+      description,
+    );
     setMeta('meta[property="og:url"]', "property", "og:url", url);
 
     setAllOgImages(cover, square, imageAlt);
 
-    setMeta('meta[name="twitter:card"]', "name", "twitter:card", "summary_large_image");
-    setMeta('meta[name="twitter:site"]', "name", "twitter:site", "@theaicreatesai");
+    setMeta(
+      'meta[name="twitter:card"]',
+      "name",
+      "twitter:card",
+      "summary_large_image",
+    );
+    setMeta(
+      'meta[name="twitter:site"]',
+      "name",
+      "twitter:site",
+      "@theaicreatesai",
+    );
     setMeta('meta[name="twitter:url"]', "name", "twitter:url", url);
     setMeta('meta[name="twitter:title"]', "name", "twitter:title", fullTitle);
-    setMeta('meta[name="twitter:description"]', "name", "twitter:description", description);
+    setMeta(
+      'meta[name="twitter:description"]',
+      "name",
+      "twitter:description",
+      description,
+    );
     setMeta('meta[name="twitter:image"]', "name", "twitter:image", cover);
-    setMeta('meta[name="twitter:image:alt"]', "name", "twitter:image:alt", imageAlt);
-  }, [title, description, path, image, squareImage, imageAlt]);
+    setMeta(
+      'meta[name="twitter:image:alt"]',
+      "name",
+      "twitter:image:alt",
+      imageAlt,
+    );
+  }, [
+    title,
+    fullTitleOverride,
+    indexable,
+    description,
+    path,
+    image,
+    squareImage,
+    imageAlt,
+  ]);
 }

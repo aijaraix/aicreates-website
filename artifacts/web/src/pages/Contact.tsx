@@ -11,20 +11,22 @@ import { useSeo } from "@/lib/useSeo";
 const CONTACT_ENDPOINT = "https://formsubmit.co/ajax/sholom@aicreates.ai";
 
 const INTERESTS = [
-  "Eve OS Waitlist",
-  "FinPayTek Waitlist",
+  "EVE CXO",
+  "Strategic partnership",
   "Developer Waitlist",
   "Investor",
   "Press",
   "Other",
 ] as const;
-type Interest = typeof INTERESTS[number];
+type Interest = (typeof INTERESTS)[number];
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/[0.02]">
       <span className="w-1.5 h-1.5 rounded-full bg-[#00F5D4] shadow-[0_0_8px_rgba(0,245,212,0.7)]" />
-      <span className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/70">{children}</span>
+      <span className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/70">
+        {children}
+      </span>
     </div>
   );
 }
@@ -33,28 +35,31 @@ export default function Contact() {
   useSeo({
     title: "Contact",
     description:
-      "Get in touch with AIcreatesAI - waitlists for Eve OS and FinPayTek, investor relations, press, and partnerships.",
+      "Get in touch with AIcreatesAI - EVE CXO, strategic partnerships, investor relations, and press.",
     path: "/contact",
   });
   const { toast } = useToast();
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [interest, setInterest] = useState<Interest>("Eve OS Waitlist");
+  const [interest, setInterest] = useState<Interest>("EVE CXO");
 
   useEffect(() => {
     if (typeof window === "undefined") return;
     const params = new URLSearchParams(window.location.search);
-    const raw = params.get("interest") || window.location.hash.replace(/^#/, "");
+    const raw =
+      params.get("interest") || window.location.hash.replace(/^#/, "");
     if (!raw) return;
     const decoded = decodeURIComponent(raw).toLowerCase();
     // Exact match first, then a few legacy aliases.
-    let match: Interest | undefined = INTERESTS.find((i) => i.toLowerCase() === decoded);
+    let match: Interest | undefined = INTERESTS.find(
+      (i) => i.toLowerCase() === decoded,
+    );
     if (!match) {
       const aliases: Record<string, Interest> = {
-        "eve os": "Eve OS Waitlist",
-        "neobank": "FinPayTek Waitlist",
-        "developer": "Developer Waitlist",
-        "developers": "Developer Waitlist",
+        "eve os": "EVE CXO",
+        neobank: "Strategic partnership",
+        developer: "Developer Waitlist",
+        developers: "Developer Waitlist",
       };
       match = aliases[decoded];
     }
@@ -64,9 +69,9 @@ export default function Contact() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (submitting || submitted) return;
+    const form = e.currentTarget;
+    if (!form.reportValidity()) return;
     setSubmitting(true);
-
-    const form = e.target as HTMLFormElement;
     const fd = new FormData(form);
     const payload: Record<string, string> = {
       _subject: `New AIcreatesAI inquiry · ${interest} · ${fd.get("name") || "Anonymous"}`,
@@ -84,10 +89,17 @@ export default function Contact() {
     try {
       const res = await fetch(CONTACT_ENDPOINT, {
         method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
         body: JSON.stringify(payload),
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const result = await res.json();
+      if (result.success !== true && result.success !== "true") {
+        throw new Error("The form provider did not accept the message.");
+      }
       setSubmitted(true);
       toast({
         title: "Message sent.",
@@ -98,7 +110,8 @@ export default function Contact() {
     } catch (err) {
       toast({
         title: "Couldn't reach the server.",
-        description: "Email us directly at sholom@aicreates.ai and we will respond promptly.",
+        description:
+          "Email us directly at sholom@aicreates.ai and we will respond promptly.",
         className: "bg-[#0E0E0E] border-red-400/30 text-white",
       });
     } finally {
@@ -125,7 +138,8 @@ export default function Contact() {
                 Start a conversation.
               </h1>
               <p className="text-lg text-white/60 leading-relaxed mb-12 max-w-md">
-                Tell us what you are building, deploying, or underwriting. We will route you to the right person.
+                Tell us what you are building, deploying, or underwriting. We
+                will route you to the right person.
               </p>
 
               <div className="space-y-6">
@@ -134,8 +148,13 @@ export default function Contact() {
                     <Mail className="w-4 h-4 text-[#00F5D4]" />
                   </div>
                   <div>
-                    <h4 className="text-[10px] font-medium text-white/40 mb-1.5 uppercase tracking-[0.2em]">Direct</h4>
-                    <a href="mailto:sholom@aicreates.ai" className="text-white hover:text-[#00F5D4] transition-colors">
+                    <h4 className="text-[10px] font-medium text-white/40 mb-1.5 uppercase tracking-[0.2em]">
+                      Direct
+                    </h4>
+                    <a
+                      href="mailto:sholom@aicreates.ai"
+                      className="text-white hover:text-[#00F5D4] transition-colors"
+                    >
                       sholom@aicreates.ai
                     </a>
                   </div>
@@ -146,7 +165,9 @@ export default function Contact() {
                     <MapPin className="w-4 h-4 text-[#00F5D4]" />
                   </div>
                   <div>
-                    <h4 className="text-[10px] font-medium text-white/40 mb-1.5 uppercase tracking-[0.2em]">Headquarters</h4>
+                    <h4 className="text-[10px] font-medium text-white/40 mb-1.5 uppercase tracking-[0.2em]">
+                      Headquarters
+                    </h4>
                     <p className="text-white">Miami, Florida</p>
                   </div>
                 </div>
@@ -164,11 +185,18 @@ export default function Contact() {
                 {submitted ? (
                   <div className="relative text-center py-10">
                     <div className="w-14 h-14 rounded-full bg-[#00F5D4]/10 border border-[#00F5D4]/30 flex items-center justify-center mx-auto mb-5">
-                      <CheckCircle2 className="w-7 h-7 text-[#00F5D4]" strokeWidth={1.75} />
+                      <CheckCircle2
+                        className="w-7 h-7 text-[#00F5D4]"
+                        strokeWidth={1.75}
+                      />
                     </div>
-                    <h3 className="text-2xl font-serif font-semibold text-white mb-3">Message received.</h3>
+                    <h3 className="text-2xl font-serif font-semibold text-white mb-3">
+                      Message received.
+                    </h3>
                     <p className="text-white/55 max-w-md mx-auto mb-6">
-                      Thank you. We will reply from <span className="text-white/80">sholom@aicreates.ai</span> shortly.
+                      Thank you. We will reply from{" "}
+                      <span className="text-white/80">sholom@aicreates.ai</span>{" "}
+                      shortly.
                     </p>
                     <button
                       type="button"
@@ -179,17 +207,27 @@ export default function Contact() {
                     </button>
                   </div>
                 ) : (
-                  <form onSubmit={handleSubmit} className="relative space-y-5" noValidate>
-                    <input type="text" name="_honey" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
+                  <form onSubmit={handleSubmit} className="relative space-y-5">
+                    <input
+                      type="text"
+                      name="_honey"
+                      tabIndex={-1}
+                      autoComplete="off"
+                      className="hidden"
+                      aria-hidden="true"
+                    />
 
                     <div className="space-y-2">
-                      <Label className="text-white/60 text-[10px] uppercase tracking-[0.18em]">I'm reaching out as</Label>
+                      <Label className="text-white/60 text-[10px] uppercase tracking-[0.18em]">
+                        I'm reaching out as
+                      </Label>
                       <div className="flex flex-wrap gap-2">
                         {INTERESTS.map((opt) => (
                           <button
                             key={opt}
                             type="button"
                             onClick={() => setInterest(opt)}
+                            aria-pressed={interest === opt}
                             className={`px-4 py-2 rounded-full text-xs font-medium border transition-all ${
                               interest === opt
                                 ? "bg-[#00F5D4] text-black border-[#00F5D4]"
@@ -204,17 +242,32 @@ export default function Contact() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <Label htmlFor="name" className="text-white/60 text-[10px] uppercase tracking-[0.18em]">Full name</Label>
+                        <Label
+                          htmlFor="name"
+                          className="text-white/60 text-[10px] uppercase tracking-[0.18em]"
+                        >
+                          Full name
+                        </Label>
                         <Input
-                          id="name" name="name" required
+                          id="name"
+                          name="name"
+                          required
                           className="bg-white/[0.02] border-white/10 text-white placeholder:text-white/25 h-11 focus-visible:ring-[#00F5D4] focus-visible:border-[#00F5D4]/40"
                           placeholder="Jane Doe"
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="email" className="text-white/60 text-[10px] uppercase tracking-[0.18em]">Email</Label>
+                        <Label
+                          htmlFor="email"
+                          className="text-white/60 text-[10px] uppercase tracking-[0.18em]"
+                        >
+                          Email
+                        </Label>
                         <Input
-                          id="email" name="email" type="email" required
+                          id="email"
+                          name="email"
+                          type="email"
+                          required
                           className="bg-white/[0.02] border-white/10 text-white placeholder:text-white/25 h-11 focus-visible:ring-[#00F5D4] focus-visible:border-[#00F5D4]/40"
                           placeholder="you@company.com"
                         />
@@ -223,17 +276,29 @@ export default function Contact() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <Label htmlFor="company" className="text-white/60 text-[10px] uppercase tracking-[0.18em]">Company</Label>
+                        <Label
+                          htmlFor="company"
+                          className="text-white/60 text-[10px] uppercase tracking-[0.18em]"
+                        >
+                          Company
+                        </Label>
                         <Input
-                          id="company" name="company"
+                          id="company"
+                          name="company"
                           className="bg-white/[0.02] border-white/10 text-white placeholder:text-white/25 h-11 focus-visible:ring-[#00F5D4] focus-visible:border-[#00F5D4]/40"
                           placeholder="Organization"
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="role" className="text-white/60 text-[10px] uppercase tracking-[0.18em]">Role</Label>
+                        <Label
+                          htmlFor="role"
+                          className="text-white/60 text-[10px] uppercase tracking-[0.18em]"
+                        >
+                          Role
+                        </Label>
                         <Input
-                          id="role" name="role"
+                          id="role"
+                          name="role"
                           className="bg-white/[0.02] border-white/10 text-white placeholder:text-white/25 h-11 focus-visible:ring-[#00F5D4] focus-visible:border-[#00F5D4]/40"
                           placeholder="Founder, investor, operator"
                         />
@@ -241,9 +306,16 @@ export default function Contact() {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="message" className="text-white/60 text-[10px] uppercase tracking-[0.18em]">Message</Label>
+                      <Label
+                        htmlFor="message"
+                        className="text-white/60 text-[10px] uppercase tracking-[0.18em]"
+                      >
+                        Message
+                      </Label>
                       <Textarea
-                        id="message" name="message" required
+                        id="message"
+                        name="message"
+                        required
                         className="bg-white/[0.02] border-white/10 text-white placeholder:text-white/25 min-h-[120px] resize-none focus-visible:ring-[#00F5D4] focus-visible:border-[#00F5D4]/40"
                         placeholder="What are you building, deploying, or underwriting?"
                       />
@@ -255,13 +327,25 @@ export default function Contact() {
                       className="w-full rounded-full teal-btn h-12 text-sm disabled:opacity-70"
                     >
                       {submitting ? (
-                        <><Loader2 className="me-2 w-4 h-4 animate-spin" /> Sending</>
+                        <>
+                          <Loader2 className="me-2 w-4 h-4 animate-spin" />{" "}
+                          Sending
+                        </>
                       ) : (
-                        <>Send message <Send className="ms-2 w-4 h-4" /></>
+                        <>
+                          Send message <Send className="ms-2 w-4 h-4" />
+                        </>
                       )}
                     </Button>
                     <p className="text-xs text-white/35 text-center">
-                      Or email <a href="mailto:sholom@aicreates.ai" className="text-white/55 hover:text-[#00F5D4]">sholom@aicreates.ai</a>.
+                      Or email{" "}
+                      <a
+                        href="mailto:sholom@aicreates.ai"
+                        className="text-white/55 hover:text-[#00F5D4]"
+                      >
+                        sholom@aicreates.ai
+                      </a>
+                      .
                     </p>
                   </form>
                 )}

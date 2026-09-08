@@ -1,3 +1,4 @@
+import { LegacyContext } from "@/components/LegacyContext";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { ArrowRight, Cpu, Server, Recycle } from "lucide-react";
@@ -79,11 +80,13 @@ export default function Token() {
     description:
       "$AICA powers subscription discounts, compute network participation, and contributor rewards across the agentic intelligence layer. Fixed supply: 10,000,000,000.",
     path: "/token",
+    indexable: false,
   });
   return (
     <div className="flex flex-col w-full">
+      <LegacyContext />
       {/* HERO */}
-      <section className="relative pt-28 pb-14 md:pt-36 md:pb-20 overflow-hidden">
+      <section className="relative pt-10 pb-14 md:pt-12 md:pb-20 overflow-hidden">
         <div className="absolute inset-0 bg-grid bg-grid-fade pointer-events-none" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_0%,rgba(0,245,212,0.10),transparent_70%)] pointer-events-none" />
         <div className="container mx-auto px-4 md:px-6 relative z-10">
@@ -444,17 +447,15 @@ export default function Token() {
             <div className="relative grid grid-cols-1 md:grid-cols-[1fr_auto] gap-8 items-center">
               <div>
                 <h2 className="text-3xl md:text-5xl font-serif font-semibold text-gradient leading-[1.05] mb-4">
-                  Accredited investor?
+                  Looking for earlier records?
                 </h2>
                 <p className="text-lg text-white/55 max-w-xl">
-                  The investor portal contains the complete private-sale terms, round schedule, and SAFT documents.
+                  Use the investor portal for your existing account, or contact the company about earlier documents.
                 </p>
               </div>
-              <a href="https://invest.aicreates.ai" target="_blank" rel="noopener noreferrer">
-                <Button size="lg" className="rounded-full h-12 px-8 teal-btn whitespace-nowrap" data-testid="link-investor-portal">
-                  Open investor portal <ArrowRight className="ms-2 w-4 h-4" />
-                </Button>
-              </a>
+              <Button size="lg" className="rounded-full h-12 px-8 teal-btn whitespace-nowrap" data-testid="link-investor-portal" asChild><a href="https://invest.aicreates.ai" target="_blank" rel="noopener noreferrer">
+                  Existing investor portal <ArrowRight className="ms-2 w-4 h-4" />
+                </a></Button>
             </div>
           </div>
         </div>
