@@ -6,7 +6,12 @@ const DEFAULT_OG = `${ORIGIN}/social/og-default.png`;
 const DEFAULT_OG_SQUARE = `${ORIGIN}/social/og-square.png`;
 const DEFAULT_OG_ALT = "AIcreatesAI - The Agentic Intelligence Layer";
 
-function setMeta(selector: string, attr: "name" | "property", key: string, content: string) {
+function setMeta(
+  selector: string,
+  attr: "name" | "property",
+  key: string,
+  content: string,
+) {
   let el = document.head.querySelector<HTMLMetaElement>(selector);
   if (!el) {
     el = document.createElement("meta");
@@ -42,7 +47,9 @@ function setAllOgImages(coverUrl: string, squareUrl: string, alt: string) {
     "og:image:alt",
   ];
   for (const p of props) {
-    document.head.querySelectorAll(`meta[property="${p}"]`).forEach((n) => n.remove());
+    document.head
+      .querySelectorAll(`meta[property="${p}"]`)
+      .forEach((n) => n.remove());
   }
   const append = (property: string, content: string) => {
     const el = document.createElement("meta");
@@ -50,7 +57,8 @@ function setAllOgImages(coverUrl: string, squareUrl: string, alt: string) {
     el.setAttribute("content", content);
     document.head.appendChild(el);
   };
-  const typeFor = (u: string) => (/\.jpe?g(\?|$)/i.test(u) ? "image/jpeg" : "image/png");
+  const typeFor = (u: string) =>
+    /\.jpe?g(\?|$)/i.test(u) ? "image/jpeg" : "image/png";
   append("og:image", coverUrl);
   append("og:image:secure_url", coverUrl);
   append("og:image:type", typeFor(coverUrl));
@@ -102,17 +110,50 @@ export function useSeo({
     setMeta('meta[property="og:type"]', "property", "og:type", "website");
     setMeta('meta[property="og:locale"]', "property", "og:locale", "en_US");
     setMeta('meta[property="og:title"]', "property", "og:title", fullTitle);
-    setMeta('meta[property="og:description"]', "property", "og:description", description);
+    setMeta(
+      'meta[property="og:description"]',
+      "property",
+      "og:description",
+      description,
+    );
     setMeta('meta[property="og:url"]', "property", "og:url", url);
 
     setAllOgImages(cover, square, imageAlt);
 
-    setMeta('meta[name="twitter:card"]', "name", "twitter:card", "summary_large_image");
-    setMeta('meta[name="twitter:site"]', "name", "twitter:site", "@theaicreatesai");
+    setMeta(
+      'meta[name="twitter:card"]',
+      "name",
+      "twitter:card",
+      "summary_large_image",
+    );
+    setMeta(
+      'meta[name="twitter:site"]',
+      "name",
+      "twitter:site",
+      "@theaicreatesai",
+    );
     setMeta('meta[name="twitter:url"]', "name", "twitter:url", url);
     setMeta('meta[name="twitter:title"]', "name", "twitter:title", fullTitle);
-    setMeta('meta[name="twitter:description"]', "name", "twitter:description", description);
+    setMeta(
+      'meta[name="twitter:description"]',
+      "name",
+      "twitter:description",
+      description,
+    );
     setMeta('meta[name="twitter:image"]', "name", "twitter:image", cover);
-    setMeta('meta[name="twitter:image:alt"]', "name", "twitter:image:alt", imageAlt);
-  }, [title, description, path, image, squareImage, imageAlt]);
+    setMeta(
+      'meta[name="twitter:image:alt"]',
+      "name",
+      "twitter:image:alt",
+      imageAlt,
+    );
+  }, [
+    title,
+    fullTitleOverride,
+    description,
+    path,
+    image,
+    squareImage,
+    imageAlt,
+  ]);
 }

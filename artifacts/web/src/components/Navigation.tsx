@@ -3,7 +3,13 @@ import { Link, useLocation } from "wouter";
 import { useTranslation } from "react-i18next";
 import { Menu, ChevronDown } from "lucide-react";
 import { Button } from "./ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+  SheetTitle,
+  SheetDescription,
+} from "./ui/sheet";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,42 +20,80 @@ import { LogoMark } from "./LogoMark";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import wordmark from "@/assets/aica-wordmark.png";
 
-type LinkItem = { name: string; path: string; desc: string; external?: boolean };
+type LinkItem = {
+  name: string;
+  path: string;
+  desc: string;
+  external?: boolean;
+};
 
 type TFn = (k: string) => string;
 
 const productLinks = (t: TFn): LinkItem[] => [
-  { name: t("nav.items.eveOS.name"), path: "/eve-os", desc: t("nav.items.eveOS.desc") },
-  { name: t("nav.items.neoBank.name"), path: "/neobank", desc: t("nav.items.neoBank.desc") },
+  {
+    name: t("nav.items.eveOS.name"),
+    path: "/eve-cxo",
+    desc: t("nav.items.eveOS.desc"),
+  },
 ];
 
 const solutionLinks = (t: TFn): LinkItem[] => [
-  { name: t("nav.items.business.name"), path: "/business", desc: t("nav.items.business.desc") },
-  { name: t("nav.items.developers.name"), path: "/developers", desc: t("nav.items.developers.desc") },
+  {
+    name: t("nav.items.business.name"),
+    path: "/business",
+    desc: t("nav.items.business.desc"),
+  },
+  {
+    name: t("nav.items.developers.name"),
+    path: "/developers",
+    desc: t("nav.items.developers.desc"),
+  },
 ];
 
 const resourceLinks = (t: TFn): LinkItem[] => [
-  { name: t("nav.items.litepaper.name"), path: "/litepaper", desc: t("nav.items.litepaper.desc") },
-  { name: t("nav.items.roadmap.name"), path: "/roadmap", desc: t("nav.items.roadmap.desc") },
-  { name: t("nav.items.faq.name"), path: "/faq", desc: t("nav.items.faq.desc") },
-  { name: t("nav.items.press.name"), path: "/press", desc: t("nav.items.press.desc") },
+  {
+    name: t("nav.items.litepaper.name"),
+    path: "/litepaper",
+    desc: t("nav.items.litepaper.desc"),
+  },
+  {
+    name: t("nav.items.roadmap.name"),
+    path: "/roadmap",
+    desc: t("nav.items.roadmap.desc"),
+  },
+  {
+    name: t("nav.items.faq.name"),
+    path: "/faq",
+    desc: t("nav.items.faq.desc"),
+  },
+  {
+    name: t("nav.items.press.name"),
+    path: "/press",
+    desc: t("nav.items.press.desc"),
+  },
 ];
 
 const companyLinks = (t: TFn): LinkItem[] => [
-  { name: t("nav.items.about.name"), path: "/about", desc: t("nav.items.about.desc") },
-  { name: t("nav.items.contact.name"), path: "/contact", desc: t("nav.items.contact.desc") },
-  { name: t("nav.items.token.name"), path: "/token", desc: t("nav.items.token.desc") },
-  { name: t("nav.items.opportunity.name"), path: "/opportunity", desc: t("nav.items.opportunity.desc") },
   {
-    name: t("nav.items.ambassadors.name"),
-    path: "https://invest.aicreates.ai/genesis",
-    desc: t("nav.items.ambassadors.desc"),
-    external: true,
+    name: t("nav.items.about.name"),
+    path: "/about",
+    desc: t("nav.items.about.desc"),
+  },
+  {
+    name: t("nav.items.contact.name"),
+    path: "/contact",
+    desc: t("nav.items.contact.desc"),
+  },
+  {
+    name: t("nav.items.opportunity.name"),
+    path: "/opportunity",
+    desc: t("nav.items.opportunity.desc"),
   },
 ];
 
 function Wordmark({ size = "md" }: { size?: "sm" | "md" }) {
-  const iconCls = size === "sm" ? "h-4 w-auto shrink-0" : "h-[19px] w-auto shrink-0";
+  const iconCls =
+    size === "sm" ? "h-4 w-auto shrink-0" : "h-[19px] w-auto shrink-0";
   const textCls = size === "sm" ? "h-[10px] w-auto" : "h-[13px] w-auto";
   return (
     <span className="inline-flex items-center gap-2">
@@ -111,12 +155,19 @@ function NavDropdown({
                 className="flex flex-col gap-0.5 px-4 py-3 cursor-pointer w-full"
                 data-testid={`link-nav-${p.name.toLowerCase().replace(/\s+/g, "-")}`}
               >
-                <span className="text-sm font-semibold text-white">{p.name}</span>
+                <span className="text-sm font-semibold text-white">
+                  {p.name}
+                </span>
                 <span className="text-xs text-white/50">{p.desc}</span>
               </a>
             ) : (
-              <Link href={p.path} className="flex flex-col gap-0.5 px-4 py-3 cursor-pointer w-full">
-                <span className="text-sm font-semibold text-white">{p.name}</span>
+              <Link
+                href={p.path}
+                className="flex flex-col gap-0.5 px-4 py-3 cursor-pointer w-full"
+              >
+                <span className="text-sm font-semibold text-white">
+                  {p.name}
+                </span>
                 <span className="text-xs text-white/50">{p.desc}</span>
               </Link>
             )}
@@ -156,54 +207,89 @@ export function Navigation() {
     >
       <div className="container mx-auto px-4 md:px-6 flex items-center justify-between">
         <div className="flex items-center gap-2 lg:gap-6">
-          <Link href="/" className="flex items-center gap-2.5 group" data-testid="link-home-logo">
+          <Link
+            href="/"
+            className="flex items-center gap-2.5 group"
+            data-testid="link-home-logo"
+          >
             <Wordmark />
           </Link>
 
-          <nav className="hidden md:flex items-center gap-1">
-            <NavDropdown label={t("nav.products")} items={PRODUCT_LINKS} testId="nav-products" location={location} />
-            <NavDropdown label={t("nav.solutions")} items={SOLUTION_LINKS} testId="nav-solutions" location={location} />
-            <NavDropdown label={t("nav.resources")} items={RESOURCE_LINKS} testId="nav-resources" location={location} />
-            <NavDropdown label={t("nav.company")} items={COMPANY_LINKS} testId="nav-company" location={location} />
+          <nav className="hidden xl:flex items-center gap-1">
+            <NavDropdown
+              label={t("nav.products")}
+              items={PRODUCT_LINKS}
+              testId="nav-products"
+              location={location}
+            />
+            <NavDropdown
+              label={t("nav.solutions")}
+              items={SOLUTION_LINKS}
+              testId="nav-solutions"
+              location={location}
+            />
+            <NavDropdown
+              label={t("nav.resources")}
+              items={RESOURCE_LINKS}
+              testId="nav-resources"
+              location={location}
+            />
+            <NavDropdown
+              label={t("nav.company")}
+              items={COMPANY_LINKS}
+              testId="nav-company"
+              location={location}
+            />
           </nav>
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="hidden md:flex items-center gap-2">
+          <div className="hidden xl:flex items-center gap-2">
             <LanguageSwitcher compact />
-            <Link href="/litepaper">
-              <Button
-                variant="outline"
-                className="rounded-full h-9 px-5 glass-btn text-sm font-medium"
-                data-testid="button-nav-litepaper"
-              >
-                {t("nav.litepaper")}
-              </Button>
-            </Link>
-            <a
-              href={import.meta.env.PROD ? "https://invest.aicreates.ai/invest/" : "/invest/"}
-              target="_blank"
-              rel="noopener noreferrer"
+            <Button
+              asChild
+              variant="outline"
+              className="rounded-full h-9 px-5 glass-btn text-sm font-medium"
+              data-testid="button-nav-litepaper"
             >
-              <Button
-                className="rounded-full h-9 px-5 teal-btn text-sm"
-                data-testid="button-nav-portal"
+              <Link href="/litepaper">{t("nav.litepaper")}</Link>
+            </Button>
+            <Button
+              asChild
+              className="rounded-full h-9 px-5 teal-btn text-sm"
+              data-testid="button-nav-portal"
+            >
+              <a
+                href={"https://invest.aicreates.ai/invest/"}
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 {t("nav.portal")}
-              </Button>
-            </a>
+              </a>
+            </Button>
           </div>
-          <div className="md:hidden">
+          <div className="xl:hidden">
             <LanguageSwitcher compact />
           </div>
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="md:hidden text-white hover:bg-white/10">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="xl:hidden text-white hover:bg-white/10"
+              >
                 <Menu className="h-5 w-5" />
                 <span className="sr-only">{t("nav.openMenu")}</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="bg-[#0A0A0A] border-s border-white/5 w-screen max-w-none sm:max-w-none p-5 h-[100dvh] overflow-hidden">
+            <SheetContent
+              side="right"
+              className="bg-[#0A0A0A] border-s border-white/5 w-screen max-w-none sm:max-w-none p-5 h-[100dvh] overflow-hidden"
+            >
+              <SheetTitle className="sr-only">Site navigation</SheetTitle>
+              <SheetDescription className="sr-only">
+                Explore AI Creates AI and EVE CXO.
+              </SheetDescription>
               <div className="flex flex-col h-full min-h-0">
                 <div className="flex items-center gap-2.5 mb-5 shrink-0">
                   <Wordmark />
@@ -217,7 +303,9 @@ export function Navigation() {
                     { header: t("nav.company"), items: COMPANY_LINKS },
                   ].map((group) => {
                     const isOpen = openGroup === group.header;
-                    const hasActive = group.items.some((p) => !p.external && p.path === location);
+                    const hasActive = group.items.some(
+                      (p) => !p.external && p.path === location,
+                    );
                     return (
                       <div
                         key={group.header}
@@ -286,28 +374,30 @@ export function Navigation() {
                 </nav>
 
                 <div className="shrink-0 mt-4 pt-4 border-t border-white/5 flex flex-col gap-2">
-                  <Link href="/litepaper" onClick={() => setOpen(false)}>
-                    <Button
-                      variant="outline"
-                      className="w-full rounded-full h-10 glass-btn text-sm"
-                      data-testid="button-mobile-nav-litepaper"
-                    >
-                      {t("nav.litepaper")}
-                    </Button>
-                  </Link>
-                  <a
-                    href={import.meta.env.PROD ? "https://invest.aicreates.ai/invest/" : "/invest/"}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={() => setOpen(false)}
+                  <Button
+                    asChild
+                    variant="outline"
+                    className="w-full rounded-full h-10 glass-btn text-sm"
+                    data-testid="button-mobile-nav-litepaper"
                   >
-                    <Button
-                      className="w-full rounded-full h-10 teal-btn text-sm"
-                      data-testid="button-mobile-nav-portal"
+                    <Link href="/litepaper" onClick={() => setOpen(false)}>
+                      {t("nav.litepaper")}
+                    </Link>
+                  </Button>
+                  <Button
+                    asChild
+                    className="w-full rounded-full h-10 teal-btn text-sm"
+                    data-testid="button-mobile-nav-portal"
+                  >
+                    <a
+                      href="https://invest.aicreates.ai/invest/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => setOpen(false)}
                     >
                       {t("nav.portal")}
-                    </Button>
-                  </a>
+                    </a>
+                  </Button>
                 </div>
               </div>
             </SheetContent>

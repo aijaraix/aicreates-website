@@ -9,7 +9,7 @@
     "openMenu": "Mở menu",
     "items": {
       "eveOS": {
-        "name": "Eve OS",
+        "name": "EVE CXO",
         "desc": "Đội ngũ không bao giờ ngủ"
       },
       "neoBank": {
@@ -159,20 +159,20 @@
   },
   "eveos": {
     "seo": {
-      "title": "Eve OS - Đội ngũ không bao giờ ngủ",
+      "title": "EVE CXO - Đội ngũ không bao giờ ngủ",
       "description": "Eve hoạt động như một chánh văn phòng, điều phối các trưởng bộ phận AI chuyên trách trong toàn bộ công ty của bạn."
     },
     "hero": {
       "eyebrow": "Sản phẩm chủ lực",
       "subline": "Gặp gỡ đội ngũ không bao giờ ngủ.",
-      "desc": "Eve điều hành công ty của bạn giống như một Chánh văn phòng. Cô ấy điều phối sáu trưởng bộ phận AI chuyên trách làm việc song song, thực thi và đánh giá công việc 24/7.",
-      "joinWaitlist": "Khám phá Eve OS",
+      "desc": "Eve điều hành công ty của bạn giống như một Chánh văn phòng. Cô ấy điều phối bảy trưởng bộ phận AI chuyên trách làm việc song song, thực thi và đánh giá công việc 24/7.",
+      "joinWaitlist": "Khám phá EVE CXO",
       "readLitepaper": "Đọc Litepaper"
     },
     "what": {
-      "eyebrow": "Eve OS là gì?",
+      "eyebrow": "EVE CXO là gì?",
       "title": "Một đội ngũ điều hành sống động.",
-      "p1": "Eve OS không phải là một chatbot. Đây là một đội ngũ điều hành tự chủ, đầy đủ nhân sự. Bạn cung cấp các mục tiêu cấp cao, và Eve đóng vai trò là Chánh văn phòng của bạn, phân tích các mục tiêu đó thành các nhiệm vụ của từng phòng ban.",
+      "p1": "EVE CXO không phải là một chatbot. Đây là một đội ngũ điều hành tự chủ, đầy đủ nhân sự. Bạn cung cấp các mục tiêu cấp cao, và Eve đóng vai trò là Chánh văn phòng của bạn, phân tích các mục tiêu đó thành các nhiệm vụ của từng phòng ban.",
       "p2": "Cô ấy ủy quyền công việc cho các tác nhân AI chuyên trách về Tiếp thị, Bán hàng, Quảng cáo, Tài chính, Vận hành và Pháp lý, điều phối nỗ lực của họ song song để mang lại kết quả hoàn chỉnh, đã được đánh giá."
     },
     "how": {
@@ -190,7 +190,7 @@
         },
         "s3": {
           "title": "Thực thi song song",
-          "desc": "Sáu trưởng phòng AI làm việc đồng thời trên các lĩnh vực của họ."
+          "desc": "Bảy trưởng phòng AI làm việc đồng thời trên các lĩnh vực của họ."
         },
         "s4": {
           "title": "Đánh giá chéo giữa các phòng ban",
@@ -204,7 +204,7 @@
     },
     "caps": {
       "eyebrow": "Các phòng ban",
-      "title": "Sáu trưởng bộ phận AI chuyên trách.",
+      "title": "Bảy trưởng bộ phận AI chuyên trách.",
       "sub": "Một đội ngũ điều hành hoàn chỉnh, có sẵn ngay lập tức và luôn đồng bộ.",
       "items": {
         "marketing": {
@@ -235,7 +235,7 @@
     },
     "team": {
       "eyebrow": "Đội ngũ",
-      "title": "Một chánh văn phòng. Sáu trưởng bộ phận.",
+      "title": "Một chánh văn phòng. Bảy trưởng bộ phận.",
       "sub": "Eve chỉ đạo một ban điều hành chuyên biệt. Mỗi tác nhân được xây dựng riêng cho lĩnh vực của họ.",
       "eve": {
         "role": "Chánh văn phòng",
@@ -508,7 +508,7 @@
   "contact": {
     "seo": {
       "title": "Liên hệ",
-      "description": "Liên lạc với AIcreatesAI - danh sách chờ cho Eve OS và FinPayTek, quan hệ nhà đầu tư, báo chí và đối tác."
+      "description": "Liên lạc với AIcreatesAI - danh sách chờ cho EVE CXO và FinPayTek, quan hệ nhà đầu tư, báo chí và đối tác."
     },
     "eyebrow": "Liên hệ",
     "title": "Bắt đầu một cuộc trò chuyện.",
@@ -521,7 +521,7 @@
     "sendAnother": "Gửi tin nhắn khác",
     "interestsLabel": "Tôi đang liên hệ với tư cách",
     "interests": {
-      "eveWaitlist": "Danh sách chờ Eve OS",
+      "eveWaitlist": "Danh sách chờ EVE CXO",
       "neoWaitlist": "Danh sách chờ FinPayTek",
       "devWaitlist": "Danh sách chờ nhà phát triển",
       "investor": "Nhà đầu tư",

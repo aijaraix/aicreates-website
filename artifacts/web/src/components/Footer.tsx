@@ -1,5 +1,5 @@
 import { Link } from "wouter";
-import { useState, type FormEvent } from "react";
+import { useId, useState, type FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { useToast } from "@/hooks/use-toast";
 import { LogoMark } from "./LogoMark";
@@ -12,10 +12,7 @@ const buildColumns = (
 ): { heading: string; links: { name: string; href: string }[] }[] => [
   {
     heading: t("footer.products"),
-    links: [
-      { name: t("nav.items.eveOS.name"), href: "/eve-os" },
-      { name: t("nav.items.neoBank.name"), href: "/neobank" },
-    ],
+    links: [{ name: t("nav.items.eveOS.name"), href: "/eve-cxo" }],
   },
   {
     heading: t("footer.solutions"),
@@ -38,9 +35,7 @@ const buildColumns = (
     links: [
       { name: t("nav.items.about.name"), href: "/about" },
       { name: t("nav.items.contact.name"), href: "/contact" },
-      { name: t("nav.items.token.name"), href: "/token" },
       { name: t("nav.items.opportunity.name"), href: "/opportunity" },
-      { name: t("nav.items.ambassadors.name"), href: "https://invest.aicreates.ai/genesis" },
       { name: t("footer.privacy"), href: "/privacy" },
       { name: t("footer.terms"), href: "/terms" },
     ],
@@ -51,6 +46,7 @@ const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const NEWSLETTER_ENDPOINT = "https://formsubmit.co/ajax/sholom@aicreates.ai";
 
 function NewsletterSubscribe() {
+  const emailId = useId();
   const { t } = useTranslation();
   const [email, setEmail] = useState("");
   const [honey, setHoney] = useState("");
@@ -61,6 +57,7 @@ function NewsletterSubscribe() {
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (submitting || submitted) return;
     setError(null);
     if (honey.trim()) {
       // honeypot tripped: pretend success, do nothing
@@ -76,18 +73,28 @@ function NewsletterSubscribe() {
     try {
       const res = await fetch(NEWSLETTER_ENDPOINT, {
         method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
         body: JSON.stringify({
           _subject: "Newsletter Subscription - aicreates.ai",
           _captcha: "false",
           _template: "table",
           _honey: honey,
           email: trimmed,
-          source_page: typeof window !== "undefined" ? window.location.pathname : "",
+          source_page:
+            typeof window !== "undefined" ? window.location.pathname : "",
           submitted_at: new Date().toISOString(),
         }),
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const result = await res.json();
+      if (result.success !== true && result.success !== "true") {
+        throw new Error(
+          "The form provider did not accept the subscription. Please try again.",
+        );
+      }
       setSubmitted(true);
       setEmail("");
       toast({
@@ -96,7 +103,9 @@ function NewsletterSubscribe() {
       });
     } catch (err) {
       const msg =
-        err instanceof Error ? err.message : "Something went wrong. Please try again.";
+        err instanceof Error
+          ? err.message
+          : "Something went wrong. Please try again.";
       setError(msg);
       toast({
         title: "Subscription failed",
@@ -123,7 +132,11 @@ function NewsletterSubscribe() {
             You're subscribed. Watch your inbox for the next dispatch.
           </div>
         ) : (
-          <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-2">
+          <form
+            onSubmit={handleSubmit}
+            noValidate
+            className="flex flex-col gap-2"
+          >
             {/* Honeypot - hidden from real users, bots fill it in */}
             <input
               type="text"
@@ -136,11 +149,11 @@ function NewsletterSubscribe() {
               className="absolute start-[-9999px] h-0 w-0 opacity-0"
             />
             <div className="flex flex-col sm:flex-row gap-2">
-              <label htmlFor="newsletter-email" className="sr-only">
+              <label htmlFor={emailId} className="sr-only">
                 Email address
               </label>
               <input
-                id="newsletter-email"
+                id={emailId}
                 type="email"
                 required
                 autoComplete="email"
@@ -175,7 +188,8 @@ function NewsletterSubscribe() {
           </form>
         )}
         <p className="text-white/40 text-xs leading-relaxed mt-3">
-          Product updates, ecosystem milestones, and the occasional manifesto. No spam, unsubscribe any time.
+          Product updates, ecosystem milestones, and the occasional manifesto.
+          No spam, unsubscribe any time.
         </p>
       </div>
     </div>
@@ -209,7 +223,8 @@ export function Footer() {
                 <span>Elevate.</span>
               </div>
               <p className="text-white/50 text-sm leading-relaxed max-w-sm mb-6">
-                Building the agentic intelligence layer for the next generation of companies, capital, and consumers.
+                Building the agentic intelligence layer for the next generation
+                of companies, capital, and consumers.
               </p>
               <a
                 href="https://x.com/theaicreatesai"

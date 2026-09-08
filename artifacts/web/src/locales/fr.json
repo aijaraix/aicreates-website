@@ -9,7 +9,7 @@
     "openMenu": "Ouvrir le menu",
     "items": {
       "eveOS": {
-        "name": "Eve OS",
+        "name": "EVE CXO",
         "desc": "L'équipe qui ne dort jamais"
       },
       "neoBank": {
@@ -159,20 +159,20 @@
   },
   "eveos": {
     "seo": {
-      "title": "Eve OS - L'équipe qui ne dort jamais",
+      "title": "EVE CXO - L'équipe qui ne dort jamais",
       "description": "Eve agit comme un chef de cabinet, coordonnant des chefs de département d'IA spécialisés dans toute votre entreprise."
     },
     "hero": {
       "eyebrow": "Produit Phare",
       "subline": "Rencontrez l'équipe qui ne dort jamais.",
-      "desc": "Eve dirige votre entreprise comme un chef de cabinet. Elle coordonne six chefs de département d'IA spécialisés travaillant en parallèle, exécutant et révisant le travail 24h/24 et 7j/7.",
-      "joinWaitlist": "Découvrir Eve OS",
+      "desc": "Eve dirige votre entreprise comme un chef de cabinet. Elle coordonne sept chefs de département d'IA spécialisés travaillant en parallèle, exécutant et révisant le travail 24h/24 et 7j/7.",
+      "joinWaitlist": "Découvrir EVE CXO",
       "readLitepaper": "Lire le Litepaper"
     },
     "what": {
-      "eyebrow": "Qu'est-ce qu'Eve OS ?",
+      "eyebrow": "Qu'est-ce qu'EVE CXO ?",
       "title": "Une équipe de direction vivante.",
-      "p1": "Eve OS n'est pas un chatbot. C'est une équipe de direction autonome et complète. Vous fixez les objectifs de haut niveau, et Eve agit comme votre chef de cabinet, décomposant ces objectifs en tâches départementales.",
+      "p1": "EVE CXO n'est pas un chatbot. C'est une équipe de direction autonome et complète. Vous fixez les objectifs de haut niveau, et Eve agit comme votre chef de cabinet, décomposant ces objectifs en tâches départementales.",
       "p2": "Elle délègue le travail à des agents d'IA spécialisés en Marketing, Ventes, Publicité, Finance, Opérations et Juridique, orchestrant leurs efforts en parallèle pour livrer des résultats complets et révisés."
     },
     "how": {
@@ -190,7 +190,7 @@
         },
         "s3": {
           "title": "Exécution Parallèle",
-          "desc": "Six chefs de département d'IA travaillent simultanément dans leurs domaines."
+          "desc": "Sept chefs de département d'IA travaillent simultanément dans leurs domaines."
         },
         "s4": {
           "title": "Examen Interdépartemental",
@@ -204,7 +204,7 @@
     },
     "caps": {
       "eyebrow": "Départements",
-      "title": "Six chefs d'IA spécialisés.",
+      "title": "Sept chefs d'IA spécialisés.",
       "sub": "Une équipe de direction complète, disponible instantanément et toujours alignée.",
       "items": {
         "marketing": {
@@ -235,7 +235,7 @@
     },
     "team": {
       "eyebrow": "L'Équipe",
-      "title": "Un chef de cabinet. Six chefs de département.",
+      "title": "Un chef de cabinet. Sept chefs de département.",
       "sub": "Eve dirige une suite exécutive spécialisée. Chaque agent est conçu pour son domaine.",
       "eve": {
         "role": "Chef de Cabinet",
@@ -508,7 +508,7 @@
   "contact": {
     "seo": {
       "title": "Contact",
-      "description": "Entrez en contact avec AIcreatesAI - listes d'attente pour Eve OS et FinPayTek, relations investisseurs, presse et partenariats."
+      "description": "Entrez en contact avec AIcreatesAI - listes d'attente pour EVE CXO et FinPayTek, relations investisseurs, presse et partenariats."
     },
     "eyebrow": "Contact",
     "title": "Commencez une conversation.",
@@ -521,7 +521,7 @@
     "sendAnother": "Envoyer un autre message",
     "interestsLabel": "Je vous contacte en tant que",
     "interests": {
-      "eveWaitlist": "Liste d'attente Eve OS",
+      "eveWaitlist": "Liste d'attente EVE CXO",
       "neoWaitlist": "Liste d'attente FinPayTek",
       "devWaitlist": "Liste d'attente développeur",
       "investor": "Investisseur",
