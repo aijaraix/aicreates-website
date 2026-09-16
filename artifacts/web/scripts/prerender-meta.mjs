@@ -90,11 +90,11 @@ const PAGES = [
 const baseHtml = readFileSync(join(dist, "index.html"), "utf8");
 
 function replaceRequired(html, label, pattern, replacement, route) {
-  const next = html.replace(pattern, replacement);
-  if (next === html) {
+  if (!pattern.test(html)) {
     throw new Error(`prerender-meta: ${label} did not match for ${route}`);
   }
-  return next;
+  pattern.lastIndex = 0;
+  return html.replace(pattern, replacement);
 }
 
 for (const page of PAGES) {
