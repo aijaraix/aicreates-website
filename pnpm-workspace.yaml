@@ -4,6 +4,13 @@ packages:
   - lib/integrations/*
   - scripts
 
+allowBuilds:
+  '@clerk/shared': true
+  '@swc/core': true
+  esbuild: true
+  msw: true
+  unrs-resolver: true
+
 autoInstallPeers: false
 
 catalog:
@@ -35,12 +42,6 @@ minimumReleaseAge: 1440
 minimumReleaseAgeExclude:
   - '@replit/*'
   - stripe-replit-sync
-
-onlyBuiltDependencies:
-  - '@swc/core'
-  - esbuild
-  - msw
-  - unrs-resolver
 
 overrides:
   '@esbuild-kit/esm-loader': npm:tsx@^4.21.0
@@ -94,7 +95,7 @@ overrides:
   lightningcss>lightningcss-darwin-arm64: '-'
   lightningcss>lightningcss-darwin-x64: '-'
   lightningcss>lightningcss-freebsd-x64: '-'
-  lightningcss>lightningcss-linux-arm-gnueabihf: '-'
+  lightningcss>lightningcss-linux-arm-gnueabihf': '-'
   lightningcss>lightningcss-linux-arm64-gnu: '-'
   lightningcss>lightningcss-linux-arm64-musl: '-'
   lightningcss>lightningcss-linux-x64-musl: '-'
