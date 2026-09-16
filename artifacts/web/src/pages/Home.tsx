@@ -11,7 +11,8 @@ const departments = [
   "Finance",
   "Operations",
   "Legal & Compliance",
-  "Development & Engineering",
+  "People & HR",
+  "Customer Service",
 ];
 const principles = [
   {
@@ -36,7 +37,7 @@ export default function Home() {
     title: "Building coordinated AI for business",
     fullTitle: "AI Creates AI | The company behind EVE CXO",
     description:
-      "AI Creates AI builds EVE CXO, the AI Operating System for Business. Adam works internally, Eve serves customers, and Hermes coordinates their work.",
+      "AI Creates AI builds persistent AI organizations for businesses. EVE CXO serves customers, Adam supports the company internally, and Hermes provides shared orchestration.",
     path: "/",
   });
   return (
@@ -51,15 +52,20 @@ export default function Home() {
               <span>together.</span>
             </h1>
             <p className="relaunch-lede">
-              We build EVE CXO — the AI Operating System for Business. One
-              executive layer to coordinate your departments, tools and
-              decisions around the work that matters.
+              AI Creates AI builds persistent AI organizations for businesses.
+              EVE CXO is our commercial AI Operating System for Business: one
+              executive layer coordinating departments, tools, and decisions
+              around the work that matters.
             </p>
             <div className="relaunch-actions">
               <Button asChild className="rounded-full h-12 px-6 teal-btn">
-                <Link href="/eve-cxo">
-                  Discover EVE CXO <ArrowUpRight aria-hidden="true" size={18} />
-                </Link>
+                <a
+                  href="https://evecxo.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Visit EVE CXO <ArrowUpRight aria-hidden="true" size={18} />
+                </a>
               </Button>
               <Button
                 asChild
@@ -106,7 +112,7 @@ export default function Home() {
           </div>
           <div
             className="relaunch-departments"
-            aria-label="Seven customer-facing departments"
+            aria-label="Eight customer-facing departments"
           >
             {departments.map((name, i) => (
               <div key={name}>
@@ -119,6 +125,10 @@ export default function Home() {
             Meet the product and its departments{" "}
             <ArrowUpRight size={18} aria-hidden="true" />
           </Link>
+          <p className="mt-4 text-sm text-white/55">
+            Jarvis supports shared development and engineering work across the
+            organization; it is not a ninth department.
+          </p>
         </div>
       </section>
 
@@ -196,9 +206,13 @@ export default function Home() {
             </p>
           </div>
           <div className="relaunch-audience-links">
-            <Link href="/eve-cxo">
+            <a
+              href="https://evecxo.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               For your business <ArrowUpRight aria-hidden="true" />
-            </Link>
+            </a>
             <Link href="/contact">
               For strategic partners <ArrowUpRight aria-hidden="true" />
             </Link>

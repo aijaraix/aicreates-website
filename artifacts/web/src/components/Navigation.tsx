@@ -100,7 +100,7 @@ function Wordmark({ size = "md" }: { size?: "sm" | "md" }) {
       <LogoMark className={iconCls} />
       <img
         src={wordmark}
-        alt="AIcreatesAI"
+        alt="AI Creates AI"
         draggable={false}
         decoding="async"
         loading="eager"

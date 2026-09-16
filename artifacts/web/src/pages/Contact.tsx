@@ -35,7 +35,7 @@ export default function Contact() {
   useSeo({
     title: "Contact",
     description:
-      "Get in touch with AIcreatesAI - EVE CXO, strategic partnerships, investor relations, and press.",
+      "Get in touch with AI Creates AI about EVE CXO, strategic partnerships, investor relations, and press.",
     path: "/contact",
   });
   const { toast } = useToast();
@@ -74,7 +74,7 @@ export default function Contact() {
     setSubmitting(true);
     const fd = new FormData(form);
     const payload: Record<string, string> = {
-      _subject: `New AIcreatesAI inquiry · ${interest} · ${fd.get("name") || "Anonymous"}`,
+      _subject: `New AI Creates AI inquiry · ${interest} · ${fd.get("name") || "Anonymous"}`,
       _captcha: "false",
       _template: "table",
       interest,

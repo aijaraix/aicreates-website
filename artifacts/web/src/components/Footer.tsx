@@ -210,7 +210,7 @@ export function Footer() {
                 <LogoMark className="h-6 w-auto shrink-0" />
                 <img
                   src={wordmark}
-                  alt="AIcreatesAI"
+                  alt="AI Creates AI"
                   draggable={false}
                   decoding="async"
                   loading="eager"
@@ -223,13 +223,14 @@ export function Footer() {
                 <span>Elevate.</span>
               </div>
               <p className="text-white/50 text-sm leading-relaxed max-w-sm mb-6">
-                AI Creates AI is the company behind EVE CXO, the AI Operating System for Business.
+                AI Creates AI is the company behind EVE CXO, the AI Operating
+                System for Business.
               </p>
               <a
                 href="https://x.com/theaicreatesai"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="AIcreatesAI on X"
+                aria-label="AI Creates AI on X"
                 className="inline-flex items-center gap-2 text-sm text-white/70 hover:text-[#00F5D4] transition-colors"
               >
                 @theaicreatesai
@@ -283,7 +284,7 @@ export function Footer() {
 
         <div className="pt-6 border-t border-white/5 md:border-t-0 md:pt-2 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <p className="text-white/30 text-xs tracking-wide">
-            © 2026 AIcreatesAI. {t("footer.rights")}
+            © 2026 AI Creates AI. {t("footer.rights")}
           </p>
           <p className="text-white/30 text-xs tracking-wide">
             {t("footer.tagline", "Engineered for the agentic era.")}

@@ -5,7 +5,7 @@ type Props = {
   alt?: string;
 };
 
-export function LogoMark({ className = "h-6 w-auto", alt = "AIcreatesAI" }: Props) {
+export function LogoMark({ className = "h-6 w-auto", alt = "AI Creates AI" }: Props) {
   return (
     <img
       src={logoMark}

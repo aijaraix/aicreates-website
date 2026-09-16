@@ -39,7 +39,7 @@ const PHASES = [
   {
     n: "Priority 3",
     title: "EVE CXO workflows",
-    desc: "Deepen coordinated work across the seven commercial departments.",
+    desc: "Deepen coordinated work across the eight commercial departments.",
     bullets: [
       "Customer and sales follow-through",
       "Marketing and operating workflows",

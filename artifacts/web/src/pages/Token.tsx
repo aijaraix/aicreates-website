@@ -44,7 +44,7 @@ const ADDITIONAL_INCENTIVES = [
   {
     name: "High-Quality Feedback & Evaluation",
     desc: "Users earn $AICA by providing detailed feedback on outputs - accuracy ratings, usefulness scores, business value assessment, error corrections, and improvement suggestions. Rewards scale with depth, consistency, and measurable impact on model improvement.",
-    benefit: "Directly strengthens the closed-loop quality system and continuously improves Eve OS.",
+    benefit: "Supports the closed-loop quality system and the continued development of EVE CXO.",
   },
   {
     name: "Validator Performance Tiers",
@@ -131,7 +131,7 @@ export default function Token() {
             </div>
             <div className="md:col-span-7 space-y-6 text-white/70 text-base md:text-lg leading-relaxed">
               <p>
-                The $AICA token is the economic engine of the AIcreatesAI ecosystem. It is designed to reward real contributions, drive high-quality participation, and create a sustainable, usage-driven economy.
+                The $AICA token is the economic engine of the AI Creates AI ecosystem. It is designed to reward real contributions, drive high-quality participation, and create a sustainable, usage-driven economy.
               </p>
               <p>
                 While core platform revenue comes from stablecoin and fiat subscriptions, the $AICA token serves as the primary mechanism to incentivize network growth, improve intelligence quality, and align long-term participants with the success of the platform.
@@ -433,7 +433,7 @@ export default function Token() {
           <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 md:p-8">
             <div className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/40 mb-3">Disclaimer</div>
             <p className="text-white/50 text-sm leading-relaxed">
-              This page is for informational purposes only and does not constitute an offer to sell or a solicitation to buy any securities or tokens. AICA tokens, when issued, will be utility tokens for consumptive use within the AIcreatesAI ecosystem and are subject to vesting and jurisdictional restrictions. Early-stage technology and cryptocurrency commitments involve significant risk and you may lose all funds. Detailed private-sale terms are available to accredited investors via the investor portal.
+              This page is for informational purposes only and does not constitute an offer to sell or a solicitation to buy any securities or tokens. AICA tokens, when issued, will be utility tokens for consumptive use within the AI Creates AI ecosystem and are subject to vesting and jurisdictional restrictions. Early-stage technology and cryptocurrency commitments involve significant risk and you may lose all funds. Detailed private-sale terms are available to accredited investors via the investor portal.
             </p>
           </div>
         </div>

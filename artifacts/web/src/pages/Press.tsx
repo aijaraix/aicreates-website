@@ -115,10 +115,12 @@ export default function Press() {
               executive direction, department work and connected tools.
             </p>
             <p>
-              EVE CXO brings together Marketing, Sales, Finance, Legal,
-              Operations, HR and Engineering. Eve is the customer-facing
-              executive intelligence; Adam supports the company internally, and
-              Hermes coordinates shared runtime execution.
+              EVE CXO brings together eight departments: Marketing, Sales &amp;
+              Acquisition, Advertising, Finance, Operations, Legal &amp;
+              Compliance, People &amp; HR, and Customer Service. Jarvis supports
+              shared development work. Eve is the customer-facing executive
+              intelligence; Adam supports the company internally, and Hermes
+              coordinates the shared orchestration runtime.
             </p>
             <p>The company is headquartered in Miami, Florida.</p>
           </div>

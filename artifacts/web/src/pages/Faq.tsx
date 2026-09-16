@@ -38,7 +38,7 @@ const GROUPS: Group[] = [
     items: [
       {
         q: "Which departments does EVE CXO cover?",
-        a: "The commercial experience brings together Marketing, Sales, Finance, Legal, Operations, HR and Engineering. Department heads coordinate specialist work, while existing workspace roles and agents retain their own identities.",
+        a: "EVE CXO brings together eight departments: Marketing, Sales & Acquisition, Advertising, Finance, Operations, Legal & Compliance, People & HR, and Customer Service. Jarvis is the shared development capability, not a ninth department. Department heads coordinate 46 named specialists.",
       },
       {
         q: "Do I need technical skills to get started?",

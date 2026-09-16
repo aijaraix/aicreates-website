@@ -114,35 +114,37 @@ const AGENT_ROLES = [
     icon: Code2,
     name: "Coding",
     remit:
-      "Implements features, integrations, and automation against your stack.",
+      "Prepares and tests scoped features, integrations, and automation for review.",
   },
   {
     icon: Megaphone,
     name: "Marketing",
-    remit: "Positions, writes, schedules, and measures campaigns.",
+    remit:
+      "Positions, writes, and prepares campaigns; connected publishing remains governed.",
   },
   {
     icon: Briefcase,
     name: "Sales",
     remit:
-      "Builds pipeline, drafts outreach, qualifies leads, and runs follow-through.",
+      "Supports pipeline work, drafts outreach, and prepares qualification and follow-through.",
   },
   {
     icon: Headphones,
     name: "Support",
     remit:
-      "Handles inbound questions, drafts replies, and escalates intelligently.",
+      "Triages inbound questions, drafts replies, and escalates for human decisions.",
   },
   {
     icon: Calculator,
     name: "Finance",
     remit:
-      "Reconciles books, invoices, tracks runway, and prepares financial reporting.",
+      "Reviews recorded finance data and prepares advisory budgets, forecasts, and reporting.",
   },
   {
     icon: Scale,
     name: "Compliance",
-    remit: "Reviews against policy, regulation, and contractual obligations.",
+    remit:
+      "Prepares advisory policy, contract, and compliance review for qualified human judgment.",
   },
   {
     icon: ShieldCheck,
@@ -154,7 +156,7 @@ const AGENT_ROLES = [
     icon: Rocket,
     name: "Deployment",
     remit:
-      "Ships changes through environments, monitors, and rolls back on failure.",
+      "Prepares reviewed releases; Git and publishing actions remain permission- and approval-gated.",
   },
 ];
 

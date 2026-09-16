@@ -32,7 +32,7 @@ const PAGES = [
     route: "/eve-cxo",
     title: "EVE CXO — The AI Operating System for Business | AI Creates AI",
     description:
-      "Eve coordinates seven departments and their specialists around your objectives, with your tools, your workspace and approval before consequential action.",
+      "Eve coordinates eight departments and 46 specialists around your objectives, with your tools, your workspace and approval before consequential action.",
     cover: eveCover,
     twitter: eveTwitter,
     imageAlt: "EVE CXO — The AI Operating System for Business",
@@ -41,7 +41,7 @@ const PAGES = [
     route: "/business",
     title: "For Business - operate like a much larger company | AI Creates AI",
     description:
-      "EVE CXO helps business operators coordinate seven departments, working context and approved tools.",
+      "EVE CXO helps business operators coordinate eight departments, working context and approved tools.",
   },
   {
     route: "/developers",
@@ -77,19 +77,19 @@ const PAGES = [
     route: "/contact",
     title: "Contact | AI Creates AI",
     description:
-      "Get in touch with AIcreatesAI - EVE CXO, strategic partnerships, investor relations, and press.",
+      "Get in touch with AI Creates AI about EVE CXO, strategic partnerships, investor relations, and press.",
   },
   {
     route: "/privacy",
     title: "Privacy Policy | AI Creates AI",
     description:
-      "How AIcreatesAI collects, uses, and protects your information across the marketing site, products, and investor portal.",
+      "How AI Creates AI collects, uses, and protects your information across the marketing site, products, and investor portal.",
   },
   {
     route: "/terms",
     title: "Terms of Service | AI Creates AI",
     description:
-      "The terms governing use of the AIcreatesAI website, products, and investor portal.",
+      "The terms governing use of the AI Creates AI website, products, and investor portal.",
   },
 
   // Preserved compatibility aliases. Keep them functional for direct links,
@@ -122,7 +122,7 @@ const PAGES = [
     route: "/eve-os",
     title: "EVE CXO — The AI Operating System for Business | AI Creates AI",
     description:
-      "Eve coordinates seven departments and their specialists around your objectives, with your tools, your workspace and approval before consequential action.",
+      "Eve coordinates eight departments and 46 specialists around your objectives, with your tools, your workspace and approval before consequential action.",
     canonicalOverride: `${ORIGIN}/eve-cxo/`,
     indexable: false,
     cover: eveCover,

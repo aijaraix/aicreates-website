@@ -9,8 +9,9 @@
 - **Adam** — internal executive intelligence for AI Creates AI.
 - **Eve** — customer-facing executive intelligence and chief-of-staff layer inside EVE CXO.
 - **Hermes** — shared orchestration/runtime for task state, delegation, approvals, evidence, and durable execution.
+- **Jarvis** — shared development and engineering capability for internal and appropriate customer build workflows; not a ninth department.
 
-EVE CXO is organized around seven customer-facing departments: Marketing, Sales & Acquisition, Advertising, Finance, Operations, Legal & Compliance, and Development & Engineering. Consequential actions remain subject to permissions and human approval.
+EVE CXO is organized around eight customer-facing departments: Marketing, Sales & Acquisition, Advertising, Finance, Operations, Legal & Compliance, People & HR, and Customer Service. Its preserved registry also contains 46 named specialists. Consequential actions remain subject to permissions and human approval.
 
 ## Public pages
 

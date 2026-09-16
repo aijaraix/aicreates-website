@@ -20,6 +20,7 @@ import {
   Repeat,
   Network,
   Users,
+  HeartHandshake,
 } from "lucide-react";
 import { useSeo } from "@/lib/useSeo";
 import { trackOutboundProductCta } from "@/lib/analytics";
@@ -112,9 +113,25 @@ export default function EveOS() {
       d: t("eveos.caps.items.ops.d"),
     },
     {
+      icon: Users,
+      t: t("eveos.caps.items.people.t", "People & HR"),
+      d: t(
+        "eveos.caps.items.people.d",
+        "Advisory recruiting, onboarding, culture, and performance-support drafts.",
+      ),
+    },
+    {
+      icon: HeartHandshake,
+      t: t("eveos.caps.items.customerService.t", "Customer Service"),
+      d: t(
+        "eveos.caps.items.customerService.d",
+        "Support-case triage and reply drafts, with human review before sending.",
+      ),
+    },
+    {
       icon: Cpu,
-      t: "Development & Engineering",
-      d: "Build, review and test software with Jarvis.",
+      t: "Jarvis · Shared Development",
+      d: "Prepare, review, and test software with Jarvis in controlled early access.",
     },
     {
       icon: Target,
@@ -152,17 +169,6 @@ export default function EveOS() {
   ];
 
   const team = [
-    {
-      name: "Jarvis",
-      role: "Head of Development & Engineering",
-      department: "Development & Engineering",
-      description:
-        "Helps turn requirements into software, with build review, testing and human control over deployment.",
-      image: null,
-      accent: "text-indigo-300",
-      border: "border-indigo-300/30",
-      wash: "from-indigo-300/20",
-    },
     {
       name: "Sienna",
       role: t("eveos.team.marketing.role", "Head of Marketing"),
@@ -240,6 +246,46 @@ export default function EveOS() {
       accent: "text-sky-300",
       border: "border-sky-300/30",
       wash: "from-sky-300/20",
+    },
+    {
+      name: "Elliot",
+      role: t("eveos.team.people.role", "Head of People & HR"),
+      department: t("eveos.team.people.department", "People & HR"),
+      description: t(
+        "eveos.team.people.desc",
+        "Prepares advisory hiring, onboarding, culture, and performance-support work for human review.",
+      ),
+      image: null,
+      accent: "text-cyan-300",
+      border: "border-cyan-300/30",
+      wash: "from-cyan-300/20",
+    },
+    {
+      name: "Imogen",
+      role: t("eveos.team.customerService.role", "Head of Customer Service"),
+      department: t(
+        "eveos.team.customerService.department",
+        "Customer Service",
+      ),
+      description: t(
+        "eveos.team.customerService.desc",
+        "Coordinates support-case triage and grounded reply drafts, with a human approving every outbound response.",
+      ),
+      image: null,
+      accent: "text-rose-300",
+      border: "border-rose-300/30",
+      wash: "from-rose-300/20",
+    },
+    {
+      name: "Jarvis",
+      role: "Shared development capability",
+      department: "Builder · Development & Engineering",
+      description:
+        "Helps turn scoped requirements into reviewed software, with testing and human control over Git operations and publishing.",
+      image: null,
+      accent: "text-indigo-300",
+      border: "border-indigo-300/30",
+      wash: "from-indigo-300/20",
     },
   ];
 
@@ -332,7 +378,7 @@ export default function EveOS() {
               <div className="absolute inset-0 bg-fuchsia-500/20 blur-[100px] rounded-full" />
               <img
                 src={eveHero}
-                alt="Eve OS"
+                alt="EVE CXO"
                 className="relative z-10 w-full h-auto rounded-3xl border border-white/10 object-cover"
               />
             </motion.div>
@@ -369,7 +415,7 @@ export default function EveOS() {
             <h2 className="mt-6 text-4xl md:text-6xl font-serif font-semibold bg-clip-text text-transparent bg-gradient-to-b from-white to-white/60 leading-[1.05]">
               {t(
                 "eveos.team.title",
-                "One chief of staff. Six department heads.",
+                "One chief of staff. Eight department heads. Plus Jarvis.",
               )}
             </h2>
             <p className="mt-6 text-lg text-white/55 leading-relaxed max-w-2xl">

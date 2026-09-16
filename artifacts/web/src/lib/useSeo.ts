@@ -84,7 +84,7 @@ export type SeoOptions = {
   title: string;
   description: string;
   path: string;
-  /** Optional full title that bypasses the `<title> | AIcreatesAI` suffix. */
+  /** Optional full title that bypasses the `<title> | AI Creates AI` suffix. */
   fullTitle?: string;
   indexable?: boolean;
   /** 1200x630 cover image (absolute URL or path under /). */

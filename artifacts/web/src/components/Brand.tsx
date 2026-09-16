@@ -7,7 +7,7 @@ export function Brand() {
       <LogoMark className="h-5 w-auto shrink-0" />
       <img
         src={wordmark}
-        alt="AIcreatesAI"
+        alt="AI Creates AI"
         draggable={false}
         decoding="async"
         loading="eager"

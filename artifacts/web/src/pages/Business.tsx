@@ -41,7 +41,7 @@ const OUTCOMES = [
   {
     icon: Briefcase,
     t: "One coordinated company",
-    d: "Marketing, sales, finance, legal, ops, and dev on a single intelligence layer.",
+    d: "Eight departments on one coordinated layer, with Jarvis supporting shared development work.",
   },
 ];
 
@@ -49,7 +49,7 @@ export default function Business() {
   useSeo({
     title: "For Business - operate like a much larger company",
     description:
-      "EVE CXO helps business operators coordinate seven departments, working context and approved tools.",
+      "EVE CXO helps business operators coordinate eight departments, working context and approved tools.",
     path: "/business",
   });
   return (
@@ -129,10 +129,10 @@ export default function Business() {
               {
                 tag: "SMB",
                 title: "Operate like a much larger company",
-                d: "Designed for founders and operating teams coordinating their back office - marketing, sales, finance, support, and ops on one coordinated layer, without hiring across every function.",
+                d: "Designed for founders and operating teams coordinating marketing, sales, advertising, finance, operations, legal, people, and customer service on one layer.",
                 bullets: [
                   "Launch and run from one workspace",
-                  "Replace fragmented SaaS sprawl",
+                  "Coordinate approved tools and business context",
                   "Compounding quality with usage",
                 ],
               },
@@ -149,10 +149,10 @@ export default function Business() {
               {
                 tag: "Enterprise",
                 title: "Coordinated autonomy across departments",
-                d: "Larger operators bring their own systems, data, and identity into the layer with scoped permissions, spend caps, audit trails, and the Quality Engine governing every autonomous action.",
+                d: "Controlled deployments can connect approved systems, data, and identity with scoped permissions, spend caps, audit trails, and human approval for consequential actions.",
                 bullets: [
-                  "SSO, scoped permissions, audit",
-                  "Bring your data, tools, and policies",
+                  "Identity and tenancy assessed per deployment",
+                  "Connect approved data, tools, and policies",
                   "Per-team budgets and approvals",
                 ],
               },
@@ -244,7 +244,7 @@ export default function Business() {
                 tag: "Solo",
                 title: "One-person companies that punch above their weight.",
                 points: [
-                  "Coordinate seven departments from one workspace",
+                  "Coordinate eight departments from one workspace",
                   "Review and approval steps",
                   "Persistent memory of your business",
                 ],
@@ -264,7 +264,7 @@ export default function Business() {
                 points: [
                   "Role-based permissions",
                   "Shared business memory",
-                  "Sovereign tenancy options",
+                  "Deployment options by requirements assessment",
                 ],
               },
             ].map((t, i) => (

@@ -10,7 +10,7 @@
     "items": {
       "eveOS": {
         "name": "EVE CXO",
-        "desc": "Đội ngũ không bao giờ ngủ"
+        "desc": "Lực lượng lao động AI được điều phối"
       },
       "neoBank": {
         "name": "FinPayTek",
@@ -88,7 +88,7 @@
       "eyebrow": "Cơ hội",
       "title": "Hạ tầng cho thế hệ doanh nghiệp tiếp theo.",
       "p1": "Chúng tôi đang xây dựng hạ tầng nền tảng cho thế hệ doanh nghiệp tiếp theo. Khi AI được tích hợp sâu vào mọi công ty, nhu cầu về các hệ điều hành thông minh và tự chủ sẽ bùng nổ.",
-      "p2": "AICreatesAi nằm ở trung tâm của sự chuyển dịch này, tạo ra các nền tảng và lớp thông minh sẽ vận hành cách doanh nghiệp hoạt động trong tương lai."
+      "p2": "AI Creates AI nằm ở trung tâm của sự chuyển dịch này, tạo ra các nền tảng và lớp thông minh sẽ vận hành cách doanh nghiệp hoạt động trong tương lai."
     },
     "compute": {
       "eyebrow": "Tính toán",
@@ -127,7 +127,7 @@
     },
     "why": {
       "eyebrow": "Vì sao bây giờ",
-      "title": "Vì sao cơ hội AICreatesAi?",
+      "title": "Vì sao cơ hội AI Creates AI?",
       "subtitle": "Một canh bạc định nghĩa danh mục về lớp mà doanh nghiệp, vốn và người tiêu dùng sẽ vận hành.",
       "pillar": "Trụ cột",
       "p1Title": "Giá trị tích lũy dài hạn",
@@ -146,11 +146,11 @@
     },
     "dialog": {
       "title": "AICA Whitepaper",
-      "desc": "Xem qua whitepaper của AIcreatesAI."
+      "desc": "Xem qua whitepaper của AI Creates AI."
     },
     "disclaimer": {
       "label": "Miễn trừ trách nhiệm",
-      "text": "Trang này chỉ nhằm mục đích thông tin và không cấu thành lời chào bán hay lời mời mua bất kỳ chứng khoán hoặc token nào. Token AICA, khi được phát hành, sẽ là token tiện ích để sử dụng trong hệ sinh thái AIcreatesAI và chịu các hạn chế về vesting và pháp lý theo quốc gia. Các cam kết về công nghệ giai đoạn sớm và tiền mã hóa tiềm ẩn rủi ro đáng kể và bạn có thể mất toàn bộ vốn. Các điều khoản chi tiết của đợt bán riêng tư được cung cấp cho nhà đầu tư được chứng nhận qua cổng nhà đầu tư."
+      "text": "Trang này chỉ nhằm mục đích thông tin và không cấu thành lời chào bán hay lời mời mua bất kỳ chứng khoán hoặc token nào. Token AICA, khi được phát hành, sẽ là token tiện ích để sử dụng trong hệ sinh thái AI Creates AI và chịu các hạn chế về vesting và pháp lý theo quốc gia. Các cam kết về công nghệ giai đoạn sớm và tiền mã hóa tiềm ẩn rủi ro đáng kể và bạn có thể mất toàn bộ vốn. Các điều khoản chi tiết của đợt bán riêng tư được cung cấp cho nhà đầu tư được chứng nhận qua cổng nhà đầu tư."
     },
     "seo": {
       "title": "Đầu tư - Hậu thuẫn cho lớp trí tuệ Agentic",
@@ -159,26 +159,26 @@
   },
   "eveos": {
     "seo": {
-      "title": "EVE CXO - Đội ngũ không bao giờ ngủ",
-      "description": "Eve hoạt động như một chánh văn phòng, điều phối các trưởng bộ phận AI chuyên trách trong toàn bộ công ty của bạn."
+      "title": "EVE CXO - Hệ điều hành AI cho doanh nghiệp",
+      "description": "Eve điều phối tám phòng ban và 46 chuyên gia quanh mục tiêu của bạn, với phê duyệt của con người trước hành động có hệ quả."
     },
     "hero": {
       "eyebrow": "Sản phẩm chủ lực",
-      "subline": "Gặp gỡ đội ngũ không bao giờ ngủ.",
-      "desc": "Eve điều hành công ty của bạn giống như một Chánh văn phòng. Cô ấy điều phối bảy trưởng bộ phận AI chuyên trách làm việc song song, thực thi và đánh giá công việc 24/7.",
+      "subline": "Hệ điều hành AI cho doanh nghiệp.",
+      "desc": "Eve là trí tuệ điều hành và Chánh văn phòng của bạn. Cô ấy điều phối tám phòng ban và 46 chuyên gia quanh mục tiêu kinh doanh, trong khi công cụ và quyết định vẫn thuộc quyền kiểm soát của bạn.",
       "joinWaitlist": "Khám phá EVE CXO",
       "readLitepaper": "Đọc Litepaper"
     },
     "what": {
       "eyebrow": "EVE CXO là gì?",
       "title": "Một đội ngũ điều hành sống động.",
-      "p1": "EVE CXO không phải là một chatbot. Đây là một đội ngũ điều hành tự chủ, đầy đủ nhân sự. Bạn cung cấp các mục tiêu cấp cao, và Eve đóng vai trò là Chánh văn phòng của bạn, phân tích các mục tiêu đó thành các nhiệm vụ của từng phòng ban.",
-      "p2": "Cô ấy ủy quyền công việc cho các tác nhân AI chuyên trách về Tiếp thị, Bán hàng, Quảng cáo, Tài chính, Vận hành và Pháp lý, điều phối nỗ lực của họ song song để mang lại kết quả hoàn chỉnh, đã được đánh giá."
+      "p1": "EVE CXO kết hợp điều phối điều hành, chuyên môn phòng ban và công việc chuyên biệt trong một môi trường kinh doanh. Eve chuyển mục tiêu thành nhiệm vụ có phạm vi và bàn giao có thể đánh giá.",
+      "p2": "Cô ấy điều phối Tiếp thị, Bán hàng & Thu hút, Quảng cáo, Tài chính, Vận hành, Pháp lý & Tuân thủ, Nhân sự và Dịch vụ khách hàng. Jarvis hỗ trợ phát triển dùng chung trong chương trình truy cập sớm có kiểm soát."
     },
     "how": {
       "eyebrow": "Sự điều phối",
-      "title": "Mô hình tác nhân song song 24/7.",
-      "sub": "Bạn đặt mục tiêu. Chánh văn phòng ủy quyền. Các phòng ban thực thi song song.",
+      "title": "Mô hình tác nhân song song có điều phối.",
+      "sub": "Bạn đặt mục tiêu. Chánh văn phòng ủy quyền. Các phòng ban chuẩn bị và đánh giá công việc song song.",
       "steps": {
         "s1": {
           "title": "Xác định mục tiêu",
@@ -190,7 +190,7 @@
         },
         "s3": {
           "title": "Thực thi song song",
-          "desc": "Bảy trưởng phòng AI làm việc đồng thời trên các lĩnh vực của họ."
+          "desc": "Tám trưởng phòng AI có thể làm việc trong lĩnh vực của họ trong khi vẫn giữ ranh giới đánh giá và phê duyệt."
         },
         "s4": {
           "title": "Đánh giá chéo giữa các phòng ban",
@@ -204,8 +204,8 @@
     },
     "caps": {
       "eyebrow": "Các phòng ban",
-      "title": "Bảy trưởng bộ phận AI chuyên trách.",
-      "sub": "Một đội ngũ điều hành hoàn chỉnh, có sẵn ngay lập tức và luôn đồng bộ.",
+      "title": "Tám phòng ban phục vụ khách hàng.",
+      "sub": "Một đội ngũ điều hành được điều phối, tùy theo gói, quyền và kết nối đã cấu hình.",
       "items": {
         "marketing": {
           "t": "Tiếp thị",
@@ -235,8 +235,8 @@
     },
     "team": {
       "eyebrow": "Đội ngũ",
-      "title": "Một chánh văn phòng. Bảy trưởng bộ phận.",
-      "sub": "Eve chỉ đạo một ban điều hành chuyên biệt. Mỗi tác nhân được xây dựng riêng cho lĩnh vực của họ.",
+      "title": "Một Chánh văn phòng. Tám trưởng bộ phận. Cộng thêm Jarvis.",
+      "sub": "Eve điều phối tám trưởng bộ phận và các chuyên gia. Jarvis là năng lực phát triển dùng chung, không phải phòng ban thứ chín.",
       "eve": {
         "role": "Chánh văn phòng",
         "department": "Điều phối",
@@ -291,7 +291,7 @@
         "d3": {
           "tag": "Quy mô",
           "title": "Hoạt động liên tục",
-          "desc": "Đội ngũ không bao giờ ngủ, đưa việc thực thi toàn cầu trở thành hiện thực 24/7."
+          "desc": "Trạng thái nhiệm vụ bền vững giúp công việc có quản trị tiếp tục qua các phiên và múi giờ."
         }
       }
     },
@@ -301,14 +301,14 @@
       "sub": "Tập trung vào tầm nhìn. Hãy để đội ngũ lo việc thực thi.",
       "bullets": {
         "b1": "Mở rộng quy mô đầu ra của bạn mà không cần tăng số lượng nhân sự.",
-        "b2": "Thực hiện các sáng kiến phức tạp, đa phòng ban một cách dễ dàng.",
-        "b3": "Duy trì chất lượng cao thông qua hệ thống đánh giá chéo tự động.",
-        "b4": "Vận hành một doanh nghiệp toàn cầu 24/7 thực sự."
+        "b2": "Điều phối các sáng kiến phức tạp giữa nhiều phòng ban với bàn giao có trách nhiệm.",
+        "b3": "Duy trì chất lượng qua quy trình đánh giá và phê duyệt của con người.",
+        "b4": "Giữ công việc có quản trị tiếp tục qua các phiên và múi giờ."
       }
     },
     "cta": {
-      "title": "Gặp gỡ đội ngũ không bao giờ ngủ.",
-      "sub": "Khám phá cách Eve có thể chuyển đổi hoạt động của bạn.",
+      "title": "Gặp đội ngũ được xây dựng cho công việc bền bỉ.",
+      "sub": "Xem cách Eve điều phối công việc có quản trị trong tổ chức EVE CXO.",
       "button": "Truy cập evecxo.com"
     }
   },
@@ -391,7 +391,7 @@
     },
     "hero": {
       "eyebrow": "Litepaper",
-      "title": "AICreatesAi Litepaper",
+      "title": "AI Creates AI Litepaper",
       "sub": "Hệ điều hành kinh doanh Agentic",
       "date": "Tháng 5 năm 2026",
       "viewDeck": "Xem Pitch Deck",
@@ -405,7 +405,7 @@
     },
     "disclaimer": {
       "label": "Miễn trừ trách nhiệm",
-      "text": "Trang này chỉ nhằm mục đích thông tin và không cấu thành lời chào bán hay lời mời mua bất kỳ chứng khoán hoặc token nào. Token AICA, khi được phát hành, sẽ là token tiện ích để sử dụng trong hệ sinh thái AIcreatesAI và chịu các hạn chế về vesting và pháp lý theo quốc gia. Các cam kết về công nghệ giai đoạn sớm và tiền mã hóa tiềm ẩn rủi ro đáng kể và bạn có thể mất toàn bộ vốn. Các điều khoản chi tiết của đợt bán riêng tư được cung cấp cho nhà đầu tư được chứng nhận qua cổng nhà đầu tư."
+      "text": "Trang này chỉ nhằm mục đích thông tin và không cấu thành lời chào bán hay lời mời mua bất kỳ chứng khoán hoặc token nào. Token AICA, khi được phát hành, sẽ là token tiện ích để sử dụng trong hệ sinh thái AI Creates AI và chịu các hạn chế về vesting và pháp lý theo quốc gia. Các cam kết về công nghệ giai đoạn sớm và tiền mã hóa tiềm ẩn rủi ro đáng kể và bạn có thể mất toàn bộ vốn. Các điều khoản chi tiết của đợt bán riêng tư được cung cấp cho nhà đầu tư được chứng nhận qua cổng nhà đầu tư."
     },
     "cta": {
       "label": "Cơ hội",
@@ -416,12 +416,12 @@
     },
     "dialog": {
       "title": "AICA Whitepaper",
-      "desc": "Xem qua whitepaper của AIcreatesAI."
+      "desc": "Xem qua whitepaper của AI Creates AI."
     },
     "sections": {
       "executiveSummary": {
         "title": "Tóm tắt điều hành",
-        "p1": "AICreatesAi đang xây dựng Hệ điều hành kinh doanh Agentic đầu tiên trên thế giới - một \"Company in a Box\" hoàn chỉnh cho phép mọi chủ doanh nghiệp vận hành một công ty ảo được điều phối, thông minh và liên tục cải thiện.",
+        "p1": "AI Creates AI đang xây dựng Hệ điều hành kinh doanh Agentic đầu tiên trên thế giới - một \"Company in a Box\" hoàn chỉnh cho phép mọi chủ doanh nghiệp vận hành một công ty ảo được điều phối, thông minh và liên tục cải thiện.",
         "p2": "Chúng tôi đang huy động 50 triệu USD chủ yếu để phát triển trí tuệ AI độc quyền, hạ tầng tính toán tiên tiến và hệ điều hành cốt lõi. Nền tảng sẽ mang lại kết quả kinh doanh đáng tin cậy thông qua một cách tiếp cận theo giai đoạn, với quyền sở hữu dài hạn các mô hình AI của riêng chúng tôi.",
         "p3": "Các tính năng chính bao gồm trải nghiệm desktop-native, hệ thống chất lượng vòng kín, ví Agentic với quyền kiểm soát thực sự của người dùng và nền kinh tế token bền vững được thiết kế để thưởng cho người đóng góp."
       },
@@ -431,7 +431,7 @@
       },
       "vision": {
         "title": "Tầm nhìn và Giải pháp của chúng tôi",
-        "p1": "AICreatesAi đang tạo ra một danh mục mới: Hệ điều hành kinh doanh Agentic.",
+        "p1": "AI Creates AI đang tạo ra một danh mục mới: Hệ điều hành kinh doanh Agentic.",
         "p2": "Nền tảng của chúng tôi cho phép người dùng mô tả mục tiêu kinh doanh bằng ngôn ngữ tự nhiên và nhận được thực thi được điều phối, chất lượng cao trên marketing, bán hàng, tài chính, pháp lý, vận hành và phát triển - với đánh giá chất lượng tích hợp và cải thiện liên tục.",
         "p3": "Chúng tôi đang thực hiện một chiến lược kỷ luật, theo giai đoạn mang lại giá trị thực sớm trong khi xây dựng khả năng phòng thủ dài hạn thông qua dữ liệu, trải nghiệm sản phẩm và phát triển mô hình độc quyền."
       },
@@ -441,7 +441,7 @@
       },
       "product": {
         "title": "Tổng quan sản phẩm",
-        "p1": "AICreatesAi cung cấp một nền tảng thống nhất có thể truy cập qua web, di động và một trải nghiệm desktop bản địa mạnh mẽ.",
+        "p1": "AI Creates AI cung cấp một nền tảng thống nhất có thể truy cập qua web, di động và một trải nghiệm desktop bản địa mạnh mẽ.",
         "listIntro": "Khả năng cốt lõi (cấp cao):",
         "l1": "Quy trình kinh doanh đa chức năng được điều phối",
         "l2": "Hệ thống đánh giá và cải thiện chất lượng tự động",
@@ -476,7 +476,7 @@
       },
       "tokenomics": {
         "title": "Tokenomics",
-        "p1": "AICreatesAi Token ($AICA) hỗ trợ các gói đăng ký, sự tham gia hệ sinh thái dài hạn và phần thưởng cho người đóng góp cũng như các tiện ích khác đã được lên kế hoạch.",
+        "p1": "AI Creates AI Token ($AICA) hỗ trợ các gói đăng ký, sự tham gia hệ sinh thái dài hạn và phần thưởng cho người đóng góp cũng như các tiện ích khác đã được lên kế hoạch.",
         "subTitle": "Tổng quan Token",
         "subText": "Tổng cung: 10.000.000.000 $AICA",
         "listIntro": "Nguyên tắc Token chính:",
@@ -500,7 +500,7 @@
       },
       "conclusion": {
         "title": "Kết luận",
-        "p1": "AICreatesAi đang xây dựng hệ điều hành cho kỷ nguyên Agentic của kinh doanh.",
+        "p1": "AI Creates AI đang xây dựng hệ điều hành cho kỷ nguyên Agentic của kinh doanh.",
         "p2": "Với vòng huy động 50 triệu USD tập trung vào trí tuệ AI cốt lõi, hạ tầng tính toán và sản phẩm \"Company in a Box\", chúng tôi được định vị để tạo ra một nền tảng định nghĩa danh mục mang lại giá trị tức thì trong khi xây dựng các lợi thế cạnh tranh lâu dài."
       }
     }
@@ -508,7 +508,7 @@
   "contact": {
     "seo": {
       "title": "Liên hệ",
-      "description": "Liên lạc với AIcreatesAI - danh sách chờ cho EVE CXO và FinPayTek, quan hệ nhà đầu tư, báo chí và đối tác."
+      "description": "Liên lạc với AI Creates AI - danh sách chờ cho EVE CXO và FinPayTek, quan hệ nhà đầu tư, báo chí và đối tác."
     },
     "eyebrow": "Liên hệ",
     "title": "Bắt đầu một cuộc trò chuyện.",
@@ -554,7 +554,7 @@
   "privacy": {
     "seo": {
       "title": "Chính sách quyền riêng tư",
-      "description": "Cách AIcreatesAI thu thập, sử dụng và bảo vệ thông tin của bạn trên trang web tiếp thị, sản phẩm và cổng nhà đầu tư."
+      "description": "Cách AI Creates AI thu thập, sử dụng và bảo vệ thông tin của bạn trên trang web tiếp thị, sản phẩm và cổng nhà đầu tư."
     },
     "eyebrow": "Pháp lý",
     "title": "Chính sách quyền riêng tư.",
@@ -564,7 +564,7 @@
   "terms": {
     "seo": {
       "title": "Điều khoản dịch vụ",
-      "description": "Các điều khoản quản lý việc sử dụng trang web AIcreatesAI, sản phẩm và cổng nhà đầu tư."
+      "description": "Các điều khoản quản lý việc sử dụng trang web AI Creates AI, sản phẩm và cổng nhà đầu tư."
     },
     "eyebrow": "Pháp lý",
     "title": "Điều khoản dịch vụ.",
