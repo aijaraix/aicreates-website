@@ -1,3 +1,4 @@
+import { LegacyContext } from "@/components/LegacyContext";
 import { Link } from "wouter";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
@@ -33,6 +34,7 @@ export default function NeoBank() {
     title: t("neobank.seo.title"),
     description: t("neobank.seo.description"),
     path: "/neobank",
+    indexable: false,
   });
 
   const pillars = [
@@ -77,8 +79,9 @@ export default function NeoBank() {
 
   return (
     <div className="flex flex-col w-full">
+      <LegacyContext />
       {/* HERO */}
-      <section className="relative pt-28 pb-14 md:pt-36 md:pb-20 overflow-hidden">
+      <section className="relative pt-10 pb-14 md:pt-12 md:pb-20 overflow-hidden">
         <div className="absolute inset-0 bg-grid bg-grid-fade pointer-events-none opacity-50" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_0%,rgba(59,130,246,0.08),transparent_70%)] pointer-events-none" />
 
@@ -119,7 +122,7 @@ export default function NeoBank() {
                 transition={{ duration: 0.7, delay: 0.25 }}
                 className="mt-10 flex flex-col sm:flex-row gap-4"
               >
-                <a
+                <Button size="lg" className="rounded-full h-12 px-7 bg-blue-600 hover:bg-blue-500 text-white border-0 shadow-[0_0_20px_rgba(59,130,246,0.3)] transition-all" asChild><a
                   href="https://finpaytek.com/"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -131,10 +134,8 @@ export default function NeoBank() {
                     })
                   }
                 >
-                  <Button size="lg" className="rounded-full h-12 px-7 bg-blue-600 hover:bg-blue-500 text-white border-0 shadow-[0_0_20px_rgba(59,130,246,0.3)] transition-all">
                     {t("neobank.hero.coming")} <ArrowUpRight className="ms-2 w-4 h-4" />
-                  </Button>
-                </a>
+                  </a></Button>
               </motion.div>
             </div>
             
@@ -261,7 +262,7 @@ export default function NeoBank() {
                   {t("neobank.cta.sub")}
                 </p>
               </div>
-              <a
+              <Button size="lg" className="rounded-full h-12 px-8 bg-blue-600 hover:bg-blue-500 text-white border-0 shadow-[0_0_20px_rgba(59,130,246,0.3)] transition-all whitespace-nowrap" asChild><a
                 href="https://finpaytek.com/"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -273,10 +274,8 @@ export default function NeoBank() {
                   })
                 }
               >
-                <Button size="lg" className="rounded-full h-12 px-8 bg-blue-600 hover:bg-blue-500 text-white border-0 shadow-[0_0_20px_rgba(59,130,246,0.3)] transition-all whitespace-nowrap">
                   {t("neobank.cta.coming")} <ArrowUpRight className="ms-2 w-4 h-4" />
-                </Button>
-              </a>
+                </a></Button>
             </div>
           </div>
         </div>

@@ -9,8 +9,8 @@
     "openMenu": "Ouvrir le menu",
     "items": {
       "eveOS": {
-        "name": "Eve OS",
-        "desc": "L'équipe qui ne dort jamais"
+        "name": "EVE CXO",
+        "desc": "L’organisation IA coordonnée"
       },
       "neoBank": {
         "name": "FinPayTek",
@@ -25,8 +25,8 @@
         "desc": "Construisez sur les primitives agentiques"
       },
       "litepaper": {
-        "name": "Litepaper",
-        "desc": "Positionnement, architecture et tokenomics"
+        "name": "Documents antérieurs",
+        "desc": "Pages de référence sur les projets antérieurs"
       },
       "roadmap": {
         "name": "Feuille de route",
@@ -88,7 +88,7 @@
       "eyebrow": "L'opportunité",
       "title": "L'infrastructure pour la prochaine génération d'entreprises.",
       "p1": "Nous construisons l'infrastructure fondamentale de la prochaine génération d'entreprises. À mesure que l'IA s'intègre profondément dans chaque société, la demande de systèmes d'exploitation intelligents et autonomes va exploser.",
-      "p2": "AICreatesAi se positionne au cœur de ce changement, en créant les plateformes et la couche d'intelligence qui alimenteront le fonctionnement des entreprises de demain."
+      "p2": "AI Creates AI se positionne au cœur de ce changement, en créant les plateformes et la couche d'intelligence qui alimenteront le fonctionnement des entreprises de demain."
     },
     "compute": {
       "eyebrow": "Compute",
@@ -127,7 +127,7 @@
     },
     "why": {
       "eyebrow": "Pourquoi maintenant",
-      "title": "Pourquoi l'opportunité AICreatesAi ?",
+      "title": "Pourquoi l'opportunité AI Creates AI ?",
       "subtitle": "Un pari qui définit une catégorie sur la couche que les entreprises, le capital et les consommateurs utiliseront.",
       "pillar": "Pilier",
       "p1Title": "Valeur cumulative à long terme",
@@ -146,11 +146,11 @@
     },
     "dialog": {
       "title": "AICA Whitepaper",
-      "desc": "Parcourez le whitepaper AIcreatesAI."
+      "desc": "Parcourez le whitepaper AI Creates AI."
     },
     "disclaimer": {
       "label": "Avertissement",
-      "text": "Cette page est fournie à titre informatif uniquement et ne constitue ni une offre de vente ni une sollicitation d'achat de titres ou de tokens. Les tokens AICA, une fois émis, seront des tokens utilitaires pour un usage consommatoire dans l'écosystème AIcreatesAI et seront soumis à des restrictions de vesting et de juridiction. Les engagements en technologies au stade précoce et en cryptomonnaies comportent un risque significatif et vous pouvez perdre la totalité des fonds. Les conditions détaillées de la vente privée sont disponibles pour les investisseurs accrédités via le portail investisseur."
+      "text": "Cette page est fournie à titre informatif uniquement et ne constitue ni une offre de vente ni une sollicitation d'achat de titres ou de tokens. Les tokens AICA, une fois émis, seront des tokens utilitaires pour un usage consommatoire dans l'écosystème AI Creates AI et seront soumis à des restrictions de vesting et de juridiction. Les engagements en technologies au stade précoce et en cryptomonnaies comportent un risque significatif et vous pouvez perdre la totalité des fonds. Les conditions détaillées de la vente privée sont disponibles pour les investisseurs accrédités via le portail investisseur."
     },
     "seo": {
       "title": "Investir - Soutenir la couche d'intelligence agentique",
@@ -159,26 +159,26 @@
   },
   "eveos": {
     "seo": {
-      "title": "Eve OS - L'équipe qui ne dort jamais",
-      "description": "Eve agit comme un chef de cabinet, coordonnant des chefs de département d'IA spécialisés dans toute votre entreprise."
+      "title": "EVE CXO — Le système d’exploitation IA pour l’entreprise",
+      "description": "Eve coordonne huit départements et 46 spécialistes autour de vos objectifs, avec approbation humaine avant toute action conséquente."
     },
     "hero": {
       "eyebrow": "Produit Phare",
-      "subline": "Rencontrez l'équipe qui ne dort jamais.",
-      "desc": "Eve dirige votre entreprise comme un chef de cabinet. Elle coordonne six chefs de département d'IA spécialisés travaillant en parallèle, exécutant et révisant le travail 24h/24 et 7j/7.",
-      "joinWaitlist": "Découvrir Eve OS",
+      "subline": "Le système d’exploitation IA pour l’entreprise.",
+      "desc": "Eve est votre intelligence exécutive et cheffe de cabinet. Elle coordonne huit départements et 46 spécialistes autour de vos objectifs, tout en vous laissant le contrôle des outils et des décisions.",
+      "joinWaitlist": "Découvrir EVE CXO",
       "readLitepaper": "Lire le Litepaper"
     },
     "what": {
-      "eyebrow": "Qu'est-ce qu'Eve OS ?",
+      "eyebrow": "Qu'est-ce qu'EVE CXO ?",
       "title": "Une équipe de direction vivante.",
-      "p1": "Eve OS n'est pas un chatbot. C'est une équipe de direction autonome et complète. Vous fixez les objectifs de haut niveau, et Eve agit comme votre chef de cabinet, décomposant ces objectifs en tâches départementales.",
-      "p2": "Elle délègue le travail à des agents d'IA spécialisés en Marketing, Ventes, Publicité, Finance, Opérations et Juridique, orchestrant leurs efforts en parallèle pour livrer des résultats complets et révisés."
+      "p1": "EVE CXO réunit coordination exécutive, expertise des départements et travail spécialisé dans un même environnement. Eve transforme les objectifs en tâches cadrées et en transmissions vérifiables.",
+      "p2": "Elle coordonne Marketing, Ventes & Acquisition, Publicité, Finance, Opérations, Juridique & Conformité, Ressources humaines et Service client. Jarvis soutient le développement partagé en accès anticipé contrôlé."
     },
     "how": {
       "eyebrow": "L'Orchestration",
-      "title": "Un modèle d'agents parallèles 24/7.",
-      "sub": "Vous fixez l'objectif. Le chef de cabinet délègue. Les départements exécutent en parallèle.",
+      "title": "Un modèle coordonné d’agents parallèles.",
+      "sub": "Vous fixez l’objectif. La cheffe de cabinet délègue. Les départements préparent et révisent le travail en parallèle.",
       "steps": {
         "s1": {
           "title": "Définition de l'objectif",
@@ -190,7 +190,7 @@
         },
         "s3": {
           "title": "Exécution Parallèle",
-          "desc": "Six chefs de département d'IA travaillent simultanément dans leurs domaines."
+          "desc": "Huit chefs de département IA peuvent travailler dans leurs domaines tout en respectant les limites de révision et d’approbation."
         },
         "s4": {
           "title": "Examen Interdépartemental",
@@ -204,8 +204,8 @@
     },
     "caps": {
       "eyebrow": "Départements",
-      "title": "Six chefs d'IA spécialisés.",
-      "sub": "Une équipe de direction complète, disponible instantanément et toujours alignée.",
+      "title": "Huit départements orientés client.",
+      "sub": "Une équipe de direction coordonnée, selon l’offre, les permissions et les connexions configurées.",
       "items": {
         "marketing": {
           "t": "Marketing",
@@ -235,8 +235,8 @@
     },
     "team": {
       "eyebrow": "L'Équipe",
-      "title": "Un chef de cabinet. Six chefs de département.",
-      "sub": "Eve dirige une suite exécutive spécialisée. Chaque agent est conçu pour son domaine.",
+      "title": "Une cheffe de cabinet. Huit chefs de département. Plus Jarvis.",
+      "sub": "Eve coordonne huit chefs de département et leurs spécialistes. Jarvis est une capacité de développement partagée, pas un neuvième département.",
       "eve": {
         "role": "Chef de Cabinet",
         "department": "Orchestration",
@@ -291,7 +291,7 @@
         "d3": {
           "tag": "Échelle",
           "title": "Opérations Continues",
-          "desc": "L'équipe ne dort jamais, faisant de l'exécution mondiale une réalité 24h/24 et 7j/7."
+          "desc": "Un état de tâche durable aide le travail gouverné à continuer entre les sessions et les fuseaux horaires."
         }
       }
     },
@@ -301,14 +301,14 @@
       "sub": "Concentrez-vous sur la vision. Laissez l'équipe s'occuper de l'exécution.",
       "bullets": {
         "b1": "Faites évoluer votre production sans augmenter les effectifs.",
-        "b2": "Exécutez sans effort des initiatives complexes et interdépartementales.",
-        "b3": "Maintenez une haute qualité grâce à l'examen automatisé par les pairs.",
-        "b4": "Exploitez une véritable entreprise mondiale 24h/24 et 7j/7."
+        "b2": "Coordonnez des initiatives complexes entre départements avec des transmissions responsables.",
+        "b3": "Maintenez la qualité grâce aux révisions et à la validation humaine.",
+        "b4": "Faites avancer un travail gouverné entre les sessions et les fuseaux horaires."
       }
     },
     "cta": {
-      "title": "Rencontrez l'équipe qui ne dort jamais.",
-      "sub": "Découvrez comment Eve peut transformer vos opérations.",
+      "title": "Découvrez l’équipe conçue pour un travail durable.",
+      "sub": "Découvrez comment Eve coordonne le travail gouverné dans l’organisation EVE CXO.",
       "button": "Visitez evecxo.com"
     }
   },
@@ -391,7 +391,7 @@
     },
     "hero": {
       "eyebrow": "Litepaper",
-      "title": "AICreatesAi Litepaper",
+      "title": "AI Creates AI Litepaper",
       "sub": "Le système d'exploitation agentique pour entreprises",
       "date": "Mai 2026",
       "viewDeck": "Voir le Pitch Deck",
@@ -405,7 +405,7 @@
     },
     "disclaimer": {
       "label": "Avertissement",
-      "text": "Cette page est fournie à titre informatif uniquement et ne constitue ni une offre de vente ni une sollicitation d'achat de titres ou de tokens. Les tokens AICA, une fois émis, seront des tokens utilitaires pour un usage consommatoire dans l'écosystème AIcreatesAI et seront soumis à des restrictions de vesting et de juridiction. Les engagements en technologies au stade précoce et en cryptomonnaies comportent un risque significatif et vous pouvez perdre la totalité des fonds. Les conditions détaillées de la vente privée sont disponibles pour les investisseurs accrédités via le portail investisseur."
+      "text": "Cette page est fournie à titre informatif uniquement et ne constitue ni une offre de vente ni une sollicitation d'achat de titres ou de tokens. Les tokens AICA, une fois émis, seront des tokens utilitaires pour un usage consommatoire dans l'écosystème AI Creates AI et seront soumis à des restrictions de vesting et de juridiction. Les engagements en technologies au stade précoce et en cryptomonnaies comportent un risque significatif et vous pouvez perdre la totalité des fonds. Les conditions détaillées de la vente privée sont disponibles pour les investisseurs accrédités via le portail investisseur."
     },
     "cta": {
       "label": "L'opportunité",
@@ -416,12 +416,12 @@
     },
     "dialog": {
       "title": "AICA Whitepaper",
-      "desc": "Parcourez le whitepaper AIcreatesAI."
+      "desc": "Parcourez le whitepaper AI Creates AI."
     },
     "sections": {
       "executiveSummary": {
         "title": "Résumé exécutif",
-        "p1": "AICreatesAi construit le premier système d'exploitation agentique pour entreprises au monde - une \"Company in a Box\" complète qui permet à tout dirigeant d'exploiter une entreprise virtuelle coordonnée, intelligente et en amélioration continue.",
+        "p1": "AI Creates AI construit le premier système d'exploitation agentique pour entreprises au monde - une \"Company in a Box\" complète qui permet à tout dirigeant d'exploiter une entreprise virtuelle coordonnée, intelligente et en amélioration continue.",
         "p2": "Nous levons 50 millions de dollars principalement pour développer une intelligence IA propriétaire, une infrastructure de calcul avancée et le système d'exploitation central. La plateforme délivrera des résultats métier fiables via une approche par phases, avec une propriété à long terme de nos propres modèles d'IA.",
         "p3": "Les fonctionnalités clés incluent une expérience desktop-native, des systèmes qualité en boucle fermée, des portefeuilles agentiques avec un véritable contrôle utilisateur, et une économie de token durable conçue pour récompenser les contributeurs."
       },
@@ -431,7 +431,7 @@
       },
       "vision": {
         "title": "Notre vision et notre solution",
-        "p1": "AICreatesAi crée une nouvelle catégorie : le système d'exploitation agentique pour entreprises.",
+        "p1": "AI Creates AI crée une nouvelle catégorie : le système d'exploitation agentique pour entreprises.",
         "p2": "Notre plateforme permet aux utilisateurs de décrire leurs objectifs en langage naturel et de recevoir une exécution coordonnée et de haute qualité sur le marketing, les ventes, la finance, le juridique, les opérations et le développement - avec contrôle qualité intégré et amélioration continue.",
         "p3": "Nous exécutons une stratégie disciplinée et par phases qui apporte de la valeur réelle tôt, tout en construisant une défensibilité à long terme par les données, l'expérience produit et le développement de modèles propriétaires."
       },
@@ -441,7 +441,7 @@
       },
       "product": {
         "title": "Aperçu du produit",
-        "p1": "AICreatesAi délivre une plateforme unifiée accessible via le web, le mobile et une puissante expérience desktop native.",
+        "p1": "AI Creates AI délivre une plateforme unifiée accessible via le web, le mobile et une puissante expérience desktop native.",
         "listIntro": "Capacités principales (vue haute) :",
         "l1": "Flux métier multi-fonctions coordonnés",
         "l2": "Systèmes automatiques de contrôle et d'amélioration qualité",
@@ -476,7 +476,7 @@
       },
       "tokenomics": {
         "title": "Tokenomics",
-        "p1": "Le AICreatesAi Token ($AICA) soutient les abonnements, la participation à long terme dans l'écosystème et les récompenses des contributeurs, ainsi que d'autres utilités prévues.",
+        "p1": "Le AI Creates AI Token ($AICA) soutient les abonnements, la participation à long terme dans l'écosystème et les récompenses des contributeurs, ainsi que d'autres utilités prévues.",
         "subTitle": "Aperçu du token",
         "subText": "Offre totale : 10 000 000 000 $AICA",
         "listIntro": "Principes clés du token :",
@@ -500,7 +500,7 @@
       },
       "conclusion": {
         "title": "Conclusion",
-        "p1": "AICreatesAi construit le système d'exploitation de l'ère agentique des entreprises.",
+        "p1": "AI Creates AI construit le système d'exploitation de l'ère agentique des entreprises.",
         "p2": "Avec une levée de 50 M$ focalisée sur l'intelligence IA centrale, l'infrastructure de calcul et le produit \"Company in a Box\", nous sommes positionnés pour créer une plateforme qui définit la catégorie, en livrant une valeur immédiate tout en construisant des avantages compétitifs durables."
       }
     }
@@ -508,7 +508,7 @@
   "contact": {
     "seo": {
       "title": "Contact",
-      "description": "Entrez en contact avec AIcreatesAI - listes d'attente pour Eve OS et FinPayTek, relations investisseurs, presse et partenariats."
+      "description": "Entrez en contact avec AI Creates AI - listes d'attente pour EVE CXO et FinPayTek, relations investisseurs, presse et partenariats."
     },
     "eyebrow": "Contact",
     "title": "Commencez une conversation.",
@@ -521,7 +521,7 @@
     "sendAnother": "Envoyer un autre message",
     "interestsLabel": "Je vous contacte en tant que",
     "interests": {
-      "eveWaitlist": "Liste d'attente Eve OS",
+      "eveWaitlist": "Liste d'attente EVE CXO",
       "neoWaitlist": "Liste d'attente FinPayTek",
       "devWaitlist": "Liste d'attente développeur",
       "investor": "Investisseur",
@@ -554,7 +554,7 @@
   "privacy": {
     "seo": {
       "title": "Politique de confidentialité",
-      "description": "Comment AIcreatesAI collecte, utilise et protège vos informations sur le site marketing, les produits et le portail investisseur."
+      "description": "Comment AI Creates AI collecte, utilise et protège vos informations sur le site marketing, les produits et le portail investisseur."
     },
     "eyebrow": "Mentions légales",
     "title": "Politique de confidentialité.",
@@ -564,7 +564,7 @@
   "terms": {
     "seo": {
       "title": "Conditions d'utilisation",
-      "description": "Les conditions régissant l'utilisation du site, des produits et du portail investisseur AIcreatesAI."
+      "description": "Les conditions régissant l'utilisation du site, des produits et du portail investisseur AI Creates AI."
     },
     "eyebrow": "Mentions légales",
     "title": "Conditions d'utilisation.",

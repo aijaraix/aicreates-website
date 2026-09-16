@@ -1,12 +1,19 @@
 import { useEffect } from "react";
 
-const SITE = "AIcreatesAI";
+const SITE = "AI Creates AI";
 const ORIGIN = "https://www.aicreates.ai";
 const DEFAULT_OG = `${ORIGIN}/social/og-default.png`;
 const DEFAULT_OG_SQUARE = `${ORIGIN}/social/og-square.png`;
-const DEFAULT_OG_ALT = "AIcreatesAI - The Agentic Intelligence Layer";
+const DEFAULT_OG_ALT = "AI Creates AI — The company behind EVE CXO";
+const EVE_CXO_OG = `${ORIGIN}/social/og-eve-os.png`;
+const EVE_CXO_TWITTER = `${ORIGIN}/social/twitter-card-eve-os.png`;
 
-function setMeta(selector: string, attr: "name" | "property", key: string, content: string) {
+function setMeta(
+  selector: string,
+  attr: "name" | "property",
+  key: string,
+  content: string,
+) {
   let el = document.head.querySelector<HTMLMetaElement>(selector);
   if (!el) {
     el = document.createElement("meta");
@@ -31,6 +38,11 @@ function ensureAbsolute(url: string): string {
   return `${ORIGIN}${url.startsWith("/") ? "" : "/"}${url}`;
 }
 
+function canonicalUrl(path: string): string {
+  if (!path || path === "/") return `${ORIGIN}/`;
+  return `${ORIGIN}${path.endsWith("/") ? path : `${path}/`}`;
+}
+
 function setAllOgImages(coverUrl: string, squareUrl: string, alt: string) {
   // Remove existing og:image* tags so we can rewrite them in the right order.
   const props = [
@@ -42,7 +54,9 @@ function setAllOgImages(coverUrl: string, squareUrl: string, alt: string) {
     "og:image:alt",
   ];
   for (const p of props) {
-    document.head.querySelectorAll(`meta[property="${p}"]`).forEach((n) => n.remove());
+    document.head
+      .querySelectorAll(`meta[property="${p}"]`)
+      .forEach((n) => n.remove());
   }
   const append = (property: string, content: string) => {
     const el = document.createElement("meta");
@@ -50,7 +64,8 @@ function setAllOgImages(coverUrl: string, squareUrl: string, alt: string) {
     el.setAttribute("content", content);
     document.head.appendChild(el);
   };
-  const typeFor = (u: string) => (/\.jpe?g(\?|$)/i.test(u) ? "image/jpeg" : "image/png");
+  const typeFor = (u: string) =>
+    /\.jpe?g(\?|$)/i.test(u) ? "image/jpeg" : "image/png";
   append("og:image", coverUrl);
   append("og:image:secure_url", coverUrl);
   append("og:image:type", typeFor(coverUrl));
@@ -69,13 +84,16 @@ export type SeoOptions = {
   title: string;
   description: string;
   path: string;
-  /** Optional full title that bypasses the `<title> | AIcreatesAI` suffix. */
+  /** Optional full title that bypasses the `<title> | AI Creates AI` suffix. */
   fullTitle?: string;
+  indexable?: boolean;
   /** 1200x630 cover image (absolute URL or path under /). */
   image?: string;
-  /** 600x600 square image for WhatsApp/iMessage (absolute URL or path under /). */
+  /** 600x600+ square image for WhatsApp/iMessage (absolute URL or path under /). */
   squareImage?: string;
-  /** Alt text for both images. */
+  /** Optional X/Twitter card image. */
+  twitterImage?: string;
+  /** Alt text for social images. */
   imageAlt?: string;
 };
 
@@ -84,35 +102,81 @@ export function useSeo({
   description,
   path,
   fullTitle: fullTitleOverride,
-  image = DEFAULT_OG,
+  indexable = true,
+  image,
   squareImage = DEFAULT_OG_SQUARE,
+  twitterImage,
   imageAlt = DEFAULT_OG_ALT,
 }: SeoOptions) {
   useEffect(() => {
     const fullTitle = fullTitleOverride ?? `${title} | ${SITE}`;
-    const url = `${ORIGIN}${path}`;
-    const cover = ensureAbsolute(image);
+    const url = canonicalUrl(path);
+    const routeDefaultCover = path === "/eve-cxo" ? EVE_CXO_OG : DEFAULT_OG;
+    const cover = ensureAbsolute(image ?? routeDefaultCover);
     const square = ensureAbsolute(squareImage);
+    const routeDefaultTwitter = path === "/eve-cxo" ? EVE_CXO_TWITTER : cover;
+    const twitter = ensureAbsolute(twitterImage ?? routeDefaultTwitter);
 
     document.title = fullTitle;
     setMeta('meta[name="description"]', "name", "description", description);
     setLink("canonical", url);
+    setMeta(
+      'meta[name="robots"]',
+      "name",
+      "robots",
+      indexable ? "index, follow" : "noindex, follow",
+    );
 
     setMeta('meta[property="og:site_name"]', "property", "og:site_name", SITE);
     setMeta('meta[property="og:type"]', "property", "og:type", "website");
     setMeta('meta[property="og:locale"]', "property", "og:locale", "en_US");
     setMeta('meta[property="og:title"]', "property", "og:title", fullTitle);
-    setMeta('meta[property="og:description"]', "property", "og:description", description);
+    setMeta(
+      'meta[property="og:description"]',
+      "property",
+      "og:description",
+      description,
+    );
     setMeta('meta[property="og:url"]', "property", "og:url", url);
 
     setAllOgImages(cover, square, imageAlt);
 
-    setMeta('meta[name="twitter:card"]', "name", "twitter:card", "summary_large_image");
-    setMeta('meta[name="twitter:site"]', "name", "twitter:site", "@theaicreatesai");
+    setMeta(
+      'meta[name="twitter:card"]',
+      "name",
+      "twitter:card",
+      "summary_large_image",
+    );
+    setMeta(
+      'meta[name="twitter:site"]',
+      "name",
+      "twitter:site",
+      "@theaicreatesai",
+    );
     setMeta('meta[name="twitter:url"]', "name", "twitter:url", url);
     setMeta('meta[name="twitter:title"]', "name", "twitter:title", fullTitle);
-    setMeta('meta[name="twitter:description"]', "name", "twitter:description", description);
-    setMeta('meta[name="twitter:image"]', "name", "twitter:image", cover);
-    setMeta('meta[name="twitter:image:alt"]', "name", "twitter:image:alt", imageAlt);
-  }, [title, description, path, image, squareImage, imageAlt]);
+    setMeta(
+      'meta[name="twitter:description"]',
+      "name",
+      "twitter:description",
+      description,
+    );
+    setMeta('meta[name="twitter:image"]', "name", "twitter:image", twitter);
+    setMeta(
+      'meta[name="twitter:image:alt"]',
+      "name",
+      "twitter:image:alt",
+      imageAlt,
+    );
+  }, [
+    title,
+    fullTitleOverride,
+    indexable,
+    description,
+    path,
+    image,
+    squareImage,
+    twitterImage,
+    imageAlt,
+  ]);
 }

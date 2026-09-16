@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AnimatePresence, motion } from "framer-motion";
-import React, { useEffect } from "react";
+import React, { lazy, Suspense, useEffect } from "react";
 
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
@@ -12,21 +12,21 @@ import { Footer } from "@/components/Footer";
 // import { EveWidget } from "@/components/EveWidget";
 
 import Home from "@/pages/Home";
-import EveOS from "@/pages/EveOS";
-import NeoBank from "@/pages/NeoBank";
-import About from "@/pages/About";
-import Business from "@/pages/Business";
-import Developers from "@/pages/Developers";
-import Token from "@/pages/Token";
-import Roadmap from "@/pages/Roadmap";
-import Faq from "@/pages/Faq";
-import Press from "@/pages/Press";
-import Litepaper from "@/pages/Litepaper";
-import Invest from "@/pages/Invest";
-import Contact from "@/pages/Contact";
-import Privacy from "@/pages/Privacy";
-import Terms from "@/pages/Terms";
-import NotFound from "@/pages/not-found";
+const EveOS = lazy(() => import("@/pages/EveOS"));
+const NeoBank = lazy(() => import("@/pages/NeoBank"));
+const About = lazy(() => import("@/pages/About"));
+const Business = lazy(() => import("@/pages/Business"));
+const Developers = lazy(() => import("@/pages/Developers"));
+const Token = lazy(() => import("@/pages/Token"));
+const Roadmap = lazy(() => import("@/pages/Roadmap"));
+const Faq = lazy(() => import("@/pages/Faq"));
+const Press = lazy(() => import("@/pages/Press"));
+const Litepaper = lazy(() => import("@/pages/Litepaper"));
+const Invest = lazy(() => import("@/pages/Invest"));
+const Contact = lazy(() => import("@/pages/Contact"));
+const Privacy = lazy(() => import("@/pages/Privacy"));
+const Terms = lazy(() => import("@/pages/Terms"));
+const NotFound = lazy(() => import("@/pages/not-found"));
 
 const queryClient = new QueryClient();
 
@@ -55,26 +55,175 @@ function Router() {
   return (
     <AnimatePresence mode="wait">
       <Switch location={location} key={location}>
-        <Route path="/" component={() => <PageTransition><Home /></PageTransition>} />
-        <Route path="/about" component={() => <PageTransition><About /></PageTransition>} />
-        <Route path="/platform" component={() => <PageTransition><About /></PageTransition>} />
-        <Route path="/agents" component={() => <PageTransition><About /></PageTransition>} />
-        <Route path="/company-in-a-box" component={() => <PageTransition><About /></PageTransition>} />
-        <Route path="/business" component={() => <PageTransition><Business /></PageTransition>} />
-        <Route path="/developers" component={() => <PageTransition><Developers /></PageTransition>} />
-        <Route path="/token" component={() => <PageTransition><Token /></PageTransition>} />
-        <Route path="/roadmap" component={() => <PageTransition><Roadmap /></PageTransition>} />
-        <Route path="/faq" component={() => <PageTransition><Faq /></PageTransition>} />
-        <Route path="/press" component={() => <PageTransition><Press /></PageTransition>} />
-        <Route path="/eve-os" component={() => <PageTransition><EveOS /></PageTransition>} />
-        <Route path="/neobank" component={() => <PageTransition><NeoBank /></PageTransition>} />
-        <Route path="/litepaper" component={() => <PageTransition><Litepaper /></PageTransition>} />
-        <Route path="/opportunity" component={() => <PageTransition><Invest /></PageTransition>} />
-        <Route path="/invest" component={() => { const [, navigate] = useLocation(); useEffect(() => { navigate("/opportunity", { replace: true }); }, [navigate]); return null; }} />
-        <Route path="/contact" component={() => <PageTransition><Contact /></PageTransition>} />
-        <Route path="/privacy" component={() => <PageTransition><Privacy /></PageTransition>} />
-        <Route path="/terms" component={() => <PageTransition><Terms /></PageTransition>} />
-        <Route component={() => <PageTransition><NotFound /></PageTransition>} />
+        <Route
+          path="/"
+          component={() => (
+            <PageTransition>
+              <Home />
+            </PageTransition>
+          )}
+        />
+        <Route
+          path="/about"
+          component={() => (
+            <PageTransition>
+              <About />
+            </PageTransition>
+          )}
+        />
+        <Route
+          path="/platform"
+          component={() => (
+            <PageTransition>
+              <About />
+            </PageTransition>
+          )}
+        />
+        <Route
+          path="/agents"
+          component={() => (
+            <PageTransition>
+              <About />
+            </PageTransition>
+          )}
+        />
+        <Route
+          path="/company-in-a-box"
+          component={() => (
+            <PageTransition>
+              <About />
+            </PageTransition>
+          )}
+        />
+        <Route
+          path="/business"
+          component={() => (
+            <PageTransition>
+              <Business />
+            </PageTransition>
+          )}
+        />
+        <Route
+          path="/developers"
+          component={() => (
+            <PageTransition>
+              <Developers />
+            </PageTransition>
+          )}
+        />
+        <Route
+          path="/token"
+          component={() => (
+            <PageTransition>
+              <Token />
+            </PageTransition>
+          )}
+        />
+        <Route
+          path="/roadmap"
+          component={() => (
+            <PageTransition>
+              <Roadmap />
+            </PageTransition>
+          )}
+        />
+        <Route
+          path="/faq"
+          component={() => (
+            <PageTransition>
+              <Faq />
+            </PageTransition>
+          )}
+        />
+        <Route
+          path="/press"
+          component={() => (
+            <PageTransition>
+              <Press />
+            </PageTransition>
+          )}
+        />
+        <Route
+          path="/eve-cxo"
+          component={() => (
+            <PageTransition>
+              <EveOS />
+            </PageTransition>
+          )}
+        />
+        <Route
+          path="/eve-os"
+          component={() => (
+            <PageTransition>
+              <EveOS />
+            </PageTransition>
+          )}
+        />
+        <Route
+          path="/neobank"
+          component={() => (
+            <PageTransition>
+              <NeoBank />
+            </PageTransition>
+          )}
+        />
+        <Route
+          path="/litepaper"
+          component={() => (
+            <PageTransition>
+              <Litepaper />
+            </PageTransition>
+          )}
+        />
+        <Route
+          path="/opportunity"
+          component={() => (
+            <PageTransition>
+              <Invest />
+            </PageTransition>
+          )}
+        />
+        <Route
+          path="/invest"
+          component={() => {
+            const [, navigate] = useLocation();
+            useEffect(() => {
+              navigate("/opportunity", { replace: true });
+            }, [navigate]);
+            return null;
+          }}
+        />
+        <Route
+          path="/contact"
+          component={() => (
+            <PageTransition>
+              <Contact />
+            </PageTransition>
+          )}
+        />
+        <Route
+          path="/privacy"
+          component={() => (
+            <PageTransition>
+              <Privacy />
+            </PageTransition>
+          )}
+        />
+        <Route
+          path="/terms"
+          component={() => (
+            <PageTransition>
+              <Terms />
+            </PageTransition>
+          )}
+        />
+        <Route
+          component={() => (
+            <PageTransition>
+              <NotFound />
+            </PageTransition>
+          )}
+        />
       </Switch>
     </AnimatePresence>
   );
@@ -88,8 +237,16 @@ function App() {
           <ScrollToTop />
           <div className="relative min-h-[100dvh] flex flex-col bg-background text-foreground overflow-x-clip">
             <Navigation />
-            <main className="flex-1 flex flex-col">
-              <Router />
+            <a
+              href="#main-content"
+              className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:bg-white focus:text-black focus:p-3"
+            >
+              Skip to content
+            </a>
+            <main id="main-content" className="flex-1 flex flex-col">
+              <Suspense fallback={<div role="status" className="container mx-auto min-h-[60vh] px-4 pt-32 text-white/70">Loading page…</div>}>
+                <Router />
+              </Suspense>
             </main>
             <Footer />
             {/* <EveWidget /> */}

@@ -1,3 +1,4 @@
+import { LegacyContext } from "@/components/LegacyContext";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "wouter";
@@ -116,6 +117,7 @@ export default function Litepaper() {
     title: t("litepaper.seo.title"),
     description: t("litepaper.seo.description"),
     path: "/litepaper",
+    indexable: false,
   });
   const [deckOpen, setDeckOpen] = useState(false);
 
@@ -280,8 +282,9 @@ export default function Litepaper() {
 
   return (
     <div className="flex flex-col w-full">
+      <LegacyContext />
       {/* HERO */}
-      <section className="relative pt-28 pb-12 md:pt-36 md:pb-16 overflow-hidden">
+      <section className="relative pt-10 pb-12 md:pt-12 md:pb-16 overflow-hidden">
         <div className="absolute inset-0 bg-grid bg-grid-fade pointer-events-none" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_0%,rgba(0,245,212,0.08),transparent_70%)] pointer-events-none" />
 
@@ -322,11 +325,9 @@ export default function Litepaper() {
                 <BookOpen className="me-2 w-4 h-4" />
                 {t("litepaper.hero.viewDeck")}
               </Button>
-              <Link href="/contact">
-                <Button size="lg" variant="outline" className="rounded-full h-12 px-7 glass-btn" data-testid="button-get-in-touch-hero">
+              <Button size="lg" variant="outline" className="rounded-full h-12 px-7 glass-btn" data-testid="button-get-in-touch-hero" asChild><Link href="/contact">
                   {t("litepaper.hero.getInTouch")}
-                </Button>
-              </Link>
+                </Link></Button>
             </motion.div>
           </div>
         </div>
@@ -429,11 +430,9 @@ export default function Litepaper() {
                 {t("litepaper.cta.sub")}
               </p>
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                <a href="https://invest.aicreates.ai/" target="_blank" rel="noopener noreferrer">
-                  <Button size="lg" className="rounded-full h-12 px-8 teal-btn" data-testid="button-investor-portal">
+                <Button size="lg" className="rounded-full h-12 px-8 teal-btn" data-testid="button-investor-portal" asChild><a href="https://invest.aicreates.ai/" target="_blank" rel="noopener noreferrer">
                     {t("litepaper.cta.open")} <ArrowRight className="ms-2 w-4 h-4" />
-                  </Button>
-                </a>
+                  </a></Button>
                 <Button
                   size="lg"
                   variant="outline"

@@ -176,7 +176,7 @@ export function WorkspaceAreasFigure() {
   return (
     <svg viewBox="0 0 800 320" className="w-full h-full" preserveAspectRatio="xMidYMid meet">
       <circle cx="400" cy="160" r="55" fill="#0A0A0A" stroke={C} strokeOpacity="0.7"/>
-      <text x="400" y="158" textAnchor="middle" fontFamily="Inter" fontSize="12" fill="#F5F5F5">Eve OS</text>
+      <text x="400" y="158" textAnchor="middle" fontFamily="Inter" fontSize="12" fill="#F5F5F5">EVE CXO</text>
       <text x="400" y="176" textAnchor="middle" fontFamily="Inter" fontSize="10" fill="#A1A1AA">Company in a Box</text>
       {areas.map((a, i) => {
         const angle = (i / areas.length) * Math.PI * 2 - Math.PI / 2;

@@ -19,9 +19,12 @@ import availabilityRouter from "./availability";
 import chatRouter from "./chat";
 import genesisRouter from "./genesis";
 
+import seriesSeedRouter from "./seriesSeed";
+
 const router: IRouter = Router();
 
 router.use(healthRouter);
+router.use(seriesSeedRouter);
 router.use(eveRouter);
 router.use(meRouter);
 router.use(tiersRouter);

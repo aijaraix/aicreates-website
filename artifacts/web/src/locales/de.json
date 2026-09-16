@@ -9,8 +9,8 @@
     "openMenu": "Menü öffnen",
     "items": {
       "eveOS": {
-        "name": "Eve OS",
-        "desc": "Das Team, das niemals schläft"
+        "name": "EVE CXO",
+        "desc": "Die koordinierte KI-Belegschaft"
       },
       "neoBank": {
         "name": "FinPayTek",
@@ -25,8 +25,8 @@
         "desc": "Bauen Sie auf agentischen Primitiven auf"
       },
       "litepaper": {
-        "name": "Litepaper",
-        "desc": "Positionierung, Architektur und Tokenomics"
+        "name": "Frühere Materialien",
+        "desc": "Referenzseiten zu früheren Plänen"
       },
       "roadmap": {
         "name": "Roadmap",
@@ -88,7 +88,7 @@
       "eyebrow": "Die Chance",
       "title": "Die Infrastruktur für die nächste Generation von Unternehmen.",
       "p1": "Wir bauen die grundlegende Infrastruktur für die nächste Generation von Unternehmen. Mit der zunehmenden Verankerung von KI in jedem Unternehmen wird die Nachfrage nach intelligenten, autonomen Betriebssystemen explodieren.",
-      "p2": "AICreatesAi steht im Zentrum dieses Wandels und schafft die Plattformen und die Intelligenzschicht, die das künftige Wirtschaften antreiben werden."
+      "p2": "AI Creates AI steht im Zentrum dieses Wandels und schafft die Plattformen und die Intelligenzschicht, die das künftige Wirtschaften antreiben werden."
     },
     "compute": {
       "eyebrow": "Compute",
@@ -127,7 +127,7 @@
     },
     "why": {
       "eyebrow": "Warum jetzt",
-      "title": "Warum die AICreatesAi-Chance?",
+      "title": "Warum die AI Creates AI-Chance?",
       "subtitle": "Eine kategorie-definierende Wette auf die Schicht, auf der Unternehmen, Kapital und Konsumenten laufen werden.",
       "pillar": "Säule",
       "p1Title": "Langfristig akkumulierender Wert",
@@ -146,11 +146,11 @@
     },
     "dialog": {
       "title": "AICA Whitepaper",
-      "desc": "Durchblättern Sie das AIcreatesAI Whitepaper."
+      "desc": "Durchblättern Sie das AI Creates AI Whitepaper."
     },
     "disclaimer": {
       "label": "Haftungsausschluss",
-      "text": "Diese Seite dient ausschließlich Informationszwecken und stellt weder ein Verkaufsangebot noch eine Aufforderung zum Kauf von Wertpapieren oder Tokens dar. AICA-Tokens werden bei Ausgabe Utility-Tokens für die konsumierende Nutzung im AIcreatesAI-Ökosystem sein und unterliegen Vesting- sowie länderbezogenen Beschränkungen. Investitionen in frühe Technologien und Kryptowährungen sind mit erheblichen Risiken verbunden, und Sie können den gesamten Einsatz verlieren. Detaillierte Bedingungen des Privatverkaufs sind akkreditierten Investoren über das Investorenportal verfügbar."
+      "text": "Diese Seite dient ausschließlich Informationszwecken und stellt weder ein Verkaufsangebot noch eine Aufforderung zum Kauf von Wertpapieren oder Tokens dar. AICA-Tokens werden bei Ausgabe Utility-Tokens für die konsumierende Nutzung im AI Creates AI-Ökosystem sein und unterliegen Vesting- sowie länderbezogenen Beschränkungen. Investitionen in frühe Technologien und Kryptowährungen sind mit erheblichen Risiken verbunden, und Sie können den gesamten Einsatz verlieren. Detaillierte Bedingungen des Privatverkaufs sind akkreditierten Investoren über das Investorenportal verfügbar."
     },
     "seo": {
       "title": "Investieren - Unterstützen Sie die agentische Intelligenzschicht",
@@ -159,26 +159,26 @@
   },
   "eveos": {
     "seo": {
-      "title": "Eve OS - Das Team, das niemals schläft",
-      "description": "Eve agiert als Stabschef und koordiniert spezialisierte KI-Abteilungsleiter in Ihrem Unternehmen."
+      "title": "EVE CXO – Das KI-Betriebssystem für Unternehmen",
+      "description": "Eve koordiniert acht Abteilungen und 46 Spezialisten rund um Ihre Ziele; folgenreiche Handlungen bleiben genehmigungspflichtig."
     },
     "hero": {
       "eyebrow": "Vorzeigeprodukt",
-      "subline": "Lernen Sie das Team kennen, das niemals schläft.",
-      "desc": "Eve führt Ihr Unternehmen wie ein Stabschef. Sie koordiniert sechs spezialisierte KI-Abteilungsleiter, die parallel arbeiten und rund um die Uhr Aufgaben ausführen und überprüfen.",
-      "joinWaitlist": "Eve OS entdecken",
+      "subline": "Das KI-Betriebssystem für Unternehmen.",
+      "desc": "Eve ist Ihre Executive Intelligence und Stabschefin. Sie koordiniert acht Abteilungen und 46 Spezialisten rund um Geschäftsziele, während Ihre Werkzeuge und Entscheidungen unter Ihrer Kontrolle bleiben.",
+      "joinWaitlist": "EVE CXO entdecken",
       "readLitepaper": "Litepaper lesen"
     },
     "what": {
-      "eyebrow": "Was ist Eve OS?",
+      "eyebrow": "Was ist EVE CXO?",
       "title": "Ein lebendiges Führungsteam.",
-      "p1": "Eve OS ist kein Chatbot. Es ist ein voll besetztes, autonomes Führungsteam. Sie geben die übergeordneten Ziele vor, und Eve fungiert als Ihr Stabschef und bricht diese Ziele in Abteilungsaufgaben herunter.",
-      "p2": "Sie delegiert die Arbeit an spezialisierte KI-Agenten in den Bereichen Marketing, Vertrieb, Werbung, Finanzen, Operations und Recht und orchestriert deren Bemühungen parallel, um abgeschlossene, überprüfte Ergebnisse zu liefern."
+      "p1": "EVE CXO verbindet Executive-Koordination, Abteilungsexpertise und Spezialistenarbeit in einer Geschäftsumgebung. Eve übersetzt Ziele in abgegrenzte Aufgaben und überprüfbare Übergaben.",
+      "p2": "Sie koordiniert Marketing, Vertrieb & Akquise, Werbung, Finanzen, Operations, Recht & Compliance, People & HR und Kundenservice. Jarvis unterstützt gemeinsame Entwicklungsarbeit im kontrollierten Early Access."
     },
     "how": {
       "eyebrow": "Die Orchestrierung",
-      "title": "Ein 24/7-Parallel-Agent-Modell.",
-      "sub": "Sie setzen das Ziel. Der Stabschef delegiert. Die Abteilungen führen parallel aus.",
+      "title": "Ein koordiniertes Parallel-Agenten-Modell.",
+      "sub": "Sie setzen das Ziel. Die Stabschefin delegiert. Abteilungen bereiten und prüfen Arbeit parallel.",
       "steps": {
         "s1": {
           "title": "Zieldefinition",
@@ -190,7 +190,7 @@
         },
         "s3": {
           "title": "Parallele Ausführung",
-          "desc": "Sechs KI-Abteilungsleiter arbeiten gleichzeitig in ihren Bereichen."
+          "desc": "Acht KI-Abteilungsleiter können bereichsübergreifend arbeiten, während Prüf- und Genehmigungsgrenzen erhalten bleiben."
         },
         "s4": {
           "title": "Abteilungsübergreifende Überprüfung",
@@ -204,8 +204,8 @@
     },
     "caps": {
       "eyebrow": "Abteilungen",
-      "title": "Sechs spezialisierte KI-Leiter.",
-      "sub": "Ein komplettes Führungsteam, sofort verfügbar und immer abgestimmt.",
+      "title": "Acht kundenorientierte Abteilungen.",
+      "sub": "Ein koordiniertes Führungsteam, abhängig von Tarif, Berechtigungen und eingerichteten Verbindungen.",
       "items": {
         "marketing": {
           "t": "Marketing",
@@ -235,8 +235,8 @@
     },
     "team": {
       "eyebrow": "Das Team",
-      "title": "Ein Stabschef. Sechs Abteilungsleiter.",
-      "sub": "Eve leitet ein spezialisiertes Führungsgremium. Jeder Agent ist speziell für seinen Bereich konzipiert.",
+      "title": "Eine Stabschefin. Acht Abteilungsleiter. Plus Jarvis.",
+      "sub": "Eve koordiniert acht Abteilungsleiter und ihre Spezialisten. Jarvis ist eine gemeinsame Entwicklungsfähigkeit, keine neunte Abteilung.",
       "eve": {
         "role": "Stabschef",
         "department": "Orchestrierung",
@@ -291,7 +291,7 @@
         "d3": {
           "tag": "Skalierung",
           "title": "Kontinuierliche Operationen",
-          "desc": "Das Team schläft nie und macht die globale Ausführung zu einer 24/7-Realität."
+          "desc": "Dauerhafter Aufgabenstatus unterstützt geregelte Arbeit über Sitzungen und Zeitzonen hinweg."
         }
       }
     },
@@ -301,14 +301,14 @@
       "sub": "Konzentrieren Sie sich auf die Vision. Lassen Sie das Team die Ausführung übernehmen.",
       "bullets": {
         "b1": "Skalieren Sie Ihren Output ohne zusätzliches Personal.",
-        "b2": "Führen Sie mühelos komplexe, abteilungsübergreifende Initiativen durch.",
-        "b3": "Halten Sie eine hohe Qualität durch automatisierte Peer-Reviews aufrecht.",
-        "b4": "Betreiben Sie ein echtes globales 24/7-Unternehmen."
+        "b2": "Koordinieren Sie komplexe, abteilungsübergreifende Initiativen mit klaren Übergaben.",
+        "b3": "Sichern Sie Qualität durch Prüfabläufe und menschliche Freigabe.",
+        "b4": "Halten Sie geregelte Arbeit über Sitzungen und Zeitzonen hinweg in Bewegung."
       }
     },
     "cta": {
-      "title": "Lernen Sie das Team kennen, das niemals schläft.",
-      "sub": "Entdecken Sie, wie Eve Ihre Abläufe transformieren kann.",
+      "title": "Lernen Sie das Team für dauerhafte Arbeit kennen.",
+      "sub": "Erfahren Sie, wie Eve geregelte Arbeit in der EVE-CXO-Organisation koordiniert.",
       "button": "Besuchen Sie evecxo.com"
     }
   },
@@ -391,7 +391,7 @@
     },
     "hero": {
       "eyebrow": "Litepaper",
-      "title": "AICreatesAi Litepaper",
+      "title": "AI Creates AI Litepaper",
       "sub": "Das agentische Betriebssystem für Unternehmen",
       "date": "Mai 2026",
       "viewDeck": "Pitch Deck ansehen",
@@ -405,7 +405,7 @@
     },
     "disclaimer": {
       "label": "Haftungsausschluss",
-      "text": "Diese Seite dient ausschließlich Informationszwecken und stellt weder ein Verkaufsangebot noch eine Aufforderung zum Kauf von Wertpapieren oder Tokens dar. AICA-Tokens werden bei Ausgabe Utility-Tokens für die konsumierende Nutzung im AIcreatesAI-Ökosystem sein und unterliegen Vesting- sowie länderbezogenen Beschränkungen. Investitionen in frühe Technologien und Kryptowährungen sind mit erheblichen Risiken verbunden, und Sie können den gesamten Einsatz verlieren. Detaillierte Bedingungen des Privatverkaufs sind akkreditierten Investoren über das Investorenportal verfügbar."
+      "text": "Diese Seite dient ausschließlich Informationszwecken und stellt weder ein Verkaufsangebot noch eine Aufforderung zum Kauf von Wertpapieren oder Tokens dar. AICA-Tokens werden bei Ausgabe Utility-Tokens für die konsumierende Nutzung im AI Creates AI-Ökosystem sein und unterliegen Vesting- sowie länderbezogenen Beschränkungen. Investitionen in frühe Technologien und Kryptowährungen sind mit erheblichen Risiken verbunden, und Sie können den gesamten Einsatz verlieren. Detaillierte Bedingungen des Privatverkaufs sind akkreditierten Investoren über das Investorenportal verfügbar."
     },
     "cta": {
       "label": "Die Chance",
@@ -416,12 +416,12 @@
     },
     "dialog": {
       "title": "AICA Whitepaper",
-      "desc": "Durchblättern Sie das AIcreatesAI Whitepaper."
+      "desc": "Durchblättern Sie das AI Creates AI Whitepaper."
     },
     "sections": {
       "executiveSummary": {
         "title": "Zusammenfassung",
-        "p1": "AICreatesAi baut das weltweit erste agentische Betriebssystem für Unternehmen - eine vollständige \"Company in a Box\", die es jedem Geschäftsinhaber ermöglicht, ein koordiniertes, intelligentes und sich kontinuierlich verbesserndes virtuelles Unternehmen zu betreiben.",
+        "p1": "AI Creates AI baut das weltweit erste agentische Betriebssystem für Unternehmen - eine vollständige \"Company in a Box\", die es jedem Geschäftsinhaber ermöglicht, ein koordiniertes, intelligentes und sich kontinuierlich verbesserndes virtuelles Unternehmen zu betreiben.",
         "p2": "Wir nehmen 50 Millionen Dollar auf, hauptsächlich zur Entwicklung proprietärer KI-Intelligenz, fortschrittlicher Compute-Infrastruktur und des Kern-Betriebssystems. Die Plattform liefert zuverlässige Geschäftsergebnisse über einen phasenweisen Ansatz, mit langfristigem Besitz unserer eigenen KI-Modelle.",
         "p3": "Zentrale Merkmale sind eine desktop-native Erfahrung, geschlossene Qualitätssysteme, agentische Wallets mit echter Nutzerkontrolle und eine nachhaltige Token-Ökonomie, die Beitragende belohnt."
       },
@@ -431,7 +431,7 @@
       },
       "vision": {
         "title": "Unsere Vision und Lösung",
-        "p1": "AICreatesAi schafft eine neue Kategorie: das agentische Betriebssystem für Unternehmen.",
+        "p1": "AI Creates AI schafft eine neue Kategorie: das agentische Betriebssystem für Unternehmen.",
         "p2": "Unsere Plattform ermöglicht es Nutzern, Geschäftsziele in natürlicher Sprache zu beschreiben und koordinierte, hochwertige Ausführung über Marketing, Vertrieb, Finanzen, Recht, Operations und Entwicklung zu erhalten - mit eingebauter Qualitätsprüfung und kontinuierlicher Verbesserung.",
         "p3": "Wir verfolgen eine disziplinierte, phasenweise Strategie, die früh echten Wert liefert, während wir langfristige Verteidigungsfähigkeit durch Daten, Produkterfahrung und proprietäre Modellentwicklung aufbauen."
       },
@@ -441,7 +441,7 @@
       },
       "product": {
         "title": "Produktüberblick",
-        "p1": "AICreatesAi liefert eine einheitliche Plattform, zugänglich über Web, Mobile und eine leistungsstarke native Desktop-Erfahrung.",
+        "p1": "AI Creates AI liefert eine einheitliche Plattform, zugänglich über Web, Mobile und eine leistungsstarke native Desktop-Erfahrung.",
         "listIntro": "Kernfähigkeiten (Überblick):",
         "l1": "Koordinierte multi-funktionale Geschäftsworkflows",
         "l2": "Automatische Qualitätsprüfung und Verbesserungssysteme",
@@ -476,7 +476,7 @@
       },
       "tokenomics": {
         "title": "Tokenomics",
-        "p1": "Der AICreatesAi Token ($AICA) unterstützt Abonnements, langfristige Ökosystem-Teilnahme und Beitragsbelohnungen sowie weitere geplante Nutzen.",
+        "p1": "Der AI Creates AI Token ($AICA) unterstützt Abonnements, langfristige Ökosystem-Teilnahme und Beitragsbelohnungen sowie weitere geplante Nutzen.",
         "subTitle": "Token-Überblick",
         "subText": "Gesamtversorgung: 10.000.000.000 $AICA",
         "listIntro": "Wichtige Token-Prinzipien:",
@@ -500,7 +500,7 @@
       },
       "conclusion": {
         "title": "Fazit",
-        "p1": "AICreatesAi baut das Betriebssystem für das agentische Zeitalter des Geschäfts.",
+        "p1": "AI Creates AI baut das Betriebssystem für das agentische Zeitalter des Geschäfts.",
         "p2": "Mit einer 50-Mio.-$-Runde, die sich auf zentrale KI-Intelligenz, Compute-Infrastruktur und das Produkt \"Company in a Box\" konzentriert, sind wir positioniert, eine kategorie-definierende Plattform zu schaffen, die sofortigen Wert liefert und gleichzeitig dauerhafte Wettbewerbsvorteile aufbaut."
       }
     }
@@ -508,7 +508,7 @@
   "contact": {
     "seo": {
       "title": "Kontakt",
-      "description": "Setzen Sie sich mit AIcreatesAI in Verbindung - Wartelisten für Eve OS und FinPayTek, Investor Relations, Presse und Partnerschaften."
+      "description": "Setzen Sie sich mit AI Creates AI in Verbindung - Wartelisten für EVE CXO und FinPayTek, Investor Relations, Presse und Partnerschaften."
     },
     "eyebrow": "Kontakt",
     "title": "Starten Sie ein Gespräch.",
@@ -521,7 +521,7 @@
     "sendAnother": "Weitere senden",
     "interestsLabel": "Ich melde mich als",
     "interests": {
-      "eveWaitlist": "Eve OS Warteliste",
+      "eveWaitlist": "EVE CXO Warteliste",
       "neoWaitlist": "FinPayTek Warteliste",
       "devWaitlist": "Entwickler-Warteliste",
       "investor": "Investor",
@@ -554,7 +554,7 @@
   "privacy": {
     "seo": {
       "title": "Datenschutzerklärung",
-      "description": "Wie AIcreatesAI Ihre Informationen über die Marketing-Website, Produkte und das Investorenportal hinweg erfasst, nutzt und schützt."
+      "description": "Wie AI Creates AI Ihre Informationen über die Marketing-Website, Produkte und das Investorenportal hinweg erfasst, nutzt und schützt."
     },
     "eyebrow": "Rechtliches",
     "title": "Datenschutzerklärung.",
@@ -564,7 +564,7 @@
   "terms": {
     "seo": {
       "title": "Nutzungsbedingungen",
-      "description": "Die Bedingungen für die Nutzung der AIcreatesAI-Website, der Produkte und des Investorenportals."
+      "description": "Die Bedingungen für die Nutzung der AI Creates AI-Website, der Produkte und des Investorenportals."
     },
     "eyebrow": "Rechtliches",
     "title": "Nutzungsbedingungen.",

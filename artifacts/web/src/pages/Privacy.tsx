@@ -47,7 +47,7 @@ export default function Privacy() {
         <div className="container mx-auto px-4 md:px-6 max-w-3xl space-y-10 text-white/65 leading-relaxed">
           <div>
             <h2 className="text-2xl font-serif font-semibold text-white mb-3">Overview</h2>
-            <p>AIcreatesAI respects your privacy. This page describes what we collect when you visit www.aicreates.ai or contact us, how we use it, and the choices you have. By using the site you agree to the practices described here.</p>
+            <p>AI Creates AI respects your privacy. This page describes what we collect when you visit www.aicreates.ai or contact us, how we use it, and the choices you have. By using the site you agree to the practices described here.</p>
           </div>
           <div>
             <h2 className="text-2xl font-serif font-semibold text-white mb-3">Information we collect</h2>

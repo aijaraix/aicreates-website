@@ -1,3 +1,4 @@
+import { LegacyContext } from "@/components/LegacyContext";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { ArrowRight, Cpu, Server, Recycle } from "lucide-react";
@@ -43,7 +44,7 @@ const ADDITIONAL_INCENTIVES = [
   {
     name: "High-Quality Feedback & Evaluation",
     desc: "Users earn $AICA by providing detailed feedback on outputs - accuracy ratings, usefulness scores, business value assessment, error corrections, and improvement suggestions. Rewards scale with depth, consistency, and measurable impact on model improvement.",
-    benefit: "Directly strengthens the closed-loop quality system and continuously improves Eve OS.",
+    benefit: "Supports the closed-loop quality system and the continued development of EVE CXO.",
   },
   {
     name: "Validator Performance Tiers",
@@ -79,11 +80,13 @@ export default function Token() {
     description:
       "$AICA powers subscription discounts, compute network participation, and contributor rewards across the agentic intelligence layer. Fixed supply: 10,000,000,000.",
     path: "/token",
+    indexable: false,
   });
   return (
     <div className="flex flex-col w-full">
+      <LegacyContext />
       {/* HERO */}
-      <section className="relative pt-28 pb-14 md:pt-36 md:pb-20 overflow-hidden">
+      <section className="relative pt-10 pb-14 md:pt-12 md:pb-20 overflow-hidden">
         <div className="absolute inset-0 bg-grid bg-grid-fade pointer-events-none" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_0%,rgba(0,245,212,0.10),transparent_70%)] pointer-events-none" />
         <div className="container mx-auto px-4 md:px-6 relative z-10">
@@ -128,7 +131,7 @@ export default function Token() {
             </div>
             <div className="md:col-span-7 space-y-6 text-white/70 text-base md:text-lg leading-relaxed">
               <p>
-                The $AICA token is the economic engine of the AIcreatesAI ecosystem. It is designed to reward real contributions, drive high-quality participation, and create a sustainable, usage-driven economy.
+                The $AICA token is the economic engine of the AI Creates AI ecosystem. It is designed to reward real contributions, drive high-quality participation, and create a sustainable, usage-driven economy.
               </p>
               <p>
                 While core platform revenue comes from stablecoin and fiat subscriptions, the $AICA token serves as the primary mechanism to incentivize network growth, improve intelligence quality, and align long-term participants with the success of the platform.
@@ -430,7 +433,7 @@ export default function Token() {
           <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 md:p-8">
             <div className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/40 mb-3">Disclaimer</div>
             <p className="text-white/50 text-sm leading-relaxed">
-              This page is for informational purposes only and does not constitute an offer to sell or a solicitation to buy any securities or tokens. AICA tokens, when issued, will be utility tokens for consumptive use within the AIcreatesAI ecosystem and are subject to vesting and jurisdictional restrictions. Early-stage technology and cryptocurrency commitments involve significant risk and you may lose all funds. Detailed private-sale terms are available to accredited investors via the investor portal.
+              This page is for informational purposes only and does not constitute an offer to sell or a solicitation to buy any securities or tokens. AICA tokens, when issued, will be utility tokens for consumptive use within the AI Creates AI ecosystem and are subject to vesting and jurisdictional restrictions. Early-stage technology and cryptocurrency commitments involve significant risk and you may lose all funds. Detailed private-sale terms are available to accredited investors via the investor portal.
             </p>
           </div>
         </div>
@@ -444,17 +447,15 @@ export default function Token() {
             <div className="relative grid grid-cols-1 md:grid-cols-[1fr_auto] gap-8 items-center">
               <div>
                 <h2 className="text-3xl md:text-5xl font-serif font-semibold text-gradient leading-[1.05] mb-4">
-                  Accredited investor?
+                  Looking for earlier records?
                 </h2>
                 <p className="text-lg text-white/55 max-w-xl">
-                  The investor portal contains the complete private-sale terms, round schedule, and SAFT documents.
+                  Use the investor portal for your existing account, or contact the company about earlier documents.
                 </p>
               </div>
-              <a href="https://invest.aicreates.ai" target="_blank" rel="noopener noreferrer">
-                <Button size="lg" className="rounded-full h-12 px-8 teal-btn whitespace-nowrap" data-testid="link-investor-portal">
-                  Open investor portal <ArrowRight className="ms-2 w-4 h-4" />
-                </Button>
-              </a>
+              <Button size="lg" className="rounded-full h-12 px-8 teal-btn whitespace-nowrap" data-testid="link-investor-portal" asChild><a href="https://invest.aicreates.ai" target="_blank" rel="noopener noreferrer">
+                  Existing investor portal <ArrowRight className="ms-2 w-4 h-4" />
+                </a></Button>
             </div>
           </div>
         </div>

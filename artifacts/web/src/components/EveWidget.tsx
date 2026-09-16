@@ -8,15 +8,12 @@ import eveAvatar from "@/assets/eve-portrait.png";
 /**
  * Eve API URL.
  * - In dev: defaults to http://localhost:8080 (the local api-server workflow)
- * - In prod: reads from VITE_EVE_API_URL build-time env var.
- *   When the api-server is published on Replit, the deploy URL goes here
- *   (set in .github/workflows/deploy.yml or via a build-time env).
+ * - In prod: reads from VITE_EVE_API_URL build-time env var. Without an
+ *   approved endpoint the widget stays on same-origin routing.
  */
 const EVE_API_BASE: string =
   (import.meta.env.VITE_EVE_API_URL as string | undefined) ??
-  (import.meta.env.DEV
-    ? "http://localhost:8080"
-    : "https://aicreates-website-aijaraix.replit.app");
+  (import.meta.env.DEV ? "http://localhost:8080" : "");
 
 interface EveMessage {
   role: "user" | "assistant";
@@ -29,7 +26,7 @@ const OPEN_KEY = "eve.opened.v1";
 const GREETING: EveMessage = {
   role: "assistant",
   content:
-    "Hi - I'm Eve. I help visitors get to know what we're building at AIcreatesAI. What brings you here today?",
+    "Hi - I'm Eve. I help visitors get to know what we're building at AI Creates AI. What brings you here today?",
 };
 
 function loadConversation(): EveMessage[] {

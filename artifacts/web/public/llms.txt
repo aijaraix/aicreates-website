@@ -1,0 +1,35 @@
+# AI Creates AI
+
+> AI Creates AI is the parent company behind EVE CXO. Adam is the company's internal executive intelligence, Eve is the customer-facing executive intelligence inside EVE CXO, and Hermes is the shared durable orchestration/runtime foundation beneath both.
+
+## Ecosystem
+
+- **AI Creates AI** — parent company and builder of the ecosystem.
+- **EVE CXO** — commercial customer product: the AI Operating System for Business.
+- **Adam** — internal executive intelligence for AI Creates AI.
+- **Eve** — customer-facing executive intelligence and chief-of-staff layer inside EVE CXO.
+- **Hermes** — shared orchestration/runtime for task state, delegation, approvals, evidence, and durable execution.
+- **Jarvis** — shared development and engineering capability for internal and appropriate customer build workflows; not a ninth department.
+
+EVE CXO is organized around eight customer-facing departments: Marketing, Sales & Acquisition, Advertising, Finance, Operations, Legal & Compliance, People & HR, and Customer Service. Its preserved registry also contains 46 named specialists. Consequential actions remain subject to permissions and human approval.
+
+## Public pages
+
+- [Home](https://www.aicreates.ai/): parent-company overview and ecosystem.
+- [About](https://www.aicreates.ai/about/): AI Creates AI, Adam, Eve, Hermes, and the operating model.
+- [EVE CXO](https://www.aicreates.ai/eve-cxo/): commercial product overview.
+- [For Business](https://www.aicreates.ai/business/): business use cases.
+- [For Developers](https://www.aicreates.ai/developers/): developer-facing direction.
+- [Investor Relations](https://www.aicreates.ai/opportunity/): public investor-relations entry point.
+- [Roadmap](https://www.aicreates.ai/roadmap/): current phased build direction.
+- [FAQ](https://www.aicreates.ai/faq/): common questions.
+- [Press](https://www.aicreates.ai/press/): company and media information.
+- [Contact](https://www.aicreates.ai/contact/): company contact paths.
+- [Privacy](https://www.aicreates.ai/privacy/)
+- [Terms](https://www.aicreates.ai/terms/)
+
+## Product
+
+- [EVE CXO](https://evecxo.com/)
+
+For current product capabilities, pricing, customer access, and product-specific documentation, prefer the EVE CXO domain. For parent-company, ecosystem, investor, partner, and company information, prefer AI Creates AI.
