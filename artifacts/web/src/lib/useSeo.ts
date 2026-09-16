@@ -5,6 +5,8 @@ const ORIGIN = "https://www.aicreates.ai";
 const DEFAULT_OG = `${ORIGIN}/social/og-default.png`;
 const DEFAULT_OG_SQUARE = `${ORIGIN}/social/og-square.png`;
 const DEFAULT_OG_ALT = "AI Creates AI — The company behind EVE CXO";
+const EVE_CXO_OG = `${ORIGIN}/social/og-eve-os.png`;
+const EVE_CXO_TWITTER = `${ORIGIN}/social/twitter-card-eve-os.png`;
 
 function setMeta(
   selector: string,
@@ -34,6 +36,11 @@ function setLink(rel: string, href: string) {
 function ensureAbsolute(url: string): string {
   if (/^https?:\/\//i.test(url)) return url;
   return `${ORIGIN}${url.startsWith("/") ? "" : "/"}${url}`;
+}
+
+function canonicalUrl(path: string): string {
+  if (!path || path === "/") return `${ORIGIN}/`;
+  return `${ORIGIN}${path.endsWith("/") ? path : `${path}/`}`;
 }
 
 function setAllOgImages(coverUrl: string, squareUrl: string, alt: string) {
@@ -82,9 +89,11 @@ export type SeoOptions = {
   indexable?: boolean;
   /** 1200x630 cover image (absolute URL or path under /). */
   image?: string;
-  /** 600x600 square image for WhatsApp/iMessage (absolute URL or path under /). */
+  /** 600x600+ square image for WhatsApp/iMessage (absolute URL or path under /). */
   squareImage?: string;
-  /** Alt text for both images. */
+  /** Optional X/Twitter card image. */
+  twitterImage?: string;
+  /** Alt text for social images. */
   imageAlt?: string;
 };
 
@@ -94,15 +103,19 @@ export function useSeo({
   path,
   fullTitle: fullTitleOverride,
   indexable = true,
-  image = DEFAULT_OG,
+  image,
   squareImage = DEFAULT_OG_SQUARE,
+  twitterImage,
   imageAlt = DEFAULT_OG_ALT,
 }: SeoOptions) {
   useEffect(() => {
     const fullTitle = fullTitleOverride ?? `${title} | ${SITE}`;
-    const url = `${ORIGIN}${path}`;
-    const cover = ensureAbsolute(image);
+    const url = canonicalUrl(path);
+    const routeDefaultCover = path === "/eve-cxo" ? EVE_CXO_OG : DEFAULT_OG;
+    const cover = ensureAbsolute(image ?? routeDefaultCover);
     const square = ensureAbsolute(squareImage);
+    const routeDefaultTwitter = path === "/eve-cxo" ? EVE_CXO_TWITTER : cover;
+    const twitter = ensureAbsolute(twitterImage ?? routeDefaultTwitter);
 
     document.title = fullTitle;
     setMeta('meta[name="description"]', "name", "description", description);
@@ -148,7 +161,7 @@ export function useSeo({
       "twitter:description",
       description,
     );
-    setMeta('meta[name="twitter:image"]', "name", "twitter:image", cover);
+    setMeta('meta[name="twitter:image"]', "name", "twitter:image", twitter);
     setMeta(
       'meta[name="twitter:image:alt"]',
       "name",
@@ -163,6 +176,7 @@ export function useSeo({
     path,
     image,
     squareImage,
+    twitterImage,
     imageAlt,
   ]);
 }
